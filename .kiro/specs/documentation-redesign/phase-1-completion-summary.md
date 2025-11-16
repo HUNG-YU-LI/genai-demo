@@ -101,7 +101,7 @@ Documentation 重新設計專案的 Phase 1 已成功完成。所有基礎設置
 
 ---
 
-### Task 4：重構 Steering Rules Architecture ✅
+### Task 4：重構 Steering Rules 架構 ✅
 
 **狀態**：已完成
 **子任務**：48/48（100%）
@@ -116,7 +116,7 @@ Documentation 重新設計專案的 Phase 1 已成功完成。所有基礎設置
 - `code-quality-checklist.md` - Quality checklist
 - `testing-strategy.md` - Testing rules
 
-#### 4.2 Examples 目錄結構（6 個目錄）
+#### 4.2 範例 目錄結構（6 個目錄）
 - `examples/design-patterns/`
 - `examples/xp-practices/`
 - `examples/ddd-patterns/`

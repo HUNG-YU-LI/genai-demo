@@ -245,7 +245,7 @@ public class OrderProcessor {
 
 ---
 
-## 相關 Patterns
+## 相關 模式
 
 - **Dependency Inversion Principle (DIP)**：依賴抽象
 - **Inversion of Control (IoC)**：框架控制物件建立

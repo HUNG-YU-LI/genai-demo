@@ -1,6 +1,6 @@
-# Unit Testing Guide
+# Unit 測試 Guide
 
-## Overview
+## 概覽
 
 Unit tests are the foundation of the test pyramid, focusing on testing individual components in isolation without external dependencies. They should be fast, focused, and provide immediate feedback during development.
 
@@ -33,7 +33,7 @@ Unit tests are the foundation of the test pyramid, focusing on testing individua
 
 ---
 
-## Basic Setup
+## Basic 設定
 
 ### Required Dependencies
 
@@ -46,7 +46,7 @@ dependencies {
 }
 ```
 
-### Test Class Structure
+### Test Class 結構
 
 ```java
 package solid.humank.genaidemo.domain.customer.model.aggregate;
@@ -81,11 +81,11 @@ class CustomerTest {
 
 ---
 
-## Test Structure: Given-When-Then
+## Test 結構: Given-When-Then
 
 All tests should follow the Given-When-Then (Arrange-Act-Assert) pattern for clarity.
 
-### Example: Testing Value Object
+### 範例: 測試 Value Object
 
 ```java
 @Test
@@ -117,9 +117,9 @@ void shouldThrowExceptionForInvalidEmailFormat() {
 
 ---
 
-## Testing Domain Logic
+## 測試 Domain Logic
 
-### Testing Aggregate Roots
+### 測試 Aggregate Roots
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -203,7 +203,7 @@ class CustomerTest {
 }
 ```
 
-### Testing Value Objects
+### 測試 Value Objects
 
 ```java
 @DisplayName("Money Value Object Tests")
@@ -445,7 +445,7 @@ void shouldApplyDiscountForSilverMember() {
 
 ---
 
-## Common Patterns and Best Practices
+## Common 模式 and 最佳實踐
 
 ### 1. Test Naming Convention
 
@@ -464,7 +464,7 @@ void should_calculateDiscountCorrectly_for_premiumMembers() {
 }
 ```
 
-### 2. Testing Edge Cases
+### 2. 測試 Edge Cases
 
 ```java
 @Test
@@ -492,7 +492,7 @@ void shouldHandleWhitespaceOnlyInput() {
 }
 ```
 
-### 3. Testing Collections
+### 3. 測試 Collections
 
 ```java
 @Test
@@ -586,7 +586,7 @@ void shouldCalculateMembershipDiscountCorrectly(
 
 ---
 
-## Performance Considerations
+## 效能 Considerations
 
 ### Memory Management
 
@@ -640,9 +640,9 @@ void shouldExecuteQuickly() {
 
 ---
 
-## Common Pitfalls and Anti-Patterns
+## Common Pitfalls and Anti-模式
 
-### ❌ Anti-Pattern: Testing Implementation Details
+### ❌ Anti-Pattern: 測試 實現 Details
 
 ```java
 // BAD - Testing internal implementation
@@ -682,7 +682,7 @@ void goodTest() {
 }
 ```
 
-### ❌ Anti-Pattern: Testing Multiple Things
+### ❌ Anti-Pattern: 測試 Multiple Things
 
 ```java
 // BAD - Testing too much in one test
@@ -712,7 +712,7 @@ void shouldAddAddress() {
 
 ## Quick Reference
 
-### Test Structure Template
+### Test 結構 Template
 
 ```java
 @ExtendWith(MockitoExtension.class)

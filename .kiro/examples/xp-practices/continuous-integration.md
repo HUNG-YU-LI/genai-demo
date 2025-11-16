@@ -1,4 +1,4 @@
-# Continuous Integration 指南
+# Continuous 整合 指南
 
 ## 概述
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 什麼是 Continuous Integration？
+## 什麼是 Continuous 整合？
 
 **Continuous Integration (CI)** 是頻繁地將程式碼變更整合到共享儲存庫的實踐，伴隨自動化建置和測試。
 
@@ -62,7 +62,7 @@ git push origin feature/order-submission
 # - Build
 # - Test
 # - Code quality checks
-# - Security scan
+# - 安全性 scan
 
 # 10. Create PR when ready
 # CI runs again on PR
@@ -149,7 +149,7 @@ tasks.register('ciBuild') {
 # Stage 1: Fast feedback (< 2 min)
 ./gradlew quickTest
 
-# Stage 2: Integration tests (< 5 min)
+# Stage 2: 整合 tests (< 5 min)
 ./gradlew integrationTest
 
 # Stage 3: E2E tests (< 10 min)
@@ -389,9 +389,9 @@ git commit -m "feat: add feature"
 
 ---
 
-## Continuous Deployment
+## Continuous 部署
 
-### Deployment Pipeline
+### 部署 Pipeline
 
 ```yaml
 # .github/workflows/cd.yml

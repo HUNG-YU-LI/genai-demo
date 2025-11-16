@@ -1,12 +1,12 @@
-# Enhanced Disaster Recovery Automation Implementation
+# Enhanced Disaster Recovery Automation 實現
 
-## Overview
+## 概覽
 
 This document describes the implementation of enhanced disaster recovery automation capabilities for the GenAI Demo project. The solution provides fully automated DR capabilities with CDK-based infrastructure automation, ensuring business continuity with minimal manual intervention.
 
-## Architecture
+## 架構
 
-### Components
+### 元件
 
 1. **DisasterRecoveryAutomation Construct** - Core automation logic
 2. **Failover State Machine** - Automated failover workflow
@@ -59,9 +59,9 @@ graph TB
     J --> H
 ```
 
-## Implementation Details
+## 實現 Details
 
-### 1. CDK Constructs for Automated DR Deployment
+### 1. CDK Constructs for Automated DR 部署
 
 The `DisasterRecoveryAutomation` construct provides:
 
@@ -94,7 +94,7 @@ The failover automation includes:
 - **Data Consistency Validation**: Ensures zero data loss during failover
 - **Rollback Capabilities**: Automatic rollback on failure
 
-#### Failover Process
+#### Failover 流程
 
 1. **Detection**: Health check failure triggers EventBridge rule
 2. **Validation**: Verify health status and readiness for failover
@@ -112,7 +112,7 @@ DNS automation features:
 - **Latency-Based Routing**: Optimal routing when both regions are healthy
 - **TTL Management**: Short TTL for faster DNS propagation
 
-#### DNS Configuration
+#### DNS 設定
 
 ```typescript
 // Failover record configuration
@@ -156,7 +156,7 @@ Automated testing includes:
    - Network path validation
    - Bandwidth testing
 
-### 5. Monthly Automated Failover Testing Procedures
+### 5. Monthly Automated Failover 測試 Procedures
 
 Automated testing schedule:
 
@@ -175,7 +175,7 @@ node infrastructure/scripts/dr-automation-test.js test-chaos \
   --test-type monthly_dr_test
 ```
 
-## Configuration
+## 設定
 
 ### Environment Variables
 
@@ -188,7 +188,7 @@ export PRIMARY_REGION=ap-east-2
 export SECONDARY_REGION=ap-northeast-1
 ```
 
-### CDK Context Configuration
+### CDK Context 設定
 
 ```json
 {
@@ -210,7 +210,7 @@ The automation stores configuration in SSM Parameter Store:
 - `/${PROJECT_NAME}/${ENVIRONMENT}/dr/replication-config` - Replication settings
 - `/${PROJECT_NAME}/${ENVIRONMENT}/dr/config/*` - Individual settings
 
-## Monitoring and Alerting
+## 監控 and Alerting
 
 ### CloudWatch Dashboards
 
@@ -249,9 +249,9 @@ The automation stores configuration in SSM Parameter Store:
 - **Warning Alerts**: Non-critical issues requiring attention
 - **Info Alerts**: Routine test results and status updates
 
-## Usage
+## 使用方法
 
-### Manual Failover Testing
+### Manual Failover 測試
 
 ```bash
 # Test failover workflow
@@ -310,7 +310,7 @@ node infrastructure/scripts/dr-automation-test.js report \
 - **Application Recovery**: < 60 seconds
 - **Overall RTO**: < 60 seconds
 
-## Security Considerations
+## 安全性 Considerations
 
 ### IAM Permissions
 
@@ -337,7 +337,7 @@ The DR automation requires specific IAM permissions:
 - **Audit Logging**: All actions logged to CloudTrail
 - **Multi-Factor Authentication**: Required for manual operations
 
-## Troubleshooting
+## 故障排除
 
 ### Common Issues
 
@@ -408,7 +408,7 @@ aws rds describe-global-clusters --global-cluster-identifier GLOBAL_CLUSTER_ID
 - **Q3 2025**: Multi-cloud failover support
 - **Q4 2025**: Enhanced monitoring and alerting
 
-## Conclusion
+## 結論
 
 The Enhanced Disaster Recovery Automation implementation provides a comprehensive, automated solution for ensuring business continuity. With automated failover procedures, chaos engineering tests, and comprehensive monitoring, the system meets the stringent RTO and RPO requirements while minimizing manual intervention.
 

@@ -1,6 +1,6 @@
-# Test Performance Guide
+# Test 效能 Guide
 
-## Overview
+## 概覽
 
 This guide provides practical examples for monitoring and optimizing test performance using the `@TestPerformanceExtension` annotation and related utilities in our Spring Boot application.
 
@@ -13,9 +13,9 @@ This guide provides practical examples for monitoring and optimizing test perfor
 
 ---
 
-## Test Performance Extension
+## Test 效能 Extension
 
-### Basic Usage
+### Basic 使用方法
 
 Based on your actual code at `app/src/test/java/solid/humank/genaidemo/testutils/TestPerformanceExtension.java`:
 
@@ -48,7 +48,7 @@ public @interface TestPerformanceExtension {
 }
 ```
 
-### Applying to Integration Tests
+### Applying to 整合 Tests
 
 ```java
 @TestPerformanceExtension(maxExecutionTimeMs = 3000, maxMemoryIncreaseMB = 100)
@@ -79,7 +79,7 @@ class CustomerApiIntegrationTest extends BaseIntegrationTest {
 }
 ```
 
-### Method-Level Performance Monitoring
+### Method-Level 效能 監控
 
 ```java
 @DisplayName("Order Processing Tests")
@@ -211,9 +211,9 @@ class ResourceIntensiveTest extends BaseIntegrationTest {
 
 ---
 
-## Performance Testing Patterns
+## 效能 測試 模式
 
-### 1. Concurrent Request Testing
+### 1. Concurrent Request 測試
 
 ```java
 @Test
@@ -272,7 +272,7 @@ void shouldHandleConcurrentRequests() throws InterruptedException {
 }
 ```
 
-### 2. Memory Usage Monitoring
+### 2. Memory 使用方法 監控
 
 ```java
 @Test
@@ -310,7 +310,7 @@ void shouldNotCauseMemoryLeak() {
 }
 ```
 
-### 3. Database Query Performance
+### 3. Database Query 效能
 
 ```java
 @DataJpaTest
@@ -378,7 +378,7 @@ class QueryPerformanceTest {
 
 ---
 
-## Gradle Test Task Configuration
+## Gradle Test Task 設定
 
 ### Optimized Test Tasks
 
@@ -450,7 +450,7 @@ tasks.register('e2eTest', Test) {
 
 ---
 
-## Performance Report Generation
+## 效能 Report Generation
 
 ### Generating Reports
 
@@ -473,7 +473,7 @@ The performance report includes:
 
 ---
 
-## Performance Thresholds
+## 效能 Thresholds
 
 ### Warning Thresholds
 
@@ -492,7 +492,7 @@ When thresholds are exceeded:
 
 ---
 
-## Best Practices
+## 最佳實踐
 
 ### 1. Use Appropriate Test Types
 
@@ -576,7 +576,7 @@ void shouldOptimizeQuery() {
 
 ## Quick Reference
 
-### Performance Annotations
+### 效能 Annotations
 
 ```java
 // Class-level monitoring
@@ -589,7 +589,7 @@ class MyTest { }
 void myTest() { }
 ```
 
-### Performance Targets
+### 效能 Targets
 
 | Test Type | Time Limit | Memory Limit | Use Case |
 |-----------|------------|--------------|----------|

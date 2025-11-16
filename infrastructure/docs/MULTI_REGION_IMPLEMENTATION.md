@@ -1,8 +1,8 @@
-# Multi-Region Infrastructure Implementation
+# Multi-Region Infrastructure 實現
 
 This document describes the complete implementation of multi-region infrastructure for the GenAI Demo project, providing active-active disaster recovery capabilities across Taiwan (ap-east-2) and Tokyo (ap-northeast-1) regions.
 
-## Overview
+## 概覽
 
 The multi-region infrastructure implements:
 
@@ -12,7 +12,7 @@ The multi-region infrastructure implements:
 4. **Cross-Region Observability** - Unified monitoring and logging across regions
 5. **Infrastructure as Code** - Complete CDK-based deployment automation
 
-## Architecture Components
+## 架構 元件
 
 ### 1. Aurora Global Database
 
@@ -106,16 +106,16 @@ The multi-region infrastructure implements:
 - Failover event notifications
 - Replication lag alerts
 
-## Deployment Guide
+## 部署 Guide
 
-### Prerequisites
+### 先決條件
 
 1. **AWS CLI configured** with appropriate permissions
 2. **AWS CDK installed** (`npm install -g aws-cdk`)
 3. **Node.js 18+** for CDK application
 4. **Domain configured** in Route 53 (optional but recommended)
 
-### Quick Deployment
+### Quick 部署
 
 ```bash
 # Clone the repository
@@ -129,7 +129,7 @@ npm install
 ./scripts/deploy-multi-region.sh --environment production --domain kimkao.io
 ```
 
-### Custom Deployment
+### Custom 部署
 
 ```bash
 # Deploy with custom regions
@@ -146,7 +146,7 @@ npm install
 ./scripts/deploy-multi-region.sh --deploy-all --domain example.com
 ```
 
-### Manual CDK Deployment
+### Manual CDK 部署
 
 ```bash
 # Set CDK context
@@ -160,7 +160,7 @@ cdk bootstrap aws://ACCOUNT/ap-northeast-1
 cdk deploy $CDK_CONTEXT --app "node bin/multi-region-deployment.js" --all
 ```
 
-## Configuration
+## 設定
 
 ### Environment Variables
 
@@ -174,7 +174,7 @@ export GENAI_DEMO_DOMAIN="kimkao.io"
 export GENAI_DEMO_ENVIRONMENT="production"
 ```
 
-### CDK Context Configuration
+### CDK Context 設定
 
 The deployment uses the existing `cdk.context.json` configuration:
 
@@ -195,7 +195,7 @@ The deployment uses the existing `cdk.context.json` configuration:
 }
 ```
 
-## Monitoring and Alerting
+## 監控 and Alerting
 
 ### CloudWatch Dashboards
 
@@ -249,7 +249,7 @@ The system automatically handles:
 3. **Application Traffic:** Load balancers route to healthy region
 4. **Event Processing:** MirrorMaker continues bidirectional replication
 
-### Manual Failover Testing
+### Manual Failover 測試
 
 ```bash
 # Test primary region failure
@@ -337,9 +337,9 @@ Grand Total: ~$1,850/month
 3. **Right-sizing:** Monitor and adjust instance sizes
 4. **Data Lifecycle:** Automated log archival to reduce storage costs
 
-## Security Considerations
+## 安全性 Considerations
 
-### Network Security
+### Network 安全性
 
 - **VPC Isolation:** Private subnets for databases and MSK
 - **Security Groups:** Least privilege access rules
@@ -360,7 +360,7 @@ Grand Total: ~$1,850/month
 - **Database Access:** Secrets Manager for credentials
 - **API Access:** Certificate-based authentication
 
-## Troubleshooting
+## 故障排除
 
 ### Common Issues
 
@@ -411,7 +411,7 @@ telnet api-dr.kimkao.io 443
 watch -n 5 'dig api.kimkao.io'
 ```
 
-## Maintenance
+## 維護
 
 ### Regular Tasks
 

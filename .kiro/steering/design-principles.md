@@ -1,6 +1,6 @@
-# Design Principles
+# 設計 Principles
 
-## Overview
+## 概覽
 
 本文件定義指導我們編寫程式碼的設計原則，專注於 Extreme Programming (XP) 價值觀和物件導向設計原則。
 
@@ -251,7 +251,7 @@ class OrderService {
 
 ---
 
-## Four Rules of Simple Design (Kent Beck)
+## Four Rules of Simple 設計 (Kent Beck)
 
 ### Priority Order
 
@@ -271,7 +271,7 @@ class OrderService {
 
 ---
 
-## Design Smells to Avoid
+## 設計 Smells to Avoid
 
 ### Code Smells
 
@@ -282,7 +282,7 @@ class OrderService {
 - [ ] ❌ Feature envy
 - [ ] ❌ Data clumps
 
-### Design Smells
+### 設計 Smells
 
 - [ ] ❌ Rigidity（難以變更）
 - [ ] ❌ Fragility（在許多地方損壞）

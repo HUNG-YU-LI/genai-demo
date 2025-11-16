@@ -1,4 +1,4 @@
-# DDD Tactical Patterns
+# DDD Tactical 模式
 
 ## 概述
 

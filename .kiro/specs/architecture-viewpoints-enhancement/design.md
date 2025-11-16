@@ -709,7 +709,7 @@ public class StagingTestMonitor {
 
 ##### 告警配置設計
 ```yaml
-# CloudWatch Alarms Configuration
+# CloudWatch Alarms 設定
 StagingTestAlarms:
   TestFailureRate:
     MetricName: StagingTest.Failure

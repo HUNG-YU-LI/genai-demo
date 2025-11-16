@@ -1,4 +1,4 @@
-# Event Storming Standards and Guidelines
+# Event Storming 規範 and 指南
 
 ## 概覽
 
@@ -95,7 +95,7 @@ Event Storming 是一種快速、輕量且通常很有趣的 workshop 技術，�
     --> [ShippingScheduled]
 ```
 
-### 階段 2：Process Level Event Storming
+### 階段 2：流程 Level Event Storming
 
 **目標**：深入特定流程，識別 commands、policies 和 aggregates
 
@@ -157,7 +157,7 @@ Event Storming 是一種快速、輕量且通常很有趣的 workshop 技術，�
 
 ```
 
-### 階段 3：Design Level Event Storming
+### 階段 3：設計 Level Event Storming
 
 **目標**：將發現轉化為技術設計和實作細節
 
@@ -286,7 +286,7 @@ graph LR
 
 **檔案位置**：`docs/diagrams/mermaid/event-storming/phase1-big-picture.md`
 
-### 階段 2：Process Level - Mermaid Flowchart
+### 階段 2：流程 Level - Mermaid Flowchart
 
 ```mermaid
 graph TB
@@ -326,7 +326,7 @@ graph TB
 
 **檔案位置**：`docs/diagrams/mermaid/event-storming/phase2-shopping-cart-process.md`
 
-### 階段 3：Design Level - PlantUML Class Diagram
+### 階段 3：設計 Level - PlantUML Class Diagram
 
 對於階段 3，使用 PlantUML 進行詳細的 aggregate 設計：
 
@@ -478,7 +478,7 @@ duration: "X hours"
 status: "completed|in-progress|planned"
 ---
 
-# Event Storming: {Process Name}
+# Event Storming: {流程 Name}
 
 ## Session 概述
 

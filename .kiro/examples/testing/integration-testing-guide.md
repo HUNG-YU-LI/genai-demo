@@ -1,6 +1,6 @@
-# Integration Testing Guide
+# 整合 測試 Guide
 
-## Overview
+## 概覽
 
 Integration tests verify that different components of the system work together correctly. They test the interaction between your code and external systems like databases, message queues, and HTTP endpoints.
 
@@ -14,7 +14,7 @@ Integration tests verify that different components of the system work together c
 
 ---
 
-## When to Use Integration Tests
+## When to Use 整合 Tests
 
 ### ✅ Perfect For
 
@@ -36,7 +36,7 @@ Integration tests verify that different components of the system work together c
 
 All integration tests should extend `BaseIntegrationTest` for consistent setup and resource management.
 
-### BaseIntegrationTest Features
+### BaseIntegrationTest 功能
 
 ```java
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -71,9 +71,9 @@ public abstract class BaseIntegrationTest {
 
 ---
 
-## Repository Integration Tests
+## Repository 整合 Tests
 
-### Testing with @DataJpaTest
+### 測試 with @DataJpaTest
 
 `@DataJpaTest` provides a lightweight Spring context with only JPA components.
 
@@ -208,7 +208,7 @@ class CustomerRepositoryTest {
 }
 ```
 
-### Testing Complex Queries
+### 測試 Complex Queries
 
 ```java
 @DataJpaTest
@@ -319,9 +319,9 @@ class OrderRepositoryTest {
 
 ---
 
-## REST API Integration Tests
+## REST API 整合 Tests
 
-### Testing with @WebMvcTest
+### 測試 with @WebMvcTest
 
 `@WebMvcTest` provides a lightweight context for testing controllers.
 
@@ -456,7 +456,7 @@ class CustomerControllerTest {
 }
 ```
 
-### Full Integration Tests with BaseIntegrationTest
+### Full 整合 Tests with BaseIntegrationTest
 
 ```java
 @TestPerformanceExtension(maxExecutionTimeMs = 3000, maxMemoryIncreaseMB = 100)
@@ -552,7 +552,7 @@ class CustomerApiIntegrationTest extends BaseIntegrationTest {
 
 ---
 
-## Testing JSON Serialization
+## 測試 JSON Serialization
 
 ### Using @JsonTest
 
@@ -614,7 +614,7 @@ class CustomerJsonTest {
 
 ## Database Transaction Management
 
-### Testing Transactional Behavior
+### 測試 Transactional Behavior
 
 ```java
 @DataJpaTest
@@ -717,7 +717,7 @@ DELETE FROM customers;
 
 ---
 
-## Performance Considerations
+## 效能 Considerations
 
 ### Optimizing Test Execution
 
@@ -766,7 +766,7 @@ class OptimizedRepositoryTest {
 
 ---
 
-## Common Patterns and Best Practices
+## Common 模式 and 最佳實踐
 
 ### 1. Clean Test Data Between Tests
 

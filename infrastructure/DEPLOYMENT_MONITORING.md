@@ -162,7 +162,7 @@ const deploymentMonitoring = new DeploymentMonitoringStack(app, 'DeploymentMonit
 - **評估期間**：5 分鐘
 - **動作**：發送 SNS 通知
 
-### Deployment Failure Alarm
+### 部署 Failure Alarm
 
 - **閾值**：≥ 1 次失敗
 - **評估期間**：5 分鐘
@@ -174,7 +174,7 @@ const deploymentMonitoring = new DeploymentMonitoringStack(app, 'DeploymentMonit
 - **評估期間**：15 分鐘（2 個資料點）
 - **動作**：發送 SNS 通知
 
-### Long Deployment Time Alarm
+### Long 部署 Time Alarm
 
 - **閾值**：> 1800 秒（30 分鐘）
 - **評估期間**：5 分鐘
@@ -233,7 +233,7 @@ Time: 2025-01-22T10:30:00Z
 ⚠️ FAILURE DETECTED
 ```
 
-#### Deployment State Change Alert
+#### 部署 State Change Alert
 
 ```
 Deployment Alert: CodeDeploy State Change

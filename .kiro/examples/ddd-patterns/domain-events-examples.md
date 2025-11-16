@@ -499,7 +499,7 @@ public class OrderSubmittedEventHandler
 
 ---
 
-## 關鍵 Patterns
+## 關鍵 模式
 
 ### 1. Factory Method Pattern
 

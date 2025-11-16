@@ -2,7 +2,7 @@
 inclusion: always
 ---
 
-# Security Standards and Guidelines
+# 安全性 規範 and 指南
 
 ## Authentication and Authorization
 
@@ -95,7 +95,7 @@ public Order getOrder(@PathVariable String orderId) {
 }
 ```
 
-#### Method-Level Security
+#### Method-Level 安全性
 
 ```java
 @Configuration
@@ -339,9 +339,9 @@ public class CustomerController {
 }
 ```
 
-## Security Headers 和 CORS
+## 安全性 Headers 和 CORS
 
-### Security Headers 配置
+### 安全性 Headers 配置
 
 ```java
 @Configuration

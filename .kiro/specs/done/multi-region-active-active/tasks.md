@@ -1,4 +1,4 @@
-# Multi-Region Active-Active Architecture Implementation Tasks
+# Multi-Region Active-Active 架構 實現 Tasks
 
 ## 任務概述
 

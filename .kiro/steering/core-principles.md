@@ -1,6 +1,6 @@
 # Core Development Principles
 
-## Overview
+## 概覽
 
 本文件定義指導本專案所有開發工作的基本原則。這些原則是強制性的，所有團隊成員都必須遵守。
 
@@ -9,7 +9,7 @@
 
 ---
 
-## Architecture Principles
+## 架構 Principles
 
 ### Must Follow
 
@@ -18,7 +18,7 @@
 - [ ] **Bounded Context Isolation**: 每個 context 都是獨立且自包含的
 - [ ] **Dependency Rule**: Domain layer 不依賴於 infrastructure
 
-### Architecture Layers
+### 架構 Layers
 
 ```mermaid
 graph LR
@@ -70,7 +70,7 @@ graph LR
 - [ ] **Interface Segregation**: 小而專注的介面
 - [ ] **Dependency Inversion**: 依賴於抽象，而非具體實作
 
-### Clean Code Standards
+### Clean Code 規範
 
 - [ ] **Meaningful Names**: 清楚、描述性的命名
 - [ ] **Small Functions**: 每個方法 < 20 lines
@@ -116,7 +116,7 @@ graph LR
 - CMC Management: Next.js 14 + React 18 + TypeScript
 - Consumer App: Angular 18 + TypeScript
 
-### Testing
+### 測試
 
 - JUnit 5 + Mockito + AssertJ
 - Cucumber 7 (BDD) + Gherkin
@@ -154,7 +154,7 @@ graph LR
 
 ## Validation Commands
 
-### Architecture Compliance
+### 架構 Compliance
 
 ```bash
 ./gradlew archUnit               # Verify architecture rules

@@ -495,7 +495,7 @@ public class Customer implements AggregateRootInterface {
 
 ---
 
-## 關鍵 Patterns
+## 關鍵 模式
 
 ### 1. Invariant Protection（不變條件保護）
 
@@ -726,7 +726,7 @@ class OrderTest {
 
 ---
 
-## 相關 Patterns
+## 相關 模式
 
 - [Domain Events](domain-events-examples.md)
 - [Value Objects](value-objects-examples.md)

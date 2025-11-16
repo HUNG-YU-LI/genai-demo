@@ -1,10 +1,10 @@
-# Diagram Generation Standards
+# Diagram Generation 規範
 
-## Overview
+## 概覽
 
 本文件定義專案中生成和管理圖表的標準，特別針對 PlantUML 和 Mermaid 圖表格式。
 
-## PlantUML Diagram Standards
+## PlantUML Diagram 規範
 
 ### Format Priority for GitHub Documentation
 
@@ -54,7 +54,7 @@
 ./scripts/generate-diagrams.sh --validate
 ```
 
-### Documentation Reference Standards
+### Documentation Reference 規範
 
 #### Markdown Link Format
 
@@ -80,7 +80,7 @@
      style="max-width: 100%; height: auto;">
 ```
 
-## Mermaid Diagram Standards
+## Mermaid Diagram 規範
 
 ### GitHub Native Support ✅ **PREFERRED**
 
@@ -120,9 +120,9 @@ graph TB
 - 需要精確的版面控制
 - 專業文件要求
 
-## File Organization Standards
+## File Organization 規範
 
-### Directory Structure
+### Directory 結構
 ```text
 
 docs/diagrams/
@@ -158,7 +158,7 @@ docs/diagrams/
 - **Standalone**: `{concept}-{type}.mmd`
 - **In Markdown**: 使用描述性的章節標題
 
-## Quality Standards
+## Quality 規範
 
 ### Image Quality Requirements
 
@@ -196,7 +196,7 @@ docs/diagrams/
 - **Output**: PNG 和 SVG 兩種格式
 - **Validation**: 生成前進行語法檢查
 
-## Integration with Documentation
+## 整合 with Documentation
 
 ### Viewpoint Documentation
 
@@ -212,7 +212,7 @@ docs/diagrams/
 - **Generated**: `docs/diagrams/generated/information/*.png`
 - **References**: `docs/viewpoints/information/*.md`
 
-#### Deployment Viewpoint
+#### 部署 Viewpoint
 
 - **Source**: `docs/diagrams/viewpoints/deployment/*.puml`
 - **Generated**: `docs/diagrams/generated/deployment/*.png`
@@ -227,7 +227,7 @@ docs/diagrams/
 - **Validation**: 檢查斷裂的連結
 - **Cleanup**: 移除已刪除圖表的引用
 
-## Best Practices
+## 最佳實踐
 
 ### Development Workflow
 
@@ -237,7 +237,7 @@ docs/diagrams/
 4. **Validate**: 提交前檢查語法和連結
 5. **Commit**: 包含來源檔案和生成的檔案
 
-### Maintenance Guidelines
+### 維護 指南
 
 #### Regular Tasks
 
@@ -245,13 +245,13 @@ docs/diagrams/
 - **Monthly**: 審查和清理未使用的圖表
 - **Quarterly**: 優化圖表版面以提高可讀性
 
-#### Performance Considerations
+#### 效能 Considerations
 
 - **File Size**: 監控 PNG 檔案大小，如果 >500KB 則進行優化
 - **Generation Time**: 批次生成以提高效率
 - **Storage**: 如需要，對大型圖表檔案使用 Git LFS
 
-## Troubleshooting
+## 故障排除
 
 ### Common Issues
 

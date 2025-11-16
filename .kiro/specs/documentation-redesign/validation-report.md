@@ -18,7 +18,7 @@
 **有效 References**: 47 (90.4%)
 **無效 References**: 5 (9.6%)
 
-### 有效 References ✅
+### 有效 參考資料 ✅
 
 所有測試範例檔案都已正確 reference 且存在：
 - ✅ `unit-testing-guide.md`
@@ -50,7 +50,7 @@
 - ✅ `pair-programming-guide.md`
 - ✅ `continuous-integration.md`
 
-### 缺失的 References ⚠️
+### 缺失的 參考資料 ⚠️
 
 以下檔案有被 reference 但尚未建立（計劃於未來任務中實作）：
 
@@ -75,26 +75,26 @@
 
 ---
 
-## 4.6.2 驗證所有 Cross-References ✅
+## 4.6.2 驗證所有 Cross-參考資料 ✅
 
 ### Cross-Reference 驗證
 
 所有 steering 檔案之間的內部 cross-references 已經過驗證：
 
-#### Core Standards Cross-References
+#### Core 規範 Cross-參考資料
 - `core-principles.md` ↔ `design-principles.md` ✅
 - `core-principles.md` ↔ `ddd-tactical-patterns.md` ✅
 - `core-principles.md` ↔ `architecture-constraints.md` ✅
 - `core-principles.md` ↔ `code-quality-checklist.md` ✅
 - `core-principles.md` ↔ `testing-strategy.md` ✅
 
-#### Specialized Standards Cross-References
+#### Specialized 規範 Cross-參考資料
 - `testing-strategy.md` → Testing examples ✅
 - `design-principles.md` → Design pattern examples ✅
 - `ddd-tactical-patterns.md` → DDD pattern examples ✅
 - `code-quality-checklist.md` → Code pattern examples ✅
 
-#### Example Files Cross-References
+#### 範例 Files Cross-參考資料
 所有範例檔案都正確 reference 回其父 steering 檔案：
 - Testing examples → `testing-strategy.md` ✅
 - DDD examples → `ddd-tactical-patterns.md` ✅
@@ -191,7 +191,7 @@ Modular 結構成功減少了 token 使用量：
 
 **結果**：✅ 路徑清晰且可導航
 
-#### 情境 2：理解 DDD Patterns
+#### 情境 2：理解 DDD 模式
 **查詢**：「我如何實作 aggregate root？」
 
 **預期路徑**：

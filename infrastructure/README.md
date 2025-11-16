@@ -28,7 +28,7 @@
 - **EKSStack**: Kubernetes cluster，具備自動擴展和安全性
 - **EKSIRSAStack**: IAM Roles for Service Accounts 設定
 
-### Security & Identity Layer
+### 安全性 & Identity Layer
 - **SSOStack**: AWS SSO 整合，具備權限集
 - **SecurityStack**: 增強的安全監控和合規
 
@@ -48,16 +48,16 @@
 - **DisasterRecoveryStack**: 多區域災難復原自動化
 - **MultiRegionStack**: 跨區域複寫和容錯移轉
 
-## Prerequisites
+## 先決條件
 
 - Node.js 18.x 或更新版本
 - AWS CLI，已設定適當的憑證
 - 全域安裝 AWS CDK CLI: `npm install -g aws-cdk`
 - TypeScript 5.6+（包含在相依套件中）
 
-## 🚀 Quick Start
+## 🚀 快速入門
 
-### Unified Deployment（建議）
+### Unified 部署（建議）
 
 新的統一部署腳本為所有基礎設施部署場景提供單一進入點：
 
@@ -101,7 +101,7 @@ npm run status              # 檢查部署狀態
 npm run destroy:dev         # 銷毀開發環境
 ```
 
-## 📁 Project Structure
+## 📁 Project 結構
 
 ```
 infrastructure/
@@ -129,7 +129,7 @@ infrastructure/
 └── package.json                   # 相依套件和腳本
 ```
 
-## Getting Started
+## 入門
 
 1. **安裝相依套件**:
 
@@ -173,7 +173,7 @@ infrastructure/
    npm run deploy:prod     # 生產環境部署
    ```
 
-## 🧪 Testing
+## 🧪 測試
 
 ### Quick Test Commands
 
@@ -198,7 +198,7 @@ Time: 15.828 s
 Coverage: 100% on core infrastructure
 ```
 
-## Project Structure
+## Project 結構
 
 ```
 infrastructure/
@@ -230,7 +230,7 @@ infrastructure/
 - `npm run lint` - 執行 ESLint
 - `npm run lint:fix` - 修復 ESLint 問題
 
-## Environment Configuration
+## Environment 設定
 
 基礎設施支援多個環境（development、staging、production）。
 使用 CDK context 設定環境：
@@ -246,7 +246,7 @@ cdk deploy -c environment=staging
 cdk deploy -c environment=production
 ```
 
-## Testing
+## 測試
 
 專案包含完整的測試：
 
@@ -260,7 +260,7 @@ cdk deploy -c environment=production
 npm test
 ```
 
-## Security
+## 安全性
 
 基礎設施遵循 AWS 安全最佳實踐：
 
@@ -269,7 +269,7 @@ npm test
 - IAM 角色具有最小所需權限
 - CDK Nag 檢查確保符合 AWS Well-Architected Framework
 
-## Monitoring
+## 監控
 
 ObservabilityStack 提供：
 
@@ -286,7 +286,7 @@ ObservabilityStack 提供：
 5. 合成 templates: `npm run synth`
 6. 建立 pull request
 
-## Troubleshooting
+## 故障排除
 
 如果遇到問題：
 
@@ -314,9 +314,9 @@ ObservabilityStack 提供：
 
 本專案採用 MIT License。
 
-## 🚀 Deployment Options
+## 🚀 部署 Options
 
-### Environment Configuration
+### Environment 設定
 
 基礎設施支援具有不同設定的多個環境：
 
@@ -326,7 +326,7 @@ ObservabilityStack 提供：
 | Staging | 啟用 | 啟用 | 預生產測試 |
 | Production | 啟用 | 啟用 | 生產工作負載 |
 
-### Deployment Commands
+### 部署 Commands
 
 ```bash
 # 快速開發部署
@@ -339,9 +339,9 @@ ObservabilityStack 提供：
 ./deploy-consolidated.sh production us-east-1 true true
 ```
 
-## 🔒 Security & Compliance
+## 🔒 安全性 & Compliance
 
-### CDK Nag Integration
+### CDK Nag 整合
 
 專案包含 CDK Nag 用於安全合規，具備適當的抑制：
 
@@ -350,7 +350,7 @@ ObservabilityStack 提供：
 - **AwsSolutions-IAM4**: AWS 託管政策（CloudWatch agent）
 - **AwsSolutions-IAM5**: KMS 萬用字元權限（加密操作）
 
-### Security Features
+### 安全性 功能
 
 - ✅ 所有敏感資料的 KMS 加密
 - ✅ 具最小權限原則的 IAM 角色
@@ -358,9 +358,9 @@ ObservabilityStack 提供：
 - ✅ 傳輸中資料的 SSL/TLS 強制執行
 - ✅ 稽核軌跡的 CloudTrail 日誌記錄
 
-## 📊 Monitoring & Observability
+## 📊 監控 & Observability
 
-### Built-in Monitoring
+### Built-in 監控
 
 - **CloudWatch Dashboards**: 應用程式和基礎設施指標
 - **CloudWatch Logs**: 集中式日誌記錄，具備保留政策

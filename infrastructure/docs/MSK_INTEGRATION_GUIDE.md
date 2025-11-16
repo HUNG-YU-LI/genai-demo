@@ -1,8 +1,8 @@
-# Amazon MSK Integration Guide
+# Amazon MSK 整合 Guide
 
 This guide provides comprehensive information about the Amazon MSK (Managed Streaming for Apache Kafka) integration for the GenAI Demo application.
 
-## Overview
+## 概覽
 
 The MSK integration provides a robust, scalable messaging infrastructure for domain events in the GenAI Demo application. It supports:
 
@@ -12,9 +12,9 @@ The MSK integration provides a robust, scalable messaging infrastructure for dom
 - **Monitoring & Observability**: Comprehensive monitoring and alerting
 - **Security**: IAM-based authentication and encryption
 
-## Architecture
+## 架構
 
-### MSK Cluster Configuration
+### MSK Cluster 設定
 
 The MSK cluster is configured with the following features:
 
@@ -38,7 +38,7 @@ Examples:
 - `genai-demo.production.order.confirmed`
 - `genai-demo.production.payment.processed`
 
-## Infrastructure Components
+## Infrastructure 元件
 
 ### 1. MSK Cluster
 
@@ -83,9 +83,9 @@ const cluster = new msk.CfnCluster(this, 'MSKCluster', {
 });
 ```
 
-### 2. Security Configuration
+### 2. 安全性 設定
 
-#### Security Groups
+#### 安全性 Groups
 
 - **MSK Security Group**: Allows Kafka traffic from EKS cluster
   - Port 9092: Kafka plaintext (internal only)
@@ -101,7 +101,7 @@ const cluster = new msk.CfnCluster(this, 'MSKCluster', {
 - **Data Access**: Read and write data to topics
 - **Consumer Groups**: Manage consumer group membership
 
-### 3. Monitoring and Alerting
+### 3. 監控 and Alerting
 
 #### CloudWatch Alarms
 
@@ -117,7 +117,7 @@ const cluster = new msk.CfnCluster(this, 'MSKCluster', {
 - **Prometheus Integration**: JMX and Node exporter enabled
 - **Custom Metrics**: Domain events processing metrics
 
-## Environment-Specific Configuration
+## Environment-Specific 設定
 
 ### Development Environment
 
@@ -143,7 +143,7 @@ const cluster = new msk.CfnCluster(this, 'MSKCluster', {
 }
 ```
 
-## Spring Boot Integration
+## Spring Boot 整合
 
 ### Dependencies
 
@@ -157,7 +157,7 @@ dependencies {
 }
 ```
 
-### Configuration
+### 設定
 
 The application uses profile-based configuration:
 
@@ -227,7 +227,7 @@ public class CustomerEventHandler {
 }
 ```
 
-## Deployment Guide
+## 部署 Guide
 
 ### 1. Deploy Infrastructure
 
@@ -273,7 +273,7 @@ kubectl apply -f k8s/production/
 kubectl logs -f deployment/genai-demo-app | grep -i kafka
 ```
 
-## Monitoring and Troubleshooting
+## 監控 and 故障排除
 
 ### Health Checks
 
@@ -337,7 +337,7 @@ kafka-topics.sh --bootstrap-server $MSK_BOOTSTRAP_SERVERS \
     --describe --topic genai-demo.production.customer.created
 ```
 
-### Monitoring Dashboards
+### 監控 Dashboards
 
 #### CloudWatch Dashboard
 
@@ -356,9 +356,9 @@ If using Prometheus integration:
 - **Node Metrics**: System-level metrics
 - **Application Metrics**: Custom domain event metrics
 
-## Security Best Practices
+## 安全性 最佳實踐
 
-### 1. Network Security
+### 1. Network 安全性
 
 - MSK cluster deployed in private subnets
 - Security groups restrict access to EKS cluster only
@@ -376,15 +376,15 @@ If using Prometheus integration:
 - Data encrypted in transit using TLS
 - Client-broker and inter-broker encryption
 
-### 4. Monitoring and Auditing
+### 4. 監控 and Auditing
 
 - All API calls logged via CloudTrail
 - Enhanced monitoring enabled
 - Security events sent to SNS for alerting
 
-## Performance Tuning
+## 效能 Tuning
 
-### Producer Configuration
+### Producer 設定
 
 ```yaml
 spring:
@@ -401,7 +401,7 @@ spring:
       enable-idempotence: true
 ```
 
-### Consumer Configuration
+### Consumer 設定
 
 ```yaml
 spring:
@@ -417,7 +417,7 @@ spring:
       isolation-level: read_committed
 ```
 
-### Broker Configuration
+### Broker 設定
 
 Key settings in MSK configuration:
 
@@ -442,7 +442,7 @@ Key settings in MSK configuration:
 - Longer retention (30 days)
 - Reserved instances for cost savings
 
-### Monitoring Costs
+### 監控 Costs
 
 - CloudWatch billing alerts configured
 - Cost allocation tags applied
@@ -450,7 +450,7 @@ Key settings in MSK configuration:
 
 ## Disaster Recovery
 
-### Multi-Region Setup
+### Multi-Region 設定
 
 - Primary region: ap-east-2 (Taiwan)
 - Secondary region: ap-northeast-1 (Tokyo)
@@ -470,7 +470,7 @@ Key settings in MSK configuration:
 4. Verify data consistency
 5. Plan failback procedures
 
-## Conclusion
+## 結論
 
 The MSK integration provides a robust, scalable, and secure messaging infrastructure for the GenAI Demo application. By following this guide, you can successfully deploy, configure, and operate the MSK cluster for production workloads.
 

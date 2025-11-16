@@ -582,7 +582,7 @@ public class Customer implements AggregateRootInterface {
 
 ---
 
-## 關鍵 Patterns
+## 關鍵 模式
 
 ### 1. Compact Constructor 驗證
 

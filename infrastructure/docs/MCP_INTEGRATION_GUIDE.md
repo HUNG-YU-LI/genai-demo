@@ -1,16 +1,16 @@
-# MCP Integration and Well-Architected Framework Guide
+# MCP 整合 and Well-Architected Framework Guide
 
-## Overview
+## 概覽
 
 This guide provides comprehensive instructions for using AWS MCP (Model Context Protocol) tools to perform Well-Architected Framework reviews and continuous architecture improvements for the GenAI Demo project.
 
-## 🚀 Quick Start Installation Guide
+## 🚀 快速入門 安裝 Guide
 
 ### For New Team Members
 
 If you're setting up MCP servers for the first time, follow these steps:
 
-#### 1. Install Prerequisites
+#### 1. Install 先決條件
 
 ```bash
 # Install UV (Python package manager)
@@ -48,7 +48,7 @@ export AWS_REGION=ap-northeast-1
 aws sts get-caller-identity
 ```
 
-#### 4. Verify MCP Configuration
+#### 4. Verify MCP 設定
 
 Check that `.kiro/settings/mcp.json` contains the correct configuration:
 
@@ -87,7 +87,7 @@ Test the MCP integration by asking Kiro:
 "Search AWS documentation for Lambda best practices"
 ```
 
-### Installation Verification Checklist
+### 安裝 Verification Checklist
 
 - [ ] UV package manager installed and working
 - [ ] Node.js v16+ installed
@@ -98,7 +98,7 @@ Test the MCP integration by asking Kiro:
 - [ ] Kiro IDE restarted after configuration changes
 - [ ] MCP tools working in Kiro IDE
 
-### Common Installation Issues
+### Common 安裝 Issues
 
 | Issue | Solution |
 |-------|----------|
@@ -110,7 +110,7 @@ Test the MCP integration by asking Kiro:
 
 ---
 
-## MCP Tools Configuration
+## MCP Tools 設定
 
 ### Configured MCP Servers
 
@@ -138,7 +138,7 @@ The following MCP servers are configured in `.kiro/settings/mcp.json`:
 |--------|---------|-------------------|
 | `time` | Time zone conversion and formatting | `get_current_time`, `convert_time`, `format_time`, `calculate_time_difference` |
 
-### Prerequisites
+### 先決條件
 
 1. **UV Package Manager**: Install UV for Python package management
 
@@ -168,9 +168,9 @@ The following MCP servers are configured in `.kiro/settings/mcp.json`:
 
 4. **Kiro IDE**: Ensure Kiro IDE is properly configured with MCP support
 
-## MCP Server Installation Guide
+## MCP Server 安裝 Guide
 
-### Excalidraw MCP Server Setup
+### Excalidraw MCP Server 設定
 
 The Excalidraw MCP server enables AI-powered diagram creation and visualization. Follow these steps to install and configure it:
 
@@ -187,7 +187,7 @@ npm install mcp-excalidraw-server
 ls node_modules/mcp-excalidraw-server/
 ```
 
-#### 2. Verify MCP Configuration
+#### 2. Verify MCP 設定
 
 The Excalidraw MCP server should already be configured in `.kiro/settings/mcp.json`:
 
@@ -241,7 +241,7 @@ echo '{"jsonrpc": "2.0", "id": 1, "method": "tools-and-environment/list", "param
 
 After installation, restart Kiro IDE to load the new MCP server configuration.
 
-### Alternative Installation Methods
+### Alternative 安裝 Methods
 
 #### Method 1: Using NPX (Not Recommended for Production)
 
@@ -258,7 +258,7 @@ After installation, restart Kiro IDE to load the new MCP server configuration.
 
 **Note**: NPX method may have slower startup times and is not recommended for production use.
 
-#### Method 2: Global Installation
+#### Method 2: Global 安裝
 
 ```bash
 # Install globally
@@ -275,7 +275,7 @@ npm install -g mcp-excalidraw-server
 }
 ```
 
-### Troubleshooting Excalidraw MCP Installation
+### 故障排除 Excalidraw MCP 安裝
 
 #### Common Issues and Solutions
 
@@ -398,9 +398,9 @@ The assessment generates three types of reports:
    - Key metrics and priorities
    - Action items with timelines
 
-## MCP Tools Usage
+## MCP Tools 使用方法
 
-### Testing MCP Integration
+### 測試 MCP 整合
 
 Verify that all MCP tools are properly configured:
 
@@ -416,7 +416,7 @@ This test validates:
 - Auto-approval permissions
 - AWS credentials setup
 
-### Architecture Assessment with MCP
+### 架構 Assessment with MCP
 
 Run automated architecture assessment using MCP tools:
 
@@ -433,7 +433,7 @@ This assessment includes:
 - Performance analysis
 - Documentation analysis using AWS Docs MCP
 
-### Continuous Improvement Monitoring
+### Continuous Improvement 監控
 
 Monitor architecture improvements over time:
 
@@ -505,7 +505,7 @@ Ask Kiro: "Draw a system architecture diagram with API Gateway, Lambda, and Dyna
 Ask Kiro: "Create a rectangle with text 'Database' and connect it to another rectangle labeled 'API'"
 ```
 
-#### Excalidraw MCP Features
+#### Excalidraw MCP 功能
 
 **Basic Element Creation**:
 - Rectangles, ellipses, diamonds, arrows, text, lines
@@ -554,7 +554,7 @@ Ask Kiro: "Convert 2:00 PM EST to Taiwan time"
 Ask Kiro: "Calculate the time difference between New York and London"
 ```
 
-## Best Practices for MCP Usage
+## 最佳實踐 for MCP 使用方法
 
 ### 1. Regular Assessments
 
@@ -562,25 +562,25 @@ Ask Kiro: "Calculate the time difference between New York and London"
 - **Monthly**: Full architecture assessment
 - **Quarterly**: Comprehensive Well-Architected review
 
-### 2. Continuous Monitoring
+### 2. Continuous 監控
 
 - Set up automated monitoring with alerts
 - Track improvement trends over time
 - Review recommendations regularly
 
-### 3. Documentation Maintenance
+### 3. Documentation 維護
 
 - Keep architecture decisions updated
 - Document MCP tool usage patterns
 - Maintain assessment history
 
-### 4. Security Considerations
+### 4. 安全性 Considerations
 
 - Use readonly mode for IAM MCP
 - Regularly rotate AWS credentials
 - Monitor MCP tool access logs
 
-## Troubleshooting
+## 故障排除
 
 ### Common Issues
 
@@ -668,9 +668,9 @@ Enable debug logging for MCP tools:
 }
 ```
 
-## Integration with CI/CD
+## 整合 with CI/CD
 
-### GitHub Actions Integration
+### GitHub Actions 整合
 
 Add MCP assessments to your CI/CD pipeline:
 
@@ -711,7 +711,7 @@ jobs:
 Set up automated alerts for assessment results:
 
 ```bash
-# Example: Send Slack notification for high-priority findings
+# 範例: Send Slack notification for high-priority findings
 if [ $(jq '.actionItems | map(select(.priority == "HIGH")) | length' infrastructure/docs/well-architected-summary.json) -gt 0 ]; then
   curl -X POST -H 'Content-type: application/json' \
     --data '{"text":"High priority architecture issues found. Check the assessment report."}' \
@@ -721,7 +721,7 @@ fi
 
 ## Metrics and KPIs
 
-### Key Performance Indicators
+### Key 效能 Indicators
 
 Track these KPIs using MCP assessments:
 
@@ -747,7 +747,7 @@ npm run monitoring:continuous
 cat infrastructure/docs/metrics-history.json | jq '.[] | {date: .timestamp, score: .overallScore}'
 ```
 
-## Advanced Usage
+## Advanced 使用方法
 
 ### Custom Assessment Criteria
 
@@ -768,7 +768,7 @@ class CustomAssessment extends WellArchitectedAssessment {
 }
 ```
 
-### Integration with External Tools
+### 整合 with External Tools
 
 Integrate MCP assessments with external monitoring tools:
 

@@ -1,6 +1,6 @@
 # Code Quality Checklist
 
-## Overview
+## 概覽
 
 本文件提供程式碼品質標準的完整檢查清單。在開發和程式碼審查期間將此作為快速參考使用。
 
@@ -63,7 +63,7 @@ throw new RuntimeException("Error");
 
 ---
 
-## API Design
+## API 設計
 
 ### Must Follow
 
@@ -87,7 +87,7 @@ throw new RuntimeException("Error");
 
 ---
 
-## Security
+## 安全性
 
 ### Must Follow
 
@@ -120,7 +120,7 @@ String query = "SELECT * FROM customers WHERE email = '" + email + "'";
 
 ---
 
-## Performance
+## 效能
 
 ### Must Follow
 
@@ -147,7 +147,7 @@ orders.forEach(order -> order.getItems().size()); // N+1!
 
 ---
 
-## Code Structure
+## Code 結構
 
 ### Method Length
 
@@ -178,7 +178,7 @@ orders.forEach(order -> order.getItems().size()); // N+1!
 - [ ] 重大變更時更新 README
 - [ ] API 文件已更新
 
-### Javadoc Standards
+### Javadoc 規範
 
 ```java
 /**
@@ -207,28 +207,28 @@ public Order submitOrder(SubmitOrderCommand command) {
 - [ ] 錯誤條件已處理
 - [ ] 業務規則已驗證
 
-### Design
+### 設計
 
 - [ ] 遵循 SOLID principles
 - [ ] 遵循 Tell, Don't Ask
 - [ ] 無 Law of Demeter 違規
 - [ ] 適當使用 design patterns
 
-### Testing
+### 測試
 
 - [ ] 業務邏輯的 unit tests
 - [ ] 基礎設施的 integration tests
 - [ ] 測試覆蓋率 > 80%
 - [ ] 測試清楚且可維護
 
-### Security
+### 安全性
 
 - [ ] 已實作輸入驗證
 - [ ] 無安全漏洞
 - [ ] 敏感資料受保護
 - [ ] 身份驗證/授權正確
 
-### Performance
+### 效能
 
 - [ ] 無明顯的效能問題
 - [ ] 資料庫查詢已優化
@@ -257,13 +257,13 @@ public Order submitOrder(SubmitOrderCommand command) {
 ./gradlew spotbugsMain           # Find bugs
 ```
 
-### Architecture
+### 架構
 
 ```bash
 ./gradlew archUnit               # Verify architecture rules
 ```
 
-### Security
+### 安全性
 
 ```bash
 ./gradlew dependencyCheckAnalyze # Check dependencies

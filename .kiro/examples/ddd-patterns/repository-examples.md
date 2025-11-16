@@ -452,7 +452,7 @@ public class OrderApplicationService {
 
 ---
 
-## 關鍵 Patterns
+## 關鍵 模式
 
 ### 1. 介面在領域層，實作在基礎設施層
 
@@ -577,7 +577,7 @@ public Order save(Order order) {
 
 ## 測試 Repositories
 
-### Integration Test
+### 整合 Test
 
 ```java
 @DataJpaTest

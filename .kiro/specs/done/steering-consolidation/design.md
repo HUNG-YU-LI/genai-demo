@@ -1,10 +1,10 @@
-# Steering Rules Consolidation Design
+# Steering Rules Consolidation 設計
 
-## Overview
+## 概覽
 
 This design document outlines the technical approach for consolidating and streamlining the steering rules documentation. The goal is to reduce redundancy by 40%, decrease file count by 23%, and improve navigation while preserving all essential guidance.
 
-## Architecture
+## 架構
 
 ### Document Hierarchy
 
@@ -35,9 +35,9 @@ This design document outlines the technical approach for consolidating and strea
 User Need → README Quick Start → Core Document → Specialized/Reference (if needed)
 ```
 
-## Components and Interfaces
+## 元件 and Interfaces
 
-### Component 1: Merged Documentation-Language Standards
+### Component 1: Merged Documentation-Language 規範
 
 **Purpose:** Consolidate all language and documentation rules into a single, coherent document.
 
@@ -50,12 +50,12 @@ User Need → README Quick Start → Core Document → Specialized/Reference (if
 
 **Structure:**
 ```markdown
-# Documentation and Language Standards
+# Documentation and Language 規範
 
-## Overview
+## 概覽
 [Unified introduction]
 
-## Language Usage Policy
+## Language 使用方法 Policy
 ### Conversation Language (Chinese)
 [From chinese-conversation-english-documentation.md]
 
@@ -65,8 +65,8 @@ User Need → README Quick Start → Core Document → Specialized/Reference (if
 ### Language Switching Protocol
 [From chinese-conversation-english-documentation.md]
 
-## Documentation Quality Standards
-### Writing Standards
+## Documentation Quality 規範
+### Writing 規範
 [From english-documentation-standards.md]
 
 ### Date and Time Accuracy
@@ -78,12 +78,12 @@ User Need → README Quick Start → Core Document → Specialized/Reference (if
 ## Tools and Resources
 [Consolidated from all sources]
 
-## Related Standards
+## Related 規範
 - Development Standards - Code documentation requirements
 - Reports Organization - File naming and structure
 ```
 
-### Component 2: Deduplicated Development Standards
+### Component 2: Deduplicated Development 規範
 
 **Purpose:** Remove duplicate test performance content while maintaining essential overview.
 
@@ -107,15 +107,15 @@ User Need → README Quick Start → Core Document → Specialized/Reference (if
 
 **New Structure for Test Section:**
 ```markdown
-## Testing Standards
+## 測試 規範
 
 ### Test Layer Requirements (Test Pyramid)
 [Keep existing]
 
-### Test Classification Standards
+### Test Classification 規範
 [Keep existing]
 
-### Test Performance Requirements
+### Test 效能 Requirements
 > **🧪 Test Performance Monitoring**: For detailed test performance monitoring, 
 > resource management, and optimization guidance, see 
 > [Test Performance Standards](test-performance-standards.md)
@@ -127,7 +127,7 @@ User Need → README Quick Start → Core Document → Specialized/Reference (if
 - Use `@TestPerformanceExtension` for automatic monitoring
 - Generate reports: `./gradlew generatePerformanceReport`
 
-### BDD/TDD Development Process
+### BDD/TDD Development 流程
 [Moved from bdd-tdd-principles.md]
 
 #### Gherkin Scenarios
@@ -137,7 +137,7 @@ User Need → README Quick Start → Core Document → Specialized/Reference (if
 [Content from bdd-tdd-principles.md]
 ```
 
-### Component 3: Deduplicated Performance Standards
+### Component 3: Deduplicated 效能 規範
 
 **Purpose:** Remove duplicate test performance content and add clear cross-references.
 
@@ -150,7 +150,7 @@ User Need → README Quick Start → Core Document → Specialized/Reference (if
 
 **Replace with:**
 ```markdown
-## Test Performance Integration
+## Test 效能 整合
 
 > **🧪 Test Performance Standards**: For comprehensive test performance monitoring,
 > including detailed configuration, resource management, and troubleshooting,
@@ -177,7 +177,7 @@ User Need → README Quick Start → Core Document → Specialized/Reference (if
 ```markdown
 # Steering Rules Guide
 
-## 🚀 Quick Start
+## 🚀 快速入門
 
 ### I need to...
 - **Write code**: Start with [Development Standards](development-standards.md)
@@ -189,7 +189,7 @@ User Need → README Quick Start → Core Document → Specialized/Reference (if
 
 ## 📚 Document Categories
 
-### Core Standards (Read First)
+### Core 規範 (Read First)
 Essential standards for daily development work.
 
 | Document | Purpose | When to Use |
@@ -198,7 +198,7 @@ Essential standards for daily development work.
 | [Code Review Standards](code-review-standards.md) | Review process and checklist | Before and during code reviews |
 | [Documentation & Language Standards](documentation-language-standards.md) | Writing and language rules | Creating any documentation |
 
-### Specialized Standards (Domain-Specific)
+### Specialized 規範 (Domain-Specific)
 Deep-dive standards for specific areas.
 
 | Document | Purpose | When to Use |
@@ -209,7 +209,7 @@ Deep-dive standards for specific areas.
 | [Domain Events](domain-events.md) | DDD event patterns | Implementing domain events |
 | [Diagram Generation](diagram-generation-standards.md) | PlantUML/Mermaid standards | Creating technical diagrams |
 
-### Reference Standards (Deep Dive)
+### Reference 規範 (Deep Dive)
 Detailed technical references for specific topics.
 
 | Document | Purpose | When to Use |
@@ -224,7 +224,7 @@ Detailed technical references for specific topics.
 2. Check [Rozanski & Woods Methodology](rozanski-woods-architecture-methodology.md) - Viewpoint analysis
 3. Follow [Domain Events](domain-events.md) - If using DDD patterns
 
-### Fixing Performance Issues
+### Fixing 效能 Issues
 1. Start with [Performance Standards](performance-standards.md) - General optimization
 2. For test performance: [Test Performance Standards](test-performance-standards.md)
 3. Review [Development Standards](development-standards.md) - Database and caching patterns
@@ -327,7 +327,7 @@ If issues are discovered:
 3. Fix issues incrementally
 4. Re-validate before final merge
 
-## Testing Strategy
+## 測試 Strategy
 
 ### Validation Tests
 
@@ -362,7 +362,7 @@ If issues are discovered:
 - [ ] File count is reduced as planned
 - [ ] Duplicate content is eliminated
 
-## Implementation Plan
+## 實現 Plan
 
 ### Phase 1: Preparation (Week 1)
 1. Create backup branch
@@ -420,7 +420,7 @@ If issues are discovered:
 
 ## Notes
 
-### Design Decisions
+### 設計 Decisions
 
 **Why merge language standards?**
 - All three files deal with documentation quality

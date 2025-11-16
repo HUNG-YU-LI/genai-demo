@@ -37,9 +37,9 @@ inclusion: always
 - **Database connections**: Max 20 per service instance
 - **Memory usage**: ≤ 512MB per service instance
 
-## Performance Monitoring 實作
+## 效能 監控 實作
 
-### Application Performance Monitoring
+### Application 效能 監控
 
 ```java
 @Component
@@ -82,7 +82,7 @@ public class PerformanceMonitor {
 }
 ```
 
-### Database Performance Monitoring
+### Database 效能 監控
 
 ```java
 @Component
@@ -206,7 +206,7 @@ public class CustomerService {
 }
 ```
 
-#### Redis Configuration for Distributed Caching
+#### Redis 設定 for Distributed Caching
 
 ```java
 @Configuration
@@ -281,9 +281,9 @@ public class AsyncConfiguration {
 }
 ```
 
-## Performance Testing 標準
+## 效能 測試 標準
 
-### Load Testing 實作
+### Load 測試 實作
 
 #### JMeter Test Plan 結構
 
@@ -327,7 +327,7 @@ public class AsyncConfiguration {
 </jmeterTestPlan>
 ```
 
-#### 自動化 Performance Tests
+#### 自動化 效能 Tests
 
 ```java
 // Modern performance testing with monitoring
@@ -407,7 +407,7 @@ class PerformanceTest extends BaseIntegrationTest {
 }
 ```
 
-### Memory 和 Resource Testing
+### Memory 和 Resource 測試
 
 #### Memory Leak Detection
 
@@ -450,11 +450,11 @@ public class MemoryMonitor {
 }
 ```
 
-## Performance Optimization Patterns
+## 效能 Optimization 模式
 
 ### Connection Pool 最佳化
 
-#### HikariCP Configuration
+#### HikariCP 設定
 
 ```yaml
 spring:
@@ -471,7 +471,7 @@ spring:
       connection-test-query: SELECT 1
 ```
 
-#### Connection Pool Monitoring
+#### Connection Pool 監控
 
 ```java
 @Component
@@ -545,12 +545,12 @@ public class CustomerRepository {
 }
 ```
 
-## Performance Alerts 和 Monitoring
+## 效能 Alerts 和 監控
 
-### Alert Configuration
+### Alert 設定
 
 ```yaml
-# Prometheus Alert Rules for Performance
+# Prometheus Alert Rules for 效能
 groups:
 
   - name: performance-alerts
@@ -602,9 +602,9 @@ groups:
           description: "{{ $value }} slow queries per second"
 ```
 
-### Performance Dashboard 要求
+### 效能 Dashboard 要求
 
-#### Technical Performance Dashboard
+#### Technical 效能 Dashboard
 
 - **Response Time Trends**: 95th percentile over time by endpoint
 - **Throughput**: Requests per second by endpoint
@@ -613,14 +613,14 @@ groups:
 - **JVM Metrics**: Memory usage, garbage collection, thread count
 - **Cache Performance**: Hit rates, eviction rates
 
-#### Business Performance Dashboard
+#### Business 效能 Dashboard
 
 - **User Experience**: Page load times, conversion rates
 - **Transaction Performance**: Order processing times, payment success rates
 - **System Capacity**: Current load vs. capacity limits
 - **Resource Utilization**: CPU, memory, disk usage trends
 
-## Test Performance Integration
+## Test 效能 整合
 
 > **🧪 Test Performance Standards**: For comprehensive test performance monitoring, resource management, and optimization, see [Test Performance Standards](test-performance-standards.md)
 
@@ -638,9 +638,9 @@ groups:
 - Configuring Gradle test tasks
 - Understanding memory management in tests
 
-## Performance Testing Checklist
+## 效能 測試 Checklist
 
-### Pre-Production Performance Testing
+### Pre-Production 效能 測試
 
 - [ ] Load testing completed with expected traffic patterns
 - [ ] Stress testing performed to identify breaking points
@@ -653,7 +653,7 @@ groups:
 - [ ] Memory usage thresholds validated
 - [ ] Test execution time benchmarks established
 
-### Production Performance Monitoring
+### Production 效能 監控
 
 - [ ] Response time monitoring configured
 - [ ] Throughput monitoring implemented
@@ -662,7 +662,7 @@ groups:
 - [ ] Cache performance tracking enabled
 - [ ] Performance regression detection in place
 
-### Performance Optimization Review
+### 效能 Optimization Review
 
 - [ ] Database queries optimized and indexed
 - [ ] Caching strategy implemented

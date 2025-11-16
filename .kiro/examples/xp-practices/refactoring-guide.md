@@ -1,6 +1,6 @@
 # Refactoring Guide
 
-## Overview
+## 概覽
 
 This document provides practical guidance on refactoring techniques, when to refactor, and how to refactor safely in our DDD + Hexagonal Architecture project.
 
@@ -40,7 +40,7 @@ This document provides practical guidance on refactoring techniques, when to ref
 - Data clumps
 - Primitive obsession
 
-#### Before Adding Features
+#### Before Adding 功能
 - Refactor to make the new feature easy to add
 - "Make the change easy, then make the easy change"
 
@@ -457,7 +457,7 @@ public class OrderService {
 
 ## Refactoring Workflow
 
-### Step-by-Step Process
+### Step-by-Step 流程
 
 1. **Ensure Tests Exist**
    ```bash
@@ -509,7 +509,7 @@ public class OrderService {
 
 ---
 
-## Refactoring Patterns for DDD
+## Refactoring 模式 for DDD
 
 ### Pattern 1: Extract Aggregate Root
 

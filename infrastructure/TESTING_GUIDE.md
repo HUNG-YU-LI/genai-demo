@@ -48,7 +48,7 @@ npm test
 # Unit tests only
 npm test -- --testPathPatterns="unit/"
 
-# Integration tests only
+# 整合 tests only
 npm test -- --testPathPatterns="integration/"
 
 # Consolidated tests only
@@ -64,7 +64,7 @@ npm test -- --testPathPatterns="cdk-nag-suppressions.test.ts"
 # Network stack tests
 npm test -- --testPathPatterns="network-stack.test.ts"
 
-# Security stack tests
+# 安全性 stack tests
 npm test -- --testPathPatterns="security-stack.test.ts"
 
 # Full deployment tests
@@ -120,7 +120,7 @@ npx cdk synth genai-demo-development-NetworkStack --context enableCdkNag=false
 - **Integration Tests**：✅ 完整部署、Cross-stack references（8 個測試）
 - **Compliance Tests**：✅ CDK Nag suppressions、Security validation（4 個測試）
 
-### Integration Tests
+### 整合 Tests
 
 - **Full Deployment**：✅ 所有包含相依性的 stacks
 - **Cross-Stack References**：✅ VPC、Security Groups、KMS Keys

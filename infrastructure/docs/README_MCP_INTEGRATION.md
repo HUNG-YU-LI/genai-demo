@@ -1,6 +1,6 @@
-# MCP Integration for AWS Well-Architected Reviews
+# MCP 整合 for AWS Well-Architected Reviews
 
-## Quick Start
+## 快速入門
 
 This directory contains comprehensive MCP (Model Context Protocol) integration for automated AWS Well-Architected Framework reviews and continuous architecture improvements.
 
@@ -50,7 +50,7 @@ The Well-Architected assessment covers:
 5. **Cost Optimization** - Tagging, monitoring, lifecycle management
 6. **Sustainability** - Energy efficiency, resource optimization
 
-### 🎯 Key Features
+### 🎯 Key 功能
 
 - **Automated Assessments**: Comprehensive architecture reviews
 - **Continuous Monitoring**: Track improvements over time
@@ -66,7 +66,7 @@ The Well-Architected assessment covers:
 - [Architecture Assessment Report](automated-architecture-assessment.md)
 - \1
 
-### 🔍 Troubleshooting
+### 🔍 故障排除
 
 If you encounter issues:
 

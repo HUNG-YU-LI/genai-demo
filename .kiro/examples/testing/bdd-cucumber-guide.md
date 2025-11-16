@@ -404,7 +404,7 @@ Then: Expected outcome
 And: Additional step
 ```
 
-### Step Definition Patterns
+### Step Definition 模式
 
 ```java
 // String parameter

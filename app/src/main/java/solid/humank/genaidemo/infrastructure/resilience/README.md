@@ -1,4 +1,4 @@
-# Application Resilience Patterns - 應用韌性模式
+# Application Resilience 模式 - 應用韌性模式
 
 本套件提供了全面的災難恢復和業務連續性的 Resilience 模式。
 

@@ -614,7 +614,7 @@ public class JpaEventStore implements EventStore {
 }
 ```
 
-#### Option 3: In-Memory Event Store (Testing Only)
+#### Option 3: In-Memory Event Store (測試 Only)
 
 ```java
 @Component
@@ -658,7 +658,7 @@ public class InMemoryEventStore implements EventStore {
 }
 ```
 
-#### Event Store Configuration
+#### Event Store 設定
 
 ```java
 @Configuration
@@ -684,7 +684,7 @@ public class EventStoreConfiguration {
 }
 ```
 
-#### Event Store Integration
+#### Event Store 整合
 
 ```java
 @Component
@@ -886,7 +886,7 @@ void should_send_welcome_email_when_customer_created() {
 - Event versioning 必須使用 Schema Evolution pattern，對於向後相容使用 Optional fields
 - 避免使用明確的 version methods (createV1, createV2) - 使用描述性的 factory methods
 
-## Monitoring 和 Observability
+## 監控 和 Observability
 
 ### 1. Event Metrics
 
@@ -939,7 +939,7 @@ public class EventTracingHandler {
 
 ## 環境特定設定
 
-### Development Configuration
+### Development 設定
 
 ```yaml
 # application-development.yml
@@ -962,7 +962,7 @@ logging:
     solid.humank.genaidemo.infrastructure.event: DEBUG
 ```
 
-### Test Configuration
+### Test 設定
 
 ```yaml
 # application-test.yml
@@ -980,7 +980,7 @@ event-store:
   type: in-memory
 ```
 
-### Production Configuration
+### Production 設定
 
 ```yaml
 # application-production.yml
@@ -1005,7 +1005,7 @@ logging:
 - **Benefits**: Persistent across restarts, easy to inspect data, SQL queries for debugging
 - **Setup**: No additional containers needed
 
-### Testing Stage
+### 測試 Stage
 
 - **Recommended**: In-Memory Event Store
 - **Benefits**: Fast, clean state between tests, no external dependencies

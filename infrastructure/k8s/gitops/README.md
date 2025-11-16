@@ -88,7 +88,7 @@ infrastructure/k8s/monitoring/
 
 ## 🚀 部署策略
 
-### Backend - Blue-Green Deployment
+### Backend - Blue-Green 部署
 
 Backend 使用 Blue-Green 部署策略來實現零停機時間部署：
 
@@ -112,7 +112,7 @@ strategy:
       - templateName: success-rate
 ```
 
-### Frontends - Canary Deployment
+### Frontends - Canary 部署
 
 CMC 和 Consumer frontends 都使用 Canary 部署，並漸進式流量轉移：
 

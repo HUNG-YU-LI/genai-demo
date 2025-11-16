@@ -1,4 +1,4 @@
-# Test Performance Standards and Monitoring
+# Test 效能 規範 and 監控
 
 ## 概覽
 
@@ -8,7 +8,7 @@
 
 > **🎯 用途**：本文件作為測試效能監控的深度技術參考，包含詳細的實作指南和故障排除
 
-## Test Performance Framework
+## Test 效能 Framework
 
 ### 核心元件
 

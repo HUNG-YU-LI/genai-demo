@@ -1,10 +1,10 @@
-# Analytics Pipeline Implementation
+# Analytics Pipeline 實現
 
-## Overview
+## 概覽
 
 This document describes the implementation of the data analytics pipeline for the GenAI Demo application, which provides real-time business intelligence capabilities through AWS services integration.
 
-## Architecture
+## 架構
 
 The analytics pipeline follows a modern data lake architecture with the following components:
 
@@ -50,7 +50,7 @@ graph TB
     QUICKSIGHT --> DASHBOARDS
 ```
 
-## Components
+## 元件
 
 ### 1. Event Streaming (Kinesis Data Firehose)
 
@@ -148,9 +148,9 @@ s3://genai-demo-{environment}-data-lake/
 - **Order Analytics**: Order funnel, conversion rates, revenue
 - **Inventory Analytics**: Stock levels, reorder alerts, demand forecasting
 
-## Implementation Details
+## 實現 Details
 
-### Spring Boot Integration
+### Spring Boot 整合
 
 The analytics pipeline is integrated into the Spring Boot application through:
 
@@ -282,7 +282,7 @@ The infrastructure is defined in `AnalyticsStack` with the following resources:
 - **QuickSight**: ~$24/month (2 users)
 - **Total**: ~$134/month
 
-## Monitoring and Alerting
+## 監控 and Alerting
 
 ### CloudWatch Alarms
 
@@ -303,7 +303,7 @@ The infrastructure is defined in `AnalyticsStack` with the following resources:
 - **Dashboard Refreshes**: Track dashboard usage
 - **Data Quality Score**: Monitor data completeness and accuracy
 
-## Security and Compliance
+## 安全性 and Compliance
 
 ### Encryption
 
@@ -325,7 +325,7 @@ The infrastructure is defined in `AnalyticsStack` with the following resources:
 
 ## Disaster Recovery
 
-### Multi-Region Setup
+### Multi-Region 設定
 
 - **Primary Region**: Taiwan (ap-east-2)
 - **Secondary Region**: Tokyo (ap-northeast-1)
@@ -351,13 +351,13 @@ The infrastructure is defined in `AnalyticsStack` with the following resources:
 - **Embedded Analytics**: Embed dashboards in application
 - **Mobile Dashboards**: Optimize for mobile viewing
 
-### Data Integration
+### Data 整合
 
 - **External Data**: Integrate with external data sources
 - **API Analytics**: Track API usage and performance
 - **Social Media**: Integrate social media analytics
 
-## Troubleshooting
+## 故障排除
 
 ### Common Issues
 
@@ -374,7 +374,7 @@ The infrastructure is defined in `AnalyticsStack` with the following resources:
 4. Validate Glue crawler configuration
 5. Test Athena queries manually
 
-### Performance Optimization
+### 效能 Optimization
 
 1. Optimize Athena queries with proper partitioning
 2. Adjust Firehose buffer settings for throughput

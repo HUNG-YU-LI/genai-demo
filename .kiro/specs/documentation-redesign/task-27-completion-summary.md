@@ -97,7 +97,7 @@ Task 27 專注於為 documentation 重新設計專案建立全面的利害關係
 
 ---
 
-### 4. Architecture 回饋表單（`docs/feedback-forms/architecture-feedback-form.md`）
+### 4. 架構 回饋表單（`docs/feedback-forms/architecture-feedback-form.md`）
 
 **目的**：從 architecture team 收集結構化回饋
 
@@ -380,7 +380,7 @@ Task 27 專注於為 documentation 重新設計專案建立全面的利害關係
 - ✅ Architecture team 驗證 perspective 完整性
 - ✅ Operations team 驗證 operational perspectives
 
-### Requirement 7.1（Deployment Procedures）
+### Requirement 7.1（部署 Procedures）
 
 - ✅ Operations team 審查 deployment documentation
 - ✅ 包含 deployment dry run 驗證
@@ -390,7 +390,7 @@ Task 27 專注於為 documentation 重新設計專案建立全面的利害關係
 - ✅ Operations team 使用情境驗證 runbooks
 - ✅ 使用模擬 incidents 的 runbook 測試
 
-### Requirement 8.1（Development Environment Setup）
+### Requirement 8.1（Development Environment 設定）
 
 - ✅ Developer team 測試 setup guides
 - ✅ Environment setup 的實作驗證

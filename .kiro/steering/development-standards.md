@@ -304,7 +304,7 @@ graph LR
   - 測試工具函式
   - 驗證計算和轉換
 
-#### Integration Tests (謹慎使用)
+#### 整合 Tests (謹慎使用)
 
 - **Annotation**: `@DataJpaTest`、`@WebMvcTest`、`@JsonTest`
 - **適用**: Database 整合、外部服務
@@ -354,7 +354,7 @@ class CustomerUnitTest {
 }
 ```
 
-#### Repository 測試 (Integration)
+#### Repository 測試 (整合)
 
 ```java
 @DataJpaTest
@@ -389,7 +389,7 @@ class CustomerRepositoryTest {
 }
 ```
 
-#### API 測試 (Integration)
+#### API 測試 (整合)
 
 ```java
 @WebMvcTest(CustomerController.class)

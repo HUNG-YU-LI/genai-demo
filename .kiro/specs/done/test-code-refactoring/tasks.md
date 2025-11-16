@@ -1,4 +1,4 @@
-# Implementation Plan
+# 實現 Plan
 
 - [x] 1. Set up staging test infrastructure and directory structure
   - Create staging-tests directory with proper organization

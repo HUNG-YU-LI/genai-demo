@@ -1,6 +1,6 @@
 # Requirements Document
 
-## Introduction
+## 簡介
 
 This specification defines the requirements for refactoring the current test code structure to align with profile-based development strategy. The goal is to separate fast unit tests for local development from comprehensive integration tests that run in staging environments, improving developer productivity and CI/CD pipeline efficiency.
 

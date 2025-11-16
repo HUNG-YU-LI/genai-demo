@@ -1,4 +1,4 @@
-# Kiro Hooks Configuration
+# Kiro Hooks 設定
 
 ## 概覽
 

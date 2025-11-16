@@ -1,4 +1,4 @@
-# Testing Strategy
+# 測試 Strategy
 
 ## 概覽
 
@@ -67,7 +67,7 @@ class OrderTest {
 
 ---
 
-### Integration Tests
+### 整合 Tests
 
 #### 何時使用
 
@@ -152,7 +152,7 @@ class OrderE2ETest {
 
 ---
 
-## 使用 Cucumber 進行 BDD Testing
+## 使用 Cucumber 進行 BDD 測試
 
 ### 必須遵循
 
@@ -201,7 +201,7 @@ public void theOrderStatusShouldBe(String expectedStatus) {
 
 ---
 
-## Test Performance
+## Test 效能
 
 ### 必須遵循
 

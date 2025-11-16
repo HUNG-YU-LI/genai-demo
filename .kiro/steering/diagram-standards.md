@@ -4,9 +4,9 @@ category: documentation
 last_updated: 2025-11-08
 ---
 
-# Diagram Standards and Best Practices
+# Diagram 規範 and 最佳實踐
 
-## Overview
+## 概覽
 
 本文件定義在我們的文件中何時及如何使用不同的圖表格式。選擇正確的格式可以提高可讀性、可維護性和 GitHub 渲染效果。
 
@@ -232,7 +232,7 @@ docs/diagrams/excalidraw/
 
 ---
 
-## Conversion Guidelines
+## Conversion 指南
 
 ### ASCII to Mermaid
 
@@ -271,7 +271,7 @@ python3 scripts/convert-ascii-to-mermaid.py docs/ .kiro/
 
 ---
 
-## Diagram Maintenance
+## Diagram 維護
 
 ### Update Frequency
 
@@ -296,7 +296,7 @@ python3 scripts/convert-ascii-to-mermaid.py docs/ .kiro/
 - ⚠️ 難以審查變更
 - ⚠️ 合併衝突有問題
 
-### Documentation Standards
+### Documentation 規範
 
 **Every diagram should have:**
 1. **Title**: 清楚、描述性的名稱
@@ -308,7 +308,7 @@ python3 scripts/convert-ascii-to-mermaid.py docs/ .kiro/
 **Example:**
 
 ```markdown
-## System Architecture Overview
+## System 架構 概覽
 
 **Purpose**: 展示電商平台的高階架構
 
@@ -350,9 +350,9 @@ graph TB
 
 ---
 
-## Common Patterns
+## Common 模式
 
-### Architecture Diagrams
+### 架構 Diagrams
 
 **Use:** Mermaid 用於簡單的，PlantUML 用於複雜的
 
@@ -378,7 +378,7 @@ graph TB
     Service --> Cache
 ```
 
-### Process Flows
+### 流程 Flows
 
 **Use:** Mermaid
 

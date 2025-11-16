@@ -1,6 +1,6 @@
-# Simple Design Examples
+# Simple 設計 範例
 
-## Overview
+## 概覽
 
 This document provides comprehensive examples of Kent Beck's Four Rules of Simple Design, demonstrating how to write code that is simple, clear, and maintainable.
 
@@ -8,7 +8,7 @@ This document provides comprehensive examples of Kent Beck's Four Rules of Simpl
 
 ---
 
-## Four Rules of Simple Design (Priority Order)
+## Four Rules of Simple 設計 (Priority Order)
 
 1. **Passes all tests** - Code must work correctly
 2. **Reveals intention** - Code communicates clearly
@@ -23,7 +23,7 @@ This document provides comprehensive examples of Kent Beck's Four Rules of Simpl
 
 Code must be correct before it can be simple. Tests provide confidence that the code works as intended.
 
-### Example: Test-Driven Development
+### 範例: Test-Driven Development
 
 ```java
 // ❌ BAD: Writing code without tests
@@ -109,7 +109,7 @@ public class OrderCalculator {
 
 Code should clearly communicate its purpose. A reader should understand what the code does without having to figure out how it works.
 
-### Example: Meaningful Names
+### 範例: Meaningful Names
 
 ```java
 // ❌ BAD: Unclear names
@@ -148,7 +148,7 @@ public class OrderProcessor {
 }
 ```
 
-### Example: Extract Method for Clarity
+### 範例: Extract Method for Clarity
 
 ```java
 // ❌ BAD: Complex logic buried in method
@@ -230,7 +230,7 @@ private BigDecimal applyBulkDiscount(BigDecimal total) {
 
 Duplication is the root of all evil in software. Every piece of knowledge should have a single, unambiguous representation.
 
-### Example: Extract Common Logic
+### 範例: Extract Common Logic
 
 ```java
 // ❌ BAD: Duplicated validation logic
@@ -295,7 +295,7 @@ public class CustomerService {
 }
 ```
 
-### Example: Template Method Pattern
+### 範例: Template Method Pattern
 
 ```java
 // ❌ BAD: Duplicated processing logic
@@ -399,7 +399,7 @@ public class InternationalOrderProcessor extends OrderProcessor {
 
 Minimize the number of classes and methods. Every class and method should earn its keep. Remove unnecessary abstractions.
 
-### Example: Avoid Premature Abstraction
+### 範例: Avoid Premature Abstraction
 
 ```java
 // ❌ BAD: Over-engineered with unnecessary abstractions
@@ -485,7 +485,7 @@ public class CustomerService {
 }
 ```
 
-### Example: Remove Unnecessary Classes
+### 範例: Remove Unnecessary Classes
 
 ```java
 // ❌ BAD: Unnecessary wrapper classes
@@ -570,7 +570,7 @@ public class Order {
 
 ## Applying All Four Rules Together
 
-### Example: Refactoring to Simple Design
+### 範例: Refactoring to Simple 設計
 
 ```java
 // ❌ BEFORE: Complex, unclear, duplicated code

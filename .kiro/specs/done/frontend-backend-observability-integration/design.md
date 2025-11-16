@@ -994,7 +994,7 @@ describe('ObservabilityService', () => {
 });
 ```
 
-#### 2. Integration Testing
+#### 2. 整合 測試
 
 ```typescript
 describe('Analytics Integration', () => {

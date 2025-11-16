@@ -39,7 +39,7 @@ inclusion: always
 - [ ] 測試策略涵蓋所有層級
 - [ ] Build scripts 已更新
 
-#### Deployment Viewpoint
+#### 部署 Viewpoint
 
 - [ ] CDK 基礎設施已更新
 - [ ] 環境設定變更已記錄
@@ -68,7 +68,7 @@ inclusion: always
 
 ### 依 Quality Attribute 的 QAS Templates
 
-#### Performance Scenarios
+#### 效能 Scenarios
 
 ```text
 Template:
@@ -88,7 +88,7 @@ Response: Order is processed and confirmation is returned
 Response Measure: Response time ≤ 2000ms, Success rate ≥ 99.5%
 ```
 
-#### Security Scenarios
+#### 安全性 Scenarios
 
 ```text
 Template:
@@ -170,14 +170,14 @@ Response Measure: Checkout completion ≤ 3 minutes, Error rate ≤ 2%, Abandonm
 
 ### 量化指標要求
 
-#### Performance Metrics
+#### 效能 Metrics
 
 - **Response Time**: API endpoints ≤ 2s (95th percentile)
 - **Throughput**: System handles ≥ 1000 req/s peak load
 - **Resource Usage**: CPU ≤ 70%, Memory ≤ 80%, Disk I/O ≤ 80%
 - **Database**: Query response ≤ 100ms (95th percentile)
 
-#### Security Metrics
+#### 安全性 Metrics
 
 - **Authentication**: Login success rate ≥ 99.9%
 - **Authorization**: Access control violations = 0
@@ -312,7 +312,7 @@ static final ArchRule valueObjectRules = classes()
 
 **Overall Risk Level:** [High/Medium/Low]
 
-## Implementation Plan
+## 實現 Plan
 
 ### Migration Path
 **Phase 1: Preparation (Week 1-2)**
@@ -350,7 +350,7 @@ static final ArchRule valueObjectRules = classes()
 
 **Rollback Time:** [Target time to complete rollback]
 
-## Monitoring and Success Criteria
+## 監控 and Success Criteria
 
 ### Success Metrics
 
@@ -358,7 +358,7 @@ static final ArchRule valueObjectRules = classes()
 - [Metric 2: e.g., Error rate < 0.1%]
 - [Metric 3: e.g., Cost reduction of 20%]
 
-### Monitoring Plan
+### 監控 Plan
 
 - [Dashboard/Alert 1]
 - [Dashboard/Alert 2]
@@ -405,7 +405,7 @@ static final ArchRule valueObjectRules = classes()
 - [ ] Success criteria 可衡量
 - [ ] Monitoring plan 具體明確
 
-### ADR Review Process
+### ADR Review 流程
 
 1. **Author** 建立 ADR 並設為 "Proposed" 狀態
 2. **Architecture Team** 審查技術面向
@@ -424,7 +424,7 @@ static final ArchRule valueObjectRules = classes()
 - 每個 domain event 必須有發布和處理指標
 - 關鍵路徑必須有監控和告警
 
-### Monitoring 實作標準
+### 監控 實作標準
 
 #### Business Metrics (每個 Aggregate Root 必要)
 
@@ -571,7 +571,7 @@ structuredLogger.logBusinessEvent("Customer created",
     kv("registrationSource", "web"));
 ```
 
-#### Log Correlation Standards
+#### Log Correlation 規範
 
 ```java
 @Component
@@ -592,7 +592,7 @@ public class TraceContextFilter implements Filter {
 }
 ```
 
-### Alert Configuration Standards
+### Alert 設定 規範
 
 #### Critical Path Alerts (必要)
 
@@ -684,7 +684,7 @@ groups:
 - **User Behavior**: Page views, session duration
 - **Business Process Health**: Success rates, completion times
 
-### Health Check Standards
+### Health Check 規範
 
 #### Application Health Checks
 
@@ -744,14 +744,14 @@ readinessProbe:
 
 ## Four Perspectives Checklist
 
-### Security Perspective
+### 安全性 Perspective
 
 - [ ] API endpoints pass CDK Nag checks
 - [ ] 敏感資料在儲存和傳輸中加密
 - [ ] Authentication 和 authorization 機制
 - [ ] Security event logging 和 monitoring
 
-### Performance & Scalability Perspective
+### 效能 & Scalability Perspective
 
 - [ ] 關鍵路徑效能基準 (< 2s)
 - [ ] Database query 最佳化和索引策略
@@ -781,7 +781,7 @@ readinessProbe:
 - 並行衝突偵測和處理機制
 - Deadlock 預防和偵測策略
 
-## 強制性 Resilience Patterns
+## 強制性 Resilience 模式
 
 ### 外部服務呼叫必須實作
 
@@ -796,7 +796,7 @@ readinessProbe:
 - Monitoring 和 alerting 設定
 - Operations manual 更新
 
-## Technology Evolution Standards
+## Technology Evolution 規範
 
 ### 新技術引入必須滿足
 
@@ -811,7 +811,7 @@ readinessProbe:
 - Major version 升級必須在測試環境驗證
 - Legacy technology 淘汰必須有明確時間表
 
-## Compliance Monitoring Metrics
+## Compliance 監控 Metrics
 
 - Viewpoint 覆蓋率：100%
 - Quality attribute scenario 覆蓋率：100%

@@ -111,7 +111,7 @@ e759fdf - docs: complete task 14 - Performance & Scalability Perspective (2025-1
 
 **驗證**：✅ 通過 - Scripts 正確實作 PlantUML 生成
 
-#### Task 4：重構 Steering Rules Architecture ✅
+#### Task 4：重構 Steering Rules 架構 ✅
 **tasks.md 中的狀態**：[x] 已完成（所有子任務 4.1-4.7）
 **Git 證據**：Commit e759fdf
 **建立的檔案**：
@@ -334,7 +334,7 @@ public class RedisLockConfiguration {
 
 **驗證**：✅ 通過 - 正確使用 Redis for distributed locking
 
-#### Task 11：記錄 Deployment Viewpoint ✅
+#### Task 11：記錄 部署 Viewpoint ✅
 **tasks.md 中的狀態**：[x] 已完成（所有子任務 11.1-11.5）
 **Git 證據**：Commit e759fdf
 **建立的檔案**：
@@ -370,7 +370,7 @@ public class RedisLockConfiguration {
 
 ### Phase 4：Core Perspectives Documentation（Tasks 13-16）
 
-#### Task 13：記錄 Security Perspective ✅
+#### Task 13：記錄 安全性 Perspective ✅
 **tasks.md 中的狀態**：[x] 已完成（所有子任務 13.1-13.5）
 **Git 證據**：Commit e759fdf
 **建立的檔案**：
@@ -398,7 +398,7 @@ public class JwtTokenProvider {
 
 **驗證**：✅ 通過 - 正確使用 JWT 和 Spring Security
 
-#### Task 14：記錄 Performance & Scalability Perspective ✅
+#### Task 14：記錄 效能 & Scalability Perspective ✅
 **tasks.md 中的狀態**：[x] 已完成（所有子任務 14.1-14.5）
 **Git 證據**：Commit e759fdf
 **建立的檔案**：
@@ -498,7 +498,7 @@ public class CacheConfiguration {
 
 ### Phase 6：支援 Documentation（Tasks 21-25）
 
-#### Task 21：建立 Architecture Decision Records (ADRs) ✅
+#### Task 21：建立 架構 Decision Records (ADRs) ✅
 **tasks.md 中的狀態**：[x] 已完成（子任務 21.1-21.12.13.3）
 **Git 證據**：未追蹤檔案
 **預期檔案**：
@@ -526,7 +526,7 @@ public class CacheConfiguration {
 The API is designed using Domain-Driven Design (DDD) principles
 and organized around bounded contexts.
 
-## API Design Principles
+## API 設計 Principles
 - Resource-Based URLs
 - Standard HTTP Methods: GET, POST, PUT, PATCH, DELETE
 - JSON Format
@@ -626,7 +626,7 @@ kubectl apply -k infrastructure/k8s/overlays/staging
 - **H2 (test)**：✅ Test 範例中正確使用
 - **PostgreSQL (prod)**：✅ Deployment docs 中正確參考
 
-### Testing Frameworks ✅
+### 測試 Frameworks ✅
 - **JUnit 5**：✅ 正確使用（`@ExtendWith`、`@Test` 等）
 - **Mockito**：✅ 正確使用（`@Mock`、`@InjectMocks` 等）
 - **AssertJ**：✅ 正確使用（`assertThat` 等）

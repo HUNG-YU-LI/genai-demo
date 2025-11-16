@@ -1,10 +1,10 @@
-# Design Document
+# 設計 Document
 
-## Overview
+## 概覽
 
 This design document outlines the architecture and implementation strategy for refactoring the test code structure from a monolithic approach to a profile-based, layered testing strategy. The design separates fast unit tests for local development from comprehensive integration tests that run in staging environments.
 
-## Architecture
+## 架構
 
 ### Current State Analysis
 
@@ -15,7 +15,7 @@ The current test architecture has several issues:
 - **Performance Issues**: Test execution takes 5-10 minutes and uses 6GB+ memory
 - **CI/CD Bottlenecks**: Slow feedback loop for pull request validation
 
-### Target Architecture
+### Target 架構
 
 ```
 Project Structure:
@@ -42,7 +42,7 @@ Project Structure:
     └── pipeline-template.yml           # CodePipeline CloudFormation template
 ```
 
-## Components and Interfaces
+## 元件 and Interfaces
 
 ### Test Layer Separation
 
@@ -68,7 +68,7 @@ class CustomerServiceUnitTest {
 }
 ```
 
-#### Integration Test Layer (Staging Environment)
+#### 整合 Test Layer (Staging Environment)
 - **Purpose**: Comprehensive system integration validation
 - **Scope**: External services, cross-region scenarios, performance
 - **Dependencies**: Docker Compose, real services, Python test framework
@@ -76,7 +76,7 @@ class CustomerServiceUnitTest {
 - **Performance**: Optimized for thoroughness over speed
 
 ```python
-# Example Integration Test Structure
+# 範例 整合 Test 結構
 class TestDatabaseIntegration:
     def test_aurora_connection_with_failover(self):
         # Test real Aurora connection and failover scenarios
@@ -85,9 +85,9 @@ class TestDatabaseIntegration:
         # Test actual cross-region data replication
 ```
 
-### Build System Integration
+### Build System 整合
 
-#### Gradle Test Tasks Configuration
+#### Gradle Test Tasks 設定
 
 ```gradle
 // Fast Unit Tests (Local Development)
@@ -130,7 +130,7 @@ tasks.register('stagingTest', Exec) {
 }
 ```
 
-#### CI/CD Pipeline Integration with AWS Code Services
+#### CI/CD Pipeline 整合 with AWS Code Services
 
 ```yaml
 # buildspec-unit-tests.yml (AWS CodeBuild for Unit Tests)
@@ -171,7 +171,7 @@ artifacts:
 
 ---
 
-# buildspec-integration-tests.yml (AWS CodeBuild for Integration Tests)
+# buildspec-integration-tests.yml (AWS CodeBuild for 整合 Tests)
 version: 0.2
 phases:
   install:
@@ -214,7 +214,7 @@ artifacts:
 
 ---
 
-# CodePipeline Configuration (pipeline-template.yml)
+# CodePipeline 設定 (pipeline-template.yml)
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Test Code Refactoring CI/CD Pipeline'
 
@@ -320,10 +320,10 @@ Resources:
 
 ## Data Models
 
-### Test Configuration Model
+### Test 設定 Model
 
 ```yaml
-# Test Configuration Schema
+# Test 設定 Schema
 test-configuration:
   unit-tests:
     memory-limit: "1GB"
@@ -351,7 +351,7 @@ test-configuration:
 ### Migration Mapping Model
 
 ```yaml
-# Migration Mapping Configuration
+# Migration Mapping 設定
 migration-rules:
   move-to-staging:
     patterns:
@@ -401,14 +401,14 @@ void should_handle_invalid_customer_data_gracefully() {
 }
 ```
 
-#### Integration Test Failures
+#### 整合 Test Failures
 - **Service Connectivity Issues**: External service unavailability
 - **Configuration Problems**: Incorrect service configurations
 - **Environment Issues**: Infrastructure setup problems
 - **Data Consistency Problems**: Cross-service data synchronization issues
 
 ```python
-# Error Handling in Integration Tests
+# Error Handling in 整合 Tests
 class TestErrorHandling:
     def test_database_connection_failure_recovery(self):
         try:
@@ -442,7 +442,7 @@ class TestErrorHandling:
 3. **Service Health Checks**: Automated validation of service availability
 4. **Monitoring Integration**: Real-time monitoring of test environment health
 
-## Testing Strategy
+## 測試 Strategy
 
 ### Unit Test Strategy
 
@@ -452,7 +452,7 @@ class TestErrorHandling:
 - **Utility Tests**: Helper functions, builders, converters
 - **Architecture Tests**: ArchUnit rules for architectural compliance
 
-#### Performance Optimization Techniques
+#### 效能 Optimization Techniques
 - **Parallel Execution**: JUnit 5 parallel test execution
 - **Memory Management**: Optimized JVM settings and garbage collection
 - **Mockito Optimization**: Efficient Mockito mock creation and reuse patterns
@@ -479,22 +479,22 @@ class OptimizedCustomerServiceTest {
 }
 ```
 
-### Integration Test Strategy
+### 整合 Test Strategy
 
-#### Service Integration Testing
+#### Service 整合 測試
 - **Database Integration**: Real PostgreSQL and Aurora connections
 - **Cache Integration**: Real Redis cluster testing
 - **Messaging Integration**: Real Kafka cluster testing
 - **Cross-Region Testing**: Multi-region service validation
 
-#### Infrastructure as Code Testing
+#### Infrastructure as Code 測試
 - **Docker Compose Validation**: Service orchestration testing
 - **Configuration Testing**: Environment-specific configuration validation
 - **Health Check Testing**: Service availability and readiness validation
 - **Performance Baseline Testing**: Establish performance benchmarks
 
 ```python
-# Integration Test Framework
+# 整合 Test Framework
 class BaseIntegrationTest:
     def setup_method(self):
         self.services = ServiceOrchestrator()
@@ -510,25 +510,25 @@ class BaseIntegrationTest:
         pass
 ```
 
-### Performance Testing Strategy
+### 效能 測試 Strategy
 
-#### Load Testing Scenarios
+#### Load 測試 Scenarios
 - **Normal Load**: Baseline performance under typical usage
 - **Peak Load**: Performance under maximum expected load
 - **Stress Testing**: Breaking point identification
 - **Endurance Testing**: Long-running stability validation
 
-#### Monitoring and Metrics
+#### 監控 and Metrics
 - **Response Time Monitoring**: 95th percentile response times
 - **Throughput Monitoring**: Requests per second capacity
 - **Resource Utilization**: CPU, memory, and I/O monitoring
 - **Error Rate Monitoring**: Error frequency and patterns
 
-## Testing Tools and Scripts
+## 測試 Tools and Scripts
 
-### Integration Testing Tools
+### 整合 測試 Tools
 
-#### Database Integration Testing
+#### Database 整合 測試
 ```python
 # staging-tests/integration/database/test_database_integration.py
 import pytest
@@ -592,7 +592,7 @@ class DatabaseIntegrationTestSuite:
         pass
 ```
 
-#### Cache Integration Testing
+#### Cache 整合 測試
 ```python
 # staging-tests/integration/cache/test_redis_integration.py
 import redis
@@ -649,7 +649,7 @@ class RedisIntegrationTestSuite:
         pass
 ```
 
-#### Messaging Integration Testing
+#### Messaging 整合 測試
 ```python
 # staging-tests/integration/messaging/test_kafka_integration.py
 from kafka import KafkaProducer, KafkaConsumer
@@ -717,9 +717,9 @@ class KafkaIntegrationTestSuite:
         pass
 ```
 
-### Performance Testing Tools
+### 效能 測試 Tools
 
-#### Gatling Integration Scripts
+#### Gatling 整合 Scripts
 ```bash
 #!/bin/bash
 # staging-tests/scripts/run-performance-tests.sh
@@ -729,7 +729,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# Configuration
+# 設定
 GATLING_HOME="${GATLING_HOME:-/opt/gatling}"
 SIMULATIONS_DIR="$PROJECT_ROOT/performance/gatling/simulations"
 RESULTS_DIR="$PROJECT_ROOT/reports/performance"
@@ -765,7 +765,7 @@ run_gatling_test() {
     echo "$test_name completed. Report available in: $RESULTS_DIR"
 }
 
-# Performance Test Scenarios
+# 效能 Test Scenarios
 echo "=== Running Gatling Load Tests ==="
 
 # Normal Load Test (100 users, 5 minutes)
@@ -961,7 +961,7 @@ class StressTestSimulation extends Simulation {
 }
 ```
 
-#### K6 Performance Testing Scripts
+#### K6 效能 測試 Scripts
 ```javascript
 // staging-tests/performance/k6/load-test.js
 import http from 'k6/http';
@@ -1045,7 +1045,7 @@ export function teardown(data) {
 }
 ```
 
-#### Database Performance Testing
+#### Database 效能 測試
 ```python
 # staging-tests/performance/database/db_performance_test.py
 import asyncio
@@ -1178,7 +1178,7 @@ class DatabasePerformanceTest:
         
         return recommendations
 
-# Usage example
+# 使用方法 example
 async def run_database_performance_tests():
     connection_string = "postgresql://user:password@localhost:5432/testdb"
     test_suite = DatabasePerformanceTest(connection_string)
@@ -1200,9 +1200,9 @@ if __name__ == "__main__":
     asyncio.run(run_database_performance_tests())
 ```
 
-### Monitoring and Reporting Tools
+### 監控 and Reporting Tools
 
-#### Real-time Performance Monitoring
+#### Real-time 效能 監控
 ```python
 # staging-tests/scripts/performance-monitor.py
 import psutil
@@ -1372,9 +1372,9 @@ if __name__ == "__main__":
 
 你覺得這些工具設計如何？還需要針對哪些特定的測試場景補充工具？
 
-## Implementation Phases
+## 實現 Phases
 
-### Phase 1: Infrastructure Setup (Weeks 1-2)
+### Phase 1: Infrastructure 設定 (Weeks 1-2)
 - Create staging-tests directory structure
 - Implement Docker Compose configurations
 - Create execution scripts and automation
