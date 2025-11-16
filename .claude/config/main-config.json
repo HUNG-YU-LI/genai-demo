@@ -1,0 +1,81 @@
+{
+  "version": "1.0.0",
+  "description": "Claude Code configuration following Amazon Kiro principles",
+  "created": "2025-11-16",
+
+  "kiro_principles": {
+    "idempotency": {
+      "enabled": true,
+      "description": "Ensure same input produces same output",
+      "implementation": [
+        "Use deterministic prompts",
+        "Version control for all templates",
+        "Immutable input validation"
+      ]
+    },
+    "workflow_decomposition": {
+      "enabled": true,
+      "description": "Break complex tasks into discrete steps",
+      "implementation": [
+        "Multi-step task planning",
+        "Sub-agent delegation",
+        "Checkpoint-based execution"
+      ]
+    },
+    "stateless_handler": {
+      "enabled": true,
+      "description": "Skills should not depend on external state",
+      "implementation": [
+        "Self-contained skills",
+        "Explicit parameter passing",
+        "No global state dependencies"
+      ]
+    },
+    "immutable_input": {
+      "enabled": true,
+      "description": "Never modify input, always generate new output",
+      "implementation": [
+        "Read-only file access by default",
+        "Generate new files instead of editing",
+        "Preserve original artifacts"
+      ]
+    },
+    "boundary_control": {
+      "enabled": true,
+      "description": "Clear input/output contracts",
+      "implementation": [
+        "Schema validation for inputs",
+        "Type-safe outputs",
+        "Error handling boundaries"
+      ]
+    }
+  },
+
+  "quality_gates": {
+    "pre_execution": [
+      "Validate inputs against schema",
+      "Check prerequisites",
+      "Verify environment"
+    ],
+    "post_execution": [
+      "Validate outputs",
+      "Run quality checks",
+      "Update metrics"
+    ]
+  },
+
+  "safety_nets": {
+    "max_file_size": "10MB",
+    "max_iterations": 10,
+    "timeout_seconds": 300,
+    "backup_before_edit": true,
+    "dry_run_mode": false
+  },
+
+  "observability": {
+    "logging_level": "INFO",
+    "metrics_enabled": true,
+    "trace_execution": true,
+    "report_directory": "reports-summaries/claude-code-execution"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "agent_name": "DomainModelAgent",
+  "agent_type": "Explore",
+  "specialization": "DDD Tactical Patterns",
+  "description": "專門負責生成 Domain 層程式碼，包含 Aggregates, Entities, Value Objects, Domain Events",
+
+  "kiro_principles": {
+    "idempotency": true,
+    "stateless": true,
+    "immutable_input": true,
+    "boundary_control": true
+  },
+
+  "capabilities": [
+    "Generate Aggregate Roots",
+    "Generate Value Objects",
+    "Generate Domain Events",
+    "Generate Repository Interfaces",
+    "Validate DDD patterns",
+    "Apply business rules"
+  ],
+
+  "context_sources": [
+    ".kiro/steering/ddd-tactical-patterns.md",
+    ".kiro/steering/design-principles.md",
+    ".kiro/steering/domain-events.md",
+    ".kiro/examples/ddd-patterns/aggregate-root-examples.md",
+    ".kiro/examples/ddd-patterns/value-objects-examples.md",
+    ".kiro/examples/ddd-patterns/domain-events-examples.md"
+  ],
+
+  "templates": {
+    "aggregate_root": ".claude/templates/aggregate-root.java.template",
+    "value_object": ".claude/templates/value-object.java.template",
+    "domain_event": ".claude/templates/domain-event.java.template",
+    "repository_interface": ".claude/templates/repository-interface.java.template"
+  },
+
+  "validation_rules": [
+    {
+      "rule": "aggregate_extends_base",
+      "description": "Aggregate must extend AggregateRoot<ID>",
+      "severity": "ERROR"
+    },
+    {
+      "rule": "value_object_is_record",
+      "description": "Value Object should use Java record",
+      "severity": "WARNING"
+    },
+    {
+      "rule": "domain_event_immutable",
+      "description": "Domain Event must be immutable (record)",
+      "severity": "ERROR"
+    },
+    {
+      "rule": "no_infrastructure_dependency",
+      "description": "Domain layer must not depend on infrastructure",
+      "severity": "ERROR"
+    }
+  ],
+
+  "output_quality_gates": {
+    "compilation": true,
+    "archunit": true,
+    "checkstyle": true,
+    "pmd": true,
+    "test_coverage": 80
+  },
+
+  "execution_parameters": {
+    "model": "sonnet",
+    "temperature": 0.1,
+    "max_tokens": 8000,
+    "thoroughness": "high"
+  },
+
+  "monitoring": {
+    "log_level": "INFO",
+    "trace_execution": true,
+    "collect_metrics": true
+  }
+}

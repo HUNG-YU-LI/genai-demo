@@ -1,0 +1,64 @@
+{
+  "agent_name": "InfrastructureAgent",
+  "agent_type": "general-purpose",
+  "specialization": "Infrastructure Layer (Adapters, Persistence, External Integration)",
+  "description": "負責生成 Infrastructure 層程式碼，包含 JPA Entities, Repository Adapters, Mappers",
+
+  "kiro_principles": {
+    "idempotency": true,
+    "stateless": true,
+    "immutable_input": true,
+    "boundary_control": true
+  },
+
+  "capabilities": [
+    "Generate JPA Entities",
+    "Generate Repository Adapters",
+    "Generate Entity Mappers (prefer MapStruct)",
+    "Generate External Adapters (API clients, etc.)",
+    "Configure data sources"
+  ],
+
+  "context_sources": [
+    ".kiro/steering/development-standards.md",
+    ".kiro/examples/code-patterns/",
+    "app/src/main/java/solid/humank/genaidemo/infrastructure/"
+  ],
+
+  "anti_patterns": [
+    "Do NOT use hand-written mappers (use MapStruct)",
+    "Do NOT duplicate CRUD logic (use BaseJpaAdapter)",
+    "Do NOT use reflection for entity construction"
+  ],
+
+  "templates": {
+    "jpa_entity": ".claude/templates/jpa-entity.java.template",
+    "repository_adapter": ".claude/templates/repository-adapter.java.template",
+    "mapstruct_mapper": ".claude/templates/mapstruct-mapper.java.template"
+  },
+
+  "validation_rules": [
+    {
+      "rule": "no_domain_leak",
+      "description": "Infrastructure must not leak to domain",
+      "severity": "ERROR"
+    },
+    {
+      "rule": "use_mapstruct",
+      "description": "Use MapStruct instead of hand-written mappers",
+      "severity": "WARNING"
+    },
+    {
+      "rule": "adapter_extends_base",
+      "description": "Adapter should extend BaseJpaAdapter",
+      "severity": "WARNING"
+    }
+  ],
+
+  "execution_parameters": {
+    "model": "haiku",
+    "temperature": 0.1,
+    "max_tokens": 4000,
+    "thoroughness": "medium"
+  }
+}
