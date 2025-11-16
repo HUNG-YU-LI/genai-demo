@@ -1,0 +1,223 @@
+{
+  "name": "Claude Code Development Constraints",
+  "version": "1.0",
+  "description": "開發約束和護欄配置（Kiro: Boundary Control + Fail-Safe Pattern）",
+  "kiroPatterns": {
+    "primary": "Boundary Control - 明確定義可接受的邊界",
+    "secondary": [
+      "Fail-Safe Pattern - 防止不安全的程式碼生成",
+      "Idempotency - 相同約束產生相同驗證結果"
+    ]
+  },
+  "codeStyleConstraints": {
+    "naming": {
+      "classes": {
+        "pattern": "PascalCase",
+        "aggregateRootSuffix": "",
+        "valueObjectSuffix": "",
+        "serviceSuffix": "Service",
+        "repositorySuffix": "Repository",
+        "kiroMapping": "Idempotency - 命名規範一致"
+      },
+      "methods": {
+        "pattern": "camelCase",
+        "testMethodPattern": "should_{behavior}_when_{condition}",
+        "kiroMapping": "Single Responsibility - 方法名稱描述單一行為"
+      },
+      "variables": {
+        "pattern": "camelCase",
+        "constantPattern": "UPPER_SNAKE_CASE",
+        "kiroMapping": "Immutable Input - 常數使用大寫"
+      }
+    },
+    "complexity": {
+      "maxMethodLength": 20,
+      "maxClassLength": 500,
+      "maxCyclomaticComplexity": 10,
+      "maxNestingDepth": 3,
+      "kiroMapping": "Single Responsibility - 限制複雜度確保單一職責"
+    },
+    "comments": {
+      "required": ["public classes", "public methods", "complex algorithms"],
+      "language": "zh-TW",
+      "format": "JavaDoc",
+      "kiroMapping": "Boundary Control - 文件化公開 API 邊界"
+    }
+  },
+  "architectureConstraints": {
+    "layerDependencies": {
+      "domain": {
+        "allowedDependencies": ["domain", "java.lang", "java.util", "java.time"],
+        "forbiddenDependencies": ["infrastructure", "application", "interfaces"],
+        "kiroMapping": "Boundary Control - Domain 層不依賴其他層"
+      },
+      "application": {
+        "allowedDependencies": ["domain", "application", "java.*"],
+        "forbiddenDependencies": ["infrastructure", "interfaces"],
+        "kiroMapping": "Isolation Pattern - Application 層隔離"
+      },
+      "infrastructure": {
+        "allowedDependencies": ["domain", "infrastructure", "java.*", "org.springframework.*"],
+        "kiroMapping": "Boundary Control - Infrastructure 實作 Domain 介面"
+      }
+    },
+    "packageStructure": {
+      "aggregateRoots": "domain.{context}.model.aggregate",
+      "valueObjects": "domain.{context}.model.valueobject",
+      "domainEvents": "domain.{context}.events",
+      "repositories": "domain.{context}.repository",
+      "applicationServices": "application.{context}",
+      "kiroMapping": "Idempotency - 固定的套件結構"
+    },
+    "annotations": {
+      "required": {
+        "aggregateRoot": "@AggregateRoot",
+        "valueObject": "@ValueObject",
+        "domainService": "@DomainService",
+        "repository": "@Repository"
+      },
+      "kiroMapping": "Boundary Control - 標記領域模型邊界"
+    }
+  },
+  "dddConstraints": {
+    "aggregates": {
+      "maxEntities": 7,
+      "maxValueObjects": 15,
+      "requireIdField": true,
+      "requireEventCollection": true,
+      "forbidDirectEventPublishing": true,
+      "kiroMapping": "Boundary Control - 限制聚合大小"
+    },
+    "valueObjects": {
+      "immutabilityRequired": true,
+      "useRecordPreferred": true,
+      "validationRequired": true,
+      "kiroMapping": "Immutable Input - 值物件必須不可變"
+    },
+    "domainEvents": {
+      "immutabilityRequired": true,
+      "useRecordRequired": true,
+      "pastTenseNaming": true,
+      "metadataRequired": ["eventId", "occurredOn"],
+      "kiroMapping": "Event-Driven + Immutable Input"
+    },
+    "repositories": {
+      "interfaceInDomain": true,
+      "implementationInInfrastructure": true,
+      "returnOptionalForSingle": true,
+      "kiroMapping": "Boundary Control - Repository 定義在 Domain"
+    }
+  },
+  "testingConstraints": {
+    "coverage": {
+      "minimum": 80,
+      "targetBranch": 85,
+      "excludePatterns": ["**/generated/**", "**/config/**"],
+      "kiroMapping": "Boundary Control - 品質基線"
+    },
+    "pyramid": {
+      "unitTestPercentage": 80,
+      "integrationTestPercentage": 15,
+      "e2eTestPercentage": 5,
+      "kiroMapping": "Workflow Decomposition - 分層測試策略"
+    },
+    "performance": {
+      "unitTestMaxTime": 50,
+      "integrationTestMaxTime": 500,
+      "e2eTestMaxTime": 3000,
+      "unit": "milliseconds",
+      "kiroMapping": "Fail-Safe Pattern - 測試效能限制"
+    },
+    "isolation": {
+      "databaseStrategy": "H2 in-memory",
+      "transactionRollback": true,
+      "mockExternal": true,
+      "kiroMapping": "Isolation Pattern - 測試環境隔離"
+    }
+  },
+  "securityConstraints": {
+    "forbiddenPatterns": {
+      "hardcodedCredentials": {
+        "pattern": "(password|secret|apiKey)\\s*=\\s*['\"]",
+        "message": "不允許硬編碼憑證",
+        "kiroMapping": "Fail-Safe Pattern"
+      },
+      "sqlInjection": {
+        "pattern": "executeQuery\\(.*\\+.*\\)",
+        "message": "防止 SQL 注入，使用 PreparedStatement",
+        "kiroMapping": "Boundary Control"
+      },
+      "unsafeDeserialization": {
+        "pattern": "ObjectInputStream",
+        "message": "避免不安全的反序列化",
+        "kiroMapping": "Fail-Safe Pattern"
+      }
+    },
+    "requiredValidation": {
+      "inputValidation": true,
+      "outputSanitization": true,
+      "boundaryChecking": true,
+      "kiroMapping": "Boundary Control - 驗證所有輸入/輸出"
+    }
+  },
+  "performanceConstraints": {
+    "queries": {
+      "maxN+1Queries": 0,
+      "requirePagination": true,
+      "maxFetchSize": 1000,
+      "kiroMapping": "Boundary Control - 限制查詢規模"
+    },
+    "caching": {
+      "requireForExpensiveOperations": true,
+      "maxCacheTTL": 3600,
+      "kiroMapping": "Idempotency - 快取相同輸入的結果"
+    }
+  },
+  "forbiddenPatterns": {
+    "antiPatterns": [
+      {
+        "name": "God Object",
+        "detection": "class with > 500 lines or > 20 methods",
+        "kiroMapping": "Single Responsibility"
+      },
+      {
+        "name": "Anemic Domain Model",
+        "detection": "domain objects with only getters/setters",
+        "kiroMapping": "Domain-Driven Design"
+      },
+      {
+        "name": "Magic Numbers",
+        "detection": "numeric literals without constants",
+        "kiroMapping": "Boundary Control - 使用命名常數"
+      }
+    ]
+  },
+  "validationTools": {
+    "archUnit": {
+      "enabled": true,
+      "rulesLocation": "src/test/java/architecture",
+      "kiroMapping": "Boundary Control - 架構驗證"
+    },
+    "checkstyle": {
+      "enabled": true,
+      "configFile": "config/checkstyle/checkstyle.xml",
+      "kiroMapping": "Idempotency - 程式碼風格一致"
+    },
+    "pmd": {
+      "enabled": true,
+      "ruleSets": ["category/java/bestpractices.xml"],
+      "kiroMapping": "Fail-Safe Pattern - 檢測潛在問題"
+    },
+    "spotbugs": {
+      "enabled": true,
+      "effort": "max",
+      "kiroMapping": "Fail-Safe Pattern - 檢測 bug"
+    }
+  },
+  "enforcementLevel": {
+    "preCommit": ["archUnit", "checkstyle", "unitTest"],
+    "preMerge": ["fullTest", "coverage", "security"],
+    "preRelease": ["e2eTest", "performanceTest", "securityScan"],
+    "kiroMapping": "Workflow Decomposition - 分層驗證"
+  }
+}

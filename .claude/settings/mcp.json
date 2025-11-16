@@ -1,0 +1,127 @@
+{
+  "mcpServers": {
+    "time": {
+      "command": "uvx",
+      "args": ["mcp-server-time"],
+      "env": {},
+      "disabled": false,
+      "autoApprove": [
+        "get_current_time",
+        "get_timezone",
+        "convert_time",
+        "format_time",
+        "calculate_time_difference"
+      ],
+      "kiroMapping": {
+        "pattern": "Idempotency",
+        "benefit": "提供一致的時間處理，避免時區錯誤"
+      }
+    },
+    "aws-docs": {
+      "command": "uvx",
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "search_aws_documentation",
+        "get_aws_service_info",
+        "search_documentation",
+        "read_documentation"
+      ],
+      "kiroMapping": {
+        "pattern": "Boundary Control",
+        "benefit": "提供準確的 AWS 文件，避免過時資訊"
+      }
+    },
+    "aws-cdk": {
+      "command": "uvx",
+      "args": ["awslabs.cdk-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "CDKGeneralGuidance",
+        "ExplainCDKNagRule",
+        "CheckCDKNagSuppressions"
+      ],
+      "kiroMapping": {
+        "pattern": "Fail-Safe Pattern",
+        "benefit": "自動檢查 CDK 程式碼合規性，防止配置錯誤"
+      }
+    },
+    "filesystem": {
+      "command": "uvx",
+      "args": ["mcp-server-filesystem"],
+      "env": {
+        "ALLOWED_DIRECTORIES": "/home/user/genai-demo"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "read_file",
+        "list_directory"
+      ],
+      "kiroMapping": {
+        "pattern": "Boundary Control",
+        "benefit": "限制檔案系統存取範圍，提升安全性"
+      }
+    },
+    "git": {
+      "command": "uvx",
+      "args": ["mcp-server-git"],
+      "env": {},
+      "disabled": false,
+      "autoApprove": [
+        "git_status",
+        "git_diff",
+        "git_log"
+      ],
+      "kiroMapping": {
+        "pattern": "Idempotency + Event-Driven",
+        "benefit": "追蹤程式碼變更歷史，支援版本控制"
+      }
+    },
+    "database-schema": {
+      "command": "node",
+      "args": ["mcp-database-schema-server/src/index.js"],
+      "env": {
+        "DB_CONNECTION": "jdbc:h2:mem:testdb"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "get_schema",
+        "get_tables",
+        "get_columns"
+      ],
+      "kiroMapping": {
+        "pattern": "Boundary Control",
+        "benefit": "理解資料庫結構，生成符合 schema 的程式碼"
+      }
+    }
+  },
+  "configuration": {
+    "timeout": 30000,
+    "retries": 3,
+    "caching": {
+      "enabled": true,
+      "ttl": 3600,
+      "kiroMapping": "Idempotency - 快取相同請求的結果"
+    },
+    "logging": {
+      "level": "ERROR",
+      "destination": ".claude/logs/mcp.log"
+    }
+  },
+  "rateLimiting": {
+    "enabled": true,
+    "maxRequestsPerMinute": 60,
+    "kiroMapping": "Boundary Control - 防止過度使用"
+  },
+  "healthCheck": {
+    "enabled": true,
+    "interval": 60000,
+    "kiroMapping": "Fail-Safe Pattern - 確保服務可用性"
+  }
+}

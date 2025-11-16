@@ -1,0 +1,134 @@
+{
+  "name": "Post-Edit Documentation Sync Hook",
+  "version": "1.0",
+  "description": "程式碼編輯後自動同步文件與圖表（Kiro: Event-Driven Architecture + Automation）",
+  "trigger": {
+    "type": "post-edit",
+    "patterns": [
+      "app/src/main/java/**/*.java",
+      "infrastructure/**/*.ts",
+      "app/src/main/java/**/*.java"
+    ],
+    "exclude": [
+      "**/test/**",
+      "**/generated/**",
+      "**/build/**"
+    ]
+  },
+  "kiroPatterns": [
+    "Event-Driven Architecture - 程式碼變更觸發文件更新事件",
+    "Workflow Decomposition - 分解為檢查、生成、驗證步驟",
+    "Idempotency - 多次執行產生相同結果"
+  ],
+  "actions": [
+    {
+      "name": "Check API Changes",
+      "description": "檢查是否有 API 變更（新增/修改端點、領域事件）",
+      "type": "check",
+      "condition": {
+        "filePattern": "**/*Controller.java|**/*Event.java"
+      },
+      "action": {
+        "type": "prompt",
+        "message": "⚠️  檢測到 API 變更\n\n請確認是否需要更新以下文件：\n- API 文件: docs/api/rest/endpoints/\n- 事件文件: docs/api/events/contexts/\n\n執行 '/skill api-doc-generator' 自動生成文件"
+      },
+      "kiroMapping": {
+        "pattern": "Boundary Control",
+        "benefit": "確保 API 邊界變更被記錄"
+      }
+    },
+    {
+      "name": "Check Architecture Changes",
+      "description": "檢查是否有架構變更（新聚合、新有界上下文）",
+      "type": "check",
+      "condition": {
+        "filePattern": "**/*@AggregateRoot*/**",
+        "annotation": "@AggregateRoot"
+      },
+      "action": {
+        "type": "prompt",
+        "message": "⚠️  檢測到領域模型變更\n\n請確認是否需要更新：\n- 功能視角: docs/viewpoints/functional/\n- 資訊視角: docs/viewpoints/information/\n- 領域模型圖: docs/diagrams/viewpoints/\n\n執行 '/skill architecture-doc-generator' 更新架構文件"
+      },
+      "kiroMapping": {
+        "pattern": "Event-Driven",
+        "benefit": "架構變更即時反映到文件"
+      }
+    },
+    {
+      "name": "Auto-Generate PlantUML Diagrams",
+      "description": "自動生成 PlantUML 圖表",
+      "type": "execute",
+      "condition": {
+        "fileChanged": "docs/diagrams/**/*.puml"
+      },
+      "command": "./scripts/generate-diagrams.sh --format=png",
+      "timeout": 30000,
+      "kiroMapping": {
+        "pattern": "Automation + Idempotency",
+        "benefit": "圖表始終與原始碼同步"
+      }
+    },
+    {
+      "name": "Validate Documentation Links",
+      "description": "驗證文件連結有效性",
+      "type": "execute",
+      "condition": {
+        "fileChanged": "docs/**/*.md"
+      },
+      "command": "node scripts/check-links-advanced.js --internal-only",
+      "timeout": 60000,
+      "failOnError": false,
+      "kiroMapping": {
+        "pattern": "Boundary Control",
+        "benefit": "防止文件連結失效"
+      }
+    },
+    {
+      "name": "Update Documentation Timestamps",
+      "description": "更新文件時間戳",
+      "type": "execute",
+      "script": "update-doc-timestamps.sh",
+      "kiroMapping": {
+        "pattern": "Immutable Input",
+        "benefit": "追蹤文件版本歷史"
+      }
+    }
+  ],
+  "workflows": {
+    "apiChange": {
+      "name": "API 變更工作流",
+      "steps": [
+        "Check API Changes",
+        "Auto-Generate API Documentation",
+        "Validate OpenAPI Spec",
+        "Update Postman Collection"
+      ],
+      "kiroPattern": "Workflow Decomposition"
+    },
+    "domainModelChange": {
+      "name": "領域模型變更工作流",
+      "steps": [
+        "Check Architecture Changes",
+        "Auto-Generate Domain Diagrams",
+        "Update Event Storming Diagrams",
+        "Validate Context Map"
+      ],
+      "kiroPattern": "Workflow Decomposition"
+    }
+  },
+  "performance": {
+    "async": true,
+    "debounceMs": 2000,
+    "maxConcurrent": 3
+  },
+  "notifications": {
+    "onSuccess": {
+      "type": "info",
+      "message": "✅ 文件同步完成"
+    },
+    "onFailure": {
+      "type": "warning",
+      "message": "⚠️  文件同步失敗，請手動檢查"
+    }
+  }
+}

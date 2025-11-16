@@ -1,0 +1,220 @@
+{
+  "name": "Test Architect Agent",
+  "version": "1.0",
+  "description": "測試架構專家代理，負責設計和生成測試策略（Kiro: Workflow Decomposition + Isolation Pattern）",
+  "type": "specialist",
+  "capabilities": [
+    "test-strategy-design",
+    "test-pyramid-optimization",
+    "bdd-scenario-writing",
+    "test-automation",
+    "coverage-analysis"
+  ],
+  "kiroPatterns": {
+    "primary": "Workflow Decomposition - 分解測試為 Unit → Integration → E2E",
+    "secondary": [
+      "Isolation Pattern - 確保測試獨立性",
+      "Idempotency - 測試可重複執行",
+      "Fail-Safe Pattern - 測試失敗不影響其他測試"
+    ]
+  },
+  "responsibilities": {
+    "testPyramidDesign": {
+      "description": "設計測試金字塔（80% Unit, 15% Integration, 5% E2E）",
+      "strategy": {
+        "unitTests": {
+          "percentage": 80,
+          "scope": "Domain logic, Value Objects, Business rules",
+          "speed": "< 50ms per test",
+          "kiroPattern": "Isolation + Stateless"
+        },
+        "integrationTests": {
+          "percentage": 15,
+          "scope": "Repository, API endpoints, Database",
+          "speed": "< 500ms per test",
+          "kiroPattern": "Boundary Control"
+        },
+        "e2eTests": {
+          "percentage": 5,
+          "scope": "Complete business workflows",
+          "speed": "< 3s per test",
+          "kiroPattern": "Event-Driven"
+        }
+      }
+    },
+    "bddScenarioGeneration": {
+      "description": "生成 BDD（Cucumber）測試場景",
+      "template": "Given-When-Then",
+      "kiroMapping": "Idempotency - 場景可重複執行"
+    },
+    "testDataManagement": {
+      "description": "管理測試資料和 Fixtures",
+      "strategy": "Test Data Builders + Factory Pattern",
+      "kiroMapping": "Immutable Input - 測試資料不可變"
+    }
+  },
+  "workflowSteps": [
+    {
+      "step": 1,
+      "name": "Analyze Target Code",
+      "description": "分析目標程式碼，識別測試需求",
+      "kiroPattern": "Stateless Handler",
+      "actions": [
+        "識別公開 API 和方法",
+        "分析業務邏輯複雜度",
+        "檢查現有測試覆蓋率"
+      ]
+    },
+    {
+      "step": 2,
+      "name": "Design Test Strategy",
+      "description": "設計測試策略",
+      "kiroPattern": "Workflow Decomposition",
+      "actions": [
+        "規劃單元測試（80%）",
+        "規劃整合測試（15%）",
+        "規劃 E2E 測試（5%）"
+      ]
+    },
+    {
+      "step": 3,
+      "name": "Generate Unit Tests",
+      "description": "生成單元測試",
+      "kiroPattern": "Isolation Pattern",
+      "actions": [
+        "生成正常路徑測試",
+        "生成錯誤路徑測試",
+        "生成邊界條件測試"
+      ]
+    },
+    {
+      "step": 4,
+      "name": "Generate Integration Tests",
+      "description": "生成整合測試",
+      "kiroPattern": "Boundary Control",
+      "actions": [
+        "生成 Repository 測試",
+        "生成 API 端點測試",
+        "生成資料庫整合測試"
+      ]
+    },
+    {
+      "step": 5,
+      "name": "Generate BDD/E2E Tests",
+      "description": "生成 BDD 和 E2E 測試",
+      "kiroPattern": "Event-Driven",
+      "actions": [
+        "編寫 Gherkin 場景",
+        "生成步驟定義",
+        "設計完整業務流程測試"
+      ]
+    },
+    {
+      "step": 6,
+      "name": "Validate Coverage",
+      "description": "驗證測試覆蓋率",
+      "kiroPattern": "Fail-Safe Pattern",
+      "actions": [
+        "執行測試套件",
+        "生成覆蓋率報告",
+        "識別未覆蓋的程式碼"
+      ]
+    }
+  ],
+  "testNamingConventions": {
+    "pattern": "should_{ExpectedBehavior}_when_{StateUnderTest}",
+    "examples": [
+      "should_create_order_successfully_when_valid_input_provided",
+      "should_throw_exception_when_null_id_provided",
+      "should_collect_domain_event_when_aggregate_created"
+    ],
+    "kiroMapping": "Idempotency - 測試名稱清晰描述預期行為"
+  },
+  "assertionStrategies": {
+    "unit": {
+      "framework": "AssertJ",
+      "style": "Fluent API",
+      "example": "assertThat(result).isNotNull().hasFieldOrPropertyWithValue(\"status\", CREATED)"
+    },
+    "integration": {
+      "framework": "Spring Test + AssertJ",
+      "style": "Behavior Verification"
+    },
+    "e2e": {
+      "framework": "Cucumber + AssertJ",
+      "style": "Business-Oriented Assertions"
+    }
+  },
+  "mockStrategies": {
+    "minimal": {
+      "description": "僅 mock 外部依賴（API、資料庫）",
+      "kiroPattern": "Isolation Pattern",
+      "useCase": "單元測試"
+    },
+    "moderate": {
+      "description": "Mock 複雜依賴和慢速操作",
+      "kiroPattern": "Boundary Control",
+      "useCase": "整合測試"
+    },
+    "none": {
+      "description": "不使用 Mock，測試真實整合",
+      "kiroPattern": "Event-Driven",
+      "useCase": "E2E 測試"
+    }
+  },
+  "testIsolation": {
+    "database": {
+      "strategy": "H2 in-memory + @Transactional rollback",
+      "kiroPattern": "Isolation Pattern"
+    },
+    "time": {
+      "strategy": "Clock abstraction + fixed time in tests",
+      "kiroPattern": "Idempotency"
+    },
+    "randomness": {
+      "strategy": "Seeded random generators",
+      "kiroPattern": "Idempotency"
+    }
+  },
+  "performanceTargets": {
+    "unitTest": {
+      "maxExecutionTime": "50ms",
+      "maxMemoryUsage": "5MB"
+    },
+    "integrationTest": {
+      "maxExecutionTime": "500ms",
+      "maxMemoryUsage": "50MB"
+    },
+    "e2eTest": {
+      "maxExecutionTime": "3000ms",
+      "maxMemoryUsage": "500MB"
+    }
+  },
+  "skills": [
+    "test-generator",
+    "coverage-analyzer",
+    "mutation-tester"
+  ],
+  "tools": [
+    {
+      "name": "JaCoCo",
+      "purpose": "測試覆蓋率分析",
+      "command": "./gradlew test jacocoTestReport"
+    },
+    {
+      "name": "PIT Mutation Testing",
+      "purpose": "變異測試",
+      "command": "./gradlew pitest"
+    },
+    {
+      "name": "Cucumber",
+      "purpose": "BDD 測試執行",
+      "command": "./gradlew cucumber"
+    }
+  ],
+  "outputFormats": {
+    "unit": "JUnit 5 + Mockito + AssertJ",
+    "integration": "@DataJpaTest / @WebMvcTest",
+    "e2e": "Cucumber Gherkin + Step Definitions"
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "name": "Pre-Commit Validation Hook",
+  "version": "1.0",
+  "description": "提交前驗證程式碼品質與架構合規性（Kiro: Fail-Safe Pattern + Boundary Control）",
+  "trigger": {
+    "type": "pre-commit",
+    "patterns": [
+      "**/*.java",
+      "**/*.ts",
+      "**/*.md"
+    ]
+  },
+  "kiroPatterns": [
+    "Fail-Safe Pattern - 防止不合格程式碼進入 repo",
+    "Boundary Control - 驗證程式碼邊界和規範",
+    "Idempotency - 相同程式碼每次驗證結果一致"
+  ],
+  "validations": [
+    {
+      "name": "Architecture Compliance",
+      "description": "驗證架構規則（ArchUnit）",
+      "command": "./gradlew archUnit",
+      "failOnError": true,
+      "timeout": 60000,
+      "kiroMapping": {
+        "pattern": "Boundary Control",
+        "benefit": "防止架構腐化、維持層級邊界"
+      }
+    },
+    {
+      "name": "Code Style Check",
+      "description": "檢查程式碼風格（Checkstyle）",
+      "command": "./gradlew checkstyleMain checkstyleTest",
+      "failOnError": true,
+      "timeout": 30000,
+      "kiroMapping": {
+        "pattern": "Idempotency",
+        "benefit": "維持程式碼風格一致性"
+      }
+    },
+    {
+      "name": "Unit Tests",
+      "description": "執行單元測試",
+      "command": "./gradlew unitTest",
+      "failOnError": true,
+      "timeout": 120000,
+      "kiroMapping": {
+        "pattern": "Fail-Safe Pattern",
+        "benefit": "防止破壞現有功能"
+      }
+    },
+    {
+      "name": "Test Coverage",
+      "description": "檢查測試覆蓋率 (>= 80%)",
+      "command": "./gradlew test jacocoTestCoverageVerification",
+      "failOnError": true,
+      "timeout": 120000,
+      "kiroMapping": {
+        "pattern": "Boundary Control",
+        "benefit": "確保程式碼品質基線"
+      }
+    },
+    {
+      "name": "DDD Annotation Check",
+      "description": "驗證 DDD 註解完整性",
+      "script": "check-ddd-annotations.sh",
+      "failOnError": false,
+      "warnOnly": true,
+      "kiroMapping": {
+        "pattern": "Single Responsibility",
+        "benefit": "確保領域模型正確標記"
+      }
+    }
+  ],
+  "onFailure": {
+    "action": "block",
+    "message": "⚠️  提交被阻止：程式碼未通過品質驗證\n\n請修正以下問題後重試：\n{failureDetails}\n\n提示：執行 './gradlew preCommitTest' 進行本地驗證",
+    "suggestedFixes": [
+      "執行 './gradlew archUnit' 查看架構違規詳情",
+      "執行 './gradlew checkstyleMain --info' 查看程式碼風格問題",
+      "執行 './gradlew test jacocoTestReport' 生成覆蓋率報告"
+    ]
+  },
+  "onSuccess": {
+    "action": "allow",
+    "message": "✅ 程式碼品質驗證通過\n\n- Architecture: ✓\n- Code Style: ✓\n- Unit Tests: ✓\n- Coverage: ✓"
+  },
+  "performance": {
+    "maxExecutionTime": 300000,
+    "parallelExecution": true,
+    "cacheResults": true,
+    "cacheTTL": 3600
+  },
+  "exemptions": {
+    "files": [
+      "**/generated/**",
+      "**/build/**",
+      "**/target/**"
+    ],
+    "branches": [
+      "main",
+      "master",
+      "develop"
+    ],
+    "users": []
+  }
+}
