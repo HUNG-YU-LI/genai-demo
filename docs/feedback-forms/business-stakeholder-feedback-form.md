@@ -9,7 +9,7 @@
 
 ## Functional Viewpoint Review (`docs/viewpoints/functional/`)
 
-### Business Capabilities Overview
+### Business Capabilities 概覽
 
 **Rating** (1-5): ___
 
@@ -144,7 +144,7 @@
 
 ---
 
-### External Systems Integration
+### External Systems 整合
 
 **Are external system integrations accurately documented?** [ ] Yes [ ] No
 
@@ -219,7 +219,7 @@
 
 ---
 
-## Business Process Documentation
+## Business 流程 Documentation
 
 ### Order Processing Flow
 
@@ -302,7 +302,7 @@
 
 ## Business Metrics and KPIs
 
-### Key Performance Indicators
+### Key 效能 Indicators
 
 **Are business KPIs clearly documented?** [ ] Yes [ ] No
 

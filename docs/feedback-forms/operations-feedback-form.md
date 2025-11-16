@@ -9,7 +9,7 @@
 
 ## Operational Viewpoint Review
 
-### Overview (`docs/viewpoints/operational/`)
+### 概覽 (`docs/viewpoints/operational/`)
 
 **Rating** (1-5): ___
 
@@ -25,9 +25,9 @@
 
 ---
 
-## Deployment Documentation Review
+## 部署 Documentation Review
 
-### Deployment Process (`docs/operations/deployment/deployment-process.md`)
+### 部署 流程 (`docs/operations/deployment/deployment-process.md`)
 
 **Did you attempt a deployment using this guide?** [ ] Yes [ ] No
 
@@ -47,7 +47,7 @@
 
 ---
 
-### Environment Configuration (`docs/operations/deployment/environments.md`)
+### Environment 設定 (`docs/operations/deployment/environments.md`)
 
 **Are environment configurations clearly documented?** [ ] Yes [ ] No
 
@@ -73,9 +73,9 @@
 
 ---
 
-## Monitoring and Alerting Review
+## 監控 and Alerting Review
 
-### Monitoring Strategy (`docs/operations/monitoring/monitoring-strategy.md`)
+### 監控 Strategy (`docs/operations/monitoring/monitoring-strategy.md`)
 
 **Rating** (1-5): ___
 
@@ -89,7 +89,7 @@
 
 ---
 
-### Alert Configuration (`docs/operations/monitoring/alerts.md`)
+### Alert 設定 (`docs/operations/monitoring/alerts.md`)
 
 **Are alert thresholds appropriate?** [ ] Yes [ ] No [ ] Needs review
 
@@ -104,7 +104,7 @@
 
 ## Runbooks Review (`docs/operations/runbooks/`)
 
-### Runbook Testing
+### Runbook 測試
 
 **Which runbooks did you test?**:
 - [ ] High CPU Usage
@@ -150,9 +150,9 @@
 
 ---
 
-## Troubleshooting Guide Review (`docs/operations/troubleshooting/`)
+## 故障排除 Guide Review (`docs/operations/troubleshooting/`)
 
-### Application Troubleshooting
+### Application 故障排除
 
 **Rating** (1-5): ___
 
@@ -166,7 +166,7 @@
 
 ---
 
-### Database Troubleshooting
+### Database 故障排除
 
 **Rating** (1-5): ___
 
@@ -180,7 +180,7 @@
 
 ---
 
-### Network and Connectivity Troubleshooting
+### Network and Connectivity 故障排除
 
 **Rating** (1-5): ___
 
@@ -194,7 +194,7 @@
 
 ---
 
-### Kubernetes Troubleshooting
+### Kubernetes 故障排除
 
 **Rating** (1-5): ___
 
@@ -261,9 +261,9 @@
 
 ---
 
-## Database Maintenance Review
+## Database 維護 Review
 
-### Routine Maintenance
+### Routine 維護
 
 **Are daily/weekly/monthly maintenance tasks clearly documented?** [ ] Yes [ ] No
 
@@ -274,7 +274,7 @@
 
 ---
 
-### Performance Tuning
+### 效能 Tuning
 
 **Is the performance tuning guide comprehensive?** [ ] Yes [ ] No
 
@@ -285,9 +285,9 @@
 
 ---
 
-## Security and Compliance Review
+## 安全性 and Compliance Review
 
-### Security Procedures
+### 安全性 Procedures
 
 **Are security procedures clearly documented?** [ ] Yes [ ] No
 

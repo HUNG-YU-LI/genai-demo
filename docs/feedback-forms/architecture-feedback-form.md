@@ -1,4 +1,4 @@
-# Architecture Team Documentation Review Feedback Form
+# 架構 Team Documentation Review Feedback Form
 
 **Reviewer Name**: _______________
 **Role**: _______________
@@ -77,7 +77,7 @@
 
 ---
 
-### Deployment Viewpoint (`docs/viewpoints/deployment/`)
+### 部署 Viewpoint (`docs/viewpoints/deployment/`)
 
 **Rating** (1-5): ___
 
@@ -130,7 +130,7 @@
 
 ## Perspectives Review
 
-### Security Perspective (`docs/perspectives/security/`)
+### 安全性 Perspective (`docs/perspectives/security/`)
 
 **Rating** (1-5): ___
 
@@ -148,7 +148,7 @@
 
 ---
 
-### Performance & Scalability Perspective (`docs/perspectives/performance/`)
+### 效能 & Scalability Perspective (`docs/perspectives/performance/`)
 
 **Rating** (1-5): ___
 
@@ -270,7 +270,7 @@
 
 ---
 
-## Architecture Decision Records Review (`docs/architecture/adrs/`)
+## 架構 Decision Records Review (`docs/architecture/adrs/`)
 
 ### ADR Quality Assessment
 
@@ -338,9 +338,9 @@
 
 ---
 
-## Architecture Patterns and Principles Review
+## 架構 模式 and Principles Review
 
-### DDD Implementation
+### DDD 實現
 
 **Is DDD correctly implemented and documented?** [ ] Yes [ ] No [ ] Partially
 
@@ -357,7 +357,7 @@
 
 ---
 
-### Hexagonal Architecture
+### Hexagonal 架構
 
 **Is hexagonal architecture correctly implemented and documented?** [ ] Yes [ ] No [ ] Partially
 
@@ -373,7 +373,7 @@
 
 ---
 
-### Event-Driven Architecture
+### Event-Driven 架構
 
 **Is event-driven architecture correctly implemented and documented?** [ ] Yes [ ] No [ ] Partially
 
@@ -456,7 +456,7 @@ Any other feedback, suggestions, or observations:
 
 ---
 
-## Architecture Documentation Quality Assessment
+## 架構 Documentation Quality Assessment
 
 **Does the documentation provide a complete architectural view?** [ ] Yes [ ] No
 

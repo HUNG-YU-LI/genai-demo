@@ -9,7 +9,7 @@
 
 ## Development Viewpoint Review
 
-### Setup and Environment (`docs/viewpoints/development/` & `docs/development/setup/`)
+### 設定 and Environment (`docs/viewpoints/development/` & `docs/development/setup/`)
 
 **Rating** (1-5): ___
 
@@ -30,7 +30,7 @@
 
 ## Development Guides Review
 
-### Local Environment Setup (`docs/development/setup/local-environment.md`)
+### Local Environment 設定 (`docs/development/setup/local-environment.md`)
 
 **Did you successfully set up a local environment using this guide?** [ ] Yes [ ] No
 
@@ -46,7 +46,7 @@
 
 ---
 
-### IDE Configuration (`docs/development/setup/ide-configuration.md`)
+### IDE 設定 (`docs/development/setup/ide-configuration.md`)
 
 **Which IDE did you test?** [ ] IntelliJ IDEA [ ] VS Code [ ] Other: ___
 
@@ -59,7 +59,7 @@
 
 ---
 
-### Coding Standards (`docs/development/coding-standards/`)
+### Coding 規範 (`docs/development/coding-standards/`)
 
 **Are the coding standards clear and actionable?** [ ] Yes [ ] No
 
@@ -75,7 +75,7 @@
 
 ---
 
-### Testing Guide (`docs/development/testing/`)
+### 測試 Guide (`docs/development/testing/`)
 
 **Rating** (1-5): ___
 
@@ -166,9 +166,9 @@
 
 ---
 
-## Code Examples and Tutorials
+## Code 範例 and Tutorials
 
-### Implementation Examples (`docs/development/examples/`)
+### 實現 範例 (`docs/development/examples/`)
 
 **Did you try any of the examples?** [ ] Yes [ ] No
 
