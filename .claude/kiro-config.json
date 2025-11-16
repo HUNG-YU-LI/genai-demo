@@ -1,0 +1,131 @@
+{
+  "version": "1.0.0",
+  "description": "Kiro principles configuration for Claude Code",
+  "kiro_principles": {
+    "idempotency": {
+      "enabled": true,
+      "require_idempotency_key": true,
+      "tracking_table": "idempotency_records",
+      "key_header_name": "Idempotency-Key",
+      "ttl_hours": 24,
+      "enforcement_level": "warn"
+    },
+    "stateless": {
+      "enabled": true,
+      "allow_instance_state": false,
+      "require_external_storage": true,
+      "allowed_instance_fields": [
+        "logger",
+        "injected_dependencies"
+      ],
+      "enforcement_level": "error"
+    },
+    "immutability": {
+      "enabled": true,
+      "prefer_records": true,
+      "defensive_copying": true,
+      "allow_jpa_entities": true,
+      "immutable_patterns": [
+        "record",
+        "final class + private constructor + builder",
+        "value object"
+      ],
+      "enforcement_level": "warn"
+    },
+    "boundary_control": {
+      "enabled": true,
+      "validate_inputs": true,
+      "sanitize_outputs": true,
+      "standardized_errors": true,
+      "required_annotations": [
+        "@Valid",
+        "@Validated",
+        "@NotNull"
+      ],
+      "enforcement_level": "error"
+    },
+    "workflow_decomposition": {
+      "enabled": true,
+      "max_method_lines": 50,
+      "max_class_lines": 300,
+      "single_responsibility": true,
+      "require_compensation_logic": true,
+      "enforcement_level": "warn"
+    }
+  },
+  "code_generation_constraints": {
+    "max_class_length": 300,
+    "max_method_length": 50,
+    "max_parameter_count": 5,
+    "require_documentation": true,
+    "require_tests": true,
+    "documentation_style": "javadoc",
+    "naming_conventions": {
+      "classes": "PascalCase",
+      "methods": "camelCase",
+      "constants": "UPPER_SNAKE_CASE",
+      "packages": "lowercase"
+    }
+  },
+  "architectural_patterns": {
+    "hexagonal_architecture": true,
+    "ddd_tactical_patterns": true,
+    "cqrs": false,
+    "event_sourcing": false,
+    "saga_pattern": true,
+    "circuit_breaker": true
+  },
+  "quality_gates": {
+    "min_kiro_compliance_score": 80,
+    "fail_build_on_violations": false,
+    "warn_on_score_below": 85,
+    "require_code_review_for_score_below": 90
+  },
+  "tools": {
+    "skills": [
+      "kiro-idempotency",
+      "kiro-workflow-decomposition",
+      "kiro-stateless-handler",
+      "kiro-immutable-data",
+      "kiro-boundary-control"
+    ],
+    "hooks": {
+      "pre_code_generation": ".claude/hooks/pre-code-generation.sh",
+      "post_code_generation": ".claude/hooks/post-code-generation.sh"
+    },
+    "agents": [
+      {
+        "name": "kiro-code-reviewer",
+        "type": "code-reviewer",
+        "auto_invoke": true,
+        "trigger_events": [
+          "code-generation-complete",
+          "before-commit"
+        ]
+      }
+    ]
+  },
+  "integration": {
+    "archunit": {
+      "enabled": true,
+      "rules_package": "solid.humank.genaidemo.architecture.kiro"
+    },
+    "pmd": {
+      "enabled": false
+    },
+    "checkstyle": {
+      "enabled": false
+    },
+    "ci_cd": {
+      "github_actions": true,
+      "pre_commit_hooks": true
+    }
+  },
+  "reporting": {
+    "generate_compliance_report": true,
+    "report_format": "markdown",
+    "report_output_path": "reports/kiro-compliance/",
+    "include_metrics": true,
+    "include_recommendations": true
+  }
+}
