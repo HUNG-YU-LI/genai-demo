@@ -1,67 +1,67 @@
-# Development Documentation
+# Development 文件
 
-> **Last Updated**: 2025-01-17
+> **最後更新**: 2025-01-17
 
-## Overview
+## 概述
 
-This section contains comprehensive development documentation for the GenAI Demo e-commerce platform, including setup guides, coding standards, testing strategies, workflows, and examples.
+本章節包含 GenAI Demo 電子商務平台的完整開發文件，包括設定指南、編碼標準、測試策略、工作流程和範例。
 
-## Quick Navigation
+## 快速導航
 
-### 🚀 Getting Started
+### 🚀 入門指南
 
-- [Development Setup](setup/README.md) - Environment setup and prerequisites
-- [Local Development](setup/local-development.md) - Running the application locally
-- [IDE Configuration](setup/ide-configuration.md) - IDE setup and plugins
-- [Onboarding Guide](setup/onboarding.md) - New developer onboarding
+- [Development 設定](setup/README.md) - 環境設定和先決條件
+- [本地開發](setup/local-development.md) - 在本地執行應用程式
+- [IDE 配置](setup/ide-configuration.md) - IDE 設定和插件
+- [新進人員指南](setup/onboarding.md) - 新進開發人員入職指南
 
-### 📝 Coding Standards
+### 📝 編碼標準
 
-- [Java Standards](coding-standards/java-standards.md) - Java coding conventions
-- [TypeScript Standards](coding-standards/typescript-standards.md) - TypeScript conventions
-- [Code Review Guidelines](coding-standards/code-review.md) - Code review process
-- [Git Commit Standards](coding-standards/git-standards.md) - Commit message format
+- [Java 標準](coding-standards/java-standards.md) - Java 編碼慣例
+- [TypeScript 標準](coding-standards/typescript-standards.md) - TypeScript 慣例
+- [Code Review 指南](coding-standards/code-review.md) - Code review 流程
+- [Git Commit 標準](coding-standards/git-standards.md) - Commit 訊息格式
 
-### 🧪 Testing
+### 🧪 測試
 
-- [Testing Strategy](testing/testing-strategy.md) - Overall testing approach
-- [Unit Testing](testing/unit-testing.md) - Unit test guidelines
-- [Integration Testing](testing/integration-testing.md) - Integration test guidelines
+- [測試策略](testing/testing-strategy.md) - 整體測試方法
+- [Unit Testing](testing/unit-testing.md) - Unit test 指南
+- [Integration Testing](testing/integration-testing.md) - Integration test 指南
 - [BDD Testing](testing/bdd-testing.md) - Behavior-driven development
-- [Architecture Testing](testing/architecture-testing.md) - ArchUnit tests
+- [Architecture Testing](testing/architecture-testing.md) - ArchUnit 測試
 
-### 🔄 Workflows
+### 🔄 工作流程
 
-- [Git Workflow](workflows/git-workflow.md) - Branching and merging strategy
-- [Code Review Process](workflows/code-review.md) - Review procedures
-- [CI/CD Pipeline](workflows/ci-cd.md) - Continuous integration and deployment
-- [Release Process](workflows/release-process.md) - Release management
+- [Git Workflow](workflows/git-workflow.md) - 分支和合併策略
+- [Code Review 流程](workflows/code-review.md) - Review 程序
+- [CI/CD Pipeline](workflows/ci-cd.md) - 持續整合和部署
+- [發布流程](workflows/release-process.md) - Release 管理
 
-### 💡 Examples
+### 💡 範例
 
-- [Creating an Aggregate](examples/creating-aggregate.md) - DDD aggregate example
-- [Implementing Events](examples/implementing-event.md) - Domain event example
-- [Writing Tests](examples/writing-tests.md) - Test examples
-- [API Implementation](examples/api-implementation.md) - REST API example
+- [建立 Aggregate](examples/creating-aggregate.md) - DDD aggregate 範例
+- [實作 Events](examples/implementing-event.md) - Domain event 範例
+- [撰寫測試](examples/writing-tests.md) - 測試範例
+- [API 實作](examples/api-implementation.md) - REST API 範例
 
-### 🔧 Tools & Hooks
+### 🔧 工具與 Hooks
 
-- [Development Tools](tools/README.md) - Recommended development tools
-- [Kiro Hooks](hooks/README.md) - Automated development hooks
-- [Diagram Generation](hooks/diagram-hooks-design.md) - Diagram automation
+- [開發工具](tools/README.md) - 推薦的開發工具
+- [Kiro Hooks](hooks/README.md) - 自動化開發 hooks
+- [圖表生成](hooks/diagram-hooks-design.md) - 圖表自動化
 
-## Development Environment
+## 開發環境
 
-### Prerequisites
+### 先決條件
 
-- **Java**: JDK 21 or higher
-- **Node.js**: v18 or higher (for frontend)
-- **Docker**: Latest version
-- **Gradle**: 8.x (wrapper included)
-- **Git**: Latest version
-- **IDE**: IntelliJ IDEA or VS Code
+- **Java**: JDK 21 或更高版本
+- **Node.js**: v18 或更高版本 (用於前端)
+- **Docker**: 最新版本
+- **Gradle**: 8.x (已包含 wrapper)
+- **Git**: 最新版本
+- **IDE**: IntelliJ IDEA 或 VS Code
 
-### Quick Start
+### 快速開始
 
 ```bash
 # Clone repository
@@ -78,13 +78,13 @@ cd genai-demo
 ./gradlew test
 ```
 
-[Detailed Setup Guide](setup/README.md)
+[詳細設定指南](setup/README.md)
 
-## Architecture Overview
+## 架構概述
 
 ### Hexagonal Architecture
 
-The application follows hexagonal architecture (ports and adapters):
+應用程式遵循 hexagonal architecture (ports and adapters):
 
 ```
 src/
@@ -97,11 +97,11 @@ src/
 │           └── interfaces/      # API controllers
 ```
 
-[Architecture Guide](../viewpoints/development/README.md)
+[架構指南](../viewpoints/development/README.md)
 
 ### Domain-Driven Design
 
-We follow DDD tactical patterns:
+我們遵循 DDD tactical patterns:
 
 - **Aggregates**: Consistency boundaries
 - **Entities**: Objects with identity
@@ -110,27 +110,27 @@ We follow DDD tactical patterns:
 - **Repositories**: Data access interfaces
 - **Domain Services**: Cross-aggregate logic
 
-[DDD Patterns Guide](../architecture/patterns/ddd-patterns.md)
+[DDD Patterns 指南](../architecture/patterns/ddd-patterns.md)
 
-## Coding Standards
+## 編碼標準
 
-### Java Coding Standards
+### Java 編碼標準
 
-- Follow [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)
-- Use Java 21 features (records, pattern matching, etc.)
-- Write self-documenting code
-- Use meaningful variable names
-- Keep methods small (< 20 lines)
+- 遵循 [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)
+- 使用 Java 21 特性 (records, pattern matching 等)
+- 撰寫自我說明的程式碼
+- 使用有意義的變數名稱
+- 保持方法簡短 (< 20 行)
 
-[Full Java Standards](coding-standards/java-standards.md)
+[完整 Java 標準](coding-standards/java-standards.md)
 
-### Code Quality Tools
+### 程式碼品質工具
 
-- **Checkstyle**: Code style checking
-- **PMD**: Code quality analysis
-- **SpotBugs**: Bug detection
-- **SonarQube**: Comprehensive code analysis
-- **ArchUnit**: Architecture testing
+- **Checkstyle**: 程式碼風格檢查
+- **PMD**: 程式碼品質分析
+- **SpotBugs**: Bug 偵測
+- **SonarQube**: 綜合程式碼分析
+- **ArchUnit**: 架構測試
 
 ```bash
 # Run code quality checks
@@ -139,15 +139,15 @@ We follow DDD tactical patterns:
 ./gradlew spotbugsMain
 ```
 
-## Testing Strategy
+## 測試策略
 
 ### Test Pyramid
 
-- **Unit Tests (80%)**: Fast, isolated tests
-- **Integration Tests (15%)**: Component integration
-- **E2E Tests (5%)**: Complete user journeys
+- **Unit Tests (80%)**: 快速、隔離的測試
+- **Integration Tests (15%)**: 元件整合
+- **E2E Tests (5%)**: 完整的使用者旅程
 
-### Test Commands
+### 測試指令
 
 ```bash
 # Run all tests
@@ -169,119 +169,119 @@ We follow DDD tactical patterns:
 ./gradlew jacocoTestReport
 ```
 
-[Testing Strategy Guide](testing/testing-strategy.md)
+[測試策略指南](testing/testing-strategy.md)
 
-### Test Coverage Requirements
+### 測試覆蓋率要求
 
-- **Minimum Coverage**: 80% line coverage
-- **Critical Paths**: 100% coverage
-- **New Code**: Must have tests
-- **Bug Fixes**: Must include regression test
+- **最低覆蓋率**: 80% 行覆蓋率
+- **關鍵路徑**: 100% 覆蓋率
+- **新程式碼**: 必須包含測試
+- **Bug 修復**: 必須包含 regression test
 
-## Development Workflows
+## 開發工作流程
 
 ### Git Workflow
 
-We use **Git Flow** with the following branches:
+我們使用 **Git Flow**，包含以下分支:
 
-- `main`: Production-ready code
-- `develop`: Integration branch
-- `feature/*`: Feature development
-- `bugfix/*`: Bug fixes
-- `hotfix/*`: Production hotfixes
-- `release/*`: Release preparation
+- `main`: 可用於生產環境的程式碼
+- `develop`: 整合分支
+- `feature/*`: 功能開發
+- `bugfix/*`: Bug 修復
+- `hotfix/*`: 生產環境緊急修復
+- `release/*`: Release 準備
 
-[Git Workflow Guide](workflows/git-workflow.md)
+[Git Workflow 指南](workflows/git-workflow.md)
 
-### Code Review Process
+### Code Review 流程
 
-1. **Create PR**: From feature branch to develop
-2. **Automated Checks**: CI/CD runs tests
-3. **Code Review**: At least 2 reviewers
-4. **Address Feedback**: Make requested changes
-5. **Approval**: Get approvals from reviewers
-6. **Merge**: Squash and merge to develop
+1. **建立 PR**: 從 feature 分支到 develop
+2. **自動化檢查**: CI/CD 執行測試
+3. **Code Review**: 至少 2 位 reviewers
+4. **處理回饋**: 進行要求的變更
+5. **核准**: 獲得 reviewers 的核准
+6. **合併**: Squash and merge 到 develop
 
-[Code Review Guide](workflows/code-review.md)
+[Code Review 指南](workflows/code-review.md)
 
 ### CI/CD Pipeline
 
-Our CI/CD pipeline includes:
+我們的 CI/CD pipeline 包含:
 
-1. **Build**: Compile and package
-2. **Test**: Run all tests
-3. **Quality**: Code quality checks
-4. **Security**: Security scanning
-5. **Deploy**: Deploy to environment
+1. **Build**: 編譯和打包
+2. **Test**: 執行所有測試
+3. **Quality**: 程式碼品質檢查
+4. **Security**: 安全性掃描
+5. **Deploy**: 部署到環境
 
-[CI/CD Guide](workflows/ci-cd.md)
+[CI/CD 指南](workflows/ci-cd.md)
 
-## Development Best Practices
+## 開發最佳實踐
 
-### DDD Best Practices
+### DDD 最佳實踐
 
-1. **Ubiquitous Language**: Use domain terminology
-2. **Bounded Contexts**: Clear context boundaries
-3. **Aggregate Design**: Small, focused aggregates
-4. **Event-Driven**: Use domain events for communication
-5. **Repository Pattern**: Abstract data access
+1. **Ubiquitous Language**: 使用領域術語
+2. **Bounded Contexts**: 清晰的上下文邊界
+3. **Aggregate Design**: 小型、專注的 aggregates
+4. **Event-Driven**: 使用 domain events 進行溝通
+5. **Repository Pattern**: 抽象化資料存取
 
-### Clean Code Principles
+### Clean Code 原則
 
-1. **SOLID Principles**: Follow SOLID design
+1. **SOLID Principles**: 遵循 SOLID 設計
 2. **DRY**: Don't Repeat Yourself
 3. **KISS**: Keep It Simple, Stupid
 4. **YAGNI**: You Aren't Gonna Need It
-5. **Boy Scout Rule**: Leave code better than you found it
+5. **Boy Scout Rule**: 讓程式碼比你發現時更好
 
-### Performance Best Practices
+### 效能最佳實踐
 
-1. **Database Optimization**: Use indexes, avoid N+1
-2. **Caching**: Cache frequently accessed data
-3. **Async Processing**: Use async for long operations
-4. **Connection Pooling**: Configure properly
-5. **Monitoring**: Monitor performance metrics
+1. **資料庫最佳化**: 使用索引，避免 N+1
+2. **快取**: 快取經常存取的資料
+3. **非同步處理**: 對長時間操作使用 async
+4. **連線池**: 適當配置
+5. **監控**: 監控效能指標
 
-## Common Development Tasks
+## 常見開發任務
 
-### Creating a New Feature
+### 建立新功能
 
-1. **Create Feature Branch**: `git checkout -b feature/my-feature`
-2. **Write BDD Scenarios**: Define behavior in Gherkin
-3. **Implement Domain Logic**: Start with domain layer
-4. **Add Tests**: Write unit and integration tests
-5. **Implement API**: Add REST endpoints
-6. **Update Documentation**: Document changes
-7. **Create PR**: Submit for review
+1. **建立 Feature 分支**: `git checkout -b feature/my-feature`
+2. **撰寫 BDD Scenarios**: 用 Gherkin 定義行為
+3. **實作 Domain Logic**: 從 domain 層開始
+4. **新增測試**: 撰寫 unit 和 integration tests
+5. **實作 API**: 新增 REST endpoints
+6. **更新文件**: 記錄變更
+7. **建立 PR**: 提交審查
 
-[Feature Development Guide](examples/creating-aggregate.md)
+[功能開發指南](examples/creating-aggregate.md)
 
-### Implementing Domain Events
+### 實作 Domain Events
 
-1. **Define Event**: Create event record
-2. **Collect in Aggregate**: Use `collectEvent()`
-3. **Publish in Service**: Use `DomainEventApplicationService`
-4. **Handle Event**: Create event handler
-5. **Test**: Write event tests
+1. **定義 Event**: 建立 event record
+2. **在 Aggregate 中收集**: 使用 `collectEvent()`
+3. **在 Service 中發布**: 使用 `DomainEventApplicationService`
+4. **處理 Event**: 建立 event handler
+5. **測試**: 撰寫 event 測試
 
-[Event Implementation Guide](examples/implementing-event.md)
+[Event 實作指南](examples/implementing-event.md)
 
-### Adding API Endpoint
+### 新增 API Endpoint
 
-1. **Design Endpoint**: Follow REST principles
-2. **Create DTO**: Request/response objects
-3. **Implement Controller**: REST controller
-4. **Add Validation**: Input validation
-5. **Write Tests**: API tests
-6. **Document**: Update API docs
+1. **設計 Endpoint**: 遵循 REST 原則
+2. **建立 DTO**: Request/response objects
+3. **實作 Controller**: REST controller
+4. **新增驗證**: 輸入驗證
+5. **撰寫測試**: API 測試
+6. **文件**: 更新 API 文件
 
-[API Implementation Guide](examples/api-implementation.md)
+[API 實作指南](examples/api-implementation.md)
 
-## Troubleshooting
+## 疑難排解
 
-### Common Issues
+### 常見問題
 
-#### Build Failures
+#### Build 失敗
 
 ```bash
 # Clean and rebuild
@@ -291,7 +291,7 @@ Our CI/CD pipeline includes:
 rm -rf ~/.gradle/caches
 ```
 
-#### Test Failures
+#### 測試失敗
 
 ```bash
 # Run specific test
@@ -301,70 +301,70 @@ rm -rf ~/.gradle/caches
 ./gradlew test --debug
 ```
 
-#### IDE Issues
+#### IDE 問題
 
 - **IntelliJ**: File → Invalidate Caches / Restart
 - **VS Code**: Reload window (Cmd+Shift+P → Reload Window)
 
-[Troubleshooting Guide](../operations/troubleshooting/README.md)
+[疑難排解指南](../operations/troubleshooting/README.md)
 
-## Resources
+## 資源
 
-### Documentation
+### 文件
 
-- [Architecture Documentation](../viewpoints/README.md)
-- [API Documentation](../api/README.md)
-- [Operations Documentation](../operations/README.md)
+- [架構文件](../viewpoints/README.md)
+- [API 文件](../api/README.md)
+- [Operations 文件](../operations/README.md)
 
-### External Resources
+### 外部資源
 
 - [Spring Boot Documentation](https://spring.io/projects/spring-boot)
 - [Domain-Driven Design](https://www.domainlanguage.com/ddd/)
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 - [Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/)
 
-### Training Materials
+### 培訓資料
 
 - [DDD Workshop Materials](training/ddd-workshop/)
 - [Testing Workshop](training/testing-workshop/)
 - [Architecture Patterns](training/architecture-patterns/)
 
-## Contributing
+## 貢獻
 
-### Contributing Guidelines
+### 貢獻指南
 
-1. Follow coding standards
-2. Write tests for new code
-3. Update documentation
-4. Submit PR with clear description
-5. Respond to review feedback
+1. 遵循編碼標準
+2. 為新程式碼撰寫測試
+3. 更新文件
+4. 提交 PR 並附上清楚的說明
+5. 回應 review 回饋
 
-### Documentation Updates
+### 文件更新
 
-1. Follow [style guide](../STYLE-GUIDE.md)
-2. Use templates from [templates](../templates/)
-3. Keep documentation current
-4. Add examples where helpful
+1. 遵循 [style guide](../STYLE-GUIDE.md)
+2. 使用 [templates](../templates/) 中的範本
+3. 保持文件最新
+4. 在有幫助的地方新增範例
 
-## Support
+## 支援
 
-### Getting Help
+### 取得協助
 
 - **Slack**: #dev-support
 - **Email**: dev-team@company.com
-- **Wiki**: Internal development wiki
-- **Office Hours**: Tuesday 2-3 PM
+- **Wiki**: 內部開發 wiki
+- **Office Hours**: 星期二 2-3 PM
 
-### Reporting Issues
+### 回報問題
 
-1. Check existing issues
-2. Provide reproduction steps
-3. Include error messages
-4. Add relevant logs
+1. 檢查現有問題
+2. 提供重現步驟
+3. 包含錯誤訊息
+4. 新增相關日誌
 
 ---
 
-**Document Owner**: Development Team
-**Last Review**: 2025-01-17
-**Next Review**: 2025-04-17
-**Status**: Active
+**文件負責人**: Development Team
+**最後審查**: 2025-01-17
+**下次審查**: 2025-04-17
+**狀態**: Active

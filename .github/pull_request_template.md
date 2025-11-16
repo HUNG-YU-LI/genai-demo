@@ -1,123 +1,123 @@
 # Pull Request
 
-## 📋 Description
+## 📋 說明
 
-<!-- Provide a brief description of the changes in this PR -->
+<!-- 提供此 Pull Request 中所做變更的簡要說明 -->
 
-## 🔗 Related Issues
+## 🔗 相關 Issues
 
-<!-- Link to related issues using keywords like "Closes #123" or "Fixes #456" -->
+<!-- 使用 "Closes #123" 或 "Fixes #456" 等關鍵詞連結相關 issues -->
 
 - Closes #
 - Related to #
 
-## 🧪 Type of Change
+## 🧪 變更類型
 
-<!-- Mark the relevant option with an "x" -->
+<!-- 使用 "x" 標記相關選項 -->
 
-- [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
-- [ ] 🚀 New feature (non-breaking change which adds functionality)
-- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] 📚 Documentation update
-- [ ] 🔧 Maintenance/refactoring
-- [ ] 🧪 Test improvements
-- [ ] 🏗️ Infrastructure changes
-- [ ] 🔒 Security improvements
+- [ ] 🐛 Bug fix (修復問題的非破壞性變更)
+- [ ] 🚀 New feature (新增功能的非破壞性變更)
+- [ ] 💥 Breaking change (會導致現有功能無法正常工作的修復或功能)
+- [ ] 📚 Documentation update (文件更新)
+- [ ] 🔧 Maintenance/refactoring (維護/重構)
+- [ ] 🧪 Test improvements (測試改進)
+- [ ] 🏗️ Infrastructure changes (基礎設施變更)
+- [ ] 🔒 Security improvements (安全改進)
 
-## 🧪 Testing
+## 🧪 測試
 
-<!-- Describe the tests you ran and how to reproduce them -->
+<!-- 描述您執行的測試以及如何重現這些測試 -->
 
-### Test Coverage
+### 測試覆蓋
 
-- [ ] Unit tests added/updated
-- [ ] Integration tests added/updated
-- [ ] BDD scenarios added/updated
-- [ ] Architecture tests pass
-- [ ] Manual testing completed
+- [ ] Unit tests 已新增/更新
+- [ ] Integration tests 已新增/更新
+- [ ] BDD scenarios 已新增/更新
+- [ ] Architecture tests 已通過
+- [ ] Manual testing 已完成
 
-### Test Results
-<!-- Include relevant test results or screenshots -->
+### 測試結果
+<!-- 包含相關的測試結果或螢幕截圖 -->
 
 ```
-# Paste test results here
+# 在此貼上測試結果
 ```
 
-## 📸 Screenshots (if applicable)
+## 📸 螢幕截圖 (如適用)
 
-<!-- Add screenshots for UI changes -->
+<!-- 為 UI 變更新增螢幕截圖 -->
 
-## 🔍 Code Quality Checklist
+## 🔍 程式碼品質檢查清單
 
-- [ ] Code follows the project's coding standards
-- [ ] Self-review of the code completed
-- [ ] Code is properly commented, particularly in hard-to-understand areas
-- [ ] Corresponding changes to documentation made
-- [ ] No new warnings introduced
-- [ ] All tests pass locally
+- [ ] 程式碼遵循專案的編碼標準
+- [ ] 已完成程式碼自我審查
+- [ ] 程式碼有適當的註解，特別是在難以理解的區域
+- [ ] 已進行對應的文件變更
+- [ ] 未引入新的警告
+- [ ] 所有測試在本地通過
 
-## 🔒 Security Checklist
+## 🔒 安全檢查清單
 
-- [ ] No sensitive information (passwords, keys, tokens) exposed
-- [ ] Input validation implemented where necessary
-- [ ] Authentication/authorization properly handled
-- [ ] Security scan results reviewed
+- [ ] 未曝露敏感資訊 (密碼、金鑰、Token)
+- [ ] 在必要的地方實現了 Input validation
+- [ ] 適當處理了 Authentication/authorization
+- [ ] 已審查 Security scan 結果
 
-## 🚀 Deployment Checklist
+## 🚀 部署檢查清單
 
-- [ ] Database migrations included (if applicable)
-- [ ] Environment variables documented (if applicable)
-- [ ] Deployment instructions updated (if applicable)
-- [ ] Rollback plan considered
+- [ ] 包含 Database migrations (如適用)
+- [ ] 已記錄 Environment variables (如適用)
+- [ ] 已更新部署說明 (如適用)
+- [ ] 已考慮 Rollback 計劃
 
-## 📊 Performance Impact
+## 📊 效能影響
 
-<!-- Describe any performance implications -->
+<!-- 描述任何效能影響 -->
 
-- [ ] No performance impact
-- [ ] Performance improved
-- [ ] Performance impact acceptable and documented
-- [ ] Performance tests added/updated
+- [ ] 無效能影響
+- [ ] 效能已改進
+- [ ] 效能影響可接受且已記錄
+- [ ] Performance tests 已新增/更新
 
 ## 🔄 Dependencies
 
-<!-- List any new dependencies or dependency changes -->
+<!-- 列出任何新的 dependencies 或 dependency 變更 -->
 
-- [ ] No new dependencies
-- [ ] New dependencies justified and documented
-- [ ] Dependency security scan passed
-- [ ] License compatibility verified
+- [ ] 無新的 dependencies
+- [ ] 新的 dependencies 已證明合理且已記錄
+- [ ] Dependency security scan 已通過
+- [ ] License 相容性已驗證
 
-## 📝 Additional Notes
+## 📝 額外備註
 
-<!-- Add any additional context, concerns, or notes for reviewers -->
+<!-- 為審閱者新增任何額外的上下文、疑慮或備註 -->
 
 ## 🏷️ Labels
 
-<!-- Suggest appropriate labels for this PR -->
+<!-- 為此 Pull Request 建議適當的 labels -->
 
-Suggested labels: `enhancement`, `bug`, `documentation`, `security`, `performance`, `breaking-change`
+建議 labels: `enhancement`, `bug`, `documentation`, `security`, `performance`, `breaking-change`
 
 ---
 
-## For Reviewers
+## 給審閱者的提示
 
-### Review Checklist
+### 審閱檢查清單
 
-- [ ] Code quality and standards
-- [ ] Test coverage and quality
-- [ ] Security considerations
-- [ ] Performance implications
-- [ ] Documentation completeness
-- [ ] Breaking changes identified
-- [ ] Deployment considerations
+- [ ] 程式碼品質和標準
+- [ ] 測試覆蓋和品質
+- [ ] 安全考量
+- [ ] 效能影響
+- [ ] 文件完整性
+- [ ] Breaking changes 已識別
+- [ ] 部署考量
 
-### Review Focus Areas
-<!-- Highlight specific areas that need careful review -->
+### 審閱重點區域
+<!-- 強調需要仔細審閱的特定區域 -->
 
-- [ ] Algorithm/logic changes
-- [ ] Database schema changes
-- [ ] API changes
-- [ ] Security-sensitive code
-- [ ] Performance-critical code
-- [ ] Infrastructure changes
+- [ ] Algorithm/logic changes (演算法/邏輯變更)
+- [ ] Database schema changes (資料庫 Schema 變更)
+- [ ] API changes (API 變更)
+- [ ] Security-sensitive code (安全敏感程式碼)
+- [ ] Performance-critical code (效能關鍵程式碼)
+- [ ] Infrastructure changes (基礎設施變更)

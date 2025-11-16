@@ -1,277 +1,277 @@
-# Frequently Asked Questions (FAQ)
+# 常見問題 (FAQ)
 
-This document answers common questions about the Enterprise E-Commerce Platform project.
+本文件回答關於 Enterprise E-Commerce Platform 專案的常見問題。
 
-## 📑 Table of Contents
+## 📑 目錄
 
-- [General Questions](#general-questions)
-- [Architecture & Design](#architecture--design)
-- [Development](#development)
-- [Testing](#testing)
-- [Deployment & Operations](#deployment--operations)
-- [Troubleshooting](#troubleshooting)
-
----
-
-## General Questions
-
-### What is this project about?
-
-This project demonstrates enterprise-grade software architecture through a comprehensive e-commerce platform. It showcases:
-
-- **Rozanski & Woods** methodology (7 Viewpoints + 8 Perspectives)
-- **Domain-Driven Design** with 13 bounded contexts
-- **Behavior-Driven Development** with Cucumber
-- **Cloud-native architecture** on AWS
-
-**Learn More**: [Project Overview](../README.md#-project-overview)
+- [一般問題](#一般問題)
+- [Architecture 與設計](#architecture-與設計)
+- [開發](#開發)
+- [測試](#測試)
+- [部署與維運](#部署與維運)
+- [疑難排解](#疑難排解)
 
 ---
 
-### Who is this project for?
+## 一般問題
 
-This project is designed for:
+### 這個專案是關於什麼？
 
-- **Software Architects**: Learn systematic architecture design
-- **Developers**: Study enterprise patterns and best practices
-- **Students**: Understand real-world software architecture
-- **Teams**: Use as a reference architecture for e-commerce systems
+本專案透過完整的電商平台展示企業級軟體架構。它展示了：
 
----
+- **Rozanski & Woods** 方法論 (7 個 Viewpoints + 8 個 Perspectives)
+- **Domain-Driven Design** 包含 13 個 bounded contexts
+- **Behavior-Driven Development** 使用 Cucumber
+- **Cloud-native architecture** 在 AWS 上
 
-### What makes this project different?
-
-Key differentiators:
-
-1. **Complete Architecture Documentation**: Full implementation of Rozanski & Woods methodology
-2. **Production-Ready**: Not just a demo, but production-grade code
-3. **Comprehensive Testing**: 80%+ coverage with unit, integration, and BDD tests
-4. **Cloud-Native**: Full AWS infrastructure with CDK
-5. **Living Documentation**: Tests serve as executable specifications
+**了解更多**: [專案總覽](../README.md#-project-overview)
 
 ---
 
-## Architecture & Design
+### 這個專案適合誰？
 
-### Why use Rozanski & Woods methodology?
+本專案專為以下對象設計：
 
-**Benefits**:
-
-- **Systematic Analysis**: 7 viewpoints provide complete system understanding
-- **Quality Focus**: 8 perspectives ensure quality attributes are addressed
-- **Stakeholder Communication**: Common language for discussing architecture
-- **Industry Standard**: Widely adopted in enterprise architecture
-
-**Viewpoints** describe system structure (what and how):
-- Context, Functional, Information, Concurrency
-- Development, Deployment, Operational
-
-**Perspectives** describe quality attributes (cross-cutting concerns):
-- Security, Performance, Availability, Evolution
-- Accessibility, Development Resource, i18n, Location
-
-**Learn More**: [Rozanski & Woods Guide](rozanski-woods-methodology-guide.md)
+- **軟體架構師**：學習系統化的架構設計
+- **開發者**：研究企業 patterns 和最佳實務
+- **學生**：理解真實世界的軟體架構
+- **團隊**：作為電商系統的參考架構
 
 ---
 
-### What's the difference between viewpoints and perspectives?
+### 這個專案有何不同之處？
 
-**Viewpoints** = System Structure
-- Describe **WHAT** the system is and **HOW** it's organized
-- Example: Functional Viewpoint shows business capabilities
+關鍵差異：
 
-**Perspectives** = Quality Attributes
-- Describe **quality concerns** that affect the entire system
-- Example: Security Perspective shows authentication across all viewpoints
-
-**Analogy**: 
-- Viewpoints = Different camera angles of a building
-- Perspectives = Quality lenses (safety, energy efficiency, accessibility)
-
-**Learn More**: [Architecture Methodology](rozanski-woods-methodology-guide.md)
+1. **完整的 Architecture 文件**：完整實作 Rozanski & Woods 方法論
+2. **Production-Ready**：不只是 demo，而是生產級程式碼
+3. **完整測試**：80%+ 涵蓋率，包含 unit、integration 和 BDD 測試
+4. **Cloud-Native**：完整 AWS 基礎設施使用 CDK
+5. **活文件**：測試作為可執行的規格
 
 ---
 
-### Why Domain-Driven Design (DDD)?
+## Architecture 與設計
 
-**Benefits**:
+### 為什麼使用 Rozanski & Woods 方法論？
 
-- **Business Alignment**: Code reflects business domain
-- **Bounded Contexts**: Clear boundaries reduce complexity
-- **Ubiquitous Language**: Common terminology between business and tech
-- **Strategic Design**: Helps manage large, complex systems
+**優點**：
 
-**Our Implementation**:
-- 13 bounded contexts (Customer, Order, Product, etc.)
-- Complete tactical patterns (Aggregates, Entities, Value Objects)
-- Event-driven communication between contexts
+- **系統化分析**：7 個 viewpoints 提供完整系統理解
+- **品質焦點**：8 個 perspectives 確保品質屬性得到處理
+- **利害關係人溝通**：討論架構的共同語言
+- **產業標準**：在企業架構中廣泛採用
 
-**Learn More**: [Functional Viewpoint](viewpoints/functional/README.md)
+**Viewpoints** 描述系統結構 (是什麼和如何)：
+- Context、Functional、Information、Concurrency
+- Development、Deployment、Operational
+
+**Perspectives** 描述品質屬性 (跨領域關注點)：
+- Security、Performance、Availability、Evolution
+- Accessibility、Development Resource、i18n、Location
+
+**了解更多**: [Rozanski & Woods 指南](rozanski-woods-methodology-guide.md)
 
 ---
 
-### Why Hexagonal Architecture?
+### Viewpoints 和 Perspectives 有什麼不同？
 
-**Benefits**:
+**Viewpoints** = 系統結構
+- 描述系統**是什麼**以及**如何**組織
+- 範例：Functional Viewpoint 顯示業務能力
 
-- **Testability**: Business logic isolated from infrastructure
-- **Flexibility**: Easy to swap infrastructure components
-- **Maintainability**: Clear separation of concerns
-- **Domain Focus**: Business logic is the center
+**Perspectives** = 品質屬性
+- 描述影響整個系統的**品質關注點**
+- 範例：Security Perspective 顯示跨所有 viewpoints 的認證
 
-**Structure**:
+**類比**：
+- Viewpoints = 建築物的不同相機角度
+- Perspectives = 品質鏡頭 (安全性、能源效率、無障礙性)
+
+**了解更多**: [Architecture 方法論](rozanski-woods-methodology-guide.md)
+
+---
+
+### 為什麼使用 Domain-Driven Design (DDD)？
+
+**優點**：
+
+- **業務對齊**：程式碼反映業務領域
+- **Bounded Contexts**：明確邊界降低複雜度
+- **Ubiquitous Language**：業務與技術間的共同術語
+- **Strategic Design**：協助管理大型複雜系統
+
+**我們的實作**：
+- 13 個 bounded contexts (Customer、Order、Product 等)
+- 完整戰術 patterns (Aggregates、Entities、Value Objects)
+- Contexts 間的 event-driven 通訊
+
+**了解更多**: [Functional Viewpoint](viewpoints/functional/README.md)
+
+---
+
+### 為什麼使用 Hexagonal Architecture？
+
+**優點**：
+
+- **可測試性**：業務邏輯與基礎設施隔離
+- **彈性**：易於替換基礎設施元件
+- **可維護性**：清楚的關注點分離
+- **Domain 焦點**：業務邏輯為中心
+
+**結構**：
 ```
-Domain (Core) ← Application ← Infrastructure
+Domain (核心) ← Application ← Infrastructure
                             ← Interfaces
 ```
 
-**Learn More**: [Development Viewpoint](viewpoints/development/README.md)
+**了解更多**: [Development Viewpoint](viewpoints/development/README.md)
 
 ---
 
-## Development
+## 開發
 
-### Can I run this without AWS?
+### 我可以不用 AWS 執行嗎？
 
-**Yes!** Use the `local` profile:
+**可以！** 使用 `local` profile：
 
 ```bash
 ./gradlew :app:bootRun --args='--spring.profiles.active=local'
 ```
 
-**Local Profile Uses**:
-- H2 in-memory database (instead of PostgreSQL)
-- In-memory cache (instead of Redis)
-- In-memory message broker (instead of Kafka)
+**Local Profile 使用**：
+- H2 in-memory database (取代 PostgreSQL)
+- In-memory cache (取代 Redis)
+- In-memory message broker (取代 Kafka)
 
-**Perfect for**:
-- Development
-- Unit testing
-- Quick experimentation
+**完美適用於**：
+- 開發
+- 單元測試
+- 快速實驗
 
-**Learn More**: [Local Development Setup](development/setup/local-environment.md)
-
----
-
-### How do I add a new bounded context?
-
-**Steps**:
-
-1. **Define Boundaries**: Identify business capabilities
-2. **Create Domain Model**: Aggregates, entities, value objects
-3. **Implement Repository**: Data access interface
-4. **Add Application Service**: Use case orchestration
-5. **Create Infrastructure**: Repository implementation
-6. **Add Domain Events**: For cross-context communication
-7. **Write Tests**: Unit, integration, and BDD tests
-8. **Update Documentation**: Functional viewpoint
-
-**Learn More**: [DDD Implementation Guide](development/ddd-implementation-guide.md)
+**了解更多**: [本機開發設定](development/setup/local-environment.md)
 
 ---
 
-### What coding standards should I follow?
+### 如何新增一個 bounded context？
 
-**Key Standards**:
+**步驟**：
 
-- **Style**: Google Java Style Guide
-- **Naming**: PascalCase for classes, camelCase for methods
-- **Architecture**: Hexagonal + DDD patterns
-- **Testing**: 80%+ coverage required
-- **Documentation**: JavaDoc for public APIs
+1. **定義邊界**：識別業務能力
+2. **建立 Domain Model**：Aggregates、entities、value objects
+3. **實作 Repository**：資料存取介面
+4. **新增 Application Service**：Use case 編排
+5. **建立 Infrastructure**：Repository 實作
+6. **新增 Domain Events**：用於跨 context 通訊
+7. **撰寫測試**：Unit、integration 和 BDD 測試
+8. **更新文件**：Functional viewpoint
 
-**Tools**:
-- Checkstyle for style enforcement
-- ArchUnit for architecture rules
-- JaCoCo for coverage
-
-**Learn More**: [Coding Standards](development/coding-standards/README.md)
+**了解更多**: [DDD Implementation Guide](development/ddd-implementation-guide.md)
 
 ---
 
-### How do I set up my IDE?
+### 我應該遵循哪些編碼標準？
 
-**Supported IDEs**:
-- IntelliJ IDEA (recommended)
+**關鍵標準**：
+
+- **風格**：Google Java Style Guide
+- **命名**：PascalCase 用於類別、camelCase 用於方法
+- **Architecture**：Hexagonal + DDD patterns
+- **測試**：需要 80%+ 涵蓋率
+- **文件**：公開 APIs 需要 JavaDoc
+
+**工具**：
+- Checkstyle 用於風格強制執行
+- ArchUnit 用於架構規則
+- JaCoCo 用於涵蓋率
+
+**了解更多**: [編碼標準](development/coding-standards/README.md)
+
+---
+
+### 如何設定我的 IDE？
+
+**支援的 IDEs**：
+- IntelliJ IDEA (推薦)
 - Eclipse
 - VS Code
 
-**Setup Steps**:
+**設定步驟**：
 
-1. Import as Gradle project
-2. Install required plugins
-3. Configure code style
-4. Set up run configurations
+1. 匯入為 Gradle 專案
+2. 安裝需要的 plugins
+3. 配置程式碼風格
+4. 設定執行配置
 
-**Learn More**: [IDE Configuration](development/setup/ide-configuration.md)
+**了解更多**: [IDE 配置](development/setup/ide-configuration.md)
 
 ---
 
-## Testing
+## 測試
 
-### What's the testing strategy?
+### 測試策略是什麼？
 
-**Test Pyramid**:
+**Test Pyramid**：
 
 ```
      /\
-    /E2E\     5% - Production environment
+    /E2E\     5% - Production 環境
    /____\
-  /Integ.\   15% - Staging environment
+  /Integ.\   15% - Staging 環境
  /________\
-/   Unit   \ 80% - Local environment
+/   Unit   \ 80% - Local 環境
 /___________\
 ```
 
-**Environment-Specific**:
-- **Local**: Unit tests only (fast feedback)
-- **Staging**: Integration tests with real AWS services
-- **Production**: E2E tests and monitoring
+**環境特定**：
+- **Local**：僅 unit tests (快速回饋)
+- **Staging**：與真實 AWS 服務的 integration tests
+- **Production**：E2E tests 和監控
 
-**Learn More**: [Testing Strategy](development/testing/testing-strategy.md)
+**了解更多**: [測試策略](development/testing/testing-strategy.md)
 
 ---
 
-### How do I run tests?
+### 如何執行測試？
 
-**Unit Tests**:
+**Unit Tests**：
 ```bash
 ./gradlew :app:test
 ```
 
-**BDD Tests**:
+**BDD Tests**：
 ```bash
 ./gradlew :app:cucumber
 ```
 
-**Coverage Report**:
+**Coverage Report**：
 ```bash
 ./gradlew :app:jacocoTestReport
-# View: build/reports/jacoco/test/html/index.html
+# 檢視: build/reports/jacoco/test/html/index.html
 ```
 
-**Architecture Tests**:
+**Architecture Tests**：
 ```bash
 ./gradlew :app:test --tests "*ArchitectureTest"
 ```
 
-**All Pre-commit Checks**:
+**所有 Pre-commit 檢查**：
 ```bash
 make pre-commit
 ```
 
-**Learn More**: [Testing Guide](development/testing/README.md)
+**了解更多**: [測試指南](development/testing/README.md)
 
 ---
 
-### How do I write BDD tests?
+### 如何撰寫 BDD tests？
 
-**Steps**:
+**步驟**：
 
-1. **Write Gherkin Scenario**:
+1. **撰寫 Gherkin Scenario**：
 ```gherkin
 Feature: Customer Registration
-  
+
   Scenario: Successful registration
     Given a new customer with valid information
     When they submit the registration form
@@ -279,7 +279,7 @@ Feature: Customer Registration
     And they should receive a welcome email
 ```
 
-2. **Implement Step Definitions**:
+2. **實作 Step Definitions**：
 ```java
 @Given("a new customer with valid information")
 public void aNewCustomerWithValidInformation() {
@@ -287,315 +287,315 @@ public void aNewCustomerWithValidInformation() {
 }
 ```
 
-3. **Run Tests**:
+3. **執行 Tests**：
 ```bash
 ./gradlew :app:cucumber
 ```
 
-**Learn More**: [BDD Testing Guide](development/testing/bdd-testing.md)
+**了解更多**: [BDD 測試指南](development/testing/bdd-testing.md)
 
 ---
 
-### Why is test coverage important?
+### 為什麼測試覆蓋率很重要？
 
-**Benefits**:
+**優點**：
 
-- **Confidence**: Safe refactoring
-- **Documentation**: Tests show how code works
-- **Quality**: Catches bugs early
-- **Maintainability**: Easier to change code
+- **信心**：安全重構
+- **文件**：測試顯示程式碼如何運作
+- **品質**：及早捕捉錯誤
+- **可維護性**：更容易變更程式碼
 
-**Our Target**: 80%+ line coverage
+**我們的目標**：80%+ line coverage
 
-**Focus Areas**:
-- Business logic (domain layer)
+**重點領域**：
+- 業務邏輯 (domain layer)
 - Application services
-- Critical paths
+- 關鍵路徑
 
-**Learn More**: [Testing Strategy](development/testing/testing-strategy.md)
+**了解更多**: [測試策略](development/testing/testing-strategy.md)
 
 ---
 
-## Deployment & Operations
+## 部署與維運
 
-### How do I deploy to AWS?
+### 如何部署到 AWS？
 
-**Prerequisites**:
-- AWS account
-- AWS CLI configured
-- Node.js 18+ (for CDK)
+**前置要求**：
+- AWS 帳號
+- AWS CLI 已配置
+- Node.js 18+ (用於 CDK)
 
-**Steps**:
+**步驟**：
 
-1. **Install Dependencies**:
+1. **安裝 Dependencies**：
 ```bash
 cd infrastructure
 npm install
 ```
 
-2. **Bootstrap CDK** (first time only):
+2. **Bootstrap CDK** (僅首次)：
 ```bash
 npx cdk bootstrap aws://ACCOUNT-ID/REGION
 ```
 
-3. **Deploy to Staging**:
+3. **部署到 Staging**：
 ```bash
 npm run deploy:staging
 ```
 
-4. **Deploy to Production**:
+4. **部署到 Production**：
 ```bash
 npm run deploy:production
 ```
 
-**Learn More**: [Deployment Guide](operations/deployment/README.md)
+**了解更多**: [部署指南](operations/deployment/README.md)
 
 ---
 
-### What AWS services are used?
+### 使用了哪些 AWS 服務？
 
-**Core Services**:
-- **EKS**: Kubernetes orchestration
-- **RDS**: PostgreSQL database
-- **MSK**: Managed Kafka
-- **ElastiCache**: Redis cache
-- **CloudWatch**: Monitoring and logging
-- **X-Ray**: Distributed tracing
+**核心服務**：
+- **EKS**：Kubernetes 編排
+- **RDS**：PostgreSQL 資料庫
+- **MSK**：Managed Kafka
+- **ElastiCache**：Redis cache
+- **CloudWatch**：監控和日誌
+- **X-Ray**：分散式追蹤
 
-**Supporting Services**:
-- VPC, Security Groups, IAM
-- Secrets Manager, Certificate Manager
-- Route 53, CloudFront, S3
+**支援服務**：
+- VPC、Security Groups、IAM
+- Secrets Manager、Certificate Manager
+- Route 53、CloudFront、S3
 
-**Learn More**: [Deployment Viewpoint](viewpoints/deployment/README.md)
-
----
-
-### How do I monitor the application?
-
-**Monitoring Stack**:
-
-- **Metrics**: CloudWatch + Prometheus
-- **Logging**: Structured logs in CloudWatch
-- **Tracing**: AWS X-Ray for distributed tracing
-- **Dashboards**: Amazon Managed Grafana
-- **Alerts**: CloudWatch Alarms + SNS
-
-**Key Metrics**:
-- API response times (p50, p95, p99)
-- Error rates by endpoint
-- Database query performance
-- Cache hit rates
-- Business metrics (orders, revenue)
-
-**Learn More**: [Monitoring Guide](operations/monitoring/monitoring-strategy.md)
+**了解更多**: [Deployment Viewpoint](viewpoints/deployment/README.md)
 
 ---
 
-### What if something goes wrong in production?
+### 如何監控應用程式？
 
-**Incident Response**:
+**監控堆疊**：
 
-1. **Check Runbooks**: [Operations Runbooks](operations/runbooks/README.md)
-2. **Review Dashboards**: Grafana dashboards
-3. **Check Logs**: CloudWatch Logs
-4. **Follow Procedures**: Incident response runbook
+- **Metrics**：CloudWatch + Prometheus
+- **Logging**：CloudWatch 中的結構化日誌
+- **Tracing**：AWS X-Ray 用於分散式追蹤
+- **Dashboards**：Amazon Managed Grafana
+- **Alerts**：CloudWatch Alarms + SNS
 
-**Common Issues**:
+**關鍵指標**：
+- API 回應時間 (p50, p95, p99)
+- 依 endpoint 的錯誤率
+- 資料庫查詢效能
+- 快取命中率
+- 業務指標 (訂單、收入)
+
+**了解更多**: [監控指南](operations/monitoring/monitoring-strategy.md)
+
+---
+
+### 如果 production 發生問題怎麼辦？
+
+**事件回應**：
+
+1. **檢查 Runbooks**: [Operations Runbooks](operations/runbooks/README.md)
+2. **審閱 Dashboards**: Grafana dashboards
+3. **檢查 Logs**: CloudWatch Logs
+4. **遵循程序**: Incident response runbook
+
+**常見問題**：
 - [Troubleshooting Guide](operations/troubleshooting/common-issues.md)
 - [Debugging Guide](operations/troubleshooting/debugging-guide.md)
 
-**Get Help**: yikaikao@gmail.com
+**取得協助**: yikaikao@gmail.com
 
 ---
 
-## Troubleshooting
+## 疑難排解
 
-### Application won't start
+### 應用程式無法啟動
 
-**Common Causes**:
+**常見原因**：
 
-1. **Port Already in Use**:
+1. **Port 已被使用**：
 ```bash
-# Check what's using port 8080
+# 檢查是什麼在使用 port 8080
 lsof -i :8080
-# Kill the process
+# 終止 process
 kill -9 <PID>
 ```
 
-2. **Database Not Running**:
+2. **資料庫未執行**：
 ```bash
-# Start Docker services
+# 啟動 Docker 服務
 docker-compose up -d
 ```
 
-3. **Missing Dependencies**:
+3. **缺少 Dependencies**：
 ```bash
-# Clean and rebuild
+# 清除並重新建置
 ./gradlew clean build
 ```
 
-**Learn More**: [Troubleshooting Guide](operations/troubleshooting/common-issues.md)
+**了解更多**: [Troubleshooting Guide](operations/troubleshooting/common-issues.md)
 
 ---
 
-### Tests are failing
+### 測試失敗
 
-**Common Causes**:
+**常見原因**：
 
-1. **Outdated Dependencies**:
+1. **過期的 Dependencies**：
 ```bash
 ./gradlew clean build --refresh-dependencies
 ```
 
-2. **Database State Issues**:
+2. **資料庫狀態問題**：
 ```bash
-# Reset database
+# 重置資料庫
 docker-compose down -v
 docker-compose up -d
 ```
 
-3. **Architecture Rule Violations**:
+3. **Architecture 規則違反**：
 ```bash
-# Check ArchUnit tests
+# 檢查 ArchUnit tests
 ./gradlew :app:test --tests "*ArchitectureTest"
 ```
 
-**Learn More**: [Testing Troubleshooting](development/testing/troubleshooting.md)
+**了解更多**: [測試 Troubleshooting](development/testing/troubleshooting.md)
 
 ---
 
-### Diagrams won't generate
+### 圖表無法生成
 
-**Common Causes**:
+**常見原因**：
 
-1. **PlantUML Syntax Error**:
+1. **PlantUML 語法錯誤**：
 ```bash
-# Validate diagrams
+# 驗證圖表
 make validate
 ```
 
-2. **Missing PlantUML**:
+2. **缺少 PlantUML**：
 ```bash
-# Install PlantUML
+# 安裝 PlantUML
 brew install plantuml  # macOS
-# or download from https://plantuml.com/
+# 或從 https://plantuml.com/ 下載
 ```
 
-3. **Broken References**:
+3. **損壞的參考**：
 ```bash
-# Check cross-references
+# 檢查交叉參考
 ./scripts/validate-cross-references.py
 ```
 
-**Learn More**: [Diagram Generation Guide](diagrams/README.md)
+**了解更多**: [圖表生成指南](diagrams/README.md)
 
 ---
 
-### How do I get help?
+### 如何取得協助？
 
-**Resources**:
+**資源**：
 
-1. **Documentation**: Check [docs/](../README.md#-documentation)
-2. **This FAQ**: Search this document
-3. **GitHub Issues**: [Search existing issues](https://github.com/yourusername/genai-demo/issues)
-4. **Discussions**: [Ask in Discussions](https://github.com/yourusername/genai-demo/discussions)
+1. **文件**: 查看 [docs/](../README.md#-documentation)
+2. **此 FAQ**: 搜尋本文件
+3. **GitHub Issues**: [搜尋現有 issues](https://github.com/yourusername/genai-demo/issues)
+4. **Discussions**: [在 Discussions 中提問](https://github.com/yourusername/genai-demo/discussions)
 5. **Email**: yikaikao@gmail.com
 
-**Before Asking**:
-- Search documentation
-- Check existing issues
-- Try troubleshooting guides
-- Provide error messages and logs
+**提問前**：
+- 搜尋文件
+- 檢查現有 issues
+- 嘗試疑難排解指南
+- 提供錯誤訊息和日誌
 
 ---
 
-## Additional Questions
+## 額外問題
 
-### Where can I find API documentation?
+### 在哪裡可以找到 API 文件？
 
-**Multiple Formats**:
+**多種格式**：
 
-- **Interactive**: Swagger UI at http://localhost:8080/swagger-ui.html
+- **互動式**: Swagger UI 在 http://localhost:8080/swagger-ui.html
 - **OpenAPI Spec**: http://localhost:8080/api-docs
-- **Documentation**: [API Documentation](api/README.md)
-- **Postman**: Collection (coming soon)
+- **文件**: [API Documentation](api/README.md)
+- **Postman**: Collection (即將推出)
 
 ---
 
-### How do I contribute?
+### 如何貢獻？
 
-**Quick Steps**:
+**快速步驟**：
 
-1. Fork the repository
-2. Create a feature branch
-3. Make changes following [Coding Standards](development/coding-standards/README.md)
-4. Write tests (80%+ coverage)
-5. Run `make pre-commit`
-6. Submit pull request
+1. Fork repository
+2. 建立 feature branch
+3. 遵循[編碼標準](development/coding-standards/README.md)進行變更
+4. 撰寫測試 (80%+ coverage)
+5. 執行 `make pre-commit`
+6. 提交 pull request
 
-**Learn More**: [Contributing Guide](../CONTRIBUTING.md)
+**了解更多**: [Contributing Guide](../CONTRIBUTING.md)
 
 ---
 
-### Is this production-ready?
+### 這是 production-ready 的嗎？
 
-**Yes!** This project includes:
+**是的！** 本專案包含：
 
-- ✅ Comprehensive testing (80%+ coverage)
-- ✅ Security best practices
-- ✅ Monitoring and observability
-- ✅ Disaster recovery procedures
-- ✅ Operational runbooks
+- ✅ 完整測試 (80%+ coverage)
+- ✅ 安全最佳實務
+- ✅ 監控和可觀察性
+- ✅ 災難復原程序
+- ✅ 維運 runbooks
 - ✅ CI/CD pipeline
 - ✅ Infrastructure as Code
 
-**However**: Review and adapt to your specific requirements before production use.
+**然而**：在 production 使用前，請審閱並根據您的特定需求調整。
 
 ---
 
-### Can I use this for my project?
+### 我可以用於我的專案嗎？
 
-**Yes!** This project is MIT licensed.
+**可以！** 本專案採用 MIT 授權。
 
-**You can**:
-- Use as reference architecture
-- Copy and modify code
-- Use in commercial projects
-- Learn from the implementation
+**您可以**：
+- 作為參考架構使用
+- 複製和修改程式碼
+- 用於商業專案
+- 從實作中學習
 
-**Please**:
-- Give credit where appropriate
-- Share improvements back (optional)
-- Follow the license terms
+**請**：
+- 適當給予致謝
+- 分享改進 (選擇性)
+- 遵循授權條款
 
-**Learn More**: [LICENSE](../LICENSE)
-
----
-
-### How do I stay updated?
-
-**Ways to Stay Informed**:
-
-- ⭐ Star the repository on GitHub
-- 👀 Watch for releases
-- 📧 Subscribe to discussions
-- 📰 Check [CHANGELOG.md](../CHANGELOG.md)
+**了解更多**: [LICENSE](../LICENSE)
 
 ---
 
-## Still Have Questions?
+### 如何保持更新？
 
-If your question isn't answered here:
+**保持資訊的方式**：
 
-1. **Search Documentation**: [docs/README.md](README.md)
-2. **Check Issues**: [GitHub Issues](https://github.com/yourusername/genai-demo/issues)
-3. **Ask Community**: [GitHub Discussions](https://github.com/yourusername/genai-demo/discussions)
-4. **Email Maintainer**: yikaikao@gmail.com
-
-**We're here to help!** 🤝
+- ⭐ 在 GitHub 上 star repository
+- 👀 關注 releases
+- 📧 訂閱 discussions
+- 📰 查看 [CHANGELOG.md](../CHANGELOG.md)
 
 ---
 
-**Last Updated**: 2024-11-09  
-**Maintainer**: yikaikao@gmail.com
+## 還有問題？
+
+如果您的問題未在此回答：
+
+1. **搜尋文件**: [docs/README.md](README.md)
+2. **檢查 Issues**: [GitHub Issues](https://github.com/yourusername/genai-demo/issues)
+3. **詢問社群**: [GitHub Discussions](https://github.com/yourusername/genai-demo/discussions)
+4. **Email 維護者**: yikaikao@gmail.com
+
+**我們樂意協助！** 🤝
+
+---
+
+**最後更新**: 2024-11-09
+**維護者**: yikaikao@gmail.com

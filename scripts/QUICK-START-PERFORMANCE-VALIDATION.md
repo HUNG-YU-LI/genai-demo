@@ -1,39 +1,39 @@
-# Quick Start: Performance Validation
+# 快速開始：效能驗證
 
-This guide provides a quick start for validating test performance improvements.
+本指南為驗證測試效能改進提供了快速開始方法。
 
-## Prerequisites
+## 先決條件
 
-- Java 21 installed
-- Gradle configured
-- Project built successfully
-- All tests passing
+- Java 21 已安裝
+- Gradle 已配置
+- 專案已成功建置
+- 所有測試通過
 
-## Quick Validation (5 Steps)
+## 快速驗證（5 個步驟）
 
-### Step 1: Establish Baseline (Before Refactoring)
-
-```bash
-./scripts/measure-test-performance-baseline.sh
-```
-
-**Duration:** ~15-20 minutes
-**Output:** `build/reports/performance-baseline/baseline_metrics_<timestamp>.csv`
-
-### Step 2: Perform Test Refactoring
-
-Follow the test refactoring plan in `.kiro/specs/test-code-refactoring/`
-
-### Step 3: Measure New Performance (After Refactoring)
+### 步驟 1：建立基準（重構前）
 
 ```bash
 ./scripts/measure-test-performance-baseline.sh
 ```
 
-**Duration:** ~10-15 minutes (should be faster!)
-**Output:** `build/reports/performance-baseline/baseline_metrics_<new_timestamp>.csv`
+**耗時：** ~15-20 分鐘
+**輸出：** `build/reports/performance-baseline/baseline_metrics_<timestamp>.csv`
 
-### Step 4: Compare Results
+### 步驟 2：執行測試重構
+
+遵循 `.kiro/specs/test-code-refactoring/` 中的測試重構計畫
+
+### 步驟 3：測量新效能（重構後）
+
+```bash
+./scripts/measure-test-performance-baseline.sh
+```
+
+**耗時：** ~10-15 分鐘（應該會更快！）
+**輸出：** `build/reports/performance-baseline/baseline_metrics_<new_timestamp>.csv`
+
+### 步驟 4：比較結果
 
 ```bash
 ./scripts/compare-test-performance.sh \
@@ -41,55 +41,55 @@ Follow the test refactoring plan in `.kiro/specs/test-code-refactoring/`
   build/reports/performance-baseline/baseline_metrics_NEW.csv
 ```
 
-**Duration:** <1 minute
-**Output:** `build/reports/performance-comparison/comparison_report_<timestamp>.md`
+**耗時：** <1 分鐘
+**輸出：** `build/reports/performance-comparison/comparison_report_<timestamp>.md`
 
-### Step 5: Generate Success Report
+### 步驟 5：產生成功報告
 
 ```bash
-# Validate reliability
+# 驗證可靠性
 ./scripts/validate-test-reliability.sh
 
-# Measure productivity
+# 測量效率
 ./scripts/measure-developer-productivity.sh
 
-# Generate final report
+# 產生最終報告
 ./scripts/generate-success-metrics-report.sh
 ```
 
-**Duration:** ~20-30 minutes
-**Output:** `reports-summaries/task-execution/task-8-success-metrics-report.md`
+**耗時：** ~20-30 分鐘
+**輸出：** `reports-summaries/task-execution/task-8-success-metrics-report.md`
 
-## Expected Results
+## 預期結果
 
-### Performance Targets
+### 效能目標
 
-| Metric | Target | Expected Result |
+| 指標 | 目標 | 預期結果 |
 |--------|--------|-----------------|
-| Unit Test Time | >60% reduction | ✅ 67-80% reduction |
-| Memory Usage | >80% reduction | ✅ 87% reduction |
-| CI/CD Pipeline | >50% improvement | ✅ 50-90% improvement |
-| Test Reliability | >99% success | ✅ >99% success |
-| Test Coverage | >80% maintained | ✅ 85% maintained |
+| 單元測試時間 | >60% 減少 | ✅ 67-80% 減少 |
+| 記憶體使用 | >80% 減少 | ✅ 87% 減少 |
+| CI/CD 管道 | >50% 改進 | ✅ 50-90% 改進 |
+| 測試可靠性 | >99% 成功 | ✅ >99% 成功 |
+| 測試覆蓋率 | >80% 維護 | ✅ 85% 維護 |
 
-### Before vs After
+### 重構前與重構後
 
-**Before Refactoring:**
-- Full test suite: 600-900 seconds
-- Memory usage: 6-8 GB
-- PR validation: 15-20 minutes
-- Test success rate: 95-97%
+**重構前：**
+- 完整測試套件：600-900 秒
+- 記憶體使用：6-8 GB
+- PR 驗證：15-20 分鐘
+- 測試成功率：95-97%
 
-**After Refactoring:**
-- quickTest: <120 seconds (80% faster)
-- unitTest: <300 seconds (67% faster)
-- Memory usage: 1-2 GB (87% reduction)
-- PR validation: <2 minutes (90% faster)
-- Test success rate: >99%
+**重構後：**
+- quickTest：<120 秒（快 80%）
+- unitTest：<300 秒（快 67%）
+- 記憶體使用：1-2 GB（減少 87%）
+- PR 驗證：<2 分鐘（快 90%）
+- 測試成功率：>99%
 
-## CI/CD Integration
+## CI/CD 整合
 
-### Add to GitHub Actions
+### 新增至 GitHub Actions
 
 ```yaml
 name: Performance Check
@@ -107,7 +107,7 @@ jobs:
       - run: ./scripts/detect-performance-regression.sh
 ```
 
-### Add to AWS CodeBuild
+### 新增至 AWS CodeBuild
 
 ```yaml
 version: 0.2
@@ -117,68 +117,68 @@ phases:
       - ./scripts/detect-performance-regression.sh
 ```
 
-## Troubleshooting
+## 故障排除
 
-### Script Not Found
+### 指令碼未找到
 ```bash
 chmod +x scripts/*.sh
 ```
 
-### Out of Memory
+### 記憶體不足
 ```bash
 export GRADLE_OPTS="-Xmx8g"
 ```
 
-### Tests Failing
+### 測試失敗
 ```bash
-# Fix tests first, then run validation
+# 先修復測試，然後執行驗證
 ./gradlew test
 ```
 
-## Quick Commands
+## 快速指令
 
 ```bash
-# Establish baseline
+# 建立基準
 ./scripts/measure-test-performance-baseline.sh
 
-# Check for regressions
+# 檢查回歸
 ./scripts/detect-performance-regression.sh
 
-# Compare two baselines
+# 比較兩個基準
 ./scripts/compare-test-performance.sh baseline1.csv baseline2.csv
 
-# Validate reliability
+# 驗證可靠性
 ./scripts/validate-test-reliability.sh
 
-# Measure productivity
+# 測量效率
 ./scripts/measure-developer-productivity.sh
 
-# Generate final report
+# 產生最終報告
 ./scripts/generate-success-metrics-report.sh
 ```
 
-## Report Locations
+## 報告位置
 
 ```
 build/reports/
-├── performance-baseline/       # Baseline measurements
-├── performance-comparison/     # Comparisons
-├── performance-regression/     # Regression checks
-├── test-reliability/          # Reliability validation
-└── developer-productivity/    # Productivity metrics
+├── performance-baseline/       # 基準測量
+├── performance-comparison/     # 比較
+├── performance-regression/     # 回歸檢查
+├── test-reliability/          # 可靠性驗證
+└── developer-productivity/    # 效率指標
 
 reports-summaries/task-execution/
-└── task-8-success-metrics-report.md  # Final report
+└── task-8-success-metrics-report.md  # 最終報告
 ```
 
-## Support
+## 支援
 
-- Full documentation: `scripts/PERFORMANCE-MEASUREMENT-README.md`
-- Test strategy: `docs/testing/test-strategy-guide.md`
-- Migration guide: `docs/testing/test-migration-guide.md`
-- CI/CD guide: `docs/testing/cicd-integration-guide.md`
+- 完整文件：`scripts/PERFORMANCE-MEASUREMENT-README.md`
+- 測試策略：`docs/testing/test-strategy-guide.md`
+- 遷移指南：`docs/testing/test-migration-guide.md`
+- CI/CD 指南：`docs/testing/cicd-integration-guide.md`
 
 ---
 
-**Quick Start Version:** 1.0
-**Last Updated:** October 2, 2025
+**快速開始版本：** 1.0
+**最後更新：** 2025年10月2日

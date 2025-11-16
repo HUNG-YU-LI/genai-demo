@@ -1,150 +1,150 @@
 # Quality Perspectives
 
-This section contains documentation for all 8 quality perspectives following the Rozanski & Woods methodology. Each perspective describes quality attributes that cut across multiple viewpoints.
+本章節包含遵循 Rozanski & Woods 方法論的全部 8 個品質觀點的文檔。每個觀點描述了跨越多個視角的品質屬性。
 
-## What are Perspectives
+## 什麼是 Perspectives
 
-Perspectives are quality attributes that affect the entire system:
+Perspectives 是影響整個系統的品質屬性：
 
-- **Cross-cutting concerns** that span multiple viewpoints
-- **Quality requirements** like security, performance, availability
-- **Non-functional requirements** that constrain the design
+- **跨領域關注點**：跨越多個視角
+- **品質需求**：如 security、performance、availability
+- **非功能性需求**：對設計產生限制
 
-## The 8 Perspectives
+## 8 個 Perspectives
 
 ### 1. [Security Perspective](security/README.md)
 
-**Concerns**: Authentication, authorization, data protection, compliance
+**關注點**：Authentication、authorization、資料保護、合規性
 
-**Key Questions**:
+**關鍵問題**：
 
-- How is the system protected from attacks?
-- How is sensitive data secured?
-- How are users authenticated and authorized?
+- 系統如何防範攻擊？
+- 敏感資料如何受到保護？
+- 使用者如何進行 authentication 和 authorization？
 
-**Affected Viewpoints**: All viewpoints
+**影響的視角**：所有視角
 
 ---
 
 ### 2. [Performance & Scalability Perspective](performance/README.md)
 
-**Concerns**: Response times, throughput, resource usage, scaling
+**關注點**：回應時間、吞吐量、資源使用、擴展
 
-**Key Questions**:
+**關鍵問題**：
 
-- How fast does the system respond?
-- How many users can it support?
-- How does it scale under load?
+- 系統回應速度有多快？
+- 能支援多少使用者？
+- 在負載下如何擴展？
 
-**Affected Viewpoints**: Functional, Information, Concurrency, Deployment
+**影響的視角**：Functional、Information、Concurrency、Deployment
 
 ---
 
 ### 3. [Availability & Resilience Perspective](availability/README.md)
 
-**Concerns**: Uptime, fault tolerance, disaster recovery
+**關注點**：正常運行時間、容錯、災難恢復
 
-**Key Questions**:
+**關鍵問題**：
 
-- What is the system uptime?
-- How does it handle failures?
-- How quickly can it recover?
+- 系統的正常運行時間是多少？
+- 如何處理故障？
+- 恢復速度有多快？
 
-**Affected Viewpoints**: Deployment, Operational, Concurrency
+**影響的視角**：Deployment、Operational、Concurrency
 
 ---
 
 ### 4. [Evolution Perspective](evolution/README.md)
 
-**Concerns**: Extensibility, maintainability, technology evolution
+**關注點**：可擴展性、可維護性、技術演進
 
-**Key Questions**:
+**關鍵問題**：
 
-- How easy is it to add new features?
-- How can technology be upgraded?
-- How is backward compatibility maintained?
+- 添加新功能有多容易？
+- 技術如何升級？
+- 如何維護向後相容性？
 
-**Affected Viewpoints**: Development, Functional, Information
+**影響的視角**：Development、Functional、Information
 
 ---
 
 ### 5. [Accessibility Perspective](accessibility/README.md)
 
-**Concerns**: UI accessibility, API usability, documentation clarity
+**關注點**：UI accessibility、API 可用性、文檔清晰度
 
-**Key Questions**:
+**關鍵問題**：
 
-- Can users with disabilities use the system?
-- Is the API easy to use?
-- Is documentation clear?
+- 身心障礙使用者能否使用系統？
+- API 是否易於使用？
+- 文檔是否清晰？
 
-**Affected Viewpoints**: Functional, Operational
+**影響的視角**：Functional、Operational
 
 ---
 
 ### 6. [Development Resource Perspective](development-resource/README.md)
 
-**Concerns**: Team structure, skills, tools, productivity
+**關注點**：團隊結構、技能、工具、生產力
 
-**Key Questions**:
+**關鍵問題**：
 
-- What skills are required?
-- What tools are needed?
-- How is knowledge transferred?
+- 需要哪些技能？
+- 需要哪些工具？
+- 知識如何傳遞？
 
-**Affected Viewpoints**: Development, Operational
+**影響的視角**：Development、Operational
 
 ---
 
 ### 7. [Internationalization Perspective](internationalization/README.md)
 
-**Concerns**: Multi-language support, localization, cultural adaptation
+**關注點**：多語言支援、在地化、文化適應
 
-**Key Questions**:
+**關鍵問題**：
 
-- What languages are supported?
-- How is content localized?
-- What are cultural considerations?
+- 支援哪些語言？
+- 內容如何在地化？
+- 文化考量有哪些？
 
-**Affected Viewpoints**: Functional, Information, Deployment
+**影響的視角**：Functional、Information、Deployment
 
 ---
 
 ### 8. [Location Perspective](location/README.md)
 
-**Concerns**: Geographic distribution, data residency, latency
+**關注點**：地理分佈、資料駐留、延遲
 
-**Key Questions**:
+**關鍵問題**：
 
-- Where are users located?
-- Where is data stored?
-- How is latency minimized?
+- 使用者位於何處？
+- 資料儲存在哪裡？
+- 如何最小化延遲？
 
-**Affected Viewpoints**: Deployment, Information, Operational
+**影響的視角**：Deployment、Information、Operational
 
 ---
 
-## How to Use This Documentation
+## 如何使用本文檔
 
-### For Quality Assurance
+### 對於品質保證
 
-- Review all perspectives to understand quality requirements
-- Use quality attribute scenarios for testing
-- Verify implementation against requirements
+- 檢視所有觀點以了解品質需求
+- 使用品質屬性場景進行測試
+- 根據需求驗證實作
 
-### For Architects
+### 對於架構師
 
-- Apply perspectives to viewpoints during design
-- Ensure quality attributes are addressed
-- Document trade-offs and decisions
+- 在設計期間將觀點應用於視角
+- 確保品質屬性得到解決
+- 記錄權衡和決策
 
-### For Developers
+### 對於開發人員
 
-- Understand quality constraints for implementation
-- Follow implementation guidelines
-- Verify code against quality requirements
+- 了解實作的品質限制
+- 遵循實作指南
+- 根據品質需求驗證程式碼
 
-## Perspective-Viewpoint Matrix
+## Perspective-Viewpoint 矩陣
 
 | Perspective | Functional | Information | Concurrency | Development | Deployment | Operational | Context |
 |-------------|-----------|-------------|-------------|-------------|------------|-------------|---------|
@@ -159,16 +159,16 @@ Perspectives are quality attributes that affect the entire system:
 
 ## Quality Attribute Scenarios
 
-Each perspective includes quality attribute scenarios in the format:
+每個觀點都包含以下格式的品質屬性場景：
 
-- **Source**: Who/what generates the stimulus
-- **Stimulus**: The condition that affects the system
-- **Environment**: System state when stimulus occurs
-- **Artifact**: The part of the system affected
-- **Response**: How the system responds
-- **Response Measure**: How to measure the response
+- **Source**：誰／什麼產生刺激
+- **Stimulus**：影響系統的條件
+- **Environment**：刺激發生時的系統狀態
+- **Artifact**：受影響的系統部分
+- **Response**：系統如何回應
+- **Response Measure**：如何衡量回應
 
-Example:
+範例：
 
 ```text
 Source: Web user
@@ -181,5 +181,5 @@ Response Measure: Response time ≤ 2000ms, Success rate ≥ 99.5%
 
 ---
 
-**Last Updated**: 2025-01-17  
+**Last Updated**: 2025-01-17
 **Status**: In Progress

@@ -1,74 +1,74 @@
 # Information Viewpoint
 
-> **Status**: 📝 To be documented  
-> **Last Updated**: 2025-01-17  
-> **Owner**: Data Architect
+> **狀態**：📝 待撰寫
+> **最後更新**：2025-01-17
+> **負責人**：資料架構師
 
-## Overview
+## 概述
 
-The Information Viewpoint describes how the system stores, manages, and distributes information across bounded contexts.
+Information Viewpoint 描述系統如何跨 bounded contexts 儲存、管理和分發資訊。
 
-## Purpose
+## 目的
 
-This viewpoint answers:
+此 viewpoint 回答：
 
-- What data does the system manage?
-- How is data structured and related?
-- Who owns which data?
-- How does data flow through the system?
+- 系統管理哪些資料？
+- 資料如何結構化和關聯？
+- 誰擁有哪些資料？
+- 資料如何在系統中流動？
 
-## Stakeholders
+## 利害關係人
 
-- **Primary**: Data architects, database administrators
-- **Secondary**: Developers, architects
+- **主要**：資料架構師、資料庫管理員
+- **次要**：開發人員、架構師
 
-## Contents
+## 內容
 
-### 📄 Documents
+### 📄 文件
 
-- [Overview](overview.md) - Data management approach
-- [Domain Models](domain-models.md) - Entity relationships by bounded context
-- [Data Ownership](data-ownership.md) - Data ownership and boundaries
-- [Data Flow](data-flow.md) - How data moves between contexts
-- [Data Lifecycle](data-lifecycle.md) - Creation, update, deletion policies
+- [Overview](overview.md) - 資料管理方法
+- [Domain Models](domain-models.md) - 按 bounded context 的實體關係
+- [Data Ownership](data-ownership.md) - 資料擁有權和邊界
+- [Data Flow](data-flow.md) - 資料如何在 contexts 之間移動
+- [Data Lifecycle](data-lifecycle.md) - 建立、更新、刪除政策
 
-### 📊 Diagrams
+### 📊 圖表
 
-- Entity-relationship diagrams for each bounded context
-- Data flow diagrams
-- Event flow diagrams
+- 每個 bounded context 的實體關係圖
+- 資料流圖
+- 事件流圖
 
-## Key Concepts
+## 關鍵概念
 
-### Data Ownership
+### 資料擁有權
 
-- Each bounded context owns its data
-- Cross-context data access via domain events
-- Eventual consistency between contexts
+- 每個 bounded context 擁有其資料
+- 透過 domain events 進行跨 context 資料存取
+- Contexts 之間的最終一致性
 
-### Data Storage
+### 資料儲存
 
-- **Primary Database**: PostgreSQL (production)
-- **Development/Test**: H2 in-memory database
-- **Caching**: Redis for distributed caching
+- **主要資料庫**：PostgreSQL（正式環境）
+- **開發/測試**：H2 記憶體資料庫
+- **快取**：Redis 用於分散式快取
 
-## Related Documentation
+## 相關文件
 
-### Related Viewpoints
+### 相關 Viewpoints
 
-- [Functional Viewpoint](../functional/README.md) - Bounded contexts that own data
-- [Concurrency Viewpoint](../concurrency/README.md) - Data consistency strategies
+- [Functional Viewpoint](../functional/README.md) - 擁有資料的 bounded contexts
+- [Concurrency Viewpoint](../concurrency/README.md) - 資料一致性策略
 
-### Related Perspectives
+### 相關 Perspectives
 
-- [Security Perspective](../../perspectives/security/README.md) - Data encryption and protection
-- [Performance Perspective](../../perspectives/performance/README.md) - Database optimization
+- [Security Perspective](../../perspectives/security/README.md) - 資料加密和保護
+- [Performance Perspective](../../perspectives/performance/README.md) - 資料庫最佳化
 
-## Quick Links
+## 快速連結
 
-- [Back to All Viewpoints](../README.md)
-- [Main Documentation](../../README.md)
+- [返回所有 Viewpoints](../README.md)
+- [主文件](../../README.md)
 
 ---
 
-**Note**: This viewpoint is currently being documented.
+**注意**：此 viewpoint 目前正在撰寫中。

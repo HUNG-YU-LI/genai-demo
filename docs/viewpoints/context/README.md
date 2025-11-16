@@ -1,91 +1,91 @@
 # Context Viewpoint
 
-> **Status**: 📝 To be documented  
-> **Last Updated**: 2025-01-17  
-> **Owner**: Architect / Product Manager
+> **狀態**：📝 待撰寫
+> **最後更新**：2025-01-17
+> **負責人**：架構師 / 產品經理
 
-## Overview
+## 概述
 
-The Context Viewpoint describes the system's relationships with its environment, including external systems, stakeholders, and constraints.
+Context Viewpoint 描述系統與其環境的關係，包括外部系統、利害關係人和約束條件。
 
-## Purpose
+## 目的
 
-This viewpoint answers:
+此 viewpoint 回答：
 
-- What are the system boundaries?
-- What external systems does it interact with?
-- Who are the stakeholders?
-- What are the external constraints?
+- 系統邊界是什麼？
+- 它與哪些外部系統互動？
+- 利害關係人是誰？
+- 外部約束是什麼？
 
-## Stakeholders
+## 利害關係人
 
-- **Primary**: Business analysts, architects
-- **Secondary**: Compliance officers, product managers
+- **主要**：業務分析師、架構師
+- **次要**：合規官員、產品經理
 
-## Contents
+## 內容
 
-### 📄 Documents
+### 📄 文件
 
-- [Overview](overview.md) - System context and boundaries
-- [Scope & Boundaries](scope-and-boundaries.md) - What's in scope and out of scope
-- [External Systems](external-systems.md) - Third-party integrations
-- [Stakeholders](stakeholders.md) - Stakeholder map and concerns
+- [Overview](overview.md) - 系統脈絡和邊界
+- [Scope & Boundaries](scope-and-boundaries.md) - 範圍內和範圍外的內容
+- [External Systems](external-systems.md) - 第三方整合
+- [Stakeholders](stakeholders.md) - 利害關係人圖譜和關注點
 
-### 📊 Diagrams
+### 📊 圖表
 
-- System context diagram
-- External integrations diagram
-- Stakeholder map
+- 系統脈絡圖
+- 外部整合圖
+- 利害關係人圖譜
 
-## Key Concepts
+## 關鍵概念
 
-### System Scope
+### 系統範圍
 
-**In Scope**:
+**範圍內**：
 
-- Customer management
-- Order processing
-- Payment processing
-- Inventory management
-- Product catalog
-- Promotions and pricing
+- 客戶管理
+- 訂單處理
+- 付款處理
+- 庫存管理
+- 產品目錄
+- 促銷和定價
 
-**Out of Scope**:
+**範圍外**：
 
-- Warehouse management (external system)
-- Shipping logistics (third-party)
-- Accounting (separate system)
+- 倉庫管理（外部系統）
+- 物流運輸（第三方）
+- 會計（獨立系統）
 
-### External Systems
+### 外部系統
 
-- **Payment Gateway**: Stripe
-- **Email Service**: SendGrid
-- **Shipping Provider**: FedEx
-- **Analytics**: Google Analytics
+- **Payment Gateway**：Stripe
+- **Email Service**：SendGrid
+- **Shipping Provider**：FedEx
+- **Analytics**：Google Analytics
 
-### Stakeholders
+### 利害關係人
 
-- **Business**: Product owners, marketing team, finance team
-- **Technical**: Development team, operations team, security team
-- **External**: Customers, partners, regulators
+- **業務**：產品負責人、行銷團隊、財務團隊
+- **技術**：開發團隊、維運團隊、安全團隊
+- **外部**：客戶、合作夥伴、監管機構
 
-## Related Documentation
+## 相關文件
 
-### Related Viewpoints
+### 相關 Viewpoints
 
-- [Functional Viewpoint](../functional/README.md) - Internal capabilities
-- [Deployment Viewpoint](../deployment/README.md) - External service connections
+- [Functional Viewpoint](../functional/README.md) - 內部能力
+- [Deployment Viewpoint](../deployment/README.md) - 外部服務連接
 
-### Related Perspectives
+### 相關 Perspectives
 
-- [Security Perspective](../../perspectives/security/README.md) - External system security
-- [Location Perspective](../../perspectives/location/README.md) - Geographic constraints
+- [Security Perspective](../../perspectives/security/README.md) - 外部系統安全
+- [Location Perspective](../../perspectives/location/README.md) - 地理約束
 
-### Related Guides
+### 相關指南
 
 - [API Integration Guide](../../api/integration/README.md)
 
-## Quick Links
+## 快速連結
 
-- [Back to All Viewpoints](../README.md)
-- [Main Documentation](../../README.md)
+- [返回所有 Viewpoints](../README.md)
+- [主文件](../../README.md)

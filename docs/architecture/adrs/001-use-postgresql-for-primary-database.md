@@ -12,290 +12,290 @@ affected_perspectives: ["performance", "availability"]
 
 # ADR-001: Use PostgreSQL for Primary Database
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-24
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires a robust, scalable, and reliable database system to store and manage critical business data including customers, orders, products, inventory, and transactions. The database must support:
+企業電子商務平台需要一個強健、可擴展且可靠的資料庫系統，用於儲存和管理關鍵業務資料，包括客戶、訂單、產品、庫存和交易。資料庫必須支援：
 
-- Complex relational data models with referential integrity
-- ACID transactions for financial operations
-- High read and write throughput
-- Multi-region replication
-- Advanced querying capabilities
-- Strong consistency guarantees
+- 具有參照完整性的複雜關聯式資料模型
+- 金融操作的 ACID 交易
+- 高讀寫吞吐量
+- Multi-region 複製
+- 進階查詢功能
+- 強一致性保證
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Need for reliable transaction processing (orders, payments)
-- Regulatory compliance requirements (GDPR, PCI-DSS)
-- Expected growth from 10K to 1M+ users
-- 24/7 availability requirement (99.9% SLA)
-- Multi-region deployment for global users
+- 需要可靠的交易處理（訂單、付款）
+- 法規合規要求（GDPR、PCI-DSS）
+- 預期從 10K 增長到 1M+ 用戶
+- 24/7 可用性要求（99.9% SLA）
+- Multi-region 部署以服務全球用戶
 
-**Constraints**:
+**限制條件**：
 
-- Budget: $5,000/month for database infrastructure
-- Team expertise: Strong Java/Spring Boot experience
-- Timeline: 3 months to production
-- Compliance: Must support data encryption and audit trails
+- 預算：每月 $5,000 用於資料庫基礎設施
+- 團隊專業知識：豐富的 Java/Spring Boot 經驗
+- 時程：3 個月上線至生產環境
+- 合規性：必須支援資料加密和稽核軌跡
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- New greenfield project
-- No existing database infrastructure
-- Spring Boot application framework chosen
-- AWS cloud infrastructure
+- 全新的 greenfield 專案
+- 沒有現有資料庫基礎設施
+- 已選擇 Spring Boot 應用程式框架
+- AWS 雲端基礎設施
 
-**Requirements**:
+**需求**：
 
-- Support for complex joins and transactions
-- JSON data type support for flexible schemas
-- Full-text search capabilities
-- Geospatial data support (future requirement)
-- Read replica support for scaling
-- Point-in-time recovery
+- 支援複雜 joins 和交易
+- JSON 資料類型支援以實現靈活的 schemas
+- 全文搜尋功能
+- 地理空間資料支援（未來需求）
+- Read replica 支援以實現擴展
+- Point-in-time 恢復
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Data Integrity**: Need strong ACID guarantees for financial transactions
-2. **Scalability**: Must handle 10K → 1M users growth
-3. **Team Expertise**: Team has SQL database experience
-4. **Ecosystem**: Rich tooling and Spring Boot integration
-5. **Cost**: Predictable pricing model
-6. **Compliance**: Built-in security and audit features
-7. **Performance**: Sub-100ms query response times
-8. **Availability**: Multi-AZ and read replica support
+1. **資料完整性**：金融交易需要強 ACID 保證
+2. **可擴展性**：必須處理 10K → 1M 用戶增長
+3. **團隊專業知識**：團隊具有 SQL 資料庫經驗
+4. **生態系統**：豐富的工具和 Spring Boot 整合
+5. **成本**：可預測的定價模式
+6. **合規性**：內建安全和稽核功能
+7. **效能**：查詢回應時間少於 100ms
+8. **可用性**：Multi-AZ 和 read replica 支援
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: PostgreSQL
+### 選項 1：PostgreSQL
 
-**Description**: Open-source relational database with advanced features
+**描述**：具有進階功能的開源關聯式資料庫
 
-**Pros**:
+**優點**：
 
-- ✅ Strong ACID compliance and data integrity
-- ✅ Excellent Spring Boot/JPA integration
-- ✅ Rich feature set (JSON, full-text search, arrays)
-- ✅ Active community and extensive documentation
-- ✅ AWS RDS managed service available
-- ✅ Read replicas for horizontal scaling
-- ✅ Advanced indexing (B-tree, GiST, GIN, BRIN)
-- ✅ Mature replication (streaming, logical)
-- ✅ Cost-effective for our scale
+- ✅ 強 ACID 合規性和資料完整性
+- ✅ 優秀的 Spring Boot/JPA 整合
+- ✅ 豐富的功能集（JSON、全文搜尋、陣列）
+- ✅ 活躍的社群和廣泛的文檔
+- ✅ 可用 AWS RDS 託管服務
+- ✅ Read replicas 實現水平擴展
+- ✅ 進階索引（B-tree、GiST、GIN、BRIN）
+- ✅ 成熟的複製（streaming、logical）
+- ✅ 在我們的規模下具成本效益
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Write scaling requires sharding (complex)
-- ⚠️ Vertical scaling has limits
-- ⚠️ Replication lag in read replicas
+- ⚠️ 寫入擴展需要 sharding（複雜）
+- ⚠️ 垂直擴展有限制
+- ⚠️ Read replicas 的複製延遲
 
-**Cost**:
+**成本**：
 
-- Development: $3,000/month (db.r5.xlarge Multi-AZ)
-- Production: $5,000/month (db.r5.2xlarge Multi-AZ + 2 read replicas)
+- 開發環境：每月 $3,000（db.r5.xlarge Multi-AZ）
+- 生產環境：每月 $5,000（db.r5.2xlarge Multi-AZ + 2 read replicas）
 
-**Risk**: **Low** - Proven technology with extensive production use
+**風險**：**低** - 已驗證的技術，具有廣泛的生產使用
 
-### Option 2: MySQL
+### 選項 2：MySQL
 
-**Description**: Popular open-source relational database
+**描述**：流行的開源關聯式資料庫
 
-**Pros**:
+**優點**：
 
-- ✅ Wide adoption and community
-- ✅ Good Spring Boot integration
-- ✅ AWS RDS managed service
-- ✅ Read replicas support
-- ✅ Lower resource usage
+- ✅ 廣泛採用和社群
+- ✅ 良好的 Spring Boot 整合
+- ✅ AWS RDS 託管服務
+- ✅ Read replicas 支援
+- ✅ 較低的資源使用
 
-**Cons**:
+**缺點**：
 
-- ❌ Less advanced features than PostgreSQL
-- ❌ Weaker JSON support
-- ❌ Limited full-text search
-- ❌ Less sophisticated query optimizer
-- ❌ Replication can be complex
+- ❌ 比 PostgreSQL 功能較少
+- ❌ 較弱的 JSON 支援
+- ❌ 有限的全文搜尋
+- ❌ 查詢優化器較不成熟
+- ❌ 複製可能很複雜
 
-**Cost**: Similar to PostgreSQL
+**成本**：與 PostgreSQL 相似
 
-**Risk**: **Low** - Proven technology
+**風險**：**低** - 已驗證的技術
 
-### Option 3: MongoDB
+### 選項 3：MongoDB
 
-**Description**: Document-oriented NoSQL database
+**描述**：面向文檔的 NoSQL 資料庫
 
-**Pros**:
+**優點**：
 
-- ✅ Flexible schema
-- ✅ Horizontal scaling built-in
-- ✅ Good for rapid development
-- ✅ Native JSON support
+- ✅ 靈活的 schema
+- ✅ 內建水平擴展
+- ✅ 適合快速開發
+- ✅ 原生 JSON 支援
 
-**Cons**:
+**缺點**：
 
-- ❌ No ACID transactions across documents (until v4.0)
-- ❌ Eventual consistency by default
-- ❌ Less suitable for complex joins
-- ❌ Team lacks NoSQL experience
-- ❌ Higher learning curve
-- ❌ More expensive at scale
+- ❌ 跨文檔沒有 ACID 交易（直到 v4.0）
+- ❌ 預設最終一致性
+- ❌ 不太適合複雜 joins
+- ❌ 團隊缺乏 NoSQL 經驗
+- ❌ 學習曲線較陡
+- ❌ 在規模化時更昂貴
 
-**Cost**: $6,000/month (MongoDB Atlas M30)
+**成本**：每月 $6,000（MongoDB Atlas M30）
 
-**Risk**: **Medium** - Team learning curve, transaction limitations
+**風險**：**中等** - 團隊學習曲線，交易限制
 
-### Option 4: Amazon Aurora PostgreSQL
+### 選項 4：Amazon Aurora PostgreSQL
 
-**Description**: AWS-native PostgreSQL-compatible database
+**描述**：AWS 原生 PostgreSQL 相容資料庫
 
-**Pros**:
+**優點**：
 
-- ✅ PostgreSQL compatibility
-- ✅ Better performance than standard PostgreSQL
-- ✅ Automatic scaling
-- ✅ Fast failover (< 30 seconds)
-- ✅ Up to 15 read replicas
+- ✅ PostgreSQL 相容性
+- ✅ 比標準 PostgreSQL 效能更好
+- ✅ 自動擴展
+- ✅ 快速容錯移轉（< 30 秒）
+- ✅ 最多 15 個 read replicas
 
-**Cons**:
+**缺點**：
 
-- ❌ Vendor lock-in to AWS
-- ❌ Higher cost than RDS PostgreSQL
-- ❌ Some PostgreSQL extensions not supported
-- ❌ More complex pricing model
+- ❌ 廠商鎖定於 AWS
+- ❌ 成本高於 RDS PostgreSQL
+- ❌ 某些 PostgreSQL 擴展不支援
+- ❌ 更複雜的定價模式
 
-**Cost**: $7,000/month (db.r5.2xlarge + replicas)
+**成本**：每月 $7,000（db.r5.2xlarge + replicas）
 
-**Risk**: **Low** - AWS managed, but vendor lock-in
+**風險**：**低** - AWS 託管，但有廠商鎖定
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **PostgreSQL on AWS RDS**
+**選擇的選項**：**PostgreSQL on AWS RDS**
 
-### Rationale
+### 理由
 
-PostgreSQL was selected as the primary database for the following reasons:
+選擇 PostgreSQL 作為主要資料庫的原因如下：
 
-1. **Strong ACID Guarantees**: Critical for financial transactions and order processing
-2. **Feature-Rich**: JSON support, full-text search, and advanced indexing meet all current and near-future requirements
-3. **Excellent Ecosystem**: Best-in-class Spring Boot/JPA integration with Hibernate
-4. **Team Expertise**: Team has SQL experience, minimal learning curve
-5. **Cost-Effective**: Meets budget constraints while providing enterprise features
-6. **Scalability Path**: Read replicas provide horizontal read scaling; can add sharding later if needed
-7. **AWS RDS**: Managed service reduces operational overhead (backups, patching, monitoring)
-8. **Compliance**: Built-in encryption, audit logging, and security features
+1. **強 ACID 保證**：對金融交易和訂單處理至關重要
+2. **功能豐富**：JSON 支援、全文搜尋和進階索引滿足所有當前和近期需求
+3. **優秀的生態系統**：與 Hibernate 的一流 Spring Boot/JPA 整合
+4. **團隊專業知識**：團隊具有 SQL 經驗，學習曲線最小
+5. **具成本效益**：在預算限制內滿足企業功能需求
+6. **可擴展路徑**：Read replicas 提供水平讀取擴展；如需要可稍後新增 sharding
+7. **AWS RDS**：託管服務減少營運負擔（備份、修補、監控）
+8. **合規性**：內建加密、稽核日誌和安全功能
 
-**Why Not Aurora**: While Aurora offers better performance, the cost premium (40% higher) is not justified for our current scale. We can migrate to Aurora later if needed without application changes.
+**為何不選 Aurora**：雖然 Aurora 提供更好的效能，但成本溢價（高 40%）對我們目前的規模來說不合理。如需要，我們可以稍後遷移到 Aurora，而無需變更應用程式。
 
-**Why Not MongoDB**: Lack of strong ACID guarantees and team expertise makes it unsuitable for our transaction-heavy workload.
+**為何不選 MongoDB**：缺乏強 ACID 保證和團隊專業知識，使其不適合我們的交易密集型工作負載。
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Development Team | Medium | Need to learn PostgreSQL-specific features | Training sessions, documentation |
-| Operations Team | Low | Familiar with RDS management | Standard RDS runbooks |
-| End Users | None | Transparent to users | N/A |
-| Business | Positive | Reliable data storage | N/A |
-| Compliance | Positive | Built-in security features | Regular audits |
+| Development Team | Medium | 需要學習 PostgreSQL 特定功能 | 培訓課程、文檔 |
+| Operations Team | Low | 熟悉 RDS 管理 | 標準 RDS runbooks |
+| End Users | None | 對用戶透明 | N/A |
+| Business | Positive | 可靠的資料儲存 | N/A |
+| Compliance | Positive | 內建安全功能 | 定期稽核 |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**：**System**
 
-Affects:
+影響：
 
-- All bounded contexts (data storage)
-- Application layer (JPA configuration)
-- Infrastructure layer (RDS setup)
-- Deployment processes
-- Backup and recovery procedures
+- 所有 bounded contexts（資料儲存）
+- Application 層（JPA 配置）
+- Infrastructure 層（RDS 設定）
+- 部署流程
+- 備份和恢復程序
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
-| Write scaling limitations | Medium | High | Implement read replicas, caching, eventual sharding plan |
-| Replication lag | Medium | Medium | Monitor lag, implement retry logic, use async processing |
-| Cost overrun | Low | Medium | Monitor usage, implement auto-scaling policies |
-| Data migration complexity | Low | High | Thorough testing, staged rollout, rollback plan |
-| Vendor lock-in (AWS RDS) | Low | Medium | Use standard PostgreSQL features, avoid AWS-specific extensions |
+| 寫入擴展限制 | Medium | High | 實作 read replicas、快取、最終 sharding 計畫 |
+| 複製延遲 | Medium | Medium | 監控延遲、實作重試邏輯、使用非同步處理 |
+| 成本超支 | Low | Medium | 監控使用量、實作自動擴展政策 |
+| 資料遷移複雜性 | Low | High | 徹底測試、分階段推出、回滾計畫 |
+| 廠商鎖定（AWS RDS） | Low | Medium | 使用標準 PostgreSQL 功能、避免 AWS 特定擴展 |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**：**低**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Setup and Configuration (Week 1-2)
+### 第 1 階段：設定和配置（第 1-2 週）
 
-- [x] Provision RDS PostgreSQL instance (db.r5.xlarge, Multi-AZ)
-- [x] Configure security groups and network access
-- [x] Set up parameter groups for optimization
-- [x] Enable automated backups (7-day retention)
-- [x] Configure CloudWatch monitoring and alarms
-- [x] Set up read replica in secondary region
+- [x] 佈建 RDS PostgreSQL 實例（db.r5.xlarge、Multi-AZ）
+- [x] 配置 security groups 和網路存取
+- [x] 設定 parameter groups 以進行優化
+- [x] 啟用自動備份（7 天保留）
+- [x] 配置 CloudWatch 監控和告警
+- [x] 在次要區域設定 read replica
 
-### Phase 2: Application Integration (Week 3-4)
+### 第 2 階段：應用程式整合（第 3-4 週）
 
-- [x] Configure Spring Boot data source
-- [x] Set up Hibernate/JPA with PostgreSQL dialect
-- [x] Implement database migration with Flyway
-- [x] Create initial schema and indexes
-- [x] Implement connection pooling (HikariCP)
-- [x] Add database health checks
+- [x] 配置 Spring Boot data source
+- [x] 使用 PostgreSQL dialect 設定 Hibernate/JPA
+- [x] 使用 Flyway 實作資料庫遷移
+- [x] 建立初始 schema 和索引
+- [x] 實作連線池（HikariCP）
+- [x] 新增資料庫健康檢查
 
-### Phase 3: Testing and Optimization (Week 5-6)
+### 第 3 階段：測試和優化（第 5-6 週）
 
-- [x] Load testing with realistic data volumes
-- [x] Query performance optimization
-- [x] Index tuning based on query patterns
-- [x] Replication lag monitoring
-- [x] Failover testing
-- [x] Backup and restore testing
+- [x] 使用實際資料量進行負載測試
+- [x] 查詢效能優化
+- [x] 基於查詢模式調整索引
+- [x] 複製延遲監控
+- [x] 容錯移轉測試
+- [x] 備份和恢復測試
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
-- Performance degradation > 50%
-- Data corruption or loss
-- Unrecoverable errors
-- Cost exceeds budget by > 50%
+- 效能下降 > 50%
+- 資料損壞或遺失
+- 無法恢復的錯誤
+- 成本超過預算 > 50%
 
-**Rollback Steps**:
+**回滾步驟**：
 
-1. If in development: Switch to H2 in-memory database temporarily
-2. If in production: Restore from latest backup
-3. Investigate root cause
-4. Re-evaluate database choice if fundamental issues found
+1. 如果在開發環境：暫時切換到 H2 in-memory 資料庫
+2. 如果在生產環境：從最新備份恢復
+3. 調查根本原因
+4. 如發現根本問題，重新評估資料庫選擇
 
-**Rollback Time**: < 1 hour for development, < 4 hours for production
+**回滾時間**：開發環境 < 1 小時，生產環境 < 4 小時
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
-- ✅ Query response time < 100ms (95th percentile)
-- ✅ Write throughput > 1000 TPS
-- ✅ Read throughput > 5000 TPS
-- ✅ Replication lag < 1 second
-- ✅ Availability > 99.9%
-- ✅ Zero data loss incidents
-- ✅ Cost within budget ($5,000/month)
+- ✅ 查詢回應時間 < 100ms（第 95 百分位）
+- ✅ 寫入吞吐量 > 1000 TPS
+- ✅ 讀取吞吐量 > 5000 TPS
+- ✅ 複製延遲 < 1 秒
+- ✅ 可用性 > 99.9%
+- ✅ 零資料遺失事件
+- ✅ 成本在預算內（每月 $5,000）
 
-### Monitoring Plan
+### 監控計畫
 
-**CloudWatch Metrics**:
+**CloudWatch Metrics**：
 
 - DatabaseConnections
 - CPUUtilization
@@ -304,68 +304,68 @@ Affects:
 - ReplicaLag
 - DiskQueueDepth
 
-**Alerts**:
+**告警**：
 
-- CPU > 80% for 5 minutes
-- Connections > 80% of max
-- Replication lag > 5 seconds
-- Disk space < 20%
-- Failed connections > 10/minute
+- CPU > 80% 持續 5 分鐘
+- 連線 > 最大值的 80%
+- 複製延遲 > 5 秒
+- 磁碟空間 < 20%
+- 連線失敗 > 10 次/分鐘
 
-**Review Schedule**:
+**審查時程**：
 
-- Daily: Check CloudWatch dashboard
-- Weekly: Review slow query log
-- Monthly: Capacity planning review
-- Quarterly: Cost optimization review
+- 每日：檢查 CloudWatch 儀表板
+- 每週：審查慢查詢日誌
+- 每月：容量規劃審查
+- 每季：成本優化審查
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Strong Data Integrity**: ACID guarantees protect financial data
-- ✅ **Rich Feature Set**: JSON, full-text search, arrays support complex use cases
-- ✅ **Excellent Tooling**: pgAdmin, pg_stat_statements, extensive monitoring
-- ✅ **Spring Boot Integration**: Seamless JPA/Hibernate support
-- ✅ **Scalability**: Read replicas provide horizontal read scaling
-- ✅ **Community Support**: Large community, extensive documentation
-- ✅ **Cost-Effective**: Meets requirements within budget
-- ✅ **Compliance Ready**: Built-in encryption, audit logging
+- ✅ **強資料完整性**：ACID 保證保護金融資料
+- ✅ **豐富功能集**：JSON、全文搜尋、陣列支援複雜使用案例
+- ✅ **優秀工具**：pgAdmin、pg_stat_statements、廣泛監控
+- ✅ **Spring Boot 整合**：無縫的 JPA/Hibernate 支援
+- ✅ **可擴展性**：Read replicas 提供水平讀取擴展
+- ✅ **社群支援**：大型社群、廣泛文檔
+- ✅ **具成本效益**：在預算內滿足需求
+- ✅ **合規就緒**：內建加密、稽核日誌
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Write Scaling**: Vertical scaling only, sharding required for massive scale
-- ⚠️ **Replication Lag**: Read replicas have eventual consistency
-- ⚠️ **Operational Overhead**: Need to monitor and tune performance
-- ⚠️ **Migration Complexity**: Future migration to Aurora or sharding will be complex
+- ⚠️ **寫入擴展**：僅垂直擴展，大規模需要 sharding
+- ⚠️ **複製延遲**：Read replicas 具有最終一致性
+- ⚠️ **營運負擔**：需要監控和調整效能
+- ⚠️ **遷移複雜性**：未來遷移到 Aurora 或 sharding 將很複雜
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. No sharding strategy implemented (acceptable for current scale)
-2. Single-region write master (acceptable for current requirements)
-3. Manual query optimization needed (ongoing process)
+1. 未實作 sharding 策略（對當前規模可接受）
+2. 單區域寫入 master（對當前需求可接受）
+3. 需要手動查詢優化（持續進行的過程）
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q2 2026**: Evaluate need for sharding based on growth
-- **Q3 2026**: Implement caching layer to reduce database load
-- **Q4 2026**: Consider Aurora migration if performance requirements increase
+- **2026 年 Q2**：根據增長評估 sharding 需求
+- **2026 年 Q3**：實作快取層以減少資料庫負載
+- **2026 年 Q4**：如效能需求增加，考慮 Aurora 遷移
 
-## Related Decisions
+## 相關決策
 
-- [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - Repository pattern implementation
-- [ADR-004: Use Redis for Distributed Caching](004-use-redis-for-distributed-caching.md) - Caching strategy to reduce database load
-- [ADR-005: Use Apache Kafka for Event Streaming](005-use-kafka-for-event-streaming.md) - Event sourcing considerations
-- [ADR-007: Use AWS CDK for Infrastructure](007-use-aws-cdk-for-infrastructure.md) - Database provisioning
+- [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - Repository pattern 實作
+- [ADR-004: Use Redis for Distributed Caching](004-use-redis-for-distributed-caching.md) - 快取策略以減少資料庫負載
+- [ADR-005: Use Apache Kafka for Event Streaming](005-use-kafka-for-event-streaming.md) - Event sourcing 考量
+- [ADR-007: Use AWS CDK for Infrastructure](007-use-aws-cdk-for-infrastructure.md) - 資料庫佈建
 
-## Notes
+## 備註
 
-### PostgreSQL Configuration
+### PostgreSQL 配置
 
 ```yaml
-# Key RDS Parameters
+# 關鍵 RDS 參數
 max_connections: 200
 shared_buffers: 8GB
 effective_cache_size: 24GB
@@ -380,22 +380,22 @@ min_wal_size: 1GB
 max_wal_size: 4GB
 ```
 
-### Migration Path to Aurora
+### 遷移到 Aurora 的路徑
 
-If future requirements demand Aurora:
+如未來需求需要 Aurora：
 
-1. Create Aurora cluster from RDS snapshot
-2. Update application connection string
-3. Test thoroughly in staging
-4. Blue-green deployment to production
-5. Monitor for 48 hours
-6. Decommission RDS instance
+1. 從 RDS 快照建立 Aurora cluster
+2. 更新應用程式連線字串
+3. 在 staging 環境徹底測試
+4. Blue-green 部署到生產環境
+5. 監控 48 小時
+6. 停用 RDS 實例
 
-**Estimated Migration Time**: 1 week  
-**Estimated Downtime**: < 1 hour
+**預估遷移時間**：1 週
+**預估停機時間**：< 1 小時
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-24  
-**Next Review**: 2026-01-24 (Quarterly)
+**文檔狀態**：✅ Accepted
+**上次審查**：2025-10-24
+**下次審查**：2026-01-24（每季）

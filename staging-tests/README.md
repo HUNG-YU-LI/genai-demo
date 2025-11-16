@@ -1,78 +1,78 @@
 # Staging Tests
 
-This directory contains comprehensive integration, performance, and cross-region tests that run in staging environments with real services.
+此目錄包含在 staging 環境中使用真實服務執行的綜合整合、效能和跨區域測試。
 
-## Directory Structure
+## 目錄結構
 
 ```
 staging-tests/
-├── integration/           # Integration tests with real services
-│   ├── database/         # PostgreSQL and Aurora integration tests
-│   ├── cache/           # Redis cluster integration tests
-│   ├── messaging/       # Kafka integration tests
-│   └── monitoring/      # Observability and monitoring tests
-├── performance/         # Gatling performance tests
-│   ├── simulations/     # Gatling simulation scripts
-│   └── scenarios/       # Test scenario configurations
-├── cross-region/        # Cross-region and disaster recovery tests
-│   ├── disaster-recovery/  # DR scenario tests
-│   └── replication/     # Cross-region replication tests
-├── config/              # Docker Compose and service configurations
+├── integration/           # 與真實服務的整合測試
+│   ├── database/         # PostgreSQL 和 Aurora 整合測試
+│   ├── cache/           # Redis cluster 整合測試
+│   ├── messaging/       # Kafka 整合測試
+│   └── monitoring/      # 可觀測性和監控測試
+├── performance/         # Gatling 效能測試
+│   ├── simulations/     # Gatling 模擬腳本
+│   └── scenarios/       # 測試場景設定
+├── cross-region/        # 跨區域和災難復原測試
+│   ├── disaster-recovery/  # DR 場景測試
+│   └── replication/     # 跨區域複寫測試
+├── config/              # Docker Compose 和服務設定
 │   ├── docker-compose-staging.yml
-│   └── service-configs/ # Individual service configurations
-└── scripts/             # Automation and execution scripts
+│   └── service-configs/ # 個別服務設定
+└── scripts/             # 自動化和執行腳本
     ├── run-integration-tests.sh
     ├── run-performance-tests.sh
     └── run-cross-region-tests.sh
 ```
 
-## Test Categories
+## 測試類別
 
 ### Integration Tests
-- **Database**: Connection pooling, failover, performance validation
-- **Cache**: Redis cluster operations, Sentinel failover scenarios
-- **Messaging**: Kafka throughput, partition rebalancing, cross-region replication
-- **Monitoring**: Health checks, metrics collection, alerting validation
+- **Database**: 連線池、容錯移轉、效能驗證
+- **Cache**: Redis cluster 操作、Sentinel 容錯移轉場景
+- **Messaging**: Kafka 吞吐量、分區重新平衡、跨區域複寫
+- **Monitoring**: 健康檢查、指標收集、告警驗證
 
 ### Performance Tests
-- **Load Testing**: Normal and peak load scenarios using Gatling
-- **Stress Testing**: System breaking point identification
-- **Endurance Testing**: Long-running stability validation
-- **Baseline Testing**: Performance regression detection
+- **Load Testing**: 使用 Gatling 的正常和尖峰負載場景
+- **Stress Testing**: 系統臨界點識別
+- **Endurance Testing**: 長時間執行穩定性驗證
+- **Baseline Testing**: 效能回歸檢測
 
 ### Cross-Region Tests
-- **Data Consistency**: Cross-region data replication and consistency validation
-- **Failover Scenarios**: Complete and partial region failure testing
-- **Load Balancing**: Geographic, weighted, health-based, and capacity-based routing
-- **Business Flows**: End-to-end business workflows across multiple regions
-- **Disaster Recovery**: Multi-region failover scenarios
-- **Network Partitioning**: Split-brain and network failure scenarios
+- **Data Consistency**: 跨區域資料複寫和一致性驗證
+- **Failover Scenarios**: 完整和部分區域故障測試
+- **Load Balancing**: 地理、加權、基於健康和基於容量的路由
+- **Business Flows**: 跨多個區域的端對端業務工作流程
+- **Disaster Recovery**: 多區域容錯移轉場景
+- **Network Partitioning**: Split-brain 和網路故障場景
 
-## Execution
+## 執行
 
 ### Prerequisites
-- Docker and Docker Compose installed
-- Python 3.11+ with required packages
-- Gatling installed for performance tests
-- AWS CLI configured for cross-region tests
+- 已安裝 Docker 和 Docker Compose
+- Python 3.11+ 及必要套件
+- 已安裝 Gatling 用於效能測試
+- 已設定 AWS CLI 用於跨區域測試
 
 ### Running Tests
 
 ```bash
-# Run all integration tests
+# 執行所有整合測試
 ./scripts/run-integration-tests.sh
 
-# Run performance tests
+# 執行效能測試
 ./scripts/run-performance-tests.sh
 
-# Run cross-region tests
+# 執行跨區域測試
 ./scripts/run-cross-region-tests.sh
 
-# Run specific test category
+# 執行特定測試類別
 ./scripts/run-integration-tests.sh --category database
 ./scripts/run-performance-tests.sh --scenario normal-load
 
-# Run specific cross-region tests
+# 執行特定跨區域測試
 python3 cross-region/test_cross_region_data_consistency.py
 python3 cross-region/test_failover_scenarios.py
 python3 cross-region/test_load_balancing.py
@@ -82,17 +82,17 @@ python3 cross-region/test_end_to_end_business_flow.py
 ### Cross-Region Test Details
 
 #### Data Consistency Tests (`test_cross_region_data_consistency.py`)
-Tests data replication and consistency across multiple AWS regions:
-- **Write and Replicate**: Validates data written to one region replicates to others within 100ms (P99)
-- **Concurrent Writes**: Tests concurrent writes to multiple regions with eventual consistency
-- **Conflict Resolution**: Validates Last-Write-Wins (LWW) conflict resolution strategy
+測試多個 AWS 區域之間的資料複寫和一致性：
+- **Write and Replicate**: 驗證寫入一個區域的資料在 100ms 內複寫到其他區域（P99）
+- **Concurrent Writes**: 測試多個區域的並發寫入，具備最終一致性
+- **Conflict Resolution**: 驗證 Last-Write-Wins (LWW) 衝突解決策略
 
 **Configuration**:
 ```python
 config = TestConfig(
     primary_region="us-east-1",
     secondary_regions=["us-west-2", "eu-west-1"],
-    max_replication_delay_ms=100,  # P99 target
+    max_replication_delay_ms=100,  # P99 目標
     api_endpoints={
         "us-east-1": "https://api-us-east-1.example.com",
         "us-west-2": "https://api-us-west-2.example.com",
@@ -102,82 +102,82 @@ config = TestConfig(
 ```
 
 #### Failover Scenarios Tests (`test_failover_scenarios.py`)
-Tests failover mechanisms and system resilience:
-- **Complete Region Failure**: Validates automatic failover with RTO < 2 minutes
-- **Partial Service Failure**: Tests graceful degradation and traffic routing
-- **Network Partition**: Validates split-brain prevention and consistency
-- **Automatic Recovery**: Tests traffic redistribution when region recovers
+測試容錯移轉機制和系統韌性：
+- **Complete Region Failure**: 驗證 RTO < 2 分鐘的自動容錯移轉
+- **Partial Service Failure**: 測試優雅降級和流量路由
+- **Network Partition**: 驗證 split-brain 預防和一致性
+- **Automatic Recovery**: 測試區域復原時的流量重新分配
 
 **Success Criteria**:
-- Failover time ≤ 120 seconds (RTO target)
-- No data loss during failover (RPO < 1 second)
-- Availability ≥ 99% during failover
-- Automatic recovery and rebalancing
+- 容錯移轉時間 ≤ 120 秒（RTO 目標）
+- 容錯移轉期間無資料遺失（RPO < 1 秒）
+- 容錯移轉期間可用性 ≥ 99%
+- 自動復原和重新平衡
 
 #### Load Balancing Tests (`test_load_balancing.py`)
-Tests traffic distribution across regions:
-- **Geographic Routing**: Users routed to nearest region (>95% accuracy)
-- **Weighted Routing**: Traffic distributed according to configured weights
-- **Health-Based Routing**: Traffic avoids unhealthy regions
-- **Capacity-Based Routing**: Traffic shifts when region reaches capacity
+測試跨區域的流量分配：
+- **Geographic Routing**: 使用者路由到最近的區域（>95% 準確度）
+- **Weighted Routing**: 依據設定的權重分配流量
+- **Health-Based Routing**: 流量避開不健康的區域
+- **Capacity-Based Routing**: 區域達到容量時流量轉移
 
 **Performance Targets**:
-- P95 latency < 200ms
-- Routing accuracy > 95%
-- Error rate < 1%
-- Traffic distribution within 5% of target weights
+- P95 延遲 < 200ms
+- 路由準確度 > 95%
+- 錯誤率 < 1%
+- 流量分配在目標權重的 5% 內
 
 #### End-to-End Business Flow Tests (`test_end_to_end_business_flow.py`)
-Tests complete business workflows across regions:
-- **Customer Registration and Order**: Complete customer lifecycle across regions
-- **Cross-Region Order Fulfillment**: Inventory allocation and fulfillment
-- **Payment Processing**: Multi-region payment coordination
+測試跨區域的完整業務工作流程：
+- **Customer Registration and Order**: 跨區域的完整客戶生命週期
+- **Cross-Region Order Fulfillment**: 庫存分配和履行
+- **Payment Processing**: 多區域支付協調
 
 **Workflow Validation**:
-- All workflow steps complete successfully
-- Data consistency maintained across regions
-- Workflow completion time < 30 seconds
-- No data loss or corruption
+- 所有工作流程步驟成功完成
+- 跨區域維持資料一致性
+- 工作流程完成時間 < 30 秒
+- 無資料遺失或損毀
 
 ### Test Reports
 
-Test results and reports are generated in:
-- `reports/integration/` - Integration test results
-- `reports/performance/` - Gatling performance reports
-- `reports/cross-region/` - Cross-region test results
+測試結果和報告產生於：
+- `reports/integration/` - 整合測試結果
+- `reports/performance/` - Gatling 效能報告
+- `reports/cross-region/` - 跨區域測試結果
 
 ## Configuration
 
 ### Environment Variables
-- `TARGET_HOST` - Target application host (default: localhost:8080)
-- `TEST_ENVIRONMENT` - Test environment (staging, production)
-- `AWS_REGION` - Primary AWS region for testing
-- `SECONDARY_REGION` - Secondary region for cross-region tests
+- `TARGET_HOST` - 目標應用程式主機（預設：localhost:8080）
+- `TEST_ENVIRONMENT` - 測試環境（staging、production）
+- `AWS_REGION` - 測試的主要 AWS 區域
+- `SECONDARY_REGION` - 跨區域測試的次要區域
 
 ### Service Configuration
-Services are configured via Docker Compose with production-like settings:
-- PostgreSQL with connection pooling and replication
-- Redis cluster with Sentinel for high availability
-- Kafka cluster with cross-region replication
-- Monitoring stack with Prometheus and Grafana
+服務透過 Docker Compose 以類生產環境設定進行配置：
+- PostgreSQL，具備連線池和複寫
+- Redis cluster，具備 Sentinel 以實現高可用性
+- Kafka cluster，具備跨區域複寫
+- 監控堆疊，包含 Prometheus 和 Grafana
 
 ## Development Guidelines
 
 ### Adding New Tests
-1. Choose appropriate test category (integration/performance/cross-region)
-2. Follow existing test structure and naming conventions
-3. Include proper cleanup and resource management
-4. Add test documentation and expected outcomes
-5. Update relevant execution scripts
+1. 選擇適當的測試類別（integration/performance/cross-region）
+2. 遵循現有測試結構和命名慣例
+3. 包含適當的清理和資源管理
+4. 新增測試文件和預期結果
+5. 更新相關執行腳本
 
 ### Test Data Management
-- Use realistic test data that mirrors production patterns
-- Implement proper cleanup procedures
-- Avoid hardcoded values, use configuration files
-- Consider data privacy and security requirements
+- 使用反映生產模式的真實測試資料
+- 實作適當的清理程序
+- 避免硬編碼值，使用設定檔
+- 考慮資料隱私和安全要求
 
 ### Performance Considerations
-- Tests should be designed for parallel execution where possible
-- Include proper resource limits and timeouts
-- Monitor test execution resource usage
-- Implement performance regression detection
+- 測試應盡可能設計為並行執行
+- 包含適當的資源限制和逾時
+- 監控測試執行的資源使用
+- 實作效能回歸檢測

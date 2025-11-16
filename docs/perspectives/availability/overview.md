@@ -1,71 +1,71 @@
 # Availability & Resilience Perspective
 
-> **Last Updated**: 2025-10-24  
-> **Status**: Active  
+> **Last Updated**: 2025-10-24
+> **Status**: Active
 > **Owner**: Operations & Architecture Team
 
-## Purpose
+## 目的
 
-The Availability & Resilience Perspective addresses the system's ability to remain operational and recover from failures. For an e-commerce platform, high availability is critical as downtime directly impacts revenue, customer trust, and brand reputation. This perspective ensures the system can:
+Availability & Resilience Perspective 處理系統保持運作和從故障中恢復的能力。對於電子商務平台而言，高可用性至關重要，因為停機時間直接影響收入、客戶信任和品牌聲譽。本觀點確保系統能夠：
 
-- Maintain service availability during component failures
-- Recover quickly from unexpected incidents
-- Minimize data loss during failures
-- Provide consistent user experience under various failure scenarios
+- 在元件故障期間維持服務可用性
+- 從意外事件中快速恢復
+- 在故障期間最小化資料損失
+- 在各種故障場景下提供一致的使用者體驗
 
-## Scope
+## 範圍
 
-This perspective applies to all system components and addresses:
+本觀點適用於所有系統元件並處理：
 
-- **Availability**: The proportion of time the system is operational and accessible
-- **Resilience**: The system's ability to withstand and recover from failures
-- **Fault Tolerance**: The system's capability to continue operating despite component failures
-- **Disaster Recovery**: The system's ability to recover from catastrophic events
+- **Availability**: 系統運作和可存取的時間比例
+- **Resilience**: 系統承受和從故障中恢復的能力
+- **Fault Tolerance**: 系統在元件故障時繼續運作的能力
+- **Disaster Recovery**: 系統從災難性事件中恢復的能力
 
-## Stakeholders
+## 利害關係人
 
-### Primary Stakeholders
+### 主要利害關係人
 
-| Stakeholder | Concerns | Success Criteria |
+| 利害關係人 | 關注點 | 成功標準 |
 |-------------|----------|------------------|
-| **Business Leadership** | Revenue protection, brand reputation | 99.9% uptime, minimal customer impact |
-| **Operations Team** | System reliability, incident response | Fast recovery, clear procedures |
-| **Development Team** | Resilient architecture, fault handling | Robust error handling, automated recovery |
-| **Customers** | Service availability, data integrity | Seamless experience, no data loss |
-| **Support Team** | Issue resolution, customer communication | Clear status information, quick resolution |
+| **業務領導層** | 收入保護、品牌聲譽 | 99.9% 正常運行時間、最小客戶影響 |
+| **營運團隊** | 系統可靠性、事件回應 | 快速恢復、清晰的程序 |
+| **開發團隊** | 彈性架構、故障處理 | 強健的錯誤處理、自動化恢復 |
+| **客戶** | 服務可用性、資料完整性 | 無縫體驗、無資料損失 |
+| **支援團隊** | 問題解決、客戶溝通 | 清晰的狀態資訊、快速解決 |
 
-## Availability Targets
+## Availability 目標
 
 ### Service Level Objectives (SLO)
 
-- **Overall System Availability**: 99.9% uptime
-  - Maximum downtime: 8.76 hours per year
-  - Maximum downtime per month: 43.8 minutes
-  - Maximum downtime per week: 10.1 minutes
+- **Overall System Availability**: 99.9% 正常運行時間
+  - 最大停機時間：每年 8.76 小時
+  - 最大停機時間每月：43.8 分鐘
+  - 最大停機時間每週：10.1 分鐘
 
-- **Critical Services Availability**: 99.95% uptime
-  - Order processing
-  - Payment processing
-  - Customer authentication
+- **Critical Services Availability**: 99.95% 正常運行時間
+  - 訂單處理
+  - 付款處理
+  - 客戶 authentication
 
-- **Non-Critical Services Availability**: 99.5% uptime
-  - Product recommendations
-  - Review system
+- **Non-Critical Services Availability**: 99.5% 正常運行時間
+  - 產品推薦
+  - 評論系統
   - Analytics
 
-### Recovery Objectives
+### 恢復目標
 
-- **RTO (Recovery Time Objective)**: 5 minutes
-  - Time to restore service after failure
-  
-- **RPO (Recovery Point Objective)**: 1 minute
-  - Maximum acceptable data loss
+- **RTO (Recovery Time Objective)**: 5 分鐘
+  - 故障後恢復服務的時間
 
-## Approach
+- **RPO (Recovery Point Objective)**: 1 分鐘
+  - 最大可接受的資料損失
 
-### Multi-Layered Resilience Strategy
+## 方法
 
-Our availability and resilience approach follows a defense-in-depth strategy:
+### 多層 Resilience 策略
+
+我們的 availability 和 resilience 方法遵循深度防禦策略：
 
 ```mermaid
 graph TD
@@ -80,17 +80,17 @@ graph TD
     N12 --> N13
 ```
 
-### Key Principles
+### 關鍵原則
 
-1. **Design for Failure**: Assume components will fail and design accordingly
-2. **Fail Fast**: Detect failures quickly and respond immediately
-3. **Isolate Failures**: Prevent cascading failures across system boundaries
-4. **Automate Recovery**: Minimize manual intervention through automation
-5. **Test Regularly**: Conduct regular DR drills and chaos engineering exercises
+1. **Design for Failure**: 假設元件會故障並相應設計
+2. **Fail Fast**: 快速偵測故障並立即回應
+3. **Isolate Failures**: 防止故障在系統邊界間級聯
+4. **Automate Recovery**: 通過自動化最小化手動介入
+5. **Test Regularly**: 定期進行 DR 演練和混沌工程練習
 
-## Architecture Overview
+## 架構概述
 
-### High Availability Components
+### High Availability 元件
 
 ```text
 ┌──────────────────────────────────────────────────────────┐
@@ -120,67 +120,67 @@ graph TD
 └────────────────┘       └────────────────┘
 ```
 
-## Related Documentation
+## 相關文檔
 
-### Viewpoints
+### 視角
 
-- [Deployment Viewpoint](../../viewpoints/deployment/overview.md) - Infrastructure architecture
-- [Operational Viewpoint](../../viewpoints/operational/overview.md) - Monitoring and incident response
-- [Concurrency Viewpoint](../../viewpoints/concurrency/overview.md) - State management and synchronization
+- [Deployment Viewpoint](../../viewpoints/deployment/overview.md) - 基礎設施架構
+- [Operational Viewpoint](../../viewpoints/operational/overview.md) - 監控和事件回應
+- [Concurrency Viewpoint](../../viewpoints/concurrency/overview.md) - 狀態管理和同步
 
-### Other Perspectives
+### 其他 Perspectives
 
-- [Performance & Scalability Perspective](../performance/overview.md) - Performance under failure scenarios
-- [Security Perspective](../security/overview.md) - Security during incidents
+- [Performance & Scalability Perspective](../performance/overview.md) - 故障場景下的 performance
+- [Security Perspective](../security/overview.md) - 事件期間的 security
 
-### Implementation Guides
+### 實作指南
 
-- [Fault Tolerance Patterns](fault-tolerance.md) - Circuit breakers, retries, fallbacks
-- [High Availability Design](high-availability.md) - Multi-AZ, load balancing, health checks
-- [Disaster Recovery](disaster-recovery.md) - Backup, restore, and failover procedures
+- [Fault Tolerance Patterns](fault-tolerance.md) - Circuit breakers、retries、fallbacks
+- [High Availability Design](high-availability.md) - Multi-AZ、load balancing、health checks
+- [Disaster Recovery](disaster-recovery.md) - Backup、restore 和 failover 程序
 
-## Document Structure
+## 文檔結構
 
-This perspective is organized into the following documents:
+本觀點組織成以下文檔：
 
-1. **[Overview](overview.md)** (this document) - Purpose, scope, and approach
-2. **[Requirements](requirements.md)** - SLOs, quality attribute scenarios, measurable targets
-3. **[Fault Tolerance](fault-tolerance.md)** - Patterns for handling failures
-4. **[High Availability](high-availability.md)** - Infrastructure and application HA design
-5. **[Disaster Recovery](disaster-recovery.md)** - DR strategy, backup, and restore procedures
+1. **[Overview](overview.md)** (本文檔) - 目的、範圍和方法
+2. **[Requirements](requirements.md)** - SLOs、quality attribute scenarios、可衡量的目標
+3. **[Fault Tolerance](fault-tolerance.md)** - 處理故障的模式
+4. **[High Availability](high-availability.md)** - 基礎設施和應用程式 HA 設計
+5. **[Disaster Recovery](disaster-recovery.md)** - DR 策略、backup 和 restore 程序
 
-## Metrics and Monitoring
+## 指標和監控
 
-### Key Availability Metrics
+### 關鍵 Availability 指標
 
-- **Uptime Percentage**: Actual uptime vs. target SLO
-- **MTBF (Mean Time Between Failures)**: Average time between system failures
-- **MTTR (Mean Time To Recovery)**: Average time to recover from failures
-- **Error Rate**: Percentage of failed requests
-- **Incident Count**: Number of availability incidents per month
+- **Uptime Percentage**: 實際正常運行時間 vs. 目標 SLO
+- **MTBF (Mean Time Between Failures)**: 系統故障之間的平均時間
+- **MTTR (Mean Time To Recovery)**: 從故障中恢復的平均時間
+- **Error Rate**: 失敗請求的百分比
+- **Incident Count**: 每月 availability 事件數量
 
-### Monitoring Approach
+### 監控方法
 
-See [Operational Viewpoint - Monitoring](../../viewpoints/operational/monitoring-alerting.md) for detailed monitoring implementation.
+詳細的監控實作請參閱 [Operational Viewpoint - Monitoring](../../viewpoints/operational/monitoring-alerting.md)。
 
-## Continuous Improvement
+## 持續改進
 
-### Regular Activities
+### 定期活動
 
-- **Monthly**: Review availability metrics and incident reports
-- **Quarterly**: Conduct disaster recovery drills
-- **Bi-annually**: Update and test failover procedures
-- **Annually**: Review and update availability targets
+- **每月**: 檢視 availability 指標和事件報告
+- **每季**: 進行災難恢復演練
+- **每半年**: 更新和測試故障轉移程序
+- **每年**: 檢視和更新 availability 目標
 
 ### Chaos Engineering
 
-We practice chaos engineering to proactively identify weaknesses:
+我們實踐 chaos engineering 以主動識別弱點：
 
-- Random pod termination in Kubernetes
-- Network latency injection
-- Database failover simulation
-- Cache failure scenarios
+- Kubernetes 中的隨機 pod 終止
+- 網路延遲注入
+- 資料庫故障轉移模擬
+- Cache 故障場景
 
 ---
 
-**Next Steps**: Review [Requirements](requirements.md) for detailed availability targets and quality attribute scenarios.
+**下一步**: 查看 [Requirements](requirements.md) 以了解詳細的 availability 目標和 quality attribute scenarios。

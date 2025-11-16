@@ -1,39 +1,39 @@
-# Design Patterns Examples
+# 設計模式範例
 
-This directory contains comprehensive examples and detailed guides for design patterns used in this project.
+本目錄包含本項目中使用的設計模式的綜合範例和詳細指南。
 
-## 📚 Contents
+## 📚 內容
 
-### Object-Oriented Design Principles
+### 物件導向設計原則
 
-- [Tell, Don't Ask Examples](tell-dont-ask-examples.md) - Detailed examples of Tell, Don't Ask principle
-- [Law of Demeter Examples](law-of-demeter-examples.md) - Comprehensive Law of Demeter guide
-- [Composition Over Inheritance Examples](composition-over-inheritance-examples.md) - When and how to use composition
-- [Dependency Injection Examples](dependency-injection-examples.md) - DI patterns and best practices
-- [Design Smells and Refactoring](design-smells-refactoring.md) - Common code smells and how to fix them
+- [Tell, Don't Ask Examples](tell-dont-ask-examples.md) - 告訴，不要問原則的詳細示例
+- [Law of Demeter Examples](law-of-demeter-examples.md) - 得墨忒耳律的綜合指南
+- [Composition Over Inheritance Examples](composition-over-inheritance-examples.md) - 何時以及如何使用組合
+- [Dependency Injection Examples](dependency-injection-examples.md) - DI 模式和最佳實踐
+- [Design Smells and Refactoring](design-smells-refactoring.md) - 常見的代碼惡臭及其修復方法
 
-## 🎯 Purpose
+## 🎯 目的
 
-These examples provide:
+這些範例提供：
 
-- **Real-world code examples** from the project
-- **Before/After comparisons** showing improvements
-- **Step-by-step refactoring guides**
-- **Common pitfalls and how to avoid them**
-- **Testing strategies** for each pattern
+- **來自項目的真實代碼範例**
+- **前後對比**顯示改進
+- **逐步重構指南**
+- **常見陷阱及其避免方法**
+- **每種模式的測試策略**
 
-## 📖 How to Use
+## 📖 如何使用
 
-1. **Learning**: Read through examples to understand patterns
-2. **Reference**: Use as templates when implementing similar features
-3. **Code Review**: Reference during code reviews to identify patterns
-4. **Refactoring**: Use refactoring guides to improve existing code
+1. **學習**：閱讀範例以理解模式
+2. **參考**：在實現類似功能時用作模板
+3. **代碼審查**：在代碼審查期間參考以識別模式
+4. **重構**：使用重構指南改進現有代碼
 
-## 🔗 Related Documentation
+## 🔗 相關文檔
 
-- **Core Principles**: [../../steering/design-principles.md](../../steering/design-principles.md)
-- **Code Quality Checklist**: [../../steering/code-quality-checklist.md](../../steering/code-quality-checklist.md)
+- **核心原則**：[../../steering/design-principles.md](../../steering/design-principles.md)
+- **代碼品質清單**：[../../steering/code-quality-checklist.md](../../steering/code-quality-checklist.md)
 
 ---
 
-**Note**: These are detailed examples. For quick reference rules, see the steering files.
+**注意**：這些是詳細範例。有關快速參考規則，請查看方向文件。

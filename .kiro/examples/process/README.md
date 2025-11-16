@@ -1,32 +1,32 @@
-# Process and Workflow Examples
+# 過程和工作流程範例
 
-This directory contains comprehensive examples and guides for development processes and workflows.
+本目錄包含開發過程和工作流程的綜合範例和指南。
 
-## 📚 Contents
+## 📚 內容
 
-### Development Processes
+### 開發過程
 
-- [Code Review Guide](code-review-guide.md) - Comprehensive code review process and checklist
+- [Code Review Guide](code-review-guide.md) - 綜合代碼審查過程和檢查清單
 
-## 🎯 Purpose
+## 🎯 目的
 
-These examples demonstrate:
+這些範例演示：
 
-- **Code review** best practices and checklists
-- **Development workflows** and team collaboration
-- **Quality assurance** processes
+- **代碼審查**最佳實踐和檢查清單
+- **開發工作流程**和團隊協作
+- **品質保證**過程
 
-## 📖 How to Use
+## 📖 如何使用
 
-1. **Code Reviews**: Follow the guide during code review sessions
-2. **Team Onboarding**: Use as training material for new team members
-3. **Process Improvement**: Reference when refining team processes
+1. **代碼審查**：在代碼審查會議期間遵循指南
+2. **團隊入職**：用作新團隊成員的培訓材料
+3. **過程改進**：在改進團隊過程時參考
 
-## 🔗 Related Documentation
+## 🔗 相關文檔
 
-- **Code Review Standards**: [../../steering/code-review-standards.md](../../steering/code-review-standards.md)
-- **Development Standards**: [../../steering/development-standards.md](../../steering/development-standards.md)
+- **代碼審查標準**：[../../steering/code-review-standards.md](../../steering/code-review-standards.md)
+- **開發標準**：[../../steering/development-standards.md](../../steering/development-standards.md)
 
 ---
 
-**Note**: These are detailed examples. For quick reference rules, see the steering files.
+**注意**：這些是詳細範例。有關快速參考規則，請查看方向文件。

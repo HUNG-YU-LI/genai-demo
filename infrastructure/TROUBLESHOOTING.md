@@ -1,20 +1,20 @@
-# AWS CDK Infrastructure Troubleshooting Guide
+# AWS CDK Infrastructure 疑難排解指南
 
-This guide addresses common issues encountered during AWS CDK infrastructure deployment and development.
+本指南說明在 AWS CDK 基礎設施部署和開發過程中常見的問題。
 
-## 🔧 Common Issues and Solutions
+## 🔧 常見問題與解決方案
 
-### 1. Route53 Health Check Configuration Issues
+### 1. Route53 Health Check 配置問題
 
-**Problem**: Route53 health checks failing due to missing API properties or incorrect configuration.
+**問題**：Route53 health checks 因缺少 API 屬性或配置不正確而失敗。
 
-**Symptoms**:
+**症狀**：
 
-- Health checks showing as "Failure" in Route53 console
-- Failover not working as expected
-- Missing alarm integration
+- Health checks 在 Route53 控制台顯示為「Failure」
+- Failover 未按預期運作
+- 缺少警報整合
 
-**Solution**:
+**解決方案**：
 
 ```bash
 # The Route53 health check configuration has been updated with:
@@ -24,23 +24,23 @@ This guide addresses common issues encountered during AWS CDK infrastructure dep
 # - Additional tags for better resource management
 ```
 
-**Verification**:
+**驗證**：
 
-1. Check Route53 console for health check status
-2. Verify the health endpoint returns `{"status":"UP"}`
-3. Monitor CloudWatch alarms for health check metrics
+1. 檢查 Route53 控制台的 health check 狀態
+2. 驗證 health endpoint 回傳 `{"status":"UP"}`
+3. 監控 CloudWatch alarms 的 health check 指標
 
-### 2. OpenSearch Multi-AZ Configuration Issues
+### 2. OpenSearch Multi-AZ 配置問題
 
-**Problem**: OpenSearch domain fails to deploy with Multi-AZ when using t3.small.search instances.
+**問題**：使用 t3.small.search 實例時，OpenSearch domain 無法以 Multi-AZ 部署。
 
-**Symptoms**:
+**症狀**：
 
-- CDK deployment fails with "UnsupportedOperation" error
-- Error message about instance type not supporting Multi-AZ
+- CDK 部署失敗並出現「UnsupportedOperation」錯誤
+- 錯誤訊息提示實例類型不支援 Multi-AZ
 
-**Solution**:
-The configuration has been updated to use environment-specific instance types:
+**解決方案**：
+配置已更新為使用環境特定的實例類型：
 
 ```typescript
 // Development: Single-AZ with t3.small.search
@@ -60,26 +60,26 @@ The configuration has been updated to use environment-specific instance types:
 }
 ```
 
-**Verification**:
+**驗證**：
 
 ```bash
 # Check OpenSearch domain configuration
 aws opensearch describe-domain --domain-name genai-demo-logs-production
 ```
 
-### 3. TypeScript/ts-node Cache Issues
+### 3. TypeScript/ts-node Cache 問題
 
-**Problem**: CDK synthesis fails due to stale TypeScript compilation cache or ts-node cache.
+**問題**：CDK synthesis 因過時的 TypeScript 編譯快取或 ts-node 快取而失敗。
 
-**Symptoms**:
+**症狀**：
 
-- "Cannot find module" errors
-- Outdated type definitions being used
-- Inconsistent compilation results
+- 「Cannot find module」錯誤
+- 使用過時的類型定義
+- 編譯結果不一致
 
-**Solutions**:
+**解決方案**：
 
-#### Quick Cache Cleanup
+#### 快速清除快取
 
 ```bash
 npm run clean:cache
@@ -87,21 +87,21 @@ npm run build
 npm run synth
 ```
 
-#### Deep Cleanup
+#### 深度清理
 
 ```bash
 ./scripts/cleanup-cache.sh --deep
 npm run build
 ```
 
-#### Complete Reset
+#### 完整重置
 
 ```bash
 ./scripts/cleanup-cache.sh --reinstall
 npm run build
 ```
 
-#### Manual Cleanup
+#### 手動清理
 
 ```bash
 # Remove TypeScript build info
@@ -121,45 +121,45 @@ find . -name "*.js" -not -path "./node_modules/*" -not -path "./scripts/*" -dele
 find . -name "*.d.ts" -not -path "./node_modules/*" -delete
 ```
 
-## 🚀 Deployment Best Practices
+## 🚀 部署最佳實踐
 
-### Pre-deployment Checklist
+### 部署前檢查清單
 
-1. **Clean Build Environment**:
+1. **清理建置環境**：
 
    ```bash
    npm run clean:cache
    npm run build
    ```
 
-2. **Validate Configuration**:
+2. **驗證配置**：
 
    ```bash
    npm run synth:validate
    ```
 
-3. **Run Tests**:
+3. **執行測試**：
 
    ```bash
    npm run test:ci
    ```
 
-4. **Security Scan**:
+4. **安全掃描**：
 
    ```bash
    npm run security:scan
    ```
 
-### Environment-Specific Deployment
+### 環境特定部署
 
-#### Development Environment
+#### Development 環境
 
 ```bash
 # Clean deployment for development
 npm run deploy:clean -- --context environment=development
 ```
 
-#### Production Environment
+#### Production 環境
 
 ```bash
 # Validate before production deployment
@@ -167,9 +167,9 @@ npm run validate:comprehensive
 npm run deploy -- --context environment=production --require-approval broadening
 ```
 
-## 🔍 Debugging Commands
+## 🔍 除錯指令
 
-### CDK Debugging
+### CDK 除錯
 
 ```bash
 # Synthesize with verbose output
@@ -185,7 +185,7 @@ cdk list
 cdk synth --json | jq '.[] | select(.type=="aws:cdk:tree") | .metadata'
 ```
 
-### Infrastructure Validation
+### 基礎設施驗證
 
 ```bash
 # Validate all templates
@@ -198,21 +198,21 @@ npm run drift:detect
 npm run performance:analyze
 ```
 
-## 📊 Monitoring and Alerting
+## 📊 監控與告警
 
-### Health Check Monitoring
+### Health Check 監控
 
-- **Primary Health Check**: Monitor via CloudWatch alarm `genai-demo-production-primary-health-alarm`
-- **Secondary Health Check**: Monitor via CloudWatch alarm `genai-demo-production-secondary-health-alarm`
-- **Dashboard**: Access failover monitoring dashboard via CDK output URL
+- **Primary Health Check**：透過 CloudWatch alarm `genai-demo-production-primary-health-alarm` 監控
+- **Secondary Health Check**：透過 CloudWatch alarm `genai-demo-production-secondary-health-alarm` 監控
+- **Dashboard**：透過 CDK 輸出 URL 存取 failover 監控儀表板
 
-### OpenSearch Monitoring
+### OpenSearch 監控
 
-- **Domain Health**: Check OpenSearch domain status in AWS console
-- **Cluster Metrics**: Monitor CPU, memory, and storage utilization
-- **Index Health**: Verify log ingestion and search performance
+- **Domain Health**：在 AWS 控制台檢查 OpenSearch domain 狀態
+- **Cluster Metrics**：監控 CPU、記憶體和儲存使用率
+- **Index Health**：驗證日誌收集和搜尋效能
 
-### Log Analysis
+### 日誌分析
 
 ```bash
 # Check application logs
@@ -222,9 +222,9 @@ aws logs describe-log-groups --log-group-name-prefix "/aws/containerinsights/gen
 aws logs filter-log-events --log-group-name "/aws/containerinsights/genai-demo-cluster/application" --filter-pattern "ERROR"
 ```
 
-## 🛠️ Advanced Troubleshooting
+## 🛠️ 進階疑難排解
 
-### CDK Context Issues
+### CDK Context 問題
 
 ```bash
 # Clear CDK context cache
@@ -234,7 +234,7 @@ cdk context --clear
 cdk context --reset "availability-zones:account=ACCOUNT:region=REGION"
 ```
 
-### Node.js Memory Issues
+### Node.js 記憶體問題
 
 ```bash
 # Increase Node.js memory limit
@@ -242,7 +242,7 @@ export NODE_OPTIONS="--max-old-space-size=4096"
 npm run build
 ```
 
-### AWS Credentials Issues
+### AWS Credentials 問題
 
 ```bash
 # Verify AWS credentials
@@ -252,9 +252,9 @@ aws sts get-caller-identity
 cdk bootstrap --show-template
 ```
 
-## 📞 Getting Help
+## 📞 取得協助
 
-### Log Collection for Support
+### 收集日誌以供支援
 
 ```bash
 # Collect comprehensive logs
@@ -265,22 +265,22 @@ npm run docs:generate
 npm run cost:estimate
 ```
 
-### Common Error Patterns
+### 常見錯誤模式
 
-1. **"Cannot assume role"**: Check IAM permissions and trust relationships
-2. **"Resource already exists"**: Check for naming conflicts or incomplete cleanup
-3. **"Insufficient capacity"**: Verify instance types are available in target AZs
-4. **"Invalid parameter"**: Validate configuration values in cdk.context.json
+1. **「Cannot assume role」**：檢查 IAM 權限和信任關係
+2. **「Resource already exists」**：檢查命名衝突或未完成的清理
+3. **「Insufficient capacity」**：驗證目標 AZs 中可用的實例類型
+4. **「Invalid parameter」**：驗證 cdk.context.json 中的配置值
 
-### Support Resources
+### 支援資源
 
 - AWS CDK Documentation
 - AWS CDK GitHub Issues
 - AWS Support Center
 
-## 🔄 Recovery Procedures
+## 🔄 復原程序
 
-### Rollback Deployment
+### 回滾部署
 
 ```bash
 # Rollback to previous version
@@ -291,8 +291,8 @@ cdk destroy --force
 npm run deploy:clean
 ```
 
-### Emergency Procedures
+### 緊急程序
 
-1. **Route53 Failover**: Manually update DNS records if automated failover fails
-2. **OpenSearch Recovery**: Restore from automated snapshots
-3. **Complete Infrastructure Reset**: Use disaster recovery procedures in DR documentation
+1. **Route53 Failover**：如果自動 failover 失敗，手動更新 DNS 記錄
+2. **OpenSearch Recovery**：從自動快照還原
+3. **完整基礎設施重置**：使用 DR 文件中的災難復原程序

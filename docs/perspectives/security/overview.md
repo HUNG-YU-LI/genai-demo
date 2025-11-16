@@ -8,447 +8,427 @@ version: "1.0"
 status: "active"
 owner: "Security Team"
 related_docs:
-
   - "../../viewpoints/functional/overview.md"
   - "../../viewpoints/deployment/overview.md"
   - "../../viewpoints/operational/overview.md"
-
 tags: ["security", "authentication", "authorization", "encryption", "compliance"]
 ---
 
 # Security Perspective
 
-> **Status**: ✅ Active  
-> **Last Updated**: 2025-10-23  
+> **Status**: ✅ Active
+> **Last Updated**: 2025-10-23
 > **Owner**: Security Team
 
 ## Overview
 
-The Security Perspective addresses the system's ability to protect data and resources from unauthorized access, maintain confidentiality and integrity, and ensure compliance with security standards and regulations. This perspective is critical for an e-commerce platform handling sensitive customer data, payment information, and business transactions.
+Security Perspective 處理系統保護資料和資源免受未經授權存取、維護機密性和完整性，以及確保符合 security 標準和法規的能力。此觀點對於處理敏感客戶資料、付款資訊和業務交易的電子商務平台至關重要。
 
-Security is implemented through multiple layers including authentication, authorization, data encryption, secure communication, input validation, and comprehensive security monitoring. The system follows defense-in-depth principles with security controls at every layer of the architecture.
+Security 透過多個層級實作，包括 authentication、authorization、資料加密、安全通訊、輸入驗證和全面的 security 監控。系統遵循深度防禦原則，在架構的每一層都有 security 控制。
 
 ## Purpose
 
-This perspective ensures:
+此觀點確保：
 
-- **Confidentiality**: Sensitive data is protected from unauthorized access
-- **Integrity**: Data cannot be modified without authorization
-- **Availability**: System remains accessible to authorized users
-- **Authentication**: Users and systems are properly identified
-- **Authorization**: Access is granted based on verified permissions
-- **Auditability**: Security events are logged and traceable
-- **Compliance**: System meets regulatory requirements (GDPR, PCI-DSS)
+- **Confidentiality**：敏感資料受保護免受未經授權的存取
+- **Integrity**：資料無法在未經授權的情況下修改
+- **Availability**：系統對授權使用者保持可存取
+- **Authentication**：使用者和系統得到正確識別
+- **Authorization**：基於已驗證的權限授予存取權
+- **Auditability**：Security 事件被記錄且可追蹤
+- **Compliance**：系統符合法規要求（GDPR、PCI-DSS）
 
 ## Stakeholders
 
 ### Primary Stakeholders
 
-- **Security Team**: Responsible for security architecture and threat modeling
-- **Development Team**: Implements security controls and follows secure coding practices
-- **Operations Team**: Monitors security events and responds to incidents
-- **Compliance Team**: Ensures regulatory compliance
+- **Security Team**：負責 security 架構和威脅建模
+- **Development Team**：實作 security 控制並遵循安全編碼實踐
+- **Operations Team**：監控 security 事件並回應事件
+- **Compliance Team**：確保法規遵循
 
 ### Secondary Stakeholders
 
-- **Customers**: Expect their data to be protected
-- **Business Owners**: Concerned about reputation and legal liability
-- **Auditors**: Verify security controls and compliance
-- **Legal Team**: Ensures legal and regulatory compliance
+- **Customers**：期望他們的資料受到保護
+- **Business Owners**：關注聲譽和法律責任
+- **Auditors**：驗證 security 控制和合規性
+- **Legal Team**：確保法律和法規遵循
 
 ## Contents
 
 ### 📄 Documents
 
-- [Authentication](authentication.md) - Authentication mechanisms and JWT implementation
-- [Authorization](authorization.md) - RBAC model and permission management
-- [Data Protection](data-protection.md) - Encryption and data masking strategies
-- [Compliance](compliance.md) - GDPR and PCI-DSS compliance
-- [Verification](verification.md) - Security testing and validation
+- [Authentication](authentication.md) - Authentication 機制和 JWT 實作
+- [Authorization](authorization.md) - RBAC 模型和權限管理
+- [Data Protection](data-protection.md) - 加密和資料遮罩策略
+- [Compliance](compliance.md) - GDPR 和 PCI-DSS 合規性
+- [Verification](verification.md) - Security 測試和驗證
 
 ### 📊 Diagrams
 
-- [Authentication Flow](../../diagrams/perspectives/security/authentication-flow.puml) - JWT authentication sequence
-- [Authorization Model](../../diagrams/perspectives/security/authorization-model.puml) - RBAC structure
-- [Data Encryption](../../diagrams/perspectives/security/data-encryption.puml) - Encryption at rest and in transit
-- [Security Layers](../../diagrams/perspectives/security/security-layers.puml) - Defense-in-depth architecture
+- [Authentication Flow](../../diagrams/perspectives/security/authentication-flow.puml) - JWT authentication 序列
+- [Authorization Model](../../diagrams/perspectives/security/authorization-model.puml) - RBAC 結構
+- [Data Encryption](../../diagrams/perspectives/security/data-encryption.puml) - 靜態和傳輸中的加密
+- [Security Layers](../../diagrams/perspectives/security/security-layers.puml) - 深度防禦架構
 
 ## Key Concerns
 
 ### Concern 1: Authentication and Identity Management
 
-**Description**: Ensuring that users and systems are properly authenticated before accessing resources. The system must verify identity through secure mechanisms and maintain session security.
+**Description**：確保使用者和系統在存取資源之前得到正確 authentication。系統必須透過安全機制驗證身份並維護 session security。
 
-**Impact**: Without proper authentication, unauthorized users could access sensitive data and functionality, leading to data breaches, fraud, and compliance violations.
+**Impact**：沒有適當的 authentication，未經授權的使用者可能存取敏感資料和功能，導致資料外洩、詐欺和合規違規。
 
-**Priority**: High
+**Priority**：High
 
-**Affected Viewpoints**: Functional, Deployment, Operational
+**Affected Viewpoints**：Functional、Deployment、Operational
 
 ### Concern 2: Authorization and Access Control
 
-**Description**: Controlling what authenticated users can access and modify based on their roles and permissions. The system must enforce fine-grained access control at multiple levels.
+**Description**：基於已 authentication 使用者的角色和權限，控制他們可以存取和修改的內容。系統必須在多個層級強制執行細粒度的存取控制。
 
-**Impact**: Inadequate authorization could allow privilege escalation, unauthorized data access, and violation of data privacy regulations.
+**Impact**：不適當的 authorization 可能允許權限提升、未經授權的資料存取以及違反資料隱私法規。
 
-**Priority**: High
+**Priority**：High
 
-**Affected Viewpoints**: Functional, Information, Development
+**Affected Viewpoints**：Functional、Information、Development
 
 ### Concern 3: Data Protection and Encryption
 
-**Description**: Protecting sensitive data both at rest and in transit through encryption, masking, and secure storage. This includes customer PII, payment information, and business data.
+**Description**：透過加密、遮罩和安全儲存保護靜態和傳輸中的敏感資料。這包括客戶 PII、付款資訊和業務資料。
 
-**Impact**: Unprotected data could be exposed through breaches, leading to regulatory fines, customer trust loss, and legal liability.
+**Impact**：未受保護的資料可能透過外洩而暴露，導致法規罰款、客戶信任喪失和法律責任。
 
-**Priority**: High
+**Priority**：High
 
-**Affected Viewpoints**: Information, Deployment, Operational
+**Affected Viewpoints**：Information、Deployment、Operational
 
 ### Concern 4: Input Validation and Injection Prevention
 
-**Description**: Validating all user inputs to prevent injection attacks (SQL injection, XSS, command injection) and ensure data integrity.
+**Description**：驗證所有使用者輸入以防止 injection 攻擊（SQL injection、XSS、command injection）並確保資料完整性。
 
-**Impact**: Injection vulnerabilities are among the most critical security risks, potentially allowing attackers to execute arbitrary code, access databases, or compromise the entire system.
+**Impact**：Injection 漏洞是最關鍵的 security 風險之一，可能允許攻擊者執行任意程式碼、存取資料庫或危害整個系統。
 
-**Priority**: High
+**Priority**：High
 
-**Affected Viewpoints**: Functional, Development
+**Affected Viewpoints**：Functional、Development
 
 ### Concern 5: Security Monitoring and Incident Response
 
-**Description**: Continuously monitoring security events, detecting threats, and responding to security incidents in a timely manner.
+**Description**：持續監控 security 事件、偵測威脅並及時回應 security 事件。
 
-**Impact**: Without proper monitoring, security breaches may go undetected, allowing attackers extended access and increasing damage.
+**Impact**：沒有適當的監控，security 外洩可能未被偵測到，允許攻擊者延長存取並增加損害。
 
-**Priority**: High
+**Priority**：High
 
-**Affected Viewpoints**: Operational, Deployment
+**Affected Viewpoints**：Operational、Deployment
 
 ### Concern 6: Compliance and Regulatory Requirements
 
-**Description**: Meeting regulatory requirements including GDPR for data privacy and PCI-DSS for payment card data handling.
+**Description**：滿足法規要求，包括用於資料隱私的 GDPR 和用於付款卡資料處理的 PCI-DSS。
 
-**Impact**: Non-compliance can result in significant fines, legal action, and loss of business licenses.
+**Impact**：不合規可能導致重大罰款、法律訴訟和業務許可證喪失。
 
-**Priority**: High
+**Priority**：High
 
-**Affected Viewpoints**: Information, Functional, Operational
+**Affected Viewpoints**：Information、Functional、Operational
 
 ## Quality Attribute Requirements
 
 ### Requirement 1: Authentication Token Security
 
-**Description**: All API requests must be authenticated using JWT tokens with appropriate expiration and refresh mechanisms.
+**Description**：所有 API 請求必須使用具有適當過期和更新機制的 JWT token 進行 authentication。
 
-**Target**:
+**Target**：
+- Access token 有效期：1 小時
+- Refresh token 有效期：24 小時
+- Token 驗證時間：< 10ms
+- 零 token 洩漏事件
 
-- Access token validity: 1 hour
-- Refresh token validity: 24 hours
-- Token validation time: < 10ms
-- Zero token leakage incidents
+**Rationale**：短期 token 最小化 token 被盜的影響，而 refresh token 提供良好的使用者體驗。
 
-**Rationale**: Short-lived tokens minimize the impact of token theft while refresh tokens provide good user experience.
-
-**Verification**: Security testing, token expiration tests, penetration testing
+**Verification**：Security 測試、token 過期測試、滲透測試
 
 ### Requirement 2: Password Security
 
-**Description**: User passwords must meet strength requirements and be stored using industry-standard hashing algorithms.
+**Description**：使用者密碼必須符合強度要求，並使用業界標準的雜湊演算法儲存。
 
-**Target**:
+**Target**：
+- 最少 8 個字元且符合複雜性要求
+- BCrypt 強度因子 12
+- 不儲存明文密碼
+- 密碼洩露偵測
 
-- Minimum 8 characters with complexity requirements
-- BCrypt with strength factor 12
-- No plaintext password storage
-- Password breach detection
+**Rationale**：強密碼政策和安全儲存可防止基於憑證的攻擊。
 
-**Rationale**: Strong password policies and secure storage prevent credential-based attacks.
-
-**Verification**: Password policy tests, hash algorithm verification, security audits
+**Verification**：密碼政策測試、雜湊演算法驗證、security 稽核
 
 ### Requirement 3: Data Encryption
 
-**Description**: Sensitive data must be encrypted at rest and in transit using strong encryption algorithms.
+**Description**：敏感資料必須使用強加密演算法在靜態和傳輸中加密。
 
-**Target**:
+**Target**：
+- 傳輸中資料使用 TLS 1.3
+- 靜態資料使用 AES-256
+- 所有 PII 和付款資料加密
+- 每 90 天金鑰輪換
 
-- TLS 1.3 for data in transit
-- AES-256 for data at rest
-- All PII and payment data encrypted
-- Key rotation every 90 days
+**Rationale**：即使儲存或網路受損，加密也能保護資料。
 
-**Rationale**: Encryption protects data even if storage or network is compromised.
-
-**Verification**: Encryption verification tests, compliance audits, penetration testing
+**Verification**：加密驗證測試、合規稽核、滲透測試
 
 ### Requirement 4: Authorization Enforcement
 
-**Description**: All operations must enforce role-based access control with proper permission checks.
+**Description**：所有操作必須強制執行基於角色的存取控制並進行適當的權限檢查。
 
-**Target**:
+**Target**：
+- 100% 的端點受保護
+- Authorization 檢查時間：< 5ms
+- 零未經授權存取事件
+- 所有存取嘗試的稽核軌跡
 
-- 100% of endpoints protected
-- Authorization check time: < 5ms
-- Zero unauthorized access incidents
-- Audit trail for all access attempts
+**Rationale**：適當的 authorization 可防止權限提升和未經授權的資料存取。
 
-**Rationale**: Proper authorization prevents privilege escalation and unauthorized data access.
-
-**Verification**: Authorization tests, security audits, penetration testing
+**Verification**：Authorization 測試、security 稽核、滲透測試
 
 ### Requirement 5: Security Event Logging
 
-**Description**: All security-relevant events must be logged with sufficient detail for audit and incident response.
+**Description**：所有與 security 相關的事件必須記錄足夠的詳細資訊以供稽核和事件回應。
 
-**Target**:
+**Target**：
+- 100% 的 authentication 嘗試被記錄
+- 100% 的 authorization 失敗被記錄
+- 日誌保留：最少 90 天
+- 日誌完整性保護
 
-- 100% of authentication attempts logged
-- 100% of authorization failures logged
-- Log retention: 90 days minimum
-- Log integrity protection
+**Rationale**：全面的日誌記錄能夠進行威脅偵測、事件回應和合規性。
 
-**Rationale**: Comprehensive logging enables threat detection, incident response, and compliance.
-
-**Verification**: Log completeness tests, audit reviews, compliance checks
+**Verification**：日誌完整性測試、稽核審查、合規檢查
 
 ## Quality Attribute Scenarios
 
 ### Scenario 1: Unauthorized Access Attempt
 
-**Source**: Malicious user
+**Source**：惡意使用者
 
-**Stimulus**: Attempts to access customer data without valid authentication token
+**Stimulus**：嘗試在沒有有效 authentication token 的情況下存取客戶資料
 
-**Environment**: Production system under normal load
+**Environment**：正常負載下的生產系統
 
-**Artifact**: Customer API endpoints
+**Artifact**：Customer API 端點
 
-**Response**: System rejects request, logs security event, returns 401 Unauthorized
+**Response**：系統拒絕請求、記錄 security 事件、回傳 401 Unauthorized
 
-**Response Measure**:
+**Response Measure**：
+- 在 10ms 內拒絕請求
+- Security 事件記錄完整上下文
+- 無資料暴露
+- 如果偵測到多次嘗試，觸發警報
 
-- Request rejected within 10ms
-- Security event logged with full context
-- No data exposure
-- Alert triggered if multiple attempts detected
+**Priority**：High
 
-**Priority**: High
-
-**Status**: ✅ Implemented
+**Status**：✅ Implemented
 
 ### Scenario 2: SQL Injection Attack
 
-**Source**: Attacker
+**Source**：攻擊者
 
-**Stimulus**: Submits malicious SQL code through search input field
+**Stimulus**：透過搜尋輸入欄位提交惡意 SQL 程式碼
 
-**Environment**: Production system
+**Environment**：生產系統
 
-**Artifact**: Product search API
+**Artifact**：Product search API
 
-**Response**: System sanitizes input, uses parameterized queries, logs suspicious activity
+**Response**：系統淨化輸入、使用參數化查詢、記錄可疑活動
 
-**Response Measure**:
+**Response Measure**：
+- 攻擊被阻止（無 SQL 執行）
+- 可疑活動被記錄
+- 使用者 session 被標記以供審查
+- 零資料暴露
 
-- Attack prevented (no SQL execution)
-- Suspicious activity logged
-- User session flagged for review
-- Zero data exposure
+**Priority**：High
 
-**Priority**: High
-
-**Status**: ✅ Implemented
+**Status**：✅ Implemented
 
 ### Scenario 3: Data Breach Attempt
 
-**Source**: Attacker with compromised credentials
+**Source**：擁有被盜憑證的攻擊者
 
-**Stimulus**: Attempts to export large amounts of customer data
+**Stimulus**：嘗試匯出大量客戶資料
 
-**Environment**: Production system
+**Environment**：生產系統
 
-**Artifact**: Customer data export functionality
+**Artifact**：客戶資料匯出功能
 
-**Response**: System detects anomalous behavior, requires additional authentication, alerts security team
+**Response**：系統偵測異常行為、要求額外 authentication、警告 security 團隊
 
-**Response Measure**:
+**Response Measure**：
+- 在 30 秒內偵測到異常
+- 需要額外 authentication
+- 在 1 分鐘內警告 security 團隊
+- 資料匯出被阻止直到驗證
 
-- Anomaly detected within 30 seconds
-- Additional authentication required
-- Security team alerted within 1 minute
-- Data export blocked until verified
+**Priority**：High
 
-**Priority**: High
-
-**Status**: 🚧 In Progress
+**Status**：🚧 In Progress
 
 ### Scenario 4: Password Breach Detection
 
-**Source**: User
+**Source**：使用者
 
-**Stimulus**: Attempts to set password that appears in known breach databases
+**Stimulus**：嘗試設定出現在已知外洩資料庫中的密碼
 
-**Environment**: User registration or password change
+**Environment**：使用者註冊或密碼變更
 
-**Artifact**: Password validation service
+**Artifact**：密碼驗證服務
 
-**Response**: System rejects password, suggests alternative, logs incident
+**Response**：系統拒絕密碼、建議替代方案、記錄事件
 
-**Response Measure**:
+**Response Measure**：
+- 外洩密碼被拒絕
+- 使用者收到清楚訊息通知
+- 提供替代建議
+- 事件被記錄以供分析
 
-- Breached password rejected
-- User notified with clear message
-- Alternative suggestions provided
-- Incident logged for analysis
+**Priority**：Medium
 
-**Priority**: Medium
-
-**Status**: 📝 Planned
+**Status**：📝 Planned
 
 ### Scenario 5: Compliance Audit Request
 
-**Source**: Auditor
+**Source**：稽核員
 
-**Stimulus**: Requests evidence of GDPR compliance for data protection
+**Stimulus**：要求 GDPR 資料保護合規性的證據
 
-**Environment**: Audit period
+**Environment**：稽核期間
 
-**Artifact**: Security documentation and logs
+**Artifact**：Security 文件和日誌
 
-**Response**: System provides comprehensive audit trail, encryption evidence, access logs
+**Response**：系統提供全面的稽核軌跡、加密證據、存取日誌
 
-**Response Measure**:
+**Response Measure**：
+- 完整的稽核軌跡可用
+- 提供所有必要證據
+- 回應時間 < 24 小時
+- 未發現合規缺口
 
-- Complete audit trail available
-- All required evidence provided
-- Response time < 24 hours
-- Zero compliance gaps identified
+**Priority**：High
 
-**Priority**: High
-
-**Status**: ✅ Implemented
+**Status**：✅ Implemented
 
 ## Design Decisions
 
 ### Decision 1: JWT-Based Authentication
 
-**Context**: Need for stateless authentication mechanism that scales horizontally and works across microservices.
+**Context**：需要無狀態的 authentication 機制，能夠水平擴展並跨 microservices 工作。
 
-**Decision**: Implement JWT (JSON Web Tokens) for authentication with short-lived access tokens and longer-lived refresh tokens.
+**Decision**：實作 JWT（JSON Web Tokens）進行 authentication，使用短期 access token 和長期 refresh token。
 
-**Rationale**:
+**Rationale**：
+- 無狀態設計實現水平擴展
+- 不需要伺服器端 session 儲存
+- 與 microservices 架構良好配合
+- 具有良好程式庫支援的業界標準
 
-- Stateless design enables horizontal scaling
-- No server-side session storage required
-- Works well with microservices architecture
-- Industry standard with good library support
+**Trade-offs**：
+- ✅ 獲得：Scalability、簡單性、performance
+- ❌ 犧牲：無法在過期前撤銷 token（透過短過期時間緩解）
 
-**Trade-offs**:
+**Impact on Quality Attribute**：在透過短 token 生命週期維護 security 的同時提高 scalability 和 performance。
 
-- ✅ Gained: Scalability, simplicity, performance
-- ❌ Sacrificed: Cannot revoke tokens before expiration (mitigated with short expiration)
-
-**Impact on Quality Attribute**: Improves scalability and performance while maintaining security through short token lifetimes.
-
-**Related ADR**: ADR-012: JWT Authentication Strategy
+**Related ADR**：ADR-012: JWT Authentication Strategy
 
 ### Decision 2: Role-Based Access Control (RBAC)
 
-**Context**: Need for flexible yet manageable authorization system that supports multiple user types and permissions.
+**Context**：需要靈活但可管理的 authorization 系統，支援多種使用者類型和權限。
 
-**Decision**: Implement RBAC with roles (Admin, Customer, Seller) and fine-grained permissions.
+**Decision**：實作具有角色（Admin、Customer、Seller）和細粒度權限的 RBAC。
 
-**Rationale**:
+**Rationale**：
+- 比基於屬性的存取控制更簡單管理
+- 足以滿足當前業務需求
+- 具有良好框架支援的易於理解模型
+- 更容易稽核和驗證
 
-- Simpler to manage than attribute-based access control
-- Sufficient for current business requirements
-- Well-understood model with good framework support
-- Easier to audit and verify
+**Trade-offs**：
+- ✅ 獲得：簡單性、可管理性、可稽核性
+- ❌ 犧牲：與 ABAC 相比的一些靈活性
 
-**Trade-offs**:
+**Impact on Quality Attribute**：以可管理的複雜性提供強大的 authorization。
 
-- ✅ Gained: Simplicity, manageability, auditability
-- ❌ Sacrificed: Some flexibility compared to ABAC
-
-**Impact on Quality Attribute**: Provides strong authorization with manageable complexity.
-
-**Related ADR**: ADR-013: Authorization Model
+**Related ADR**：ADR-013: Authorization Model
 
 ### Decision 3: AES-256 for Data at Rest
 
-**Context**: Need to protect sensitive customer data stored in databases.
+**Context**：需要保護儲存在資料庫中的敏感客戶資料。
 
-**Decision**: Use AES-256 encryption for PII and payment-related data at rest.
+**Decision**：對 PII 和付款相關的靜態資料使用 AES-256 加密。
 
-**Rationale**:
+**Rationale**：
+- 業界標準加密演算法
+- 滿足合規要求（GDPR、PCI-DSS）
+- 良好的 performance 特性
+- 適當的金鑰管理提供強大的 security
 
-- Industry standard encryption algorithm
-- Meets compliance requirements (GDPR, PCI-DSS)
-- Good performance characteristics
-- Strong security with proper key management
+**Trade-offs**：
+- ✅ 獲得：強大的資料保護、合規性
+- ❌ 犧牲：一些 performance 開銷、金鑰管理複雜性
 
-**Trade-offs**:
+**Impact on Quality Attribute**：即使資料庫受損也確保資料機密性。
 
-- ✅ Gained: Strong data protection, compliance
-- ❌ Sacrificed: Some performance overhead, key management complexity
-
-**Impact on Quality Attribute**: Ensures data confidentiality even if database is compromised.
-
-**Related ADR**: ADR-014: Data Encryption Strategy
+**Related ADR**：ADR-014: Data Encryption Strategy
 
 ### Decision 4: TLS 1.3 for Data in Transit
 
-**Context**: Need to protect data transmitted between clients and servers.
+**Context**：需要保護客戶端和伺服器之間傳輸的資料。
 
-**Decision**: Enforce TLS 1.3 for all external communications, disable older TLS versions.
+**Decision**：對所有外部通訊強制執行 TLS 1.3，停用較舊的 TLS 版本。
 
-**Rationale**:
+**Rationale**：
+- 具有改進 security 的最新 TLS 版本
+- 比 TLS 1.2 更好的 performance
+- 移除易受攻擊的密碼套件
+- 業界最佳實踐
 
-- Latest TLS version with improved security
-- Better performance than TLS 1.2
-- Removes vulnerable cipher suites
-- Industry best practice
+**Trade-offs**：
+- ✅ 獲得：更強的 security、更好的 performance
+- ❌ 犧牲：與非常舊的客戶端的相容性（可接受的權衡）
 
-**Trade-offs**:
+**Impact on Quality Attribute**：保護傳輸中的資料免受攔截和篡改。
 
-- ✅ Gained: Stronger security, better performance
-- ❌ Sacrificed: Compatibility with very old clients (acceptable trade-off)
-
-**Impact on Quality Attribute**: Protects data in transit from interception and tampering.
-
-**Related ADR**: ADR-015: TLS Configuration
+**Related ADR**：ADR-015: TLS Configuration
 
 ## Implementation Guidelines
 
 ### Architectural Patterns
 
-- **Defense in Depth**: Multiple layers of security controls (network, application, data)
-- **Least Privilege**: Grant minimum necessary permissions
-- **Fail Secure**: System defaults to secure state on errors
-- **Security by Design**: Security integrated from the start, not added later
-- **Zero Trust**: Verify every request, never assume trust
+- **Defense in Depth**：多層 security 控制（網路、應用程式、資料）
+- **Least Privilege**：授予最低必要權限
+- **Fail Secure**：系統在錯誤時預設為安全狀態
+- **Security by Design**：Security 從一開始整合，而不是後來添加
+- **Zero Trust**：驗證每個請求，從不假設信任
 
 ### Best Practices
 
-1. **Input Validation**: Validate all inputs at API boundaries using Bean Validation and custom validators
-2. **Parameterized Queries**: Always use parameterized queries or ORM to prevent SQL injection
-3. **Output Encoding**: Encode all outputs to prevent XSS attacks
-4. **Secure Headers**: Implement security headers (CSP, HSTS, X-Frame-Options)
-5. **Error Handling**: Never expose sensitive information in error messages
-6. **Dependency Management**: Keep dependencies updated, scan for vulnerabilities
-7. **Secret Management**: Never hardcode secrets, use environment variables or secret managers
-8. **Security Testing**: Include security tests in CI/CD pipeline
+1. **Input Validation**：使用 Bean Validation 和自訂驗證器在 API 邊界驗證所有輸入
+2. **Parameterized Queries**：始終使用參數化查詢或 ORM 以防止 SQL injection
+3. **Output Encoding**：編碼所有輸出以防止 XSS 攻擊
+4. **Secure Headers**：實作 security headers（CSP、HSTS、X-Frame-Options）
+5. **Error Handling**：絕不在錯誤訊息中暴露敏感資訊
+6. **Dependency Management**：保持相依性更新，掃描漏洞
+7. **Secret Management**：絕不硬編碼 secret，使用環境變數或 secret 管理器
+8. **Security Testing**：在 CI/CD pipeline 中包含 security 測試
 
 ### Anti-Patterns to Avoid
 
-- ❌ **Hardcoded Credentials**: Never store credentials in code or configuration files
-- ❌ **Client-Side Security**: Never rely solely on client-side validation or security
-- ❌ **Security Through Obscurity**: Don't rely on hiding implementation details
-- ❌ **Ignoring Updates**: Failing to update dependencies with security patches
-- ❌ **Insufficient Logging**: Not logging security events for audit and incident response
-- ❌ **Weak Passwords**: Allowing weak passwords or not enforcing password policies
-- ❌ **Missing Authorization**: Implementing authentication but forgetting authorization checks
+- ❌ **Hardcoded Credentials**：絕不在程式碼或配置檔案中儲存憑證
+- ❌ **Client-Side Security**：絕不僅依賴客戶端驗證或 security
+- ❌ **Security Through Obscurity**：不要依賴隱藏實作細節
+- ❌ **Ignoring Updates**：未能使用 security 補丁更新相依性
+- ❌ **Insufficient Logging**：不記錄 security 事件以供稽核和事件回應
+- ❌ **Weak Passwords**：允許弱密碼或不強制執行密碼政策
+- ❌ **Missing Authorization**：實作 authentication 但忘記 authorization 檢查
 
 ### Code Examples
 
@@ -458,20 +438,20 @@ This perspective ensures:
 @RestController
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
-    
+
     @GetMapping("/{customerId}")
     @PreAuthorize("hasRole('ADMIN') or #customerId == authentication.principal.customerId")
     public ResponseEntity<CustomerResponse> getCustomer(
             @PathVariable @Pattern(regexp = "^[A-Z0-9-]+$") String customerId) {
-        
+
         Customer customer = customerService.findById(customerId);
         return ResponseEntity.ok(CustomerResponse.from(customer));
     }
-    
+
     @PostMapping
     public ResponseEntity<CustomerResponse> createCustomer(
             @Valid @RequestBody CreateCustomerRequest request) {
-        
+
         // Input is validated by @Valid annotation
         Customer customer = customerService.createCustomer(request);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -485,26 +465,26 @@ public class CustomerController {
 ```java
 @Service
 public class AuthenticationService {
-    
+
     private final PasswordEncoder passwordEncoder;
     private final PasswordBreachChecker breachChecker;
-    
+
     public void registerUser(String email, String password) {
         // Check password strength
         validatePasswordStrength(password);
-        
+
         // Check against known breaches
         if (breachChecker.isBreached(password)) {
             throw new WeakPasswordException("Password found in known breaches");
         }
-        
+
         // Hash password with BCrypt
         String hashedPassword = passwordEncoder.encode(password);
-        
+
         // Store user with hashed password
         userRepository.save(new User(email, hashedPassword));
     }
-    
+
     private void validatePasswordStrength(String password) {
         if (password.length() < 8) {
             throw new WeakPasswordException("Password must be at least 8 characters");
@@ -518,93 +498,85 @@ public class AuthenticationService {
 
 ### Verification Methods
 
-- **Static Analysis**: Use SpotBugs, SonarQube to detect security vulnerabilities
-- **Dependency Scanning**: Use OWASP Dependency-Check to identify vulnerable dependencies
-- **Penetration Testing**: Regular penetration tests by security professionals
-- **Security Audits**: Periodic security audits of code and infrastructure
-- **Compliance Audits**: Regular GDPR and PCI-DSS compliance audits
+- **Static Analysis**：使用 SpotBugs、SonarQube 偵測 security 漏洞
+- **Dependency Scanning**：使用 OWASP Dependency-Check 識別易受攻擊的相依性
+- **Penetration Testing**：由 security 專業人員進行定期滲透測試
+- **Security Audits**：定期對程式碼和基礎設施進行 security 稽核
+- **Compliance Audits**：定期 GDPR 和 PCI-DSS 合規稽核
 
 ### Testing Strategy
 
 #### Test Type 1: Authentication Tests
 
-**Purpose**: Verify authentication mechanisms work correctly and securely
+**Purpose**：驗證 authentication 機制正確且安全地工作
 
-**Approach**:
+**Approach**：
+- 測試有效和無效憑證
+- 測試 token 過期和更新
+- 測試並行 session
+- 測試暴力破解保護
 
-- Test valid and invalid credentials
-- Test token expiration and refresh
-- Test concurrent sessions
-- Test brute force protection
+**Success Criteria**：
+- 所有 authentication 測試通過
+- 無法繞過 authentication
+- Token 按配置過期
+- 暴力破解嘗試被阻止
 
-**Success Criteria**:
-
-- All authentication tests pass
-- No authentication bypass possible
-- Tokens expire as configured
-- Brute force attempts blocked
-
-**Frequency**: Every build (CI/CD)
+**Frequency**：每次建置（CI/CD）
 
 #### Test Type 2: Authorization Tests
 
-**Purpose**: Verify authorization controls prevent unauthorized access
+**Purpose**：驗證 authorization 控制防止未經授權的存取
 
-**Approach**:
+**Approach**：
+- 測試基於角色的存取控制
+- 測試權限邊界
+- 測試權限提升嘗試
+- 測試跨使用者資料存取
 
-- Test role-based access control
-- Test permission boundaries
-- Test privilege escalation attempts
-- Test cross-user data access
+**Success Criteria**：
+- 所有 authorization 測試通過
+- 無法未經授權存取
+- 回傳適當的錯誤訊息
+- 所有嘗試被記錄
 
-**Success Criteria**:
-
-- All authorization tests pass
-- No unauthorized access possible
-- Proper error messages returned
-- All attempts logged
-
-**Frequency**: Every build (CI/CD)
+**Frequency**：每次建置（CI/CD）
 
 #### Test Type 3: Injection Attack Tests
 
-**Purpose**: Verify system is protected against injection attacks
+**Purpose**：驗證系統受保護免受 injection 攻擊
 
-**Approach**:
+**Approach**：
+- 測試 SQL injection 嘗試
+- 測試 XSS 嘗試
+- 測試 command injection 嘗試
+- 測試 LDAP injection 嘗試
 
-- Test SQL injection attempts
-- Test XSS attempts
-- Test command injection attempts
-- Test LDAP injection attempts
+**Success Criteria**：
+- 所有 injection 嘗試被阻止
+- 無法執行程式碼
+- 可疑活動被記錄
+- 適當的輸入驗證
 
-**Success Criteria**:
-
-- All injection attempts blocked
-- No code execution possible
-- Suspicious activity logged
-- Proper input validation
-
-**Frequency**: Every build (CI/CD) + Monthly penetration tests
+**Frequency**：每次建置（CI/CD）+ 每月滲透測試
 
 #### Test Type 4: Encryption Tests
 
-**Purpose**: Verify data encryption is properly implemented
+**Purpose**：驗證資料加密正確實作
 
-**Approach**:
+**Approach**：
+- 驗證 TLS 配置
+- 驗證靜態資料加密
+- 測試金鑰輪換
+- 驗證加密演算法
 
-- Verify TLS configuration
-- Verify data at rest encryption
-- Test key rotation
-- Verify encryption algorithms
+**Success Criteria**：
+- 所有敏感資料已加密
+- 使用強演算法
+- 金鑰正確管理
+- 滿足合規要求
 
-**Success Criteria**:
-
-- All sensitive data encrypted
-- Strong algorithms used
-- Keys properly managed
-- Compliance requirements met
-
-**Frequency**: Weekly + Quarterly audits
+**Frequency**：每週 + 每季稽核
 
 ### Metrics and Monitoring
 
@@ -622,106 +594,96 @@ public class AuthenticationService {
 
 ### [Functional Viewpoint](../../viewpoints/functional/overview.md)
 
-**How this perspective applies**:
-Security controls must be integrated into all functional capabilities, particularly authentication, authorization, and data access operations.
+**How this perspective applies**：
+Security 控制必須整合到所有功能能力中，特別是 authentication、authorization 和資料存取操作。
 
-**Specific concerns**:
+**Specific concerns**：
+- 所有 API 端點必須強制執行 authentication
+- 業務操作必須檢查 authorization
+- 對所有使用者輸入進行輸入驗證
+- 安全的錯誤處理
 
-- All API endpoints must enforce authentication
-- Business operations must check authorization
-- Input validation on all user inputs
-- Secure error handling
-
-**Implementation guidance**:
-
-- Use Spring Security for authentication/authorization
-- Implement @PreAuthorize annotations on sensitive operations
-- Use Bean Validation for input validation
-- Never expose sensitive data in responses
+**Implementation guidance**：
+- 使用 Spring Security 進行 authentication/authorization
+- 在敏感操作上實作 @PreAuthorize 註解
+- 使用 Bean Validation 進行輸入驗證
+- 絕不在回應中暴露敏感資料
 
 ### [Information Viewpoint](../../viewpoints/information/overview.md)
 
-**How this perspective applies**:
-Data models must include security considerations for sensitive data storage, encryption, and access control.
+**How this perspective applies**：
+資料模型必須包含敏感資料儲存、加密和存取控制的 security 考量。
 
-**Specific concerns**:
+**Specific concerns**：
+- PII 必須在靜態時加密
+- 付款資料必須符合 PCI-DSS 要求
+- 資料存取必須被記錄
+- 必須強制執行資料保留政策
 
-- PII must be encrypted at rest
-- Payment data must meet PCI-DSS requirements
-- Data access must be logged
-- Data retention policies must be enforced
-
-**Implementation guidance**:
-
-- Use JPA converters for field-level encryption
-- Implement audit logging for data access
-- Use database-level encryption where appropriate
-- Implement data masking for non-production environments
+**Implementation guidance**：
+- 使用 JPA 轉換器進行欄位級加密
+- 實作資料存取的稽核日誌
+- 在適當的情況下使用資料庫級加密
+- 為非生產環境實作資料遮罩
 
 ### [Deployment Viewpoint](../../viewpoints/deployment/overview.md)
 
-**How this perspective applies**:
-Infrastructure must be configured securely with proper network segmentation, encryption, and access controls.
+**How this perspective applies**：
+基礎設施必須配置安全，具有適當的網路分段、加密和存取控制。
 
-**Specific concerns**:
+**Specific concerns**：
+- Security groups 正確配置
+- TLS/SSL 憑證管理
+- Secret 管理實作
+- 基礎設施存取控制
 
-- Network security groups properly configured
-- TLS/SSL certificates managed
-- Secrets management implemented
-- Infrastructure access controlled
-
-**Implementation guidance**:
-
-- Use AWS Security Groups for network isolation
-- Use AWS Certificate Manager for TLS certificates
-- Use AWS Secrets Manager for sensitive configuration
-- Implement least privilege IAM policies
+**Implementation guidance**：
+- 使用 AWS Security Groups 進行網路隔離
+- 使用 AWS Certificate Manager 管理 TLS 憑證
+- 使用 AWS Secrets Manager 管理敏感配置
+- 實作最小權限 IAM 政策
 
 ### [Operational Viewpoint](../../viewpoints/operational/overview.md)
 
-**How this perspective applies**:
-Operations must include security monitoring, incident response, and regular security maintenance.
+**How this perspective applies**：
+Operations 必須包括 security 監控、事件回應和定期 security 維護。
 
-**Specific concerns**:
+**Specific concerns**：
+- Security 事件被監控
+- 事件被偵測和回應
+- 及時應用 security 補丁
+- 維護合規性
 
-- Security events monitored
-- Incidents detected and responded to
-- Security patches applied timely
-- Compliance maintained
-
-**Implementation guidance**:
-
-- Use CloudWatch for security event monitoring
-- Implement automated alerting for security events
-- Establish incident response procedures
-- Schedule regular security updates
+**Implementation guidance**：
+- 使用 CloudWatch 進行 security 事件監控
+- 實作 security 事件的自動警報
+- 建立事件回應程序
+- 安排定期 security 更新
 
 ### [Development Viewpoint](../../viewpoints/development/overview.md)
 
-**How this perspective applies**:
-Development practices must include secure coding standards, security testing, and vulnerability management.
+**How this perspective applies**：
+開發實踐必須包括安全編碼標準、security 測試和漏洞管理。
 
-**Specific concerns**:
+**Specific concerns**：
+- 遵循安全編碼實踐
+- 在 CI/CD 中包含 security 測試
+- 掃描相依性的漏洞
+- 對 security 問題進行程式碼審查
 
-- Secure coding practices followed
-- Security tests included in CI/CD
-- Dependencies scanned for vulnerabilities
-- Code reviewed for security issues
-
-**Implementation guidance**:
-
-- Follow OWASP secure coding guidelines
-- Include security tests in test suite
-- Use automated dependency scanning
-- Conduct security-focused code reviews
+**Implementation guidance**：
+- 遵循 OWASP 安全編碼指南
+- 在測試套件中包含 security 測試
+- 使用自動相依性掃描
+- 進行以 security 為重點的程式碼審查
 
 ## Related Documentation
 
 ### Related Perspectives
 
-- [Performance Perspective](../performance/overview.md) - Security controls impact performance
-- [Availability Perspective](../availability/overview.md) - Security incidents affect availability
-- [Compliance Perspective](../regulation/overview.md) - Security enables compliance
+- [Performance Perspective](../performance/overview.md) - Security 控制影響 performance
+- [Availability Perspective](../availability/overview.md) - Security 事件影響 availability
+- [Compliance Perspective](../regulation/overview.md) - Security 實現合規性
 
 ### Related Architecture Decisions
 
@@ -732,63 +694,63 @@ Development practices must include secure coding standards, security testing, an
 
 ### Related Standards and Guidelines
 
-- OWASP Top 10: <https://owasp.org/www-project-top-ten/>
-- OWASP ASVS: <https://owasp.org/www-project-application-security-verification-standard/>
-- GDPR: <https://gdpr.eu/>
-- PCI-DSS: <https://www.pcisecuritystandards.org/>
+- OWASP Top 10: https://owasp.org/www-project-top-ten/
+- OWASP ASVS: https://owasp.org/www-project-application-security-verification-standard/
+- GDPR: https://gdpr.eu/
+- PCI-DSS: https://www.pcisecuritystandards.org/
 
 ### Related Tools
 
-- SpotBugs: Static analysis for security vulnerabilities
-- OWASP Dependency-Check: Dependency vulnerability scanning
-- SonarQube: Code quality and security analysis
-- AWS Security Hub: Centralized security monitoring
+- SpotBugs：用於 security 漏洞的靜態分析
+- OWASP Dependency-Check：相依性漏洞掃描
+- SonarQube：程式碼品質和 security 分析
+- AWS Security Hub：集中式 security 監控
 
 ## Known Issues and Limitations
 
 ### Current Limitations
 
-- **Token Revocation**: JWT tokens cannot be revoked before expiration (mitigated with short expiration times)
-- **Password Breach Database**: Currently using third-party service, considering self-hosted solution
+- **Token Revocation**：JWT token 無法在過期前撤銷（透過短過期時間緩解）
+- **Password Breach Database**：目前使用第三方服務，正在考慮自託管解決方案
 
 ### Technical Debt
 
-- **MFA Implementation**: Multi-factor authentication planned for Q2 2025
-- **Advanced Threat Detection**: Machine learning-based anomaly detection planned for Q3 2025
+- **MFA Implementation**：多因素 authentication 計劃於 2025 年 Q2
+- **Advanced Threat Detection**：基於機器學習的異常偵測計劃於 2025 年 Q3
 
 ### Risks
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|-------------------|
-| Zero-day vulnerability in dependency | Medium | High | Regular dependency updates, monitoring security advisories |
-| Insider threat | Low | High | Least privilege access, comprehensive audit logging |
-| DDoS attack | Medium | Medium | AWS Shield, rate limiting, auto-scaling |
-| Data breach | Low | Critical | Encryption, access controls, monitoring, incident response plan |
+| 相依性中的零日漏洞 | Medium | High | 定期相依性更新，監控 security 公告 |
+| 內部威脅 | Low | High | 最小權限存取，全面稽核日誌 |
+| DDoS 攻擊 | Medium | Medium | AWS Shield、速率限制、自動擴展 |
+| 資料外洩 | Low | Critical | 加密、存取控制、監控、事件回應計劃 |
 
 ## Future Considerations
 
 ### Planned Improvements
 
-- **Multi-Factor Authentication (MFA)**: Implement MFA for admin users (Q2 2025)
-- **Advanced Threat Detection**: Implement ML-based anomaly detection (Q3 2025)
-- **Security Automation**: Automated security testing and remediation (Q4 2025)
-- **Zero Trust Architecture**: Implement comprehensive zero trust model (2026)
+- **Multi-Factor Authentication (MFA)**：為管理員使用者實作 MFA（2025 年 Q2）
+- **Advanced Threat Detection**：實作基於 ML 的異常偵測（2025 年 Q3）
+- **Security Automation**：自動化 security 測試和修復（2025 年 Q4）
+- **Zero Trust Architecture**：實作全面的零信任模型（2026）
 
 ### Evolution Strategy
 
-The security perspective will evolve to address emerging threats and adopt new security technologies:
+Security perspective 將演進以應對新興威脅並採用新的 security 技術：
 
-- Continuous security posture assessment
-- Integration of AI/ML for threat detection
-- Enhanced automation for security operations
-- Adoption of zero trust principles across all systems
+- 持續的 security 態勢評估
+- 整合 AI/ML 進行威脅偵測
+- 增強 security operations 的自動化
+- 在所有系統中採用零信任原則
 
 ### Emerging Technologies
 
-- **Passwordless Authentication**: WebAuthn and FIDO2 standards
-- **Confidential Computing**: Hardware-based data encryption
-- **Quantum-Resistant Cryptography**: Preparing for post-quantum era
-- **Security Service Mesh**: Enhanced microservices security
+- **Passwordless Authentication**：WebAuthn 和 FIDO2 標準
+- **Confidential Computing**：基於硬體的資料加密
+- **Quantum-Resistant Cryptography**：為後量子時代做準備
+- **Security Service Mesh**：增強的 microservices security
 
 ## Quick Links
 
@@ -801,21 +763,21 @@ The security perspective will evolve to address emerging threats and adopt new s
 
 ### Glossary
 
-- **JWT**: JSON Web Token - A compact, URL-safe means of representing claims
-- **RBAC**: Role-Based Access Control - Access control based on user roles
-- **PII**: Personally Identifiable Information - Data that can identify an individual
-- **TLS**: Transport Layer Security - Cryptographic protocol for secure communication
-- **XSS**: Cross-Site Scripting - Security vulnerability allowing code injection
-- **SQL Injection**: Attack technique inserting malicious SQL code
-- **GDPR**: General Data Protection Regulation - EU data protection law
-- **PCI-DSS**: Payment Card Industry Data Security Standard
+- **JWT**：JSON Web Token - 代表聲明的緊湊、URL 安全的方式
+- **RBAC**：Role-Based Access Control - 基於使用者角色的存取控制
+- **PII**：Personally Identifiable Information - 可識別個人的資料
+- **TLS**：Transport Layer Security - 用於安全通訊的加密協定
+- **XSS**：Cross-Site Scripting - 允許程式碼 injection 的 security 漏洞
+- **SQL Injection**：插入惡意 SQL 程式碼的攻擊技術
+- **GDPR**：General Data Protection Regulation - EU 資料保護法
+- **PCI-DSS**：Payment Card Industry Data Security Standard
 
 ### References
 
-- OWASP Top 10: <https://owasp.org/www-project-top-ten/>
-- NIST Cybersecurity Framework: <https://www.nist.gov/cyberframework>
-- AWS Security Best Practices: <https://aws.amazon.com/security/best-practices/>
-- Spring Security Documentation: <https://spring.io/projects/spring-security>
+- OWASP Top 10: https://owasp.org/www-project-top-ten/
+- NIST Cybersecurity Framework: https://www.nist.gov/cyberframework
+- AWS Security Best Practices: https://aws.amazon.com/security/best-practices/
+- Spring Security Documentation: https://spring.io/projects/spring-security
 
 ### Change History
 
@@ -825,5 +787,5 @@ The security perspective will evolve to address emerging threats and adopt new s
 
 ---
 
-**Template Version**: 1.0  
+**Template Version**: 1.0
 **Last Template Update**: 2025-01-17

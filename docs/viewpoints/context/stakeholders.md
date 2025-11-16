@@ -8,756 +8,756 @@ stakeholders: ["All Stakeholders"]
 
 # Stakeholder Analysis
 
-> **Viewpoint**: Context  
-> **Purpose**: Identify all stakeholders and map their concerns to system capabilities  
-> **Audience**: All Stakeholders
+> **Viewpoint**: Context
+> **目的**：識別所有利害關係人並將他們的關注點對應到系統能力
+> **對象**：所有利害關係人
 
-## Overview
+## 概述
 
-This document identifies all stakeholders of the E-Commerce Platform, their roles, concerns, and how the system addresses their needs. Understanding stakeholder concerns is critical for ensuring the system meets business and technical requirements.
+本文件識別電子商務平台的所有利害關係人、他們的角色、關注點，以及系統如何滿足他們的需求。理解利害關係人的關注點對於確保系統滿足業務和技術需求至關重要。
 
-## Stakeholder Categories
+## 利害關係人類別
 
-### Business Stakeholders
+### 業務利害關係人
 
 #### Executive Leadership
 
-**Role**: Strategic decision-makers and business sponsors
+**角色**：策略決策者和業務贊助者
 
-**Key Individuals**
+**關鍵人員**
 
-- CEO - Overall business strategy and vision
-- CFO - Financial performance and ROI
-- COO - Operational efficiency and scalability
+- CEO - 整體業務策略和願景
+- CFO - 財務績效和投資回報率
+- COO - 營運效率和可擴展性
 
-**Primary Concerns**
+**主要關注點**
 
-- Business growth and revenue generation
-- Return on investment (ROI)
-- Market competitiveness
-- Operational costs
-- Strategic alignment with business goals
-- Risk management
+- 業務成長和收入產生
+- 投資回報率（ROI）
+- 市場競爭力
+- 營運成本
+- 與業務目標的策略一致性
+- 風險管理
 
-**System Impact**
+**系統影響**
 
-- Platform scalability to support business growth
-- Cost-effective infrastructure
-- Revenue-generating features (promotions, upselling)
-- Business analytics and reporting
-- System reliability and uptime
+- 支援業務成長的平台可擴展性
+- 成本效益的基礎設施
+- 產生收入的功能（促銷、向上銷售）
+- 業務分析和報表
+- 系統可靠性和正常運行時間
 
-**Communication Needs**
+**溝通需求**
 
-- Quarterly business reviews
-- Executive dashboards
-- ROI reports
-- Strategic roadmap updates
+- 季度業務審查
+- Executive 儀表板
+- ROI 報告
+- 策略路線圖更新
 
 ---
 
 #### Product Management
 
-**Role**: Define product vision and prioritize features
+**角色**：定義產品願景並排定功能優先順序
 
-**Key Individuals**
+**關鍵人員**
 
-- VP of Product - Product strategy and vision
-- Product Managers - Feature definition and prioritization
-- Product Owners - Backlog management and sprint planning
+- VP of Product - 產品策略和願景
+- Product Managers - 功能定義和優先順序
+- Product Owners - Backlog 管理和 sprint 規劃
 
-**Primary Concerns**
+**主要關注點**
 
-- Feature completeness and quality
-- Time to market
-- User experience and satisfaction
-- Competitive differentiation
-- Product roadmap execution
-- Customer feedback integration
+- 功能完整性和品質
+- 上市時間
+- 使用者體驗和滿意度
+- 競爭差異化
+- 產品路線圖執行
+- 客戶回饋整合
 
-**System Impact**
+**系統影響**
 
-- Flexible architecture for rapid feature development
-- A/B testing capabilities
-- Analytics for feature usage
-- API extensibility
-- User feedback mechanisms
+- 靈活的架構以實現快速功能開發
+- A/B 測試能力
+- 功能使用的分析
+- API 可擴展性
+- 使用者回饋機制
 
-**Communication Needs**
+**溝通需求**
 
-- Sprint reviews and demos
-- Feature release notes
-- Product roadmap updates
-- User feedback reports
+- Sprint 審查和展示
+- 功能發布說明
+- 產品路線圖更新
+- 使用者回饋報告
 
 ---
 
 #### Business Analysts
 
-**Role**: Analyze business requirements and translate to technical specifications
+**角色**：分析業務需求並轉換為技術規格
 
-**Key Individuals**
+**關鍵人員**
 
 - Senior Business Analysts
 - Domain Experts
 
-**Primary Concerns**
+**主要關注點**
 
-- Requirements clarity and completeness
-- Business process alignment
-- Data accuracy and consistency
-- Reporting and analytics capabilities
-- Compliance with business rules
+- 需求明確性和完整性
+- 業務流程一致性
+- 資料準確性和一致性
+- 報表和分析能力
+- 符合業務規則
 
-**System Impact**
+**系統影響**
 
-- Clear bounded context definitions
-- Domain-driven design implementation
-- Business rule validation
-- Comprehensive audit trails
-- Flexible reporting capabilities
+- 清晰的 bounded context 定義
+- Domain-driven design 實作
+- 業務規則驗證
+- 全面的稽核追蹤
+- 靈活的報表能力
 
-**Communication Needs**
+**溝通需求**
 
-- Requirements workshops
-- Use case documentation
-- Business process diagrams
-- Data flow documentation
+- 需求工作坊
+- Use case 文件
+- 業務流程圖
+- 資料流文件
 
 ---
 
-### Technical Stakeholders
+### 技術利害關係人
 
 #### Development Team
 
-**Role**: Design, implement, and maintain the system
+**角色**：設計、實作和維護系統
 
-**Key Individuals**
+**關鍵人員**
 
-- Tech Lead - Technical direction and architecture decisions
-- Senior Developers - Complex feature implementation
-- Developers - Feature implementation and bug fixes
-- Junior Developers - Learning and contributing to codebase
+- Tech Lead - 技術方向和架構決策
+- Senior Developers - 複雜功能實作
+- Developers - 功能實作和錯誤修復
+- Junior Developers - 學習和貢獻程式碼庫
 
-**Primary Concerns**
+**主要關注點**
 
-- Code quality and maintainability
-- Technical debt management
-- Development velocity
-- Testing coverage and quality
-- Documentation completeness
-- Development tools and environment
-- Learning and growth opportunities
+- 程式碼品質和可維護性
+- 技術債務管理
+- 開發速度
+- 測試覆蓋率和品質
+- 文件完整性
+- 開發工具和環境
+- 學習和成長機會
 
-**System Impact**
+**系統影響**
 
-- Clean architecture (Hexagonal + DDD)
-- Comprehensive test coverage (>80%)
-- Clear coding standards
-- Automated testing and CI/CD
-- Developer documentation and guides
-- Local development environment setup
+- Clean architecture（Hexagonal + DDD）
+- 全面的測試覆蓋率（>80%）
+- 明確的程式碼標準
+- 自動化測試和 CI/CD
+- 開發者文件和指南
+- 本地開發環境設定
 
-**Communication Needs**
+**溝通需求**
 
-- Daily standups
-- Sprint planning and retrospectives
-- Technical design reviews
-- Code review feedback
+- 每日站立會議
+- Sprint 規劃和回顧
+- 技術設計審查
+- Code review 回饋
 - Architecture decision records (ADRs)
 
 ---
 
 #### Architecture Team
 
-**Role**: Define and maintain system architecture
+**角色**：定義和維護系統架構
 
-**Key Individuals**
+**關鍵人員**
 
-- Chief Architect - Overall architecture vision
-- Solution Architects - Domain-specific architecture
-- Enterprise Architects - Cross-system integration
+- Chief Architect - 整體架構願景
+- Solution Architects - 領域特定架構
+- Enterprise Architects - 跨系統整合
 
-**Primary Concerns**
+**主要關注點**
 
-- Architectural integrity and consistency
-- Scalability and performance
-- Security and compliance
-- Technology stack decisions
-- Integration patterns
-- Technical debt and refactoring
-- Long-term maintainability
+- 架構完整性和一致性
+- 可擴展性和效能
+- 安全和合規
+- 技術堆疊決策
+- 整合模式
+- 技術債務和重構
+- 長期可維護性
 
-**System Impact**
+**系統影響**
 
-- Hexagonal architecture implementation
+- Hexagonal architecture 實作
 - Event-driven architecture
-- Bounded context isolation
-- API design standards
-- Security architecture
-- Observability architecture
+- Bounded context 隔離
+- API 設計標準
+- 安全架構
+- Observability 架構
 
-**Communication Needs**
+**溝通需求**
 
 - Architecture review boards
-- ADR documentation
-- Architecture diagrams and documentation
-- Technology evaluation reports
-- Quarterly architecture reviews
+- ADR 文件
+- 架構圖和文件
+- 技術評估報告
+- 季度架構審查
 
 ---
 
 #### Quality Assurance Team
 
-**Role**: Ensure system quality through testing
+**角色**：透過測試確保系統品質
 
-**Key Individuals**
+**關鍵人員**
 
-- QA Lead - Testing strategy and quality standards
-- QA Engineers - Test execution and automation
-- Performance Engineers - Performance and load testing
+- QA Lead - 測試策略和品質標準
+- QA Engineers - 測試執行和自動化
+- Performance Engineers - 效能和負載測試
 
-**Primary Concerns**
+**主要關注點**
 
-- Test coverage and quality
-- Bug detection and prevention
-- Performance and scalability
-- Security vulnerabilities
-- User acceptance criteria
-- Test automation
-- Testing environments
+- 測試覆蓋率和品質
+- 錯誤偵測和預防
+- 效能和可擴展性
+- 安全漏洞
+- 使用者驗收標準
+- 測試自動化
+- 測試環境
 
-**System Impact**
+**系統影響**
 
-- Comprehensive test suite (unit, integration, E2E)
-- BDD/Cucumber for acceptance testing
-- Performance testing framework
-- Security testing integration
-- Test data management
-- Staging environment parity with production
+- 全面的測試套件（unit、integration、E2E）
+- 驗收測試使用 BDD/Cucumber
+- 效能測試框架
+- 安全測試整合
+- 測試資料管理
+- Staging 環境與生產環境一致
 
-**Communication Needs**
+**溝通需求**
 
-- Test plans and reports
-- Bug reports and tracking
-- Quality metrics dashboards
-- Test automation coverage reports
+- 測試計劃和報告
+- 錯誤報告和追蹤
+- 品質指標儀表板
+- 測試自動化覆蓋率報告
 
 ---
 
 #### Operations Team (SRE/DevOps)
 
-**Role**: Deploy, monitor, and maintain production systems
+**角色**：部署、監控和維護生產系統
 
-**Key Individuals**
+**關鍵人員**
 
-- SRE Lead - Reliability engineering and incident management
-- DevOps Engineers - CI/CD and infrastructure automation
-- System Administrators - Infrastructure management
-- On-call Engineers - Incident response
+- SRE Lead - 可靠性工程和事件管理
+- DevOps Engineers - CI/CD 和基礎設施自動化
+- System Administrators - 基礎設施管理
+- On-call Engineers - 事件回應
 
-**Primary Concerns**
+**主要關注點**
 
-- System reliability and uptime (99.9% SLA)
-- Deployment safety and rollback
-- Monitoring and alerting
-- Incident response and resolution
-- Infrastructure costs
-- Capacity planning
-- Disaster recovery
+- 系統可靠性和正常運行時間（99.9% SLA）
+- 部署安全性和回滾
+- 監控和警示
+- 事件回應和解決
+- 基礎設施成本
+- 容量規劃
+- 災難復原
 
-**System Impact**
+**系統影響**
 
-- Automated deployment pipelines
-- Comprehensive monitoring (CloudWatch, X-Ray, Grafana)
-- Health checks and readiness probes
-- Graceful degradation and circuit breakers
-- Infrastructure as Code (AWS CDK)
-- Operational runbooks
-- Backup and recovery procedures
+- 自動化部署 pipelines
+- 全面的監控（CloudWatch、X-Ray、Grafana）
+- Health checks 和 readiness probes
+- 優雅降級和 circuit breakers
+- Infrastructure as Code（AWS CDK）
+- 營運手冊
+- 備份和復原程序
 
-**Communication Needs**
+**溝通需求**
 
-- Incident reports and post-mortems
-- Deployment notifications
-- Monitoring dashboards
-- Capacity planning reports
-- On-call schedules and escalation procedures
+- 事件報告和事後檢討
+- 部署通知
+- 監控儀表板
+- 容量規劃報告
+- 值班排程和升級程序
 
 ---
 
 #### Security Team
 
-**Role**: Ensure system security and compliance
+**角色**：確保系統安全和合規
 
-**Key Individuals**
+**關鍵人員**
 
-- CISO - Security strategy and governance
-- Security Engineers - Security implementation and testing
-- Security Analysts - Threat monitoring and response
-- Compliance Officers - Regulatory compliance
+- CISO - 安全策略和治理
+- Security Engineers - 安全實作和測試
+- Security Analysts - 威脅監控和回應
+- Compliance Officers - 監管合規
 
-**Primary Concerns**
+**主要關注點**
 
-- Data protection and privacy
-- Authentication and authorization
-- Vulnerability management
-- Compliance (GDPR, PCI-DSS)
-- Security incident response
-- Penetration testing
-- Security awareness and training
+- 資料保護和隱私
+- 驗證和授權
+- 漏洞管理
+- 合規（GDPR、PCI-DSS）
+- 安全事件回應
+- 滲透測試
+- 安全意識和培訓
 
-**System Impact**
+**系統影響**
 
-- JWT-based authentication
-- Role-based access control (RBAC)
-- Data encryption (at rest and in transit)
-- Security audit logging
-- Vulnerability scanning
-- Security testing in CI/CD
-- Secrets management (AWS Secrets Manager)
+- 基於 JWT 的驗證
+- 角色型存取控制（RBAC）
+- 資料加密（靜態和傳輸中）
+- 安全稽核日誌
+- 漏洞掃描
+- CI/CD 中的安全測試
+- Secrets 管理（AWS Secrets Manager）
 
-**Communication Needs**
+**溝通需求**
 
-- Security assessment reports
-- Vulnerability scan results
-- Compliance audit reports
-- Security incident notifications
-- Security training materials
+- 安全評估報告
+- 漏洞掃描結果
+- 合規稽核報告
+- 安全事件通知
+- 安全培訓材料
 
 ---
 
-### End Users
+### 終端使用者
 
 #### Customers
 
-**Role**: Purchase products through the platform
+**角色**：透過平台購買產品
 
-**User Segments**
+**使用者區段**
 
-- Retail Customers - Individual consumers
-- Business Customers - B2B buyers
-- Premium Members - Loyalty program members
+- Retail Customers - 個人消費者
+- Business Customers - B2B 買家
+- Premium Members - 忠誠計劃會員
 
-**Primary Concerns**
+**主要關注點**
 
-- Easy product discovery and search
-- Fast and secure checkout
-- Multiple payment options
-- Order tracking and notifications
-- Product reviews and ratings
-- Customer support accessibility
-- Mobile-friendly experience
-- Data privacy and security
+- 輕鬆的產品發現和搜尋
+- 快速且安全的結帳
+- 多種付款選項
+- 訂單追蹤和通知
+- 產品評論和評分
+- 客戶支援可及性
+- 行動裝置友善體驗
+- 資料隱私和安全
 
-**System Impact**
+**系統影響**
 
-- Intuitive user interface (Angular frontend)
-- Fast page load times (< 2s)
-- Secure payment processing (Stripe)
-- Real-time order tracking
-- Email and SMS notifications
-- Review and rating system
-- Responsive design
-- GDPR compliance
+- 直覺的使用者介面（Angular frontend）
+- 快速的頁面載入時間（< 2s）
+- 安全的付款處理（Stripe）
+- 即時訂單追蹤
+- 郵件和 SMS 通知
+- 評論和評分系統
+- 響應式設計
+- GDPR 合規
 
-**Communication Needs**
+**溝通需求**
 
-- Order confirmations and updates
-- Promotional emails (opt-in)
-- Customer support channels
-- Privacy policy and terms of service
+- 訂單確認和更新
+- 促銷郵件（選擇加入）
+- 客戶支援管道
+- 隱私政策和服務條款
 
 ---
 
 #### Sellers/Vendors
 
-**Role**: Sell products through the platform
+**角色**：透過平台銷售產品
 
-**User Segments**
+**使用者區段**
 
-- Individual Sellers - Small businesses
-- Enterprise Sellers - Large vendors
-- Marketplace Partners - Third-party sellers
+- Individual Sellers - 小型企業
+- Enterprise Sellers - 大型供應商
+- Marketplace Partners - 第三方賣家
 
-**Primary Concerns**
+**主要關注點**
 
-- Easy product listing and management
-- Order fulfillment workflow
-- Sales analytics and reporting
-- Payment processing and settlements
-- Inventory management
-- Customer communication
-- Performance metrics
-- Commission transparency
+- 輕鬆的產品列表和管理
+- 訂單履行工作流程
+- 銷售分析和報表
+- 付款處理和結算
+- 庫存管理
+- 客戶溝通
+- 績效指標
+- 佣金透明度
 
-**System Impact**
+**系統影響**
 
-- Seller management console (Next.js)
-- Product management APIs
-- Order management workflow
-- Sales analytics dashboard
-- Payment settlement system
-- Inventory synchronization
-- Seller performance metrics
+- Seller 管理控制台（Next.js）
+- Product 管理 APIs
+- Order 管理工作流程
+- 銷售分析儀表板
+- 付款結算系統
+- 庫存同步
+- Seller 績效指標
 
-**Communication Needs**
+**溝通需求**
 
-- Order notifications
-- Payment settlement reports
-- Performance analytics
-- Policy updates
-- Support channels
+- 訂單通知
+- 付款結算報告
+- 績效分析
+- 政策更新
+- 支援管道
 
 ---
 
 #### Customer Support Agents
 
-**Role**: Assist customers with issues and inquiries
+**角色**：協助客戶解決問題和諮詢
 
-**Key Individuals**
+**關鍵人員**
 
-- Support Team Lead - Team management and escalation
-- Support Agents - Customer assistance
-- Technical Support - Complex technical issues
+- Support Team Lead - 團隊管理和升級
+- Support Agents - 客戶協助
+- Technical Support - 複雜技術問題
 
-**Primary Concerns**
+**主要關注點**
 
-- Customer issue resolution
-- Access to customer information
-- Order management capabilities
-- Knowledge base and documentation
-- Response time and SLA
-- Escalation procedures
-- Support tools and systems
+- 客戶問題解決
+- 存取客戶資訊
+- 訂單管理能力
+- 知識庫和文件
+- 回應時間和 SLA
+- 升級程序
+- 支援工具和系統
 
-**System Impact**
+**系統影響**
 
-- Customer information lookup
-- Order history and status
-- Order modification capabilities
-- Refund and return processing
-- Support ticket integration
-- Knowledge base system
-- Audit trail for support actions
+- 客戶資訊查詢
+- 訂單歷史記錄和狀態
+- 訂單修改能力
+- 退款和退貨處理
+- 支援工單整合
+- 知識庫系統
+- 支援動作的稽核追蹤
 
-**Communication Needs**
+**溝通需求**
 
-- Support ticket system
-- Knowledge base articles
-- Escalation procedures
-- Customer communication templates
+- 支援工單系統
+- 知識庫文章
+- 升級程序
+- 客戶溝通範本
 
 ---
 
 #### System Administrators
 
-**Role**: Manage system configuration and users
+**角色**：管理系統配置和使用者
 
-**Key Individuals**
+**關鍵人員**
 
-- Platform Administrators - System configuration
-- User Administrators - User and role management
-- Content Administrators - Content management
+- Platform Administrators - 系統配置
+- User Administrators - 使用者和角色管理
+- Content Administrators - 內容管理
 
-**Primary Concerns**
+**主要關注點**
 
-- System configuration management
-- User and role administration
-- Content management
-- System health monitoring
-- Backup and recovery
-- Security and access control
-- Audit logging
+- 系統配置管理
+- 使用者和角色管理
+- 內容管理
+- 系統健康監控
+- 備份和復原
+- 安全和存取控制
+- 稽核日誌
 
-**System Impact**
+**系統影響**
 
-- Admin console (Next.js CMC)
-- User management APIs
-- Role-based access control
-- Configuration management
-- Audit logging
-- System health dashboards
+- Admin 控制台（Next.js CMC）
+- User 管理 APIs
+- 角色型存取控制
+- 配置管理
+- 稽核日誌
+- 系統健康儀表板
 
-**Communication Needs**
+**溝通需求**
 
-- System status reports
-- Configuration change notifications
-- Security alerts
-- Backup status reports
+- 系統狀態報告
+- 配置變更通知
+- 安全警示
+- 備份狀態報告
 
 ---
 
-### External Stakeholders
+### 外部利害關係人
 
 #### Payment Gateway Provider (Stripe)
 
-**Role**: Process payments and manage payment methods
+**角色**：處理付款和管理付款方式
 
-**Primary Concerns**
+**主要關注點**
 
-- API integration compliance
-- Transaction volume and fees
-- Fraud prevention
-- PCI-DSS compliance
-- Support and escalation
+- API 整合合規
+- 交易量和費用
+- 詐欺預防
+- PCI-DSS 合規
+- 支援和升級
 
-**System Impact**
+**系統影響**
 
-- Stripe API integration
-- Webhook handling
-- Error handling and retry logic
-- Transaction monitoring
-- Compliance documentation
+- Stripe API 整合
+- Webhook 處理
+- 錯誤處理和重試邏輯
+- 交易監控
+- 合規文件
 
-**Communication Needs**
+**溝通需求**
 
-- Integration support
-- Incident notifications
-- Compliance updates
-- Business reviews
+- 整合支援
+- 事件通知
+- 合規更新
+- 業務審查
 
 ---
 
 #### Shipping Providers (FedEx, UPS, DHL)
 
-**Role**: Deliver products to customers
+**角色**：配送產品給客戶
 
-**Primary Concerns**
+**主要關注點**
 
-- Shipment volume and revenue
-- API integration quality
-- Address accuracy
-- Label generation
-- Tracking updates
+- 貨件量和收入
+- API 整合品質
+- 地址準確性
+- 標籤產生
+- 追蹤更新
 
-**System Impact**
+**系統影響**
 
 - Shipping provider APIs
-- Rate calculation
-- Label generation
-- Tracking integration
-- Address validation
+- 費率計算
+- 標籤產生
+- 追蹤整合
+- 地址驗證
 
-**Communication Needs**
+**溝通需求**
 
-- Integration support
-- Service updates
-- Volume commitments
-- Performance reviews
+- 整合支援
+- 服務更新
+- 量承諾
+- 績效審查
 
 ---
 
 #### Regulatory Bodies
 
-**Role**: Ensure compliance with laws and regulations
+**角色**：確保符合法律和法規
 
-**Organizations**
+**組織**
 
 - Data Protection Authorities (GDPR)
 - Payment Card Industry Security Standards Council (PCI-DSS)
 - Consumer Protection Agencies
 - Tax Authorities
 
-**Primary Concerns**
+**主要關注點**
 
-- Data privacy and protection
-- Payment security
-- Consumer rights
-- Tax compliance
-- Accessibility standards
+- 資料隱私和保護
+- 付款安全
+- 消費者權利
+- 稅務合規
+- 無障礙標準
 
-**System Impact**
+**系統影響**
 
-- GDPR compliance features
-- PCI-DSS compliance
-- Audit logging
-- Data retention policies
-- Accessibility compliance (WCAG 2.1)
+- GDPR 合規功能
+- PCI-DSS 合規
+- 稽核日誌
+- 資料保留政策
+- 無障礙合規（WCAG 2.1）
 
-**Communication Needs**
+**溝通需求**
 
-- Compliance reports
-- Audit documentation
-- Incident notifications
-- Policy updates
+- 合規報告
+- 稽核文件
+- 事件通知
+- 政策更新
 
 ---
 
-## Stakeholder Concern Matrix
+## 利害關係人關注點矩陣
 
-### Functional Concerns
+### 功能性關注點
 
-| Stakeholder | Primary Functional Concerns | System Capabilities |
+| 利害關係人 | 主要功能性關注點 | 系統能力 |
 |-------------|----------------------------|---------------------|
-| Customers | Product search, checkout, order tracking | Search engine, shopping cart, order management |
-| Sellers | Product listing, order fulfillment, analytics | Seller console, order workflow, analytics dashboard |
-| Product Managers | Feature delivery, user experience | Flexible architecture, A/B testing, analytics |
-| Support Agents | Customer assistance, issue resolution | Customer lookup, order management, ticket system |
+| Customers | 產品搜尋、結帳、訂單追蹤 | 搜尋引擎、購物車、訂單管理 |
+| Sellers | 產品列表、訂單履行、分析 | Seller 控制台、訂單工作流程、分析儀表板 |
+| Product Managers | 功能交付、使用者體驗 | 靈活架構、A/B 測試、分析 |
+| Support Agents | 客戶協助、問題解決 | 客戶查詢、訂單管理、工單系統 |
 
-### Non-Functional Concerns
+### 非功能性關注點
 
-| Stakeholder | Primary Non-Functional Concerns | System Capabilities |
+| 利害關係人 | 主要非功能性關注點 | 系統能力 |
 |-------------|--------------------------------|---------------------|
-| Customers | Performance, security, availability | < 2s response time, encryption, 99.9% uptime |
-| Operations Team | Reliability, monitoring, deployment | Health checks, monitoring, CI/CD, runbooks |
-| Security Team | Data protection, compliance, vulnerabilities | Encryption, RBAC, audit logging, security testing |
-| Architects | Scalability, maintainability, extensibility | Hexagonal architecture, DDD, event-driven design |
+| Customers | 效能、安全、可用性 | < 2s 回應時間、加密、99.9% 正常運行時間 |
+| Operations Team | 可靠性、監控、部署 | Health checks、監控、CI/CD、手冊 |
+| Security Team | 資料保護、合規、漏洞 | 加密、RBAC、稽核日誌、安全測試 |
+| Architects | 可擴展性、可維護性、可擴展性 | Hexagonal architecture、DDD、event-driven 設計 |
 
-### Quality Attribute Concerns
+### 品質屬性關注點
 
-| Stakeholder | Quality Attributes | Measurement |
+| 利害關係人 | 品質屬性 | 衡量標準 |
 |-------------|-------------------|-------------|
-| Executive Leadership | ROI, cost efficiency | Infrastructure costs, revenue per user |
-| Customers | Usability, performance | Task completion time, page load time |
-| Operations Team | Reliability, availability | Uptime percentage, MTTR |
-| Development Team | Maintainability, testability | Code coverage, technical debt ratio |
+| Executive Leadership | ROI、成本效率 | 基礎設施成本、每位使用者收入 |
+| Customers | 可用性、效能 | 任務完成時間、頁面載入時間 |
+| Operations Team | 可靠性、可用性 | 正常運行時間百分比、MTTR |
+| Development Team | 可維護性、可測試性 | 程式碼覆蓋率、技術債務比率 |
 
 ---
 
-## Stakeholder Communication Plan
+## 利害關係人溝通計劃
 
-### Communication Channels
+### 溝通管道
 
-**Regular Meetings**
+**定期會議**
 
-- Daily: Development team standups
-- Weekly: Sprint planning, product reviews
-- Bi-weekly: Architecture reviews, security reviews
-- Monthly: Business reviews, operations reviews
-- Quarterly: Executive reviews, strategic planning
+- 每日：Development team standups
+- 每週：Sprint 規劃、產品審查
+- 雙週：架構審查、安全審查
+- 每月：業務審查、營運審查
+- 季度：Executive 審查、策略規劃
 
-**Documentation**
+**文件**
 
 - Architecture Decision Records (ADRs)
-- API documentation (OpenAPI)
-- Operational runbooks
-- User guides and help documentation
-- Release notes and changelogs
+- API 文件（OpenAPI）
+- 營運手冊
+- 使用者指南和協助文件
+- 發布說明和變更日誌
 
-**Dashboards and Reports**
+**儀表板和報告**
 
-- Executive dashboard (business metrics)
-- Operations dashboard (system health)
-- Development dashboard (velocity, quality)
-- Customer analytics dashboard
+- Executive 儀表板（業務指標）
+- Operations 儀表板（系統健康）
+- Development 儀表板（速度、品質）
+- 客戶分析儀表板
 
-**Incident Communication**
+**事件溝通**
 
-- Critical incidents: Immediate notification to all stakeholders
-- Major incidents: Notification within 1 hour
-- Minor incidents: Daily summary report
-- Post-mortem reports: Within 48 hours of resolution
+- 關鍵事件：立即通知所有利害關係人
+- 主要事件：1 小時內通知
+- 次要事件：每日摘要報告
+- 事後檢討報告：解決後 48 小時內
 
 ---
 
-## Stakeholder Engagement Strategy
+## 利害關係人參與策略
 
-### Engagement Levels
+### 參與程度
 
-**High Engagement** (Weekly or more frequent)
+**高參與度**（每週或更頻繁）
 
 - Development Team
 - Product Managers
 - Operations Team
 - QA Team
 
-**Medium Engagement** (Bi-weekly to monthly)
+**中參與度**（雙週到每月）
 
 - Architecture Team
 - Security Team
 - Business Analysts
 - Support Team
 
-**Low Engagement** (Quarterly or as needed)
+**低參與度**（季度或視需要）
 
 - Executive Leadership
 - External Partners
 - Regulatory Bodies
 
-### Feedback Mechanisms
+### 回饋機制
 
 **Development Team**
 
 - Code reviews
-- Sprint retrospectives
-- Technical design discussions
+- Sprint 回顧
+- 技術設計討論
 - Architecture decision records
 
 **Product Managers**
 
-- Sprint reviews and demos
-- Feature feedback sessions
-- User research findings
-- Analytics reviews
+- Sprint 審查和展示
+- 功能回饋會議
+- 使用者研究發現
+- 分析審查
 
 **Operations Team**
 
-- Incident post-mortems
-- Operational reviews
-- Capacity planning sessions
-- Runbook reviews
+- 事件事後檢討
+- 營運審查
+- 容量規劃會議
+- 手冊審查
 
 **Customers**
 
-- User surveys
-- Product reviews and ratings
-- Customer support feedback
-- Usability testing
+- 使用者調查
+- 產品評論和評分
+- 客戶支援回饋
+- 可用性測試
 
 **Sellers**
 
-- Seller surveys
-- Performance reviews
-- Feature requests
-- Support feedback
+- Seller 調查
+- 績效審查
+- 功能請求
+- 支援回饋
 
 ---
 
-## Conflict Resolution
+## 衝突解決
 
-### Common Stakeholder Conflicts
+### 常見利害關係人衝突
 
-**Development Speed vs. Quality**
+**開發速度 vs. 品質**
 
-- Conflict: Product wants faster delivery, QA wants more testing
-- Resolution: Agree on minimum quality gates, prioritize critical features
+- 衝突：Product 想要更快交付，QA 想要更多測試
+- 解決方案：同意最低品質門檻，優先處理關鍵功能
 
-**Cost vs. Performance**
+**成本 vs. 效能**
 
-- Conflict: Finance wants cost reduction, Operations wants better infrastructure
-- Resolution: Data-driven cost-benefit analysis, phased optimization
+- 衝突：Finance 想要降低成本，Operations 想要更好的基礎設施
+- 解決方案：資料驅動的成本效益分析，分階段優化
 
-**Security vs. Usability**
+**安全 vs. 可用性**
 
-- Conflict: Security wants strict controls, Product wants easy user experience
-- Resolution: Risk-based approach, user-friendly security measures
+- 衝突：Security 想要嚴格控制，Product 想要輕鬆的使用者體驗
+- 解決方案：基於風險的方法，使用者友善的安全措施
 
-**Innovation vs. Stability**
+**創新 vs. 穩定性**
 
-- Conflict: Product wants new features, Operations wants stability
-- Resolution: Feature flags, gradual rollout, comprehensive testing
+- 衝突：Product 想要新功能，Operations 想要穩定性
+- 解決方案：Feature flags、逐步推出、全面測試
 
-### Escalation Path
+### 升級路徑
 
-**Level 1**: Team leads discuss and resolve
-**Level 2**: Department heads mediate
-**Level 3**: Executive leadership decides
-**Level 4**: CEO final decision
-
----
-
-## Related Documentation
-
-- [Context Viewpoint Overview](overview.md) - System context
-- [System Scope and Boundaries](scope-and-boundaries.md) - System scope
-- [External Systems](external-systems.md) - External integrations
-- [Functional Viewpoint](../functional/overview.md) - System capabilities
-- [All Perspectives](../../perspectives/) - Quality attribute concerns
+**等級 1**：團隊負責人討論並解決
+**等級 2**：部門主管調解
+**等級 3**：Executive leadership 決定
+**等級 4**：CEO 最終決定
 
 ---
 
-**Document Status**: Active  
-**Last Review**: 2025-10-23  
-**Next Review**: 2025-11-23  
-**Owner**: Product Management & Architecture Team
+## 相關文件
+
+- [Context Viewpoint Overview](overview.md) - 系統脈絡
+- [System Scope and Boundaries](scope-and-boundaries.md) - 系統範圍
+- [External Systems](external-systems.md) - 外部整合
+- [Functional Viewpoint](../functional/overview.md) - 系統能力
+- [All Perspectives](../../perspectives/) - 品質屬性關注點
+
+---
+
+**文件狀態**：使用中
+**最後審查**：2025-10-23
+**下次審查**：2025-11-23
+**負責人**：Product Management & Architecture Team

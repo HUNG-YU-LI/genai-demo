@@ -2,38 +2,38 @@
 
 > **Last Updated**: 2025-01-17
 
-## Overview
+## 概述
 
-This section contains comprehensive operational documentation for the GenAI Demo e-commerce platform, including deployment procedures, monitoring guides, runbooks, troubleshooting guides, and maintenance procedures.
+本節包含 GenAI Demo e-commerce platform 的完整操作文件，包括 deployment 程序、monitoring 指南、runbooks、troubleshooting 指南和 maintenance 程序。
 
-## Quick Navigation
+## 快速導覽
 
 ### 🚀 Deployment
 
-- [Deployment Overview](deployment/README.md) - Deployment strategies and procedures
-- [Environment Configuration](deployment/environment-configuration.md) - Environment-specific settings
-- [Release Process](deployment/release-process.md) - Release management procedures
+- [Deployment Overview](deployment/README.md) - Deployment 策略與程序
+- [Environment Configuration](deployment/environment-configuration.md) - 環境特定設定
+- [Release Process](deployment/release-process.md) - Release 管理程序
 
 ### 📊 Monitoring & Alerting
 
-- [Monitoring Overview](monitoring/README.md) - Monitoring architecture and tools
-- [Alert Configuration](monitoring/alert-configuration.md) - Alert rules and thresholds
+- [Monitoring Overview](monitoring/README.md) - Monitoring 架構與工具
+- [Alert Configuration](monitoring/alert-configuration.md) - Alert 規則與閾值
 - [Dashboard Setup](monitoring/dashboard-setup.md) - Monitoring dashboards
 
 ### 📖 Runbooks
 
-- [Runbooks Index](runbooks/README.md) - Complete list of operational runbooks
+- [Runbooks Index](runbooks/README.md) - 完整的 operational runbooks 清單
 - [High CPU Usage](runbooks/high-cpu-usage.md)
 - [High Memory Usage](runbooks/high-memory-usage.md)
 - [Database Connection Issues](runbooks/database-connection-issues.md)
 - [Slow API Responses](runbooks/slow-api-responses.md)
 - [Failed Deployment](runbooks/failed-deployment.md)
 - [Security Incident](runbooks/security-incident.md)
-- [And 9 more runbooks...](runbooks/README.md)
+- [還有 9 個 runbooks...](runbooks/README.md)
 
 ### 🔧 Troubleshooting
 
-- [Troubleshooting Guide](troubleshooting/README.md) - Common issues and solutions
+- [Troubleshooting Guide](troubleshooting/README.md) - 常見問題與解決方案
 - [Database Issues](troubleshooting/database-issues.md)
 - [Performance Issues](troubleshooting/performance-issues.md)
 - [Distributed System Issues](troubleshooting/distributed-system-issues.md)
@@ -41,85 +41,85 @@ This section contains comprehensive operational documentation for the GenAI Demo
 
 ### 🛠️ Maintenance
 
-- [Maintenance Procedures](maintenance/README.md) - Regular maintenance tasks
+- [Maintenance Procedures](maintenance/README.md) - 定期 maintenance 任務
 - [Database Maintenance](maintenance/database-maintenance.md)
 - [Security & Compliance](maintenance/security-compliance.md)
 - [Disaster Recovery & HA](maintenance/disaster-recovery-ha.md)
 - [Backup & Recovery](maintenance/backup-recovery.md)
 
-## Documentation Structure
+## 文件結構
 
 ```
 operations/
-├── deployment/          # Deployment procedures and strategies
-├── monitoring/          # Monitoring and alerting configuration
-├── runbooks/           # Operational runbooks (15 runbooks)
-├── troubleshooting/    # Troubleshooting guides
-└── maintenance/        # Maintenance procedures
+├── deployment/          # Deployment 程序與策略
+├── monitoring/          # Monitoring 和 alerting 設定
+├── runbooks/           # Operational runbooks (15 個 runbooks)
+├── troubleshooting/    # Troubleshooting 指南
+└── maintenance/        # Maintenance 程序
 ```
 
-## Key Features
+## 主要功能
 
-### Comprehensive Runbooks
+### 完整的 Runbooks
 
-15 operational runbooks covering:
-- Infrastructure issues (CPU, memory, disk)
-- Database problems (connections, performance, replication)
-- Application issues (API performance, deployments)
+15 個 operational runbooks 涵蓋：
+- Infrastructure 問題 (CPU、memory、disk)
+- Database 問題 (connections、performance、replication)
+- Application 問題 (API performance、deployments)
 - Security incidents
-- Network and connectivity problems
+- Network 和 connectivity 問題
 
 ### Monitoring & Alerting
 
-Complete monitoring setup including:
-- CloudWatch metrics and alarms
+完整的 monitoring 設定包括：
+- CloudWatch metrics 和 alarms
 - Grafana dashboards
 - X-Ray distributed tracing
-- Log aggregation with CloudWatch Logs
-- Custom application metrics
+- CloudWatch Logs log aggregation
+- 自訂 application metrics
 
 ### Disaster Recovery
 
-Comprehensive DR procedures:
-- Multi-region failover strategies
-- Backup and recovery procedures
-- Business continuity planning
-- RTO/RPO targets and procedures
+完整的 DR 程序：
+- Multi-region failover 策略
+- Backup 和 recovery 程序
+- Business continuity 規劃
+- RTO/RPO targets 和程序
 
-## Getting Started
+## 入門指南
 
 ### For Operations Team
 
-1. **Familiarize with Runbooks**: Review the [runbooks index](runbooks/README.md)
-2. **Setup Monitoring**: Follow [monitoring setup guide](monitoring/README.md)
-3. **Practice Procedures**: Run through deployment and DR procedures
-4. **Configure Alerts**: Set up alerts based on your environment
+1. **熟悉 Runbooks**：查看 [runbooks index](runbooks/README.md)
+2. **設定 Monitoring**：遵循 [monitoring setup guide](monitoring/README.md)
+3. **練習程序**：執行 deployment 和 DR 程序
+4. **設定 Alerts**：根據您的環境設定 alerts
 
 ### For Developers
 
-1. **Understand Deployment**: Review [deployment process](deployment/README.md)
-2. **Learn Monitoring**: Understand [monitoring architecture](monitoring/README.md)
-3. **Know Troubleshooting**: Familiarize with [troubleshooting guides](troubleshooting/README.md)
+1. **了解 Deployment**：查看 [deployment process](deployment/README.md)
+2. **學習 Monitoring**：了解 [monitoring architecture](monitoring/README.md)
+3. **熟悉 Troubleshooting**：熟悉 [troubleshooting guides](troubleshooting/README.md)
 
 ### For New Team Members
 
-1. **Start Here**: Read this overview
-2. **Review Architecture**: Understand the [deployment viewpoint](../viewpoints/deployment/README.md)
-3. **Practice Runbooks**: Walk through common runbooks
-4. **Shadow Operations**: Observe operational procedures
+1. **從這裡開始**：閱讀本概述
+2. **查看 Architecture**：了解 [deployment viewpoint](../viewpoints/deployment/README.md)
+3. **練習 Runbooks**：逐步執行常見 runbooks
+4. **Shadow Operations**：觀察 operational 程序
 
-## Related Documentation
+## 相關文件
 
 ### Architecture Documentation
 
-- [Deployment Viewpoint](../viewpoints/deployment/README.md) - Deployment architecture
-- [Operational Viewpoint](../viewpoints/operational/README.md) - Operational concerns
-- [Availability Perspective](../perspectives/availability/README.md) - Availability strategies
+- [Deployment Viewpoint](../viewpoints/deployment/README.md) - Deployment 架構
+- [Operational Viewpoint](../viewpoints/operational/README.md) - Operational 關注點
+- [Availability Perspective](../perspectives/availability/README.md) - Availability 策略
 
 ### Development Documentation
 
-- [Development Setup](../development/setup/README.md) - Development environment
-- [Testing Strategy](../development/testing/README.md) - Testing approaches
+- [Development Setup](../development/setup/README.md) - Development 環境
+- [Testing Strategy](../development/testing/README.md) - Testing 方法
 - [CI/CD Workflows](../development/workflows/README.md) - Automation workflows
 
 ### Architecture Decisions
@@ -129,38 +129,38 @@ Comprehensive DR procedures:
 - [ADR-035: Disaster Recovery Strategy](../architecture/adrs/035-disaster-recovery-strategy.md)
 - [ADR-037: Active-Active Multi-Region](../architecture/adrs/037-active-active-multi-region-architecture.md)
 
-## Support and Escalation
+## Support 和 Escalation
 
-### On-Call Procedures
+### On-Call 程序
 
-- **Primary On-Call**: Check runbooks first
-- **Escalation Path**: Team Lead → Architect → CTO
-- **Emergency Contact**: [Emergency contact information]
+- **Primary On-Call**：首先查看 runbooks
+- **Escalation Path**：Team Lead → Architect → CTO
+- **Emergency Contact**：[Emergency contact information]
 
 ### Incident Management
 
-1. **Detect**: Monitoring alerts or user reports
-2. **Respond**: Follow relevant runbook
-3. **Resolve**: Apply fix and verify
-4. **Document**: Update runbook if needed
-5. **Review**: Post-incident review
+1. **Detect**：Monitoring alerts 或使用者回報
+2. **Respond**：遵循相關 runbook
+3. **Resolve**：套用修復並驗證
+4. **Document**：必要時更新 runbook
+5. **Review**：Post-incident review
 
 ### Communication Channels
 
-- **Slack**: #ops-alerts, #incidents
-- **PagerDuty**: For critical alerts
-- **Email**: ops-team@company.com
-- **Wiki**: Internal operations wiki
+- **Slack**：#ops-alerts、#incidents
+- **PagerDuty**：For critical alerts
+- **Email**：ops-team@company.com
+- **Wiki**：Internal operations wiki
 
-## Metrics and SLAs
+## Metrics 和 SLAs
 
 ### Service Level Objectives
 
-- **Availability**: 99.9% uptime
-- **Response Time**: 95th percentile < 2s
-- **Error Rate**: < 0.1%
-- **RTO**: < 5 minutes
-- **RPO**: < 1 minute
+- **Availability**：99.9% uptime
+- **Response Time**：95th percentile < 2s
+- **Error Rate**：< 0.1%
+- **RTO**：< 5 minutes
+- **RPO**：< 1 minute
 
 ### Key Metrics
 
@@ -170,41 +170,41 @@ Comprehensive DR procedures:
 - Infrastructure resource utilization
 - Deployment success rates
 
-## Continuous Improvement
+## 持續改進
 
 ### Feedback Loop
 
-- Collect feedback from operations team
-- Update runbooks based on incidents
-- Improve monitoring and alerting
-- Enhance automation
+- 收集 operations team 的回饋
+- 根據 incidents 更新 runbooks
+- 改進 monitoring 和 alerting
+- 增強 automation
 
-### Regular Reviews
+### 定期審查
 
-- **Weekly**: Review incidents and alerts
-- **Monthly**: Update runbooks and procedures
-- **Quarterly**: Comprehensive operations review
-- **Annually**: DR testing and validation
+- **週**：審查 incidents 和 alerts
+- **月**：更新 runbooks 和程序
+- **季**：全面的 operations 審查
+- **年**：DR 測試和驗證
 
-## Contributing
+## 貢獻
 
-### Updating Documentation
+### 更新文件
 
-1. Follow the [style guide](../STYLE-GUIDE.md)
-2. Use templates from [templates](../templates/)
-3. Submit PR for review
-4. Update related documentation
+1. 遵循 [style guide](../STYLE-GUIDE.md)
+2. 使用 [templates](../templates/) 中的範本
+3. 提交 PR 進行審查
+4. 更新相關文件
 
-### Adding New Runbooks
+### 新增 Runbooks
 
-1. Use the [runbook template](../templates/runbook-template.md)
-2. Include clear steps and verification
-3. Add to [runbooks index](runbooks/README.md)
-4. Test the runbook procedures
+1. 使用 [runbook template](../templates/runbook-template.md)
+2. 包含清楚的步驟和驗證
+3. 新增至 [runbooks index](runbooks/README.md)
+4. 測試 runbook 程序
 
 ---
 
-**Document Owner**: Operations Team
-**Last Review**: 2025-01-17
-**Next Review**: 2025-04-17
-**Status**: Active
+**Document Owner**：Operations Team
+**Last Review**：2025-01-17
+**Next Review**：2025-04-17
+**Status**：Active

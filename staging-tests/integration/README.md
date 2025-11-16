@@ -1,221 +1,221 @@
-# Integration Test Framework
+# 整合測試 Framework
 
-This directory contains comprehensive integration tests for the application, organized by service type and testing scope.
+此目錄包含按服務類型和測試範圍組織的應用程式的綜合整合測試。
 
-## Test Structure
+## 測試結構
 
 ```
 staging-tests/integration/
-├── database/                    # Database integration tests
+├── database/                    # 資料庫整合測試
 │   ├── test_database_integration.py
 │   └── requirements.txt
-├── cache/                       # Cache integration tests
+├── cache/                       # 快取整合測試
 │   ├── test_redis_integration.py
 │   └── requirements.txt
-├── messaging/                   # Messaging integration tests
+├── messaging/                   # 訊息傳遞整合測試
 │   ├── test_kafka_integration.py
 │   └── requirements.txt
-└── monitoring/                  # Monitoring integration tests
+└── monitoring/                  # 監控整合測試
 ```
 
-## Test Categories
+## 測試類別
 
-### Database Integration Tests
-- **PostgreSQL connection pool performance tests**
-- **Aurora failover and recovery scenario tests**
-- **Database health validation and monitoring tests**
-- **Cross-region database replication tests**
-- **Test data management and cleanup procedures**
+### 資料庫整合測試
+- **PostgreSQL 連線池效能測試**
+- **Aurora 容錯移轉和復原場景測試**
+- **資料庫健康驗證和監控測試**
+- **跨區域資料庫複寫測試**
+- **測試資料管理和清理程序**
 
-**Requirements**: 2.1, 2.2, 2.4, 6.1
+**需求**: 2.1、2.2、2.4、6.1
 
-### Cache Integration Tests
-- **Redis cluster performance and scalability tests**
-- **Redis Sentinel failover scenario tests**
-- **Cross-region cache synchronization tests**
-- **Cache eviction and memory management tests**
-- **Cache performance benchmarking and validation**
+### 快取整合測試
+- **Redis cluster 效能和可擴展性測試**
+- **Redis Sentinel 容錯移轉場景測試**
+- **跨區域快取同步測試**
+- **快取驅逐和記憶體管理測試**
+- **快取效能基準測試和驗證**
 
-**Requirements**: 2.1, 2.2, 2.4, 6.1
+**需求**: 2.1、2.2、2.4、6.1
 
-### Messaging Integration Tests
-- **Kafka producer and consumer throughput tests**
-- **Kafka partition rebalancing and failover tests**
-- **Cross-region message replication tests**
-- **Message ordering and delivery guarantee tests**
-- **Messaging performance benchmarking and validation**
+### 訊息傳遞整合測試
+- **Kafka producer 和 consumer 吞吐量測試**
+- **Kafka partition 重新平衡和容錯移轉測試**
+- **跨區域訊息複寫測試**
+- **訊息順序和遞送保證測試**
+- **訊息傳遞效能基準測試和驗證**
 
-**Requirements**: 2.1, 2.2, 2.4, 6.1
+**需求**: 2.1、2.2、2.4、6.1
 
-## Running Tests
+## 執行測試
 
-### Prerequisites
+### 前置需求
 
-1. **Install Python dependencies**:
+1. **安裝 Python 依賴項**:
    ```bash
    pip install -r requirements.txt
    ```
 
-2. **Start required services** (using Docker Compose):
+2. **啟動所需服務** (使用 Docker Compose):
    ```bash
    cd staging-tests/config
    docker-compose -f docker-compose-staging.yml up -d
    ```
 
-3. **Wait for services to be ready**:
+3. **等待服務就緒**:
    ```bash
    cd staging-tests/scripts
    ./wait-for-services.sh
    ```
 
-### Running Individual Test Suites
+### 執行個別測試套件
 
-#### Database Tests
+#### 資料庫測試
 ```bash
 cd staging-tests/integration/database
 python -m pytest test_database_integration.py -v
 ```
 
-#### Cache Tests
+#### 快取測試
 ```bash
 cd staging-tests/integration/cache
 python -m pytest test_redis_integration.py -v
 ```
 
-#### Messaging Tests
+#### 訊息傳遞測試
 ```bash
 cd staging-tests/integration/messaging
 python -m pytest test_kafka_integration.py -v
 ```
 
-### Running All Integration Tests
+### 執行所有整合測試
 ```bash
 cd staging-tests
 python run_integration_tests.py
 ```
 
-### Running Specific Test Types
+### 執行特定測試類型
 ```bash
-# Database tests only
+# 只執行資料庫測試
 python run_integration_tests.py --test-type database
 
-# Cache tests only
+# 只執行快取測試
 python run_integration_tests.py --test-type cache
 
-# Messaging tests only
+# 只執行訊息傳遞測試
 python run_integration_tests.py --test-type messaging
 
-# With verbose logging
+# 使用詳細日誌
 python run_integration_tests.py --verbose
 ```
 
-## Test Configuration
+## 測試設定
 
-### Database Configuration
-- **Host**: localhost
-- **Port**: 5432 (primary), 5433 (replica), 5434 (replica)
-- **Database**: test_db
-- **Username**: test_user
-- **Password**: test_password
+### 資料庫設定
+- **主機**: localhost
+- **連接埠**: 5432 (primary)、5433 (replica)、5434 (replica)
+- **資料庫**: test_db
+- **使用者名稱**: test_user
+- **密碼**: test_password
 
-### Cache Configuration
-- **Redis Host**: localhost
-- **Redis Port**: 6379 (primary), 6380 (replica), 6381 (replica)
-- **Sentinel Port**: 26379
-- **Service Name**: mymaster
+### 快取設定
+- **Redis 主機**: localhost
+- **Redis 連接埠**: 6379 (primary)、6380 (replica)、6381 (replica)
+- **Sentinel 連接埠**: 26379
+- **服務名稱**: mymaster
 
-### Messaging Configuration
-- **Kafka Brokers**: localhost:9092, localhost:9093, localhost:9094
-- **Topics**: Auto-created during tests
-- **Consumer Groups**: Test-specific groups
+### 訊息傳遞設定
+- **Kafka Brokers**: localhost:9092、localhost:9093、localhost:9094
+- **主題**: 在測試期間自動建立
+- **Consumer Groups**: 測試特定的群組
 
-## Performance Expectations
+## 效能期望
 
-### Database Tests
-- **Connection Pool Performance**: < 500ms average response time
-- **Aurora Failover**: < 30 seconds
-- **Health Validation**: < 100ms query response time
-- **Cross-Region Replication**: < 1000ms lag
+### 資料庫測試
+- **Connection Pool 效能**: < 500ms 平均回應時間
+- **Aurora 容錯移轉**: < 30 秒
+- **健康驗證**: < 100ms 查詢回應時間
+- **跨區域複寫**: < 1000ms lag
 
-### Cache Tests
-- **Cache Operations**: < 10ms average latency
-- **Sentinel Failover**: < 30 seconds
-- **Cross-Region Sync**: < 1000ms latency
-- **Memory Management**: Proper eviction under memory pressure
+### 快取測試
+- **快取操作**: < 10ms 平均延遲
+- **Sentinel 容錯移轉**: < 30 秒
+- **跨區域同步**: < 1000ms 延遲
+- **記憶體管理**: 在記憶體壓力下適當驅逐
 
-### Messaging Tests
-- **Producer Throughput**: > 1000 messages/second
-- **Consumer Throughput**: > 1000 messages/second
-- **End-to-End Latency**: < 100ms average
-- **Message Ordering**: Preserved in single partition
+### 訊息傳遞測試
+- **Producer 吞吐量**: > 1000 訊息/秒
+- **Consumer 吞吐量**: > 1000 訊息/秒
+- **端對端延遲**: < 100ms 平均值
+- **訊息順序**: 在單個 partition 中保留
 
-## Troubleshooting
+## 疑難排解
 
-### Common Issues
+### 常見問題
 
-1. **Service Connection Failures**
-   - Ensure Docker services are running
-   - Check port availability
-   - Verify network connectivity
+1. **服務連線失敗**
+   - 確保 Docker 服務正在執行
+   - 檢查連接埠可用性
+   - 驗證網路連線
 
-2. **Test Timeouts**
-   - Increase timeout values in test configuration
-   - Check system resource availability
-   - Monitor service performance
+2. **測試逾時**
+   - 增加測試設定中的逾時值
+   - 檢查系統資源可用性
+   - 監控服務效能
 
-3. **Data Consistency Issues**
-   - Verify replication configuration
-   - Check network latency between regions
-   - Monitor synchronization processes
+3. **資料一致性問題**
+   - 驗證複寫設定
+   - 檢查區域間的網路延遲
+   - 監控同步程序
 
-### Debugging
+### 除錯
 
-Enable verbose logging:
+啟用詳細日誌：
 ```bash
 python run_integration_tests.py --verbose
 ```
 
-Check service logs:
+檢查服務日誌：
 ```bash
 docker-compose -f config/docker-compose-staging.yml logs [service-name]
 ```
 
-Monitor resource usage:
+監控資源使用：
 ```bash
 docker stats
 ```
 
-## Extending Tests
+## 擴展測試
 
-### Adding New Test Cases
+### 新增測試案例
 
-1. **Create test method** in appropriate test suite class
-2. **Follow naming convention**: `test_[functionality]_[scenario]`
-3. **Include performance assertions** based on requirements
-4. **Add proper cleanup** in teardown methods
-5. **Update documentation** with new test descriptions
+1. **在適當的測試套件類別中建立測試方法**
+2. **遵循命名慣例**: `test_[functionality]_[scenario]`
+3. **包含基於需求的效能斷言**
+4. **在 teardown 方法中新增適當的清理**
+5. **使用新的測試描述更新文件**
 
-### Adding New Test Suites
+### 新增測試套件
 
-1. **Create new directory** under `integration/`
-2. **Implement test suite class** following existing patterns
-3. **Add requirements.txt** with specific dependencies
-4. **Update main test runner** to include new suite
-5. **Add configuration** for new services if needed
+1. **在 `integration/` 下建立新目錄**
+2. **依照現有模式實現測試套件類別**
+3. **新增包含特定依賴項的 requirements.txt**
+4. **更新主測試執行器以包含新套件**
+5. **如果需要，新增新服務的設定**
 
-## Continuous Integration
+## 持續整合
 
-These tests are designed to run in CI/CD pipelines:
+這些測試設計為在 CI/CD 管道中執行：
 
-- **AWS CodeBuild**: See `aws-codebuild/buildspec-integration-tests.yml`
-- **Local Development**: Use `scripts/run-integration-tests.sh`
-- **Staging Environment**: Automated execution on code changes
+- **AWS CodeBuild**: 查閱 `aws-codebuild/buildspec-integration-tests.yml`
+- **本機開發**: 使用 `scripts/run-integration-tests.sh`
+- **Staging 環境**: 程式碼變更時自動執行
 
-## Monitoring and Reporting
+## 監控和報告
 
-Test results include:
-- **Performance metrics** for each operation
-- **Success/failure rates** by test category
-- **Resource utilization** during test execution
-- **Detailed error logs** for failed tests
-- **Trend analysis** for performance regression detection
+測試結果包括：
+- **每個操作的效能指標**
+- **按測試類別的成功/失敗率**
+- **測試執行期間的資源利用率**
+- **失敗測試的詳細錯誤日誌**
+- **效能回歸檢測的趨勢分析**

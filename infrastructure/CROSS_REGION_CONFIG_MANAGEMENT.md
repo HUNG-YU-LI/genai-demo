@@ -1,40 +1,40 @@
-# Cross-Region Configuration Management
+# 跨區域配置管理
 
-## Overview
+## 概述
 
-This document describes the enhanced cross-region configuration management system implemented in the Secrets Stack. The system provides automatic synchronization of secrets, ConfigMaps, and configuration parameters across multiple AWS regions for Active-Active deployment scenarios.
+本文件說明在 Secrets Stack 中實作的增強跨區域配置管理系統。該系統為 Active-Active 部署場景提供自動同步 secrets、ConfigMaps 和配置參數的功能，跨越多個 AWS 區域。
 
-## Features
+## 功能
 
-### 🔄 Cross-Region Secret Synchronization
+### 🔄 跨區域 Secret 同步
 
-- Automatic replication of AWS Secrets Manager secrets across regions
-- Real-time synchronization triggered by EventBridge events
-- Support for multiple replication regions
-- Conflict resolution and error handling
+- AWS Secrets Manager secrets 跨區域自動複製
+- 由 EventBridge 事件觸發的即時同步
+- 支援多個複製區域
+- 衝突解決和錯誤處理
 
-### 🗺️ ConfigMap Synchronization
+### 🗺️ ConfigMap 同步
 
-- Automatic synchronization of Kubernetes ConfigMaps
-- Integration with EKS clusters across regions
-- Selective synchronization of non-sensitive configuration data
-- Support for custom namespaces and ConfigMap names
+- Kubernetes ConfigMaps 自動同步
+- 跨區域與 EKS 叢集整合
+- 非敏感配置資料的選擇性同步
+- 支援自訂命名空間和 ConfigMap 名稱
 
-### 🔍 Configuration Drift Detection
+### 🔍 配置漂移偵測
 
-- Automated detection of configuration inconsistencies across regions
-- Hourly drift detection scans
-- CloudWatch metrics and alerting integration
-- Detailed drift reports with remediation guidance
+- 跨區域自動偵測配置不一致
+- 每小時漂移偵測掃描
+- CloudWatch 指標和告警整合
+- 詳細的漂移報告與修復指南
 
-### 🚀 GitOps Multi-Region Deployment Pipeline
+### 🚀 GitOps 多區域部署管線
 
-- Integrated deployment pipeline for multi-region infrastructure
-- Blue-green deployment strategy support
-- Automatic rollback on failure
-- Health check validation
+- 多區域基礎設施的整合部署管線
+- Blue-green 部署策略支援
+- 失敗時自動回滾
+- 健康檢查驗證
 
-## Architecture
+## 架構
 
 ```text
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -63,85 +63,85 @@ This document describes the enhanced cross-region configuration management syste
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-## Components
+## 組件
 
 ### Lambda Functions
 
 #### 1. Cross-Region Sync Lambda
 
-- **Function Name**: `{project}-{environment}-cross-region-sync`
-- **Purpose**: Synchronizes secrets across regions
-- **Triggers**: EventBridge events, manual invocation
-- **Timeout**: 10 minutes
-- **Memory**: 512 MB
+- **函式名稱**：`{project}-{environment}-cross-region-sync`
+- **用途**：跨區域同步 secrets
+- **觸發器**：EventBridge 事件、手動調用
+- **逾時**：10 分鐘
+- **記憶體**：512 MB
 
 #### 2. ConfigMap Sync Lambda
 
-- **Function Name**: `{project}-{environment}-configmap-sync`
-- **Purpose**: Synchronizes ConfigMaps in Kubernetes clusters
-- **Triggers**: EventBridge events, scheduled execution
-- **Timeout**: 5 minutes
-- **Memory**: 256 MB
+- **函式名稱**：`{project}-{environment}-configmap-sync`
+- **用途**：同步 Kubernetes 叢集中的 ConfigMaps
+- **觸發器**：EventBridge 事件、排程執行
+- **逾時**：5 分鐘
+- **記憶體**：256 MB
 
 #### 3. Drift Detection Lambda
 
-- **Function Name**: `{project}-{environment}-drift-detection`
-- **Purpose**: Detects configuration drift across regions
-- **Triggers**: Scheduled (hourly), manual invocation
-- **Timeout**: 15 minutes
-- **Memory**: 512 MB
+- **函式名稱**：`{project}-{environment}-drift-detection`
+- **用途**：偵測跨區域的配置漂移
+- **觸發器**：排程（每小時）、手動調用
+- **逾時**：15 分鐘
+- **記憶體**：512 MB
 
 ### EventBridge Rules
 
 #### Secrets Manager Event Rule
 
-- **Rule Name**: `{project}-{environment}-secrets-events`
-- **Event Pattern**: Captures Secrets Manager API calls
-- **Targets**: Cross-region sync and ConfigMap sync Lambdas
+- **規則名稱**：`{project}-{environment}-secrets-events`
+- **事件模式**：捕獲 Secrets Manager API 呼叫
+- **目標**：Cross-region sync 和 ConfigMap sync Lambdas
 
-### Parameter Store Configuration
+### Parameter Store 配置
 
-#### Global Configuration Parameters
+#### 全域配置參數
 
 - `/genai-demo/{environment}/global/secrets/cross-region-config`
 - `/genai-demo/{environment}/global/secrets/gitops-config`
 - `/genai-demo/{environment}/global/secrets/configmap-sync-config`
 - `/genai-demo/{environment}/global/secrets/drift-detection-config`
 
-## Deployment
+## 部署
 
-### Prerequisites
+### 前置條件
 
-- AWS CDK v2.x installed
-- AWS CLI configured with appropriate permissions
-- Multi-region deployment enabled in CDK context
+- 已安裝 AWS CDK v2.x
+- 已配置 AWS CLI 與適當的權限
+- 在 CDK context 中啟用多區域部署
 
-### Basic Deployment
+### 基本部署
 
 ```bash
-# Deploy with multi-region support
+# 啟用多區域支援部署
 ./infrastructure/deploy-unified.sh full -e production --enable-multi-region
 
-# Deploy only secrets and configuration management
+# 僅部署 secrets 和配置管理
 ./infrastructure/deploy-unified.sh security -e production --enable-multi-region
 ```
 
-### Advanced Deployment with Custom Regions
+### 使用自訂區域的進階部署
 
 ```bash
-# Set custom replication regions
+# 設定自訂複製區域
 export REPLICATION_REGIONS="ap-northeast-1,ap-southeast-1,us-west-2"
 
-# Deploy with custom configuration
+# 使用自訂配置部署
 ./infrastructure/deploy-unified.sh full -e production \
   --enable-multi-region \
   -r ap-east-2 \
   -a ops@company.com
 ```
 
-## Configuration
+## 配置
 
-### Secrets Stack Configuration
+### Secrets Stack 配置
 
 ```typescript
 const secretsStack = new SecretsStack(this, 'SecretsStack', {
@@ -156,7 +156,7 @@ const secretsStack = new SecretsStack(this, 'SecretsStack', {
 });
 ```
 
-### Parameter Store Configuration
+### Parameter Store 配置
 
 ```json
 {
@@ -169,7 +169,7 @@ const secretsStack = new SecretsStack(this, 'SecretsStack', {
 }
 ```
 
-### ConfigMap Sync Configuration
+### ConfigMap Sync 配置
 
 ```json
 {
@@ -183,7 +183,7 @@ const secretsStack = new SecretsStack(this, 'SecretsStack', {
 }
 ```
 
-### Drift Detection Configuration
+### Drift Detection 配置
 
 ```json
 {
@@ -198,27 +198,27 @@ const secretsStack = new SecretsStack(this, 'SecretsStack', {
 }
 ```
 
-## Monitoring and Alerting
+## 監控和告警
 
-### CloudWatch Metrics
+### CloudWatch 指標
 
-#### Configuration Drift Metrics
-- `genai-demo/ConfigurationDrift/DriftCount`: Number of configuration drifts detected
-- `genai-demo/ConfigurationDrift/HasDrift`: Binary indicator of drift presence
+#### 配置漂移指標
+- `genai-demo/ConfigurationDrift/DriftCount`：偵測到的配置漂移數量
+- `genai-demo/ConfigurationDrift/HasDrift`：漂移存在的二元指示器
 
-#### Lambda Function Metrics
-- `AWS/Lambda/Invocations`: Function invocation count
-- `AWS/Lambda/Errors`: Function error count
-- `AWS/Lambda/Duration`: Function execution duration
+#### Lambda Function 指標
+- `AWS/Lambda/Invocations`：函式調用次數
+- `AWS/Lambda/Errors`：函式錯誤次數
+- `AWS/Lambda/Duration`：函式執行時間
 
-#### EventBridge Metrics
-- `AWS/Events/MatchedEvents`: Number of events matched by rules
+#### EventBridge 指標
+- `AWS/Events/MatchedEvents`：規則匹配的事件數量
 
-### CloudWatch Alarms
+### CloudWatch 警報
 
-#### Critical Alarms
+#### 關鍵警報
 ```bash
-# Configuration drift detected
+# 偵測到配置漂移
 aws cloudwatch put-metric-alarm \
   --alarm-name "ConfigurationDriftDetected" \
   --alarm-description "Configuration drift detected across regions" \
@@ -229,7 +229,7 @@ aws cloudwatch put-metric-alarm \
   --threshold 1 \
   --comparison-operator "GreaterThanOrEqualToThreshold"
 
-# Cross-region sync failures
+# 跨區域同步失敗
 aws cloudwatch put-metric-alarm \
   --alarm-name "CrossRegionSyncFailures" \
   --alarm-description "Cross-region sync Lambda function failures" \
@@ -242,144 +242,144 @@ aws cloudwatch put-metric-alarm \
   --comparison-operator "GreaterThanOrEqualToThreshold"
 ```
 
-### Dashboard Widgets
+### 儀表板小工具
 
-The Observability Stack automatically creates dashboard widgets for:
-- Configuration drift detection status
-- Cross-region sync performance
-- ConfigMap synchronization status
-- Secrets Manager activity
-- Multi-region health overview
+Observability Stack 會自動建立以下儀表板小工具：
+- 配置漂移偵測狀態
+- 跨區域同步效能
+- ConfigMap 同步狀態
+- Secrets Manager 活動
+- 多區域健康概覽
 
-## Testing
+## 測試
 
-### Automated Testing
+### 自動化測試
 ```bash
-# Run comprehensive test suite
+# 執行綜合測試套件
 ./infrastructure/test-cross-region-config.sh
 
-# Test specific components
+# 測試特定組件
 aws lambda invoke \
   --function-name genai-demo-production-cross-region-sync \
   --payload '{"action": "test_sync"}' \
   /tmp/sync-test-response.json
 ```
 
-### Manual Testing
+### 手動測試
 
-#### Test Secret Synchronization
+#### 測試 Secret 同步
 ```bash
-# Update a secret in primary region
+# 在主要區域更新 secret
 aws secretsmanager update-secret \
   --secret-id "production/genai-demo/application" \
   --secret-string '{"test_key": "test_value"}' \
   --region ap-east-2
 
-# Wait for synchronization (30 seconds)
+# 等待同步（30 秒）
 sleep 30
 
-# Verify in replication regions
+# 在複製區域中驗證
 aws secretsmanager get-secret-value \
   --secret-id "production/genai-demo/application" \
   --region ap-northeast-1
 ```
 
-#### Test Drift Detection
+#### 測試漂移偵測
 ```bash
-# Trigger drift detection manually
+# 手動觸發漂移偵測
 aws lambda invoke \
   --function-name genai-demo-production-drift-detection \
   --payload '{"action": "manual_check"}' \
   /tmp/drift-response.json
 
-# Check results
+# 檢查結果
 cat /tmp/drift-response.json
 ```
 
-## Troubleshooting
+## 疑難排解
 
-### Common Issues
+### 常見問題
 
-#### 1. Cross-Region Sync Failures
-**Symptoms**: Secrets not synchronized across regions
-**Causes**: 
-- IAM permission issues
-- Network connectivity problems
-- KMS key access issues
+#### 1. 跨區域同步失敗
+**症狀**：Secrets 未跨區域同步
+**原因**：
+- IAM 權限問題
+- 網路連接問題
+- KMS 金鑰存取問題
 
-**Solutions**:
+**解決方案**：
 ```bash
-# Check Lambda function logs
+# 檢查 Lambda 函式日誌
 aws logs describe-log-groups --log-group-name-prefix "/aws/lambda/genai-demo"
 
-# Verify IAM permissions
+# 驗證 IAM 權限
 aws iam simulate-principal-policy \
   --policy-source-arn "arn:aws:iam::ACCOUNT:role/CrossRegionSyncLambdaRole" \
   --action-names "secretsmanager:GetSecretValue" \
   --resource-arns "*"
 
-# Test network connectivity
+# 測試網路連接
 aws lambda invoke \
   --function-name genai-demo-production-cross-region-sync \
   --payload '{"action": "connectivity_test"}' \
   /tmp/connectivity-test.json
 ```
 
-#### 2. ConfigMap Sync Issues
-**Symptoms**: ConfigMaps not updated in Kubernetes
-**Causes**:
-- EKS cluster access issues
-- Service account permissions
-- Kubernetes API connectivity
+#### 2. ConfigMap 同步問題
+**症狀**：ConfigMaps 在 Kubernetes 中未更新
+**原因**：
+- EKS 叢集存取問題
+- Service account 權限
+- Kubernetes API 連接
 
-**Solutions**:
+**解決方案**：
 ```bash
-# Check EKS cluster status
+# 檢查 EKS 叢集狀態
 aws eks describe-cluster --name genai-demo-production-cluster
 
-# Verify service account
+# 驗證 service account
 kubectl get serviceaccount genai-demo-production-secrets-sync
 
-# Check ConfigMap
+# 檢查 ConfigMap
 kubectl get configmap genai-demo-production-config -o yaml
 ```
 
-#### 3. Drift Detection False Positives
-**Symptoms**: Drift alerts for expected differences
-**Causes**:
-- Timing issues during synchronization
-- Expected regional differences
-- Configuration hash mismatches
+#### 3. 漂移偵測誤報
+**症狀**：預期差異的漂移警報
+**原因**：
+- 同步期間的時間問題
+- 預期的區域差異
+- 配置雜湊不匹配
 
-**Solutions**:
+**解決方案**：
 ```bash
-# Check drift detection configuration
+# 檢查漂移偵測配置
 aws ssm get-parameter \
   --name "/genai-demo/production/global/secrets/drift-detection-config"
 
-# Review drift detection logs
+# 檢視漂移偵測日誌
 aws logs filter-log-events \
   --log-group-name "/aws/lambda/genai-demo-production-drift-detection" \
   --start-time $(date -d '1 hour ago' +%s)000
 ```
 
-### Log Analysis
+### 日誌分析
 
-#### Lambda Function Logs
+#### Lambda Function 日誌
 ```bash
-# Cross-region sync logs
+# Cross-region sync 日誌
 aws logs tail /aws/lambda/genai-demo-production-cross-region-sync --follow
 
-# ConfigMap sync logs
+# ConfigMap sync 日誌
 aws logs tail /aws/lambda/genai-demo-production-configmap-sync --follow
 
-# Drift detection logs
+# Drift detection 日誌
 aws logs tail /aws/lambda/genai-demo-production-drift-detection --follow
 ```
 
-#### EventBridge Event Tracking
+#### EventBridge 事件追蹤
 ```bash
-# Check EventBridge rule metrics
+# 檢查 EventBridge 規則指標
 aws cloudwatch get-metric-statistics \
   --namespace "AWS/Events" \
   --metric-name "MatchedEvents" \
@@ -390,97 +390,97 @@ aws cloudwatch get-metric-statistics \
   --statistics Sum
 ```
 
-## Security Considerations
+## 安全性考量
 
-### IAM Permissions
-- Lambda functions use least-privilege IAM roles
-- Cross-region access is explicitly granted
-- KMS key permissions are region-specific
+### IAM 權限
+- Lambda 函式使用最小權限 IAM 角色
+- 明確授予跨區域存取
+- KMS 金鑰權限是區域特定的
 
-### Encryption
-- All secrets are encrypted with customer-managed KMS keys
-- Cross-region replication maintains encryption
-- ConfigMaps exclude sensitive data
+### 加密
+- 所有 secrets 使用客戶管理的 KMS 金鑰加密
+- 跨區域複製維持加密
+- ConfigMaps 排除敏感資料
 
-### Network Security
-- Lambda functions run in private subnets
-- VPC endpoints used for AWS service access
-- Security groups restrict outbound traffic
+### 網路安全
+- Lambda 函式在私有子網路中執行
+- 使用 VPC 端點存取 AWS 服務
+- 安全群組限制出站流量
 
-## Best Practices
+## 最佳實踐
 
-### 1. Secret Management
-- Use descriptive secret names with environment prefixes
-- Implement proper secret rotation schedules
-- Monitor secret access patterns
+### 1. Secret 管理
+- 使用帶環境前綴的描述性 secret 名稱
+- 實施適當的 secret 輪換排程
+- 監控 secret 存取模式
 
-### 2. Configuration Drift
-- Set appropriate drift detection thresholds
-- Implement automated remediation for critical drifts
-- Regular review of drift detection reports
+### 2. 配置漂移
+- 設定適當的漂移偵測閾值
+- 為關鍵漂移實施自動修復
+- 定期檢視漂移偵測報告
 
-### 3. Multi-Region Deployment
-- Test failover scenarios regularly
-- Monitor cross-region latency
-- Implement proper health checks
+### 3. 多區域部署
+- 定期測試容錯移轉場景
+- 監控跨區域延遲
+- 實施適當的健康檢查
 
-### 4. Monitoring and Alerting
-- Set up comprehensive CloudWatch alarms
-- Use SNS for critical alert notifications
-- Implement escalation procedures
+### 4. 監控和告警
+- 設定綜合 CloudWatch 警報
+- 使用 SNS 進行關鍵告警通知
+- 實施升級程序
 
-## Performance Optimization
+## 效能優化
 
-### Lambda Function Optimization
-- Use appropriate memory allocation
-- Implement connection pooling for AWS clients
-- Cache frequently accessed data
+### Lambda Function 優化
+- 使用適當的記憶體配置
+- 為 AWS 客戶端實施連接池
+- 快取經常存取的資料
 
-### EventBridge Optimization
-- Use specific event patterns to reduce noise
-- Implement proper error handling and retries
-- Monitor rule performance metrics
+### EventBridge 優化
+- 使用特定事件模式減少雜訊
+- 實施適當的錯誤處理和重試
+- 監控規則效能指標
 
-### Cross-Region Optimization
-- Choose replication regions based on latency requirements
-- Implement intelligent routing for read operations
-- Use regional caching where appropriate
+### 跨區域優化
+- 根據延遲需求選擇複製區域
+- 為讀取操作實施智能路由
+- 在適當的地方使用區域快取
 
-## Maintenance
+## 維護
 
-### Regular Tasks
-- Review and update IAM policies
-- Monitor Lambda function performance
-- Update drift detection thresholds
-- Test disaster recovery procedures
+### 定期任務
+- 檢視和更新 IAM 政策
+- 監控 Lambda 函式效能
+- 更新漂移偵測閾值
+- 測試災難復原程序
 
-### Quarterly Reviews
-- Analyze cross-region sync performance
-- Review security configurations
-- Update documentation
-- Conduct failover testing
+### 季度檢視
+- 分析跨區域同步效能
+- 檢視安全配置
+- 更新文件
+- 進行容錯移轉測試
 
-### Annual Tasks
-- Security audit of cross-region access
-- Performance optimization review
-- Cost analysis and optimization
-- Architecture review and updates
+### 年度任務
+- 跨區域存取的安全稽核
+- 效能優化檢視
+- 成本分析和優化
+- 架構檢視和更新
 
-## Support and Documentation
+## 支援和文件
 
-### Additional Resources
+### 其他資源
 - [AWS Secrets Manager Documentation](https://docs.aws.amazon.com/secretsmanager/)
 - [AWS EventBridge Documentation](https://docs.aws.amazon.com/eventbridge/)
 - [Kubernetes ConfigMap Documentation](https://kubernetes.io/docs/concepts/configuration/configmap/)
 
-### Getting Help
-- Check CloudWatch logs for detailed error information
-- Use the test script for automated diagnostics
-- Review Parameter Store configuration for settings
-- Contact the development team for complex issues
+### 取得協助
+- 檢查 CloudWatch 日誌以取得詳細的錯誤資訊
+- 使用測試腳本進行自動化診斷
+- 檢視 Parameter Store 配置設定
+- 對於複雜問題請聯絡開發團隊
 
 ---
 
-**Last Updated**: January 21, 2025  
-**Version**: 1.0  
-**Maintainer**: Development Team
+**最後更新**：2025 年 1 月 21 日
+**版本**：1.0
+**維護者**：開發團隊

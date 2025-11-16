@@ -1,6 +1,6 @@
 ---
 adr_number: XXX
-title: "{Decision Title}"
+title: "{決策標題}"
 date: YYYY-MM-DD
 status: "proposed|accepted|deprecated|superseded"
 supersedes: []
@@ -11,441 +11,441 @@ affected_perspectives: []
 decision_makers: ["person1", "person2"]
 ---
 
-# ADR-{NUMBER}: {Decision Title}
+# ADR-{編號}: {決策標題}
 
-## Status
+## 狀態
 
-**Status**: Proposed | Accepted | Deprecated | Superseded by [ADR-YYY](YYYYMMDD-YYY-title.md)
+**狀態**: 提議 | 已接受 | 已棄用 | 由[ADR-YYY](YYYYMMDD-YYY-title.md)取代
 
-**Date**: YYYY-MM-DD
+**日期**: YYYY-MM-DD
 
-**Decision Makers**: Person 1, Person 2, Person 3
+**決策制定者**: 人員 1、人員 2、人員 3
 
-## Context
+## 背景
 
-### Problem Statement
+### 問題陳述
 
-[Clearly describe the problem that needs to be solved. What challenge or opportunity are we addressing?]
+[清楚地描述需要解決的問題。我們在解決什麼挑戰或機會？]
 
-### Business Context
+### 業務背景
 
-**Business Drivers**:
+**業務驅動因素**:
 
-- Driver 1: Description
-- Driver 2: Description
-- Driver 3: Description
+- 驅動因素 1: 描述
+- 驅動因素 2: 描述
+- 驅動因素 3: 描述
 
-**Business Constraints**:
+**業務約束**:
 
-- Constraint 1: Description
-- Constraint 2: Description
+- 約束 1: 描述
+- 約束 2: 描述
 
-**Business Requirements**:
+**業務需求**:
 
-- Requirement 1: Description
-- Requirement 2: Description
+- 需求 1: 描述
+- 需求 2: 描述
 
-### Technical Context
+### 技術背景
 
-**Current Architecture**:
-[Describe the current state of the architecture relevant to this decision]
+**目前架構**:
+[描述與此決策相關的架構目前狀態]
 
-**Technical Constraints**:
+**技術約束**:
 
-- Constraint 1: Description
-- Constraint 2: Description
-- Constraint 3: Description
+- 約束 1: 描述
+- 約束 2: 描述
+- 約束 3: 描述
 
-**Dependencies**:
+**依賴項**:
 
-- Dependency 1: Description
-- Dependency 2: Description
+- 依賴項 1: 描述
+- 依賴項 2: 描述
 
-## Decision Drivers
+## 決策驅動因素
 
-List the factors that influenced this decision:
+列出影響此決策的因素：
 
-- **Driver 1**: [e.g., Performance requirements - need to handle 1000 req/s]
-- **Driver 2**: [e.g., Cost constraints - budget limit of $X/month]
-- **Driver 3**: [e.g., Team expertise - team familiar with technology Y]
-- **Driver 4**: [e.g., Time to market - need to launch in 3 months]
-- **Driver 5**: [e.g., Scalability - need to support 10x growth]
+- **驅動因素 1**: [例如 效能需求 - 需要處理每秒 1000 個要求]
+- **驅動因素 2**: [例如 成本約束 - 預算限制 $X/月]
+- **驅動因素 3**: [例如 團隊專業知識 - 團隊熟悉技術 Y]
+- **驅動因素 4**: [例如 上市時間 - 需要在 3 個月內推出]
+- **驅動因素 5**: [例如 可擴展性 - 需要支援 10 倍成長]
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: {Option Name}
+### 選項 1：{選項名稱}
 
-**Description**:
-[Detailed description of this option]
+**描述**:
+[此選項的詳細描述]
 
-**Pros** ✅:
+**優點** ✅:
 
-- Advantage 1: Description
-- Advantage 2: Description
-- Advantage 3: Description
+- 優點 1: 描述
+- 優點 2: 描述
+- 優點 3: 描述
 
-**Cons** ❌:
+**缺點** ❌:
 
-- Disadvantage 1: Description
-- Disadvantage 2: Description
-- Disadvantage 3: Description
+- 缺點 1: 描述
+- 缺點 2: 描述
+- 缺點 3: 描述
 
-**Cost**:
+**成本**:
 
-- **Implementation Cost**: $X or Y person-days
-- **Maintenance Cost**: $X/month or Y person-days/month
-- **Total Cost of Ownership (3 years)**: $X
+- **實施成本**: $X 或 Y 人日
+- **維護成本**: $X/月 或 Y 人日/月
+- **3 年總擁有成本 (TCO)**: $X
 
-**Risk**: High | Medium | Low
+**風險**: 高 | 中 | 低
 
-**Risk Description**: [Describe the risks associated with this option]
+**風險描述**: [描述與此選項相關的風險]
 
-**Effort**: High | Medium | Low
+**努力**: 高 | 中 | 低
 
-**Effort Description**: [Describe the implementation effort]
+**努力描述**: [描述實施努力]
 
-### Option 2: {Option Name}
+### 選項 2：{選項名稱}
 
-**Description**:
-[Detailed description of this option]
+**描述**:
+[此選項的詳細描述]
 
-**Pros** ✅:
+**優點** ✅:
 
-- Advantage 1: Description
-- Advantage 2: Description
-- Advantage 3: Description
+- 優點 1: 描述
+- 優點 2: 描述
+- 優點 3: 描述
 
-**Cons** ❌:
+**缺點** ❌:
 
-- Disadvantage 1: Description
-- Disadvantage 2: Description
-- Disadvantage 3: Description
+- 缺點 1: 描述
+- 缺點 2: 描述
+- 缺點 3: 描述
 
-**Cost**:
+**成本**:
 
-- **Implementation Cost**: $X or Y person-days
-- **Maintenance Cost**: $X/month or Y person-days/month
-- **Total Cost of Ownership (3 years)**: $X
+- **實施成本**: $X 或 Y 人日
+- **維護成本**: $X/月 或 Y 人日/月
+- **3 年總擁有成本 (TCO)**: $X
 
-**Risk**: High | Medium | Low
+**風險**: 高 | 中 | 低
 
-**Risk Description**: [Describe the risks associated with this option]
+**風險描述**: [描述與此選項相關的風險]
 
-**Effort**: High | Medium | Low
+**努力**: 高 | 中 | 低
 
-**Effort Description**: [Describe the implementation effort]
+**努力描述**: [描述實施努力]
 
-### Option 3: {Option Name}
+### 選項 3：{選項名稱}
 
-**Description**:
-[Detailed description of this option]
+**描述**:
+[此選項的詳細描述]
 
-**Pros** ✅:
+**優點** ✅:
 
-- Advantage 1: Description
-- Advantage 2: Description
-- Advantage 3: Description
+- 優點 1: 描述
+- 優點 2: 描述
+- 優點 3: 描述
 
-**Cons** ❌:
+**缺點** ❌:
 
-- Disadvantage 1: Description
-- Disadvantage 2: Description
-- Disadvantage 3: Description
+- 缺點 1: 描述
+- 缺點 2: 描述
+- 缺點 3: 描述
 
-**Cost**:
+**成本**:
 
-- **Implementation Cost**: $X or Y person-days
-- **Maintenance Cost**: $X/month or Y person-days/month
-- **Total Cost of Ownership (3 years)**: $X
+- **實施成本**: $X 或 Y 人日
+- **維護成本**: $X/月 或 Y 人日/月
+- **3 年總擁有成本 (TCO)**: $X
 
-**Risk**: High | Medium | Low
+**風險**: 高 | 中 | 低
 
-**Risk Description**: [Describe the risks associated with this option]
+**風險描述**: [描述與此選項相關的風險]
 
-**Effort**: High | Medium | Low
+**努力**: 高 | 中 | 低
 
-**Effort Description**: [Describe the implementation effort]
+**努力描述**: [描述實施努力]
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: Option X - {Option Name}
+**選定的選項**: 選項 X - {選項名稱}
 
-**Rationale**:
-[Detailed explanation of why this option was chosen. Address how it best satisfies the decision drivers and why it was preferred over other options.]
+**理由**:
+[詳細解釋為什麼選擇此選項。說明它如何最好地滿足決策驅動因素，以及為什麼它優於其他選項。]
 
-**Key Factors in Decision**:
+**決策中的關鍵因素**:
 
-1. Factor 1: Explanation
-2. Factor 2: Explanation
-3. Factor 3: Explanation
+1. 因素 1: 說明
+2. 因素 2: 說明
+3. 因素 3: 說明
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利益相關者影響
 
-| Stakeholder | Impact Level | Description | Mitigation Strategy |
+| 利益相關者 | 影響級別 | 描述 | 緩解策略 |
 |-------------|--------------|-------------|-------------------|
-| Development Team | High/Med/Low | Impact description | Mitigation plan |
-| Operations Team | High/Med/Low | Impact description | Mitigation plan |
-| End Users | High/Med/Low | Impact description | Mitigation plan |
-| Business | High/Med/Low | Impact description | Mitigation plan |
-| Security Team | High/Med/Low | Impact description | Mitigation plan |
+| 開發團隊 | 高/中/低 | 影響描述 | 緩解計畫 |
+| 運營團隊 | 高/中/低 | 影響描述 | 緩解計畫 |
+| 終端使用者 | 高/中/低 | 影響描述 | 緩解計畫 |
+| 業務 | 高/中/低 | 影響描述 | 緩解計畫 |
+| 安全團隊 | 高/中/低 | 影響描述 | 緩解計畫 |
 
-### Impact Radius Assessment
+### 影響範圍評估
 
-**Selected Impact Radius**: Local | Bounded Context | System | Enterprise
+**選定的影響範圍**: 本地 | 有限界內容 | 系統 | 企業
 
-**Impact Description**:
+**影響描述**:
 
-- **Local**: [Changes within single component/service]
-- **Bounded Context**: [Changes across related services]
-- **System**: [Changes across multiple bounded contexts]
-- **Enterprise**: [Changes affecting multiple systems]
+- **本地**: [單個組件/服務內的變更]
+- **有限界內容**: [跨相關服務的變更]
+- **系統**: [跨多個有限界內容的變更]
+- **企業**: [影響多個系統的變更]
 
-### Affected Components
+### 受影響的組件
 
-- Component 1: Description of impact
-- Component 2: Description of impact
-- Component 3: Description of impact
+- 組件 1: 影響描述
+- 組件 2: 影響描述
+- 組件 3: 影響描述
 
-### Risk Assessment
+### 風險評估
 
-| Risk | Probability | Impact | Mitigation Strategy | Owner |
+| 風險 | 可能性 | 影響 | 緩解策略 | 所有者 |
 |------|-------------|--------|-------------------|-------|
-| Risk 1 | High/Med/Low | High/Med/Low | Strategy | Person |
-| Risk 2 | High/Med/Low | High/Med/Low | Strategy | Person |
-| Risk 3 | High/Med/Low | High/Med/Low | Strategy | Person |
+| 風險 1 | 高/中/低 | 高/中/低 | 策略 | 人員 |
+| 風險 2 | 高/中/低 | 高/中/低 | 策略 | 人員 |
+| 風險 3 | 高/中/低 | 高/中/低 | 策略 | 人員 |
 
-**Overall Risk Level**: High | Medium | Low
+**總體風險級別**: 高 | 中 | 低
 
-**Risk Mitigation Plan**:
-[Describe the overall approach to managing risks]
+**風險緩解計畫**:
+[描述管理風險的整體方法]
 
-## Implementation Plan
+## 實施計畫
 
-### Phase 1: Preparation (Timeline: Week 1-2)
+### 階段 1：準備（時間線：第 1-2 週）
 
-**Objectives**:
+**目標**:
 
-- Objective 1
-- Objective 2
+- 目標 1
+- 目標 2
 
-**Tasks**:
+**任務**:
 
-- [ ] Task 1: Description
-- [ ] Task 2: Description
-- [ ] Task 3: Description
+- [ ] 任務 1: 描述
+- [ ] 任務 2: 描述
+- [ ] 任務 3: 描述
 
-**Deliverables**:
+**可交付項**:
 
-- Deliverable 1
-- Deliverable 2
+- 可交付項 1
+- 可交付項 2
 
-**Success Criteria**:
+**成功標準**:
 
-- Criterion 1
-- Criterion 2
+- 標準 1
+- 標準 2
 
-### Phase 2: Implementation (Timeline: Week 3-6)
+### 階段 2：實施（時間線：第 3-6 週）
 
-**Objectives**:
+**目標**:
 
-- Objective 1
-- Objective 2
+- 目標 1
+- 目標 2
 
-**Tasks**:
+**任務**:
 
-- [ ] Task 1: Description
-- [ ] Task 2: Description
-- [ ] Task 3: Description
+- [ ] 任務 1: 描述
+- [ ] 任務 2: 描述
+- [ ] 任務 3: 描述
 
-**Deliverables**:
+**可交付項**:
 
-- Deliverable 1
-- Deliverable 2
+- 可交付項 1
+- 可交付項 2
 
-**Success Criteria**:
+**成功標準**:
 
-- Criterion 1
-- Criterion 2
+- 標準 1
+- 標準 2
 
-### Phase 3: Deployment (Timeline: Week 7-8)
+### 階段 3：部署（時間線：第 7-8 週）
 
-**Objectives**:
+**目標**:
 
-- Objective 1
-- Objective 2
+- 目標 1
+- 目標 2
 
-**Tasks**:
+**任務**:
 
-- [ ] Task 1: Description
-- [ ] Task 2: Description
-- [ ] Task 3: Description
+- [ ] 任務 1: 描述
+- [ ] 任務 2: 描述
+- [ ] 任務 3: 描述
 
-**Deliverables**:
+**可交付項**:
 
-- Deliverable 1
-- Deliverable 2
+- 可交付項 1
+- 可交付項 2
 
-**Success Criteria**:
+**成功標準**:
 
-- Criterion 1
-- Criterion 2
+- 標準 1
+- 標準 2
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**:
 
-- Condition 1: Description
-- Condition 2: Description
-- Condition 3: Description
+- 條件 1: 描述
+- 條件 2: 描述
+- 條件 3: 描述
 
-**Rollback Steps**:
+**回滾步驟**:
 
-1. **Immediate Action**: Description
-2. **Data Rollback**: Description (if needed)
-3. **Service Rollback**: Description
-4. **Verification**: Description
+1. **立即行動**: 描述
+2. **資料回滾**: 描述（如需要）
+3. **服務回滾**: 描述
+4. **驗證**: 描述
 
-**Rollback Time**: Target time to complete rollback
+**回滾時間**: 完成回滾的目標時間
 
-**Rollback Testing**: [Describe how rollback will be tested]
+**回滾測試**: [描述如何測試回滾]
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
-| Metric | Target | Measurement Method | Review Frequency |
+| 指標 | 目標 | 測量方法 | 檢查頻率 |
 |--------|--------|-------------------|------------------|
-| Metric 1 | Target value | How to measure | Daily/Weekly/Monthly |
-| Metric 2 | Target value | How to measure | Daily/Weekly/Monthly |
-| Metric 3 | Target value | How to measure | Daily/Weekly/Monthly |
+| 指標 1 | 目標值 | 如何測量 | 每天/每週/每月 |
+| 指標 2 | 目標值 | 如何測量 | 每天/每週/每月 |
+| 指標 3 | 目標值 | 如何測量 | 每天/每週/每月 |
 
-### Monitoring Plan
+### 監控計畫
 
-**Dashboards**:
+**儀表板**:
 
-- Dashboard 1: [Link and description]
-- Dashboard 2: [Link and description]
+- 儀表板 1: [連結和描述]
+- 儀表板 2: [連結和描述]
 
-**Alerts**:
+**警報**:
 
-- Alert 1: Condition and threshold
-- Alert 2: Condition and threshold
+- 警報 1: 條件和閾值
+- 警報 2: 條件和閾值
 
-**Review Schedule**:
+**檢查排程**:
 
-- **Daily**: Quick metrics check
-- **Weekly**: Detailed review with team
-- **Monthly**: Stakeholder review
+- **每日**: 快速指標檢查
+- **每週**: 與團隊詳細檢查
+- **每月**: 利益相關者檢查
 
-### Key Performance Indicators (KPIs)
+### 關鍵效能指標 (KPI)
 
-- **KPI 1**: Description and target
-- **KPI 2**: Description and target
-- **KPI 3**: Description and target
+- **KPI 1**: 描述和目標
+- **KPI 2**: 描述和目標
+- **KPI 3**: 描述和目標
 
-## Consequences
+## 後果
 
-### Positive Consequences ✅
+### 正面後果 ✅
 
-- **Benefit 1**: Description
-- **Benefit 2**: Description
-- **Benefit 3**: Description
+- **優點 1**: 描述
+- **優點 2**: 描述
+- **優點 3**: 描述
 
-### Negative Consequences ❌
+### 負面後果 ❌
 
-- **Trade-off 1**: Description and mitigation
-- **Trade-off 2**: Description and mitigation
-- **Trade-off 3**: Description and mitigation
+- **權衡 1**: 描述和緩解
+- **權衡 2**: 描述和緩解
+- **權衡 3**: 描述和緩解
 
-### Technical Debt
+### 技術債務
 
-**Debt Introduced**:
+**引入的債務**:
 
-- Debt Item 1: Description
-- Debt Item 2: Description
+- 債務項 1: 描述
+- 債務項 2: 描述
 
-**Debt Repayment Plan**:
+**債務償還計畫**:
 
-- Plan for Debt Item 1: Timeline and approach
-- Plan for Debt Item 2: Timeline and approach
+- 債務項 1 的計畫: 時間線和方法
+- 債務項 2 的計畫: 時間線和方法
 
-### Long-term Implications
+### 長期含義
 
-[Describe the long-term implications of this decision on the system architecture, team, and business]
+[描述此決策對系統架構、團隊和業務的長期含義]
 
-## Related Decisions
+## 相關決策
 
-### Supersedes
+### 取代
 
-- [ADR-XXX: Previous Decision](YYYYMMDD-XXX-title.md) - Why it's being replaced
+- [ADR-XXX: 先前決策](YYYYMMDD-XXX-title.md) - 為什麼正在被取代
 
-### Superseded By
+### 由以下取代
 
-- [ADR-YYY: New Decision](YYYYMMDD-YYY-title.md) - Why this decision is no longer valid
+- [ADR-YYY: 新決策](YYYYMMDD-YYY-title.md) - 為什麼此決策不再有效
 
-### Related ADRs
+### 相關 ADR
 
-- [ADR-AAA: Related Decision 1](YYYYMMDD-AAA-title.md) - How they relate
-- [ADR-BBB: Related Decision 2](YYYYMMDD-BBB-title.md) - How they relate
+- [ADR-AAA: 相關決策 1](YYYYMMDD-AAA-title.md) - 它們如何關聯
+- [ADR-BBB: 相關決策 2](YYYYMMDD-BBB-title.md) - 它們如何關聯
 
-### Affected Viewpoints
+### 受影響的視點
 
-- [Viewpoint 1](../../viewpoints/viewpoint1/README.md) - How it's affected
-- [Viewpoint 2](../../viewpoints/viewpoint2/README.md) - How it's affected
+- [視點 1](../../viewpoints/viewpoint1/README.md) - 它受到什麼影響
+- [視點 2](../../viewpoints/viewpoint2/README.md) - 它受到什麼影響
 
-### Affected Perspectives
+### 受影響的觀點
 
-- [Perspective 1](../../perspectives/perspective1/README.md) - How it's affected
-- [Perspective 2](../../perspectives/perspective2/README.md) - How it's affected
+- [觀點 1](../../perspectives/perspective1/README.md) - 它受到什麼影響
+- [觀點 2](../../perspectives/perspective2/README.md) - 它受到什麼影響
 
-## Notes
+## 備註
 
-### Assumptions
+### 假設
 
-- Assumption 1: Description
-- Assumption 2: Description
+- 假設 1: 描述
+- 假設 2: 描述
 
-### Constraints
+### 約束
 
-- Constraint 1: Description
-- Constraint 2: Description
+- 約束 1: 描述
+- 約束 2: 描述
 
-### Open Questions
+### 開放問題
 
-- Question 1: Description
-- Question 2: Description
+- 問題 1: 描述
+- 問題 2: 描述
 
-### Follow-up Actions
+### 後續行動
 
-- [ ] Action 1: Description and owner
-- [ ] Action 2: Description and owner
+- [ ] 行動 1: 描述和所有者
+- [ ] 行動 2: 描述和所有者
 
-### References
+### 參考資料
 
-- Reference 1: [Title](URL)
-- Reference 2: [Title](URL)
+- 參考資料 1: [標題](URL)
+- 參考資料 2: [標題](URL)
 
-## Appendix
+## 附錄
 
-### Proof of Concept Results
+### 概念驗證結果
 
-[Include results from any POC or spike work]
+[包含任何 POC 或尖峰工作的結果]
 
-### Performance Benchmarks
+### 效能基準
 
-[Include relevant performance data]
+[包含相關的效能資料]
 
-### Cost Analysis Details
+### 成本分析詳情
 
-[Include detailed cost breakdown]
+[包含詳細的成本細分]
 
-### Alternative Approaches Considered
+### 考慮的替代方法
 
-[Include any other approaches that were briefly considered but not fully evaluated]
+[包含簡短考慮但未完全評估的任何其他方法]
 
 ---
 
-**ADR Template Version**: 1.0  
-**Last Template Update**: 2025-01-17
+**ADR 模板版本**: 1.0
+**最後模板更新**: 2025-01-17

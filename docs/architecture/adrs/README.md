@@ -9,33 +9,33 @@ status: "active"
 
 # Architecture Decision Records
 
-## Overview
+## 概述
 
-This directory contains Architecture Decision Records (ADRs) documenting significant architectural decisions made for the Enterprise E-Commerce Platform. Each ADR captures the context, options considered, decision made, and consequences.
+本目錄包含企業電子商務平台的 Architecture Decision Records (ADRs)，記錄重要的架構決策。每個 ADR 都記錄了上下文、考慮的選項、做出的決策以及後果。
 
-**Current Status**: 26 ADRs completed, 42 ADRs planned  
-**Target**: 68 ADRs total (10 ADR-000 series + 58 ADR-001 to ADR-058)  
-**Progress**: 38% complete  
-**See**: [ADR Roadmap](ADR-ROADMAP.md) for complete planning
+**目前狀態**：已完成 26 個 ADRs，已規劃 42 個 ADRs
+**目標**：總共 68 個 ADRs（10 個 ADR-000 系列 + 58 個 ADR-001 至 ADR-058）
+**進度**：完成 38%
+**參見**：[ADR Roadmap](ADR-ROADMAP.md) 獲取完整規劃
 
-## Quick Links
+## 快速連結
 
-- 📋 [ADR Roadmap](ADR-ROADMAP.md) - Complete ADR planning and priorities
-- 📝 [ADR Template](../../templates/adr-template.md) - Template for creating new ADRs
-- 🏗️ [Architecture Overview](../README.md) - Overall architecture documentation
+- 📋 [ADR Roadmap](ADR-ROADMAP.md) - 完整的 ADR 規劃和優先順序
+- 📝 [ADR Template](../../templates/adr-template.md) - 建立新 ADRs 的範本
+- 🏗️ [Architecture Overview](../README.md) - 整體架構文檔
 
-## ADR Format
+## ADR 格式
 
-Each ADR follows a standard template:
+每個 ADR 遵循標準範本：
 
-- **Status**: Proposed | Accepted | Deprecated | Superseded
-- **Context**: Problem statement and background
-- **Decision Drivers**: Key factors influencing the decision
-- **Considered Options**: Alternatives evaluated
-- **Decision Outcome**: Chosen option and rationale
-- **Consequences**: Positive and negative impacts
+- **Status**：Proposed | Accepted | Deprecated | Superseded
+- **Context**：問題陳述和背景
+- **Decision Drivers**：影響決策的關鍵因素
+- **Considered Options**：評估的替代方案
+- **Decision Outcome**：選擇的選項和理由
+- **Consequences**：正面和負面影響
 
-## Active ADRs
+## 活躍的 ADRs
 
 | Number | Date | Title | Status | Category |
 |--------|------|-------|--------|----------|
@@ -65,7 +65,7 @@ Each ADR follows a standard template:
 | 018 | 2025-10-25 | Container Orchestration with AWS EKS | Accepted | Infrastructure |
 | 019 | 2025-10-25 | Progressive Deployment Strategy (Canary + Rolling Update) | Accepted | Deployment |
 
-## ADRs by Category
+## ADRs 依類別分類
 
 ### Data Storage
 
@@ -133,51 +133,51 @@ Each ADR follows a standard template:
 - [ADR-046: Third Region Disaster Recovery (Singapore/Seoul)](046-third-region-disaster-recovery-singapore-seoul.md)
 - [ADR-047: Stateless Architecture for Regional Mobility](047-stateless-architecture-regional-mobility.md)
 
-## Planned ADRs
+## 已規劃的 ADRs
 
-See [ADR Roadmap](ADR-ROADMAP.md) for detailed planning of 51 additional ADRs covering:
+詳細規劃請參見 [ADR Roadmap](ADR-ROADMAP.md)，涵蓋另外 51 個 ADRs：
 
-### ADR-000 Series: Foundational Methodology (10 ADRs)
+### ADR-000 系列：基礎方法論（10 個 ADRs）
 
-- ADR-000 to ADR-000-10: Architecture methodology and design philosophy
+- ADR-000 至 ADR-000-10：架構方法論和設計理念
 
-### Network Security & Defense (11 ADRs)
+### 網路安全與防禦（11 個 ADRs）
 
-- ADR-048 to ADR-058: DDoS protection, WAF, API security, authentication hardening, security monitoring, DLP, vulnerability management, network segmentation, penetration testing, compliance
+- ADR-048 至 ADR-058：DDoS 防護、WAF、API 安全、認證強化、安全監控、DLP、漏洞管理、網路分段、滲透測試、合規
 
-### Resilience & Multi-Region (9 ADRs)
+### 彈性與 Multi-Region（9 個 ADRs）
 
-- ADR-037 to ADR-047: Active-active multi-region, cross-region replication, failover strategy, network partition handling, data residency, chaos engineering, observability, BCP, cost optimization
+- ADR-037 至 ADR-047：Active-active multi-region、跨區域複製、容錯移轉策略、網路分區處理、資料駐留、chaos engineering、observability、BCP、成本優化
 
-### Infrastructure & Data Management (7 ADRs)
+### 基礎設施與資料管理（7 個 ADRs）
 
-- ADR-017 to ADR-021, ADR-025 to ADR-026: Multi-region deployment, EKS, progressive deployment, Flyway, event sourcing, saga pattern, CQRS
+- ADR-017 至 ADR-021、ADR-025 至 ADR-026：Multi-region 部署、EKS、progressive deployment、Flyway、event sourcing、saga pattern、CQRS
 
-### Performance & Operations (9 ADRs)
+### 效能與營運（9 個 ADRs）
 
-- ADR-022 to ADR-024, ADR-027, ADR-032 to ADR-035, ADR-042 to ADR-045: Distributed locking, rate limiting, search, cache invalidation, log aggregation, disaster recovery, chaos engineering
+- ADR-022 至 ADR-024、ADR-027、ADR-032 至 ADR-035、ADR-042 至 ADR-045：分散式鎖定、速率限制、搜尋、快取失效、日誌聚合、災難恢復、chaos engineering
 
-### Storage & Integration (5 ADRs)
+### 儲存與整合（5 個 ADRs）
 
-- ADR-028 to ADR-031, ADR-036: File storage, background jobs, API gateway, inter-service communication, third-party integration
+- ADR-028 至 ADR-031、ADR-036：檔案儲存、背景任務、API gateway、服務間通訊、第三方整合
 
-## Superseded ADRs
+## 已廢棄的 ADRs
 
 | Number | Date | Title | Superseded By | Reason |
 |--------|------|-------|---------------|--------|
 | - | - | - | - | - |
 
-## ADR Lifecycle
+## ADR 生命週期
 
-### Creating a New ADR
+### 建立新的 ADR
 
-1. Copy the [ADR template](../../templates/adr-template.md)
-2. Assign the next sequential number
-3. Fill in all sections
-4. Submit for review
-5. Update this index
+1. 複製 [ADR template](../../templates/adr-template.md)
+2. 分配下一個順序編號
+3. 填寫所有章節
+4. 提交審查
+5. 更新此索引
 
-### ADR Status Transitions
+### ADR 狀態轉換
 
 ```mermaid
 graph LR
@@ -188,55 +188,55 @@ graph LR
     N2 --> N3
 ```
 
-### Naming Convention
+### 命名慣例
 
-Format: `{number}-{title-in-kebab-case}.md`
+格式：`{number}-{title-in-kebab-case}.md`
 
-Example: `001-use-postgresql-for-primary-database.md`
+範例：`001-use-postgresql-for-primary-database.md`
 
-## Related Documentation
+## 相關文檔
 
 - [ADR Template](../../templates/adr-template.md)
 - [Architecture Overview](../README.md)
 - [Design Principles](../../viewpoints/development/README.md)
 
-## Implementation Priority
+## 實作優先順序
 
-### Phase 1: Foundational ADRs (Q1 2026)
+### 第 1 階段：基礎 ADRs（2026 年 Q1）
 
-- ADR-000 Series: Methodology foundation (10 ADRs)
-- Critical Security: ADR-033 (Secrets Management)
+- ADR-000 系列：方法論基礎（10 個 ADRs）
+- 關鍵安全：ADR-033（Secrets Management）
 
-### Phase 2: Network Security & Defense (Q1-Q2 2026)
+### 第 2 階段：網路安全與防禦（2026 年 Q1-Q2）
 
-- P0 Critical Defense: ADR-048 to ADR-051 (4 ADRs)
-- P1 Important Defense: ADR-052 to ADR-055 (4 ADRs)
+- P0 關鍵防禦：ADR-048 至 ADR-051（4 個 ADRs）
+- P1 重要防禦：ADR-052 至 ADR-055（4 個 ADRs）
 
-### Phase 3: Multi-Region Resilience (Q2 2026)
+### 第 3 階段：Multi-Region 彈性（2026 年 Q2）
 
-- P0 Critical Resilience: ADR-037 to ADR-041 (5 ADRs)
+- P0 關鍵彈性：ADR-037 至 ADR-041（5 個 ADRs）
 
-### Phase 4: Infrastructure & Data (Q2-Q3 2026)
+### 第 4 階段：基礎設施與資料（2026 年 Q2-Q3）
 
-- Infrastructure: ADR-017 to ADR-019 (3 ADRs)
-- Data Management: ADR-020, ADR-025, ADR-026, ADR-021 (4 ADRs)
+- 基礎設施：ADR-017 至 ADR-019（3 個 ADRs）
+- 資料管理：ADR-020、ADR-025、ADR-026、ADR-021（4 個 ADRs）
 
-### Phase 5: Performance & Operations (Q3 2026)
+### 第 5 階段：效能與營運（2026 年 Q3）
 
-- Performance: ADR-022, ADR-023, ADR-027, ADR-032 (4 ADRs)
-- Operations: ADR-034, ADR-035, ADR-042, ADR-043, ADR-044 (5 ADRs)
+- 效能：ADR-022、ADR-023、ADR-027、ADR-032（4 個 ADRs）
+- 營運：ADR-034、ADR-035、ADR-042、ADR-043、ADR-044（5 個 ADRs）
 
-### Phase 6: Advanced Features (Q4 2026)
+### 第 6 階段：進階功能（2026 年 Q4）
 
-- Storage & Integration: ADR-028 to ADR-031, ADR-036, ADR-024 (6 ADRs)
+- 儲存與整合：ADR-028 至 ADR-031、ADR-036、ADR-024（6 個 ADRs）
 
-### Phase 7: Advanced Security & Resilience (Q4 2026)
+### 第 7 階段：進階安全與彈性（2026 年 Q4）
 
-- Advanced Security: ADR-056 to ADR-058 (3 ADRs)
-- Advanced Resilience: ADR-045 to ADR-047 (3 ADRs)
+- 進階安全：ADR-056 至 ADR-058（3 個 ADRs）
+- 進階彈性：ADR-045 至 ADR-047（3 個 ADRs）
 
 ---
 
-**Document Status**: ✅ Active (26/68 ADRs completed - 38%)  
-**Review Date**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**：✅ Active（已完成 26/68 個 ADRs - 38%）
+**審查日期**：2025-10-25
+**下次審查**：2026-01-25（每季）

@@ -1,50 +1,50 @@
-# Deployment Monitoring Stack
+# 部署監控堆疊
 
-## Overview
+## 概述
 
-The Deployment Monitoring Stack provides comprehensive monitoring and alerting for AWS Code Services deployments, including CodePipeline and CodeDeploy. This stack addresses the monitoring requirements for multi-region active-active deployments.
+Deployment Monitoring Stack 為 AWS Code Services 部署提供全面的監控和告警，包括 CodePipeline 和 CodeDeploy。此堆疊滿足多區域 active-active 部署的監控需求。
 
-## Features
+## 功能
 
-### 📊 Deployment Metrics Collection
+### 📊 部署指標收集
 
-Automatically collects and publishes the following metrics to CloudWatch:
+自動收集並發佈以下指標到 CloudWatch：
 
-#### CodePipeline Metrics
-- **Pipeline Success Rate**: Percentage of successful pipeline executions
-- **Pipeline Execution Time**: Average time for pipeline executions to complete
-- **Pipeline Failures**: Count of failed pipeline executions
+#### CodePipeline 指標
+- **Pipeline Success Rate**：成功的管線執行百分比
+- **Pipeline Execution Time**：管線執行完成的平均時間
+- **Pipeline Failures**：失敗的管線執行次數
 
-#### CodeDeploy Metrics
-- **Deployment Success Rate**: Percentage of successful deployments
-- **Deployment Time**: Average time for deployments to complete
-- **Deployment Failures**: Count of failed deployments
+#### CodeDeploy 指標
+- **Deployment Success Rate**：成功的部署百分比
+- **Deployment Time**：部署完成的平均時間
+- **Deployment Failures**：失敗的部署次數
 
-### 🔔 Real-time Alerts
+### 🔔 即時告警
 
-Automated alerts for deployment issues:
+部署問題的自動化告警：
 
-1. **Pipeline Failure Alert**: Triggered when any pipeline execution fails
-2. **Deployment Failure Alert**: Triggered when any deployment fails
-3. **Low Success Rate Alert**: Triggered when deployment success rate drops below 80%
-4. **Long Deployment Time Alert**: Triggered when deployment exceeds 30 minutes
-5. **Long Pipeline Execution Alert**: Triggered when pipeline execution exceeds 60 minutes
+1. **Pipeline Failure Alert**：任何管線執行失敗時觸發
+2. **Deployment Failure Alert**：任何部署失敗時觸發
+3. **Low Success Rate Alert**：部署成功率低於 80% 時觸發
+4. **Long Deployment Time Alert**：部署超過 30 分鐘時觸發
+5. **Long Pipeline Execution Alert**：管線執行超過 60 分鐘時觸發
 
-### 📈 CloudWatch Dashboard
+### 📈 CloudWatch 儀表板
 
-Interactive dashboard with:
-- Real-time success rate tracking
-- Deployment time trends
-- Failure tracking and analysis
-- Multi-region deployment status (when enabled)
+互動式儀表板包含：
+- 即時成功率追蹤
+- 部署時間趨勢
+- 失敗追蹤和分析
+- 多區域部署狀態（啟用時）
 
-### 🎯 EventBridge Integration
+### 🎯 EventBridge 整合
 
-Captures deployment events from:
-- CodePipeline state changes (SUCCESS, FAILED)
-- CodeDeploy state changes (SUCCESS, FAILURE, STOPPED)
+從以下來源捕獲部署事件：
+- CodePipeline 狀態變更（SUCCESS、FAILED）
+- CodeDeploy 狀態變更（SUCCESS、FAILURE、STOPPED）
 
-## Architecture
+## 架構
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -93,9 +93,9 @@ Captures deployment events from:
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## Usage
+## 使用方式
 
-### Basic Deployment
+### 基本部署
 
 ```typescript
 import { DeploymentMonitoringStack } from './stacks/deployment-monitoring-stack';
@@ -106,7 +106,7 @@ const deploymentMonitoring = new DeploymentMonitoringStack(app, 'DeploymentMonit
 });
 ```
 
-### With Existing Alerting Topic
+### 使用現有告警主題
 
 ```typescript
 import { DeploymentMonitoringStack } from './stacks/deployment-monitoring-stack';
@@ -118,7 +118,7 @@ const deploymentMonitoring = new DeploymentMonitoringStack(app, 'DeploymentMonit
 });
 ```
 
-### Multi-Region Configuration
+### 多區域配置
 
 ```typescript
 const deploymentMonitoring = new DeploymentMonitoringStack(app, 'DeploymentMonitoring', {
@@ -132,83 +132,83 @@ const deploymentMonitoring = new DeploymentMonitoringStack(app, 'DeploymentMonit
 });
 ```
 
-## Metrics Reference
+## 指標參考
 
-### Custom Metrics Namespace
+### 自訂指標命名空間
 
-All metrics are published to the namespace: `{PROJECT_NAME}/Deployment`
+所有指標發佈到命名空間：`{PROJECT_NAME}/Deployment`
 
-### Metric Dimensions
+### 指標維度
 
-- **Environment**: The deployment environment (development, staging, production)
-- **Service**: The AWS service (CodePipeline, CodeDeploy)
+- **Environment**：部署環境（development、staging、production）
+- **Service**：AWS 服務（CodePipeline、CodeDeploy）
 
-### Metric Details
+### 指標詳情
 
-| Metric Name | Unit | Description | Typical Value |
+| 指標名稱 | 單位 | 說明 | 典型值 |
 |-------------|------|-------------|---------------|
-| PipelineSuccessRate | Percent | Percentage of successful pipeline executions | > 95% |
-| PipelineExecutionTime | Seconds | Average pipeline execution time | 300-1800s |
-| PipelineFailures | Count | Number of failed pipeline executions | 0 |
-| DeploymentSuccessRate | Percent | Percentage of successful deployments | > 95% |
-| DeploymentTime | Seconds | Average deployment time | 180-1200s |
-| DeploymentFailures | Count | Number of failed deployments | 0 |
+| PipelineSuccessRate | Percent | 成功的管線執行百分比 | > 95% |
+| PipelineExecutionTime | Seconds | 平均管線執行時間 | 300-1800s |
+| PipelineFailures | Count | 失敗的管線執行次數 | 0 |
+| DeploymentSuccessRate | Percent | 成功的部署百分比 | > 95% |
+| DeploymentTime | Seconds | 平均部署時間 | 180-1200s |
+| DeploymentFailures | Count | 失敗的部署次數 | 0 |
 
-## Alarms Configuration
+## 警報配置
 
 ### Pipeline Failure Alarm
 
-- **Threshold**: ≥ 1 failure
-- **Evaluation Period**: 5 minutes
-- **Action**: Send SNS notification
+- **閾值**：≥ 1 次失敗
+- **評估期間**：5 分鐘
+- **動作**：發送 SNS 通知
 
 ### Deployment Failure Alarm
 
-- **Threshold**: ≥ 1 failure
-- **Evaluation Period**: 5 minutes
-- **Action**: Send SNS notification
+- **閾值**：≥ 1 次失敗
+- **評估期間**：5 分鐘
+- **動作**：發送 SNS 通知
 
 ### Low Success Rate Alarm
 
-- **Threshold**: < 80% success rate
-- **Evaluation Period**: 15 minutes (2 data points)
-- **Action**: Send SNS notification
+- **閾值**：< 80% 成功率
+- **評估期間**：15 分鐘（2 個資料點）
+- **動作**：發送 SNS 通知
 
 ### Long Deployment Time Alarm
 
-- **Threshold**: > 1800 seconds (30 minutes)
-- **Evaluation Period**: 5 minutes
-- **Action**: Send SNS notification
+- **閾值**：> 1800 秒（30 分鐘）
+- **評估期間**：5 分鐘
+- **動作**：發送 SNS 通知
 
 ### Long Pipeline Execution Alarm
 
-- **Threshold**: > 3600 seconds (60 minutes)
-- **Evaluation Period**: 5 minutes
-- **Action**: Send SNS notification
+- **閾值**：> 3600 秒（60 分鐘）
+- **評估期間**：5 分鐘
+- **動作**：發送 SNS 通知
 
-## Dashboard Access
+## 儀表板存取
 
-After deployment, access the dashboard via:
+部署後，透過以下方式存取儀表板：
 
 ```bash
-# Get dashboard URL from stack outputs
+# 從堆疊輸出取得儀表板 URL
 aws cloudformation describe-stacks \
     --stack-name DeploymentMonitoring \
     --query 'Stacks[0].Outputs[?OutputKey==`DeploymentDashboardUrl`].OutputValue' \
     --output text
 ```
 
-Or navigate to:
+或導航到：
 ```
 https://{region}.console.aws.amazon.com/cloudwatch/home?region={region}#dashboards:name={project}-{environment}-deployment-monitoring
 ```
 
-## Alert Notifications
+## 告警通知
 
-### Subscribe to Alerts
+### 訂閱告警
 
 ```bash
-# Subscribe email to deployment alerts
+# 訂閱電子郵件以接收部署告警
 aws sns subscribe \
     --topic-arn $(aws cloudformation describe-stacks \
         --stack-name DeploymentMonitoring \
@@ -218,7 +218,7 @@ aws sns subscribe \
     --notification-endpoint your-email@example.com
 ```
 
-### Alert Message Format
+### 告警訊息格式
 
 #### Pipeline State Change Alert
 
@@ -248,11 +248,11 @@ Time: 2025-01-22T10:30:00Z
 ⚠️ FAILURE DETECTED
 ```
 
-## Monitoring Best Practices
+## 監控最佳實踐
 
-### 1. Set Up Email Notifications
+### 1. 設定電子郵件通知
 
-Subscribe key team members to the deployment alert topic:
+訂閱關鍵團隊成員到部署告警主題：
 
 ```bash
 aws sns subscribe \
@@ -261,63 +261,63 @@ aws sns subscribe \
     --notification-endpoint ops-team@example.com
 ```
 
-### 2. Review Dashboard Regularly
+### 2. 定期檢視儀表板
 
-- Check success rates daily
-- Monitor deployment time trends
-- Investigate any failures immediately
+- 每日檢查成功率
+- 監控部署時間趨勢
+- 立即調查任何失敗
 
-### 3. Tune Alarm Thresholds
+### 3. 調整警報閾值
 
-Adjust thresholds based on your deployment patterns:
+根據部署模式調整閾值：
 
 ```typescript
-// Example: Custom threshold for long deployment time
+// 範例：自訂長部署時間閾值
 const customAlarm = new cloudwatch.Alarm(this, 'CustomDeploymentTimeAlarm', {
     metric: deploymentTimeMetric,
-    threshold: 2400, // 40 minutes instead of default 30
+    threshold: 2400, // 40 分鐘而非預設的 30 分鐘
     evaluationPeriods: 2,
 });
 ```
 
-### 4. Integrate with Incident Management
+### 4. 與事件管理整合
 
-Forward SNS notifications to incident management tools:
+將 SNS 通知轉發到事件管理工具：
 
 ```bash
-# Example: Subscribe PagerDuty endpoint
+# 範例：訂閱 PagerDuty 端點
 aws sns subscribe \
     --topic-arn <deployment-alert-topic-arn> \
     --protocol https \
     --notification-endpoint https://events.pagerduty.com/integration/<key>/enqueue
 ```
 
-## Troubleshooting
+## 疑難排解
 
-### No Metrics Appearing
+### 沒有指標出現
 
-1. **Check Lambda Execution**:
+1. **檢查 Lambda 執行**：
    ```bash
    aws logs tail /aws/lambda/<metrics-function-name> --follow
    ```
 
-2. **Verify IAM Permissions**:
-   - Ensure Lambda has CodePipeline and CodeDeploy read permissions
-   - Ensure Lambda has CloudWatch PutMetricData permission
+2. **驗證 IAM 權限**：
+   - 確保 Lambda 具有 CodePipeline 和 CodeDeploy 讀取權限
+   - 確保 Lambda 具有 CloudWatch PutMetricData 權限
 
-3. **Check EventBridge Rules**:
+3. **檢查 EventBridge 規則**：
    ```bash
    aws events list-rules --name-prefix <project-name>
    ```
 
-### Alarms Not Triggering
+### 警報未觸發
 
-1. **Verify Alarm State**:
+1. **驗證警報狀態**：
    ```bash
    aws cloudwatch describe-alarms --alarm-names <alarm-name>
    ```
 
-2. **Check Metric Data**:
+2. **檢查指標資料**：
    ```bash
    aws cloudwatch get-metric-statistics \
        --namespace <project-name>/Deployment \
@@ -328,29 +328,29 @@ aws sns subscribe \
        --statistics Sum
    ```
 
-3. **Verify SNS Subscription**:
+3. **驗證 SNS 訂閱**：
    ```bash
    aws sns list-subscriptions-by-topic --topic-arn <topic-arn>
    ```
 
-### Dashboard Not Loading
+### 儀表板無法載入
 
-1. **Check Dashboard Exists**:
+1. **檢查儀表板是否存在**：
    ```bash
    aws cloudwatch list-dashboards
    ```
 
-2. **Verify Dashboard Content**:
+2. **驗證儀表板內容**：
    ```bash
    aws cloudwatch get-dashboard --dashboard-name <dashboard-name>
    ```
 
-## Integration with Existing Stacks
+## 與現有堆疊整合
 
-### With Observability Stack
+### 與 Observability Stack 整合
 
 ```typescript
-// In your main stack file
+// 在主堆疊檔案中
 const observability = new ObservabilityStack(app, 'Observability', {
     vpc,
     kmsKey,
@@ -360,11 +360,11 @@ const observability = new ObservabilityStack(app, 'Observability', {
 const deploymentMonitoring = new DeploymentMonitoringStack(app, 'DeploymentMonitoring', {
     projectName: 'genai-demo',
     environment: 'production',
-    alertingTopic: observability.alertTopic, // Reuse existing alert topic
+    alertingTopic: observability.alertTopic, // 重用現有告警主題
 });
 ```
 
-### With Alerting Stack
+### 與 Alerting Stack 整合
 
 ```typescript
 const alerting = new AlertingStack(app, 'Alerting', {
@@ -379,52 +379,52 @@ const deploymentMonitoring = new DeploymentMonitoringStack(app, 'DeploymentMonit
 });
 ```
 
-## Cost Considerations
+## 成本考量
 
-### Estimated Monthly Costs
+### 預估月費用
 
-- **Lambda Executions**: ~$0.20 (288 executions/day × 30 days)
-- **CloudWatch Metrics**: ~$3.00 (6 custom metrics)
-- **CloudWatch Alarms**: ~$5.00 (5 alarms)
-- **CloudWatch Dashboard**: ~$3.00 (1 dashboard)
-- **SNS Notifications**: ~$0.50 (assuming 100 notifications/month)
+- **Lambda 執行**：~$0.20（288 次執行/天 × 30 天）
+- **CloudWatch 指標**：~$3.00（6 個自訂指標）
+- **CloudWatch 警報**：~$5.00（5 個警報）
+- **CloudWatch 儀表板**：~$3.00（1 個儀表板）
+- **SNS 通知**：~$0.50（假設 100 次通知/月）
 
-**Total Estimated Cost**: ~$12/month per environment
+**總預估成本**：每個環境約 $12/月
 
-### Cost Optimization Tips
+### 成本優化技巧
 
-1. **Adjust Collection Frequency**: Change from 5 minutes to 10 minutes if less granularity is acceptable
-2. **Reduce Metric Retention**: Use shorter retention periods for non-critical metrics
-3. **Consolidate Alarms**: Combine related alarms where possible
+1. **調整收集頻率**：如果可以接受較少的粒度，從 5 分鐘改為 10 分鐘
+2. **減少指標保留時間**：對非關鍵指標使用較短的保留期
+3. **合併警報**：在可能的情況下合併相關警報
 
-## Testing
+## 測試
 
-Run the test suite:
+執行測試套件：
 
 ```bash
 cd infrastructure
 npm test -- deployment-monitoring-stack.test.ts
 ```
 
-## Related Documentation
+## 相關文件
 
 - [AWS Code Services Deployment Guide](./AWS_CODE_SERVICES_DEPLOYMENT.md)
 - [Observability Stack Documentation](./docs/observability-stack.md)
 - [Multi-Region Active-Active Spec](../.kiro/specs/multi-region-active-active/)
 
-## Support
+## 支援
 
-For issues or questions:
-1. Check CloudWatch Logs for Lambda function errors
-2. Review EventBridge rule configurations
-3. Verify IAM permissions for all components
-4. Check SNS topic subscriptions
+如有問題或疑問：
+1. 檢查 CloudWatch Logs 以取得 Lambda 函式錯誤
+2. 檢視 EventBridge 規則配置
+3. 驗證所有組件的 IAM 權限
+4. 檢查 SNS 主題訂閱
 
-## Future Enhancements
+## 未來增強功能
 
-Planned improvements:
-- Integration with AWS X-Ray for detailed trace analysis
-- Support for custom deployment metrics
-- Enhanced multi-region correlation and analysis
-- Integration with AWS Cost Explorer for deployment cost tracking
-- Automated remediation actions based on deployment failures
+計劃的改進：
+- 與 AWS X-Ray 整合進行詳細的追蹤分析
+- 支援自訂部署指標
+- 增強多區域關聯和分析
+- 與 AWS Cost Explorer 整合進行部署成本追蹤
+- 基於部署失敗的自動修復動作

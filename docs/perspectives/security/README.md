@@ -1,38 +1,38 @@
 # Security Perspective
 
-> **Status**: 📝 To be documented  
-> **Last Updated**: 2025-01-17  
+> **Status**: 📝 待文檔化
+> **Last Updated**: 2025-01-17
 > **Owner**: Security Engineer
 
 ## Overview
 
-The Security Perspective ensures the system is protected from malicious attacks and unauthorized access.
+Security Perspective 確保系統免受惡意攻擊和未經授權的存取。
 
-## Key Concerns
+## 關鍵關注點
 
-- Authentication and authorization
-- Data protection (encryption)
-- Security monitoring and incident response
-- Compliance (GDPR, PCI-DSS)
+- Authentication 和 authorization
+- 資料保護 (加密)
+- Security 監控和事件回應
+- 合規性 (GDPR、PCI-DSS)
 
 ## Quality Attribute Scenarios
 
-### Scenario 1: SQL Injection Attack
+### Scenario 1: SQL Injection 攻擊
 
-- **Source**: Malicious user
-- **Stimulus**: Attempts SQL injection on customer search
-- **Environment**: Production with normal load
+- **Source**: 惡意使用者
+- **Stimulus**: 嘗試對客戶搜尋進行 SQL injection
+- **Environment**: 正常負載的生產環境
 - **Artifact**: Customer API service
-- **Response**: System detects and blocks attack, logs incident
-- **Response Measure**: Attack blocked within 100ms, no data exposure
+- **Response**: 系統偵測並阻止攻擊，記錄事件
+- **Response Measure**: 在 100ms 內阻止攻擊，無資料洩露
 
-## Affected Viewpoints
+## 影響的視角
 
-- [Functional Viewpoint](../../viewpoints/functional/README.md) - Authentication features
-- [Information Viewpoint](../../viewpoints/information/README.md) - Data encryption
-- [Deployment Viewpoint](../../viewpoints/deployment/README.md) - Network security
+- [Functional Viewpoint](../../viewpoints/functional/README.md) - Authentication 功能
+- [Information Viewpoint](../../viewpoints/information/README.md) - 資料加密
+- [Deployment Viewpoint](../../viewpoints/deployment/README.md) - 網路 security
 
-## Quick Links
+## 快速連結
 
-- [Back to All Perspectives](../README.md)
-- [Main Documentation](../../README.md)
+- [回到所有 Perspectives](../README.md)
+- [主文檔](../../README.md)

@@ -1,189 +1,189 @@
-# Requirements Document: Documentation Redesign Project
+# 需求文檔：文檔重新設計項目
 
-## Introduction
+## 簡介
 
-This project aims to create comprehensive, well-structured documentation for the Enterprise E-Commerce Platform following the Rozanski & Woods methodology. The current `docs/` directory is largely empty, and we need to systematically document all architectural viewpoints and perspectives to ensure stakeholder alignment, maintainability, and quality assurance.
+本項目旨在使用 Rozanski & Woods 方法論為企業電子商務平台創建全面、組織良好的文檔。當前 `docs/` 目錄基本為空，我們需要系統地記錄所有架構視點和觀點，以確保利益相關者的一致性、可維護性和品質保證。
 
-## Glossary
+## 詞彙表
 
-- **Viewpoint**: A perspective on the system structure (WHAT and HOW the system is built)
-- **Perspective**: A quality attribute concern that cuts across multiple viewpoints (Security, Performance, etc.)
-- **Bounded Context**: A DDD concept representing a distinct business capability with clear boundaries
-- **Stakeholder**: Any person or group with interest in the system (developers, operations, business users, etc.)
-- **ADR**: Architecture Decision Record - documents important architectural decisions
-- **Quality Attribute Scenario**: A structured way to specify quality requirements (Source-Stimulus-Environment-Artifact-Response-Response Measure)
+- **Viewpoint**: 系統結構的視角 (系統如何構建)
+- **Perspective**: 跨越多個視點的品質屬性關注 (安全、效能等)
+- **Bounded Context**: DDD 概念，代表具有清晰邊界的不同業務能力
+- **Stakeholder**: 對系統有興趣的任何人或群體 (開發人員、運維、業務用戶等)
+- **ADR**: Architecture Decision Record - 記錄重要的架構決策
+- **Quality Attribute Scenario**: 指定品質要求的結構化方式 (Source-Stimulus-Environment-Artifact-Response-Response Measure)
 
-## Requirements
+## 需求
 
-### Requirement 1: Documentation Structure
+### 需求 1：文檔結構
 
-**User Story:** As a software architect, I want a well-organized documentation structure that follows Rozanski & Woods methodology, so that all stakeholders can easily find relevant information.
+**用戶故事：** 作為軟體架構師，我想要一個遵循 Rozanski & Woods 方法論的組織良好的文檔結構，以便所有利益相關者都能輕鬆找到相關信息。
 
-#### Acceptance Criteria
+#### 驗收準則
 
-1. WHEN the documentation structure is created, THE System SHALL organize documents into viewpoints and perspectives directories
-2. WHEN a stakeholder needs specific information, THE System SHALL provide clear navigation through README files and table of contents
-3. WHEN new documentation is added, THE System SHALL follow consistent naming conventions and file organization
-4. WHERE documentation references exist, THE System SHALL maintain cross-references between related documents
-5. WHILE maintaining the structure, THE System SHALL ensure each viewpoint and perspective has its own dedicated directory
+1. 當文檔結構被創建時，系統應將文檔組織到 Viewpoint 和 Perspective 目錄中
+2. 當利益相關者需要特定信息時，系統應通過 README 文件和目錄提供清晰的導航
+3. 當添加新文檔時，系統應遵循一致的命名約定和文件組織
+4. 其中存在文檔參考時，系統應維護相關文檔之間的交叉參考
+5. 在維護結構時，系統應確保每個 Viewpoint 和 Perspective 都有自己的專用目錄
 
-### Requirement 2: Viewpoint Documentation
+### 需求 2：Viewpoint 文檔
 
-**User Story:** As a development team member, I want complete documentation for all 7 architectural viewpoints, so that I understand the system structure from different angles.
+**用戶故事：** 作為開發團隊成員，我想要所有 7 個架構視點的完整文檔，以便我從不同角度理解系統結構。
 
-#### Acceptance Criteria
+#### 驗收準則
 
-1. WHEN documenting the Functional Viewpoint, THE System SHALL include bounded contexts, use cases, and functional capabilities
-2. WHEN documenting the Information Viewpoint, THE System SHALL include domain models, data ownership, and data flow diagrams
-3. WHEN documenting the Concurrency Viewpoint, THE System SHALL include concurrency strategies, synchronization mechanisms, and state management
-4. WHEN documenting the Development Viewpoint, THE System SHALL include module organization, dependency rules, and build processes
-5. WHEN documenting the Deployment Viewpoint, THE System SHALL include infrastructure architecture, network topology, and deployment procedures
-6. WHEN documenting the Operational Viewpoint, THE System SHALL include monitoring strategies, backup procedures, and operational runbooks
-7. WHEN documenting the Context Viewpoint, THE System SHALL include system boundaries, external integrations, and stakeholder maps
+1. 當記錄 Functional Viewpoint 時，系統應包括 Bounded Context、用例和功能能力
+2. 當記錄 Information Viewpoint 時，系統應包括域模型、資料所有權和資料流圖表
+3. 當記錄 Concurrency Viewpoint 時，系統應包括並發策略、同步化機制和狀態管理
+4. 當記錄 Development Viewpoint 時，系統應包括模組組織、依賴關係規則和構建流程
+5. 當記錄 Deployment Viewpoint 時，系統應包括基礎設施架構、網路拓撲和部署程序
+6. 當記錄 Operational Viewpoint 時，系統應包括監控策略、備份程序和運營 Runbook
+7. 當記錄 Context Viewpoint 時，系統應包括系統邊界、外部整合和利益相關者地圖
 
-### Requirement 3: Perspective Documentation
+### 需求 3：Perspective 文檔
 
-**User Story:** As a quality assurance engineer, I want documentation for all quality attribute perspectives, so that I can verify the system meets non-functional requirements.
+**用戶故事：** 作為品質保證工程師，我想要所有品質屬性觀點的文檔，以便我可以驗證系統是否滿足非功能需求。
 
-#### Acceptance Criteria
+#### 驗收準則
 
-1. WHEN documenting the Security Perspective, THE System SHALL include authentication mechanisms, authorization models, and data protection strategies
-2. WHEN documenting the Performance & Scalability Perspective, THE System SHALL include performance targets, scalability strategies, and optimization techniques
-3. WHEN documenting the Availability & Resilience Perspective, THE System SHALL include availability targets, fault tolerance patterns, and disaster recovery plans
-4. WHEN documenting the Evolution Perspective, THE System SHALL include extensibility points, technology upgrade strategies, and API versioning approaches
-5. WHEN documenting the Accessibility Perspective, THE System SHALL include UI accessibility standards, API usability guidelines, and documentation clarity requirements
-6. WHEN documenting the Development Resource Perspective, THE System SHALL include team structure, required skills, and development toolchain
-7. WHEN documenting the Internationalization Perspective, THE System SHALL include language support, localization strategies, and cultural adaptations
-8. WHEN documenting the Location Perspective, THE System SHALL include geographic distribution, data residency requirements, and latency optimization strategies
+1. 當記錄 Security Perspective 時，系統應包括認證機制、授權模型和資料保護策略
+2. 當記錄 Performance & Scalability Perspective 時，系統應包括效能目標、可伸縮性策略和優化技術
+3. 當記錄 Availability & Resilience Perspective 時，系統應包括可用性目標、容錯模式和災難恢復計劃
+4. 當記錄 Evolution Perspective 時，系統應包括擴展點、技術升級策略和 API 版本控制方法
+5. 當記錄 Accessibility Perspective 時，系統應包括 UI 可訪問性標準、API 易用性指南和文檔清晰度要求
+6. 當記錄 Development Resource Perspective 時，系統應包括團隊結構、所需技能和開發工具鏈
+7. 當記錄 Internationalization Perspective 時，系統應包括語言支援、本地化策略和文化適配
+8. 當記錄 Location Perspective 時，系統應包括地理分佈、資料駐留要求和延遲優化策略
 
-### Requirement 4: Diagram Integration
+### 需求 4：圖表整合
 
-**User Story:** As a technical writer, I want consistent diagram generation and integration, so that visual representations enhance text documentation.
+**用戶故事：** 作為技術作者，我想要一致的圖表生成和整合，以便視覺表示增強文字文檔。
 
-#### Acceptance Criteria
+#### 驗收準則
 
-1. WHEN creating architecture diagrams, THE System SHALL use PlantUML for complex UML diagrams and detailed system architecture
-2. WHEN creating simple flow diagrams, THE System SHALL use Mermaid for basic process flows and conceptual diagrams
-3. WHEN generating diagrams, THE System SHALL produce PNG format for GitHub documentation references
-4. WHEN organizing diagrams, THE System SHALL store PlantUML source files in `docs/diagrams/viewpoints/` and generated images in `docs/diagrams/generated/`
-5. WHILE maintaining diagrams, THE System SHALL ensure all diagram references in documentation point to generated PNG files
+1. 當創建架構圖表時，系統應使用 PlantUML 處理複雜的 UML 圖表和詳細的系統架構
+2. 當創建簡單流程圖表時，系統應使用 Mermaid 處理基本的流程圖和概念圖表
+3. 當生成圖表時，系統應為 GitHub 文檔參考生成 PNG 格式
+4. 當組織圖表時，系統應將 PlantUML 源文件存儲在 `docs/diagrams/viewpoints/` 中，生成的圖像存儲在 `docs/diagrams/generated/` 中
+5. 在維護圖表時，系統應確保文檔中的所有圖表參考指向生成的 PNG 文件
 
-### Requirement 5: Architecture Decision Records
+### 需求 5：架構決策記錄
 
-**User Story:** As a senior developer, I want Architecture Decision Records (ADRs) for all major architectural decisions, so that I understand the rationale behind design choices.
+**用戶故事：** 作為高級開發人員，我想要所有主要架構決策的 ADR，以便我了解設計選擇背後的理由。
 
-#### Acceptance Criteria
+#### 驗收準則
 
-1. WHEN documenting an architectural decision, THE System SHALL create an ADR following the standard template
-2. WHEN an ADR is created, THE System SHALL include context, decision drivers, considered options, decision outcome, and consequences
-3. WHEN decisions are related, THE System SHALL cross-reference related ADRs
-4. WHEN a decision is superseded, THE System SHALL update the ADR status and link to the new decision
-5. WHILE organizing ADRs, THE System SHALL maintain a chronological index in `docs/architecture/adrs/`
+1. 當記錄架構決策時，系統應按照標準模板創建 ADR
+2. 當創建 ADR 時，系統應包括背景、決策驅動因素、考慮的選項、決策結果和影響
+3. 當決策相關時，系統應交叉參考相關 ADR
+4. 當決策被替代時，系統應更新 ADR 狀態並連結到新決策
+5. 在組織 ADR 時，系統應在 `docs/architecture/adrs/` 中維護時間順序索引
 
-### Requirement 6: API Documentation
+### 需求 6：API 文檔
 
-**User Story:** As an API consumer, I want comprehensive API documentation with examples, so that I can integrate with the system effectively.
+**用戶故事：** 作為 API 使用者，我想要包含範例的全面 API 文檔，以便我可以有效地與系統集成。
 
-#### Acceptance Criteria
+#### 驗收準則
 
-1. WHEN documenting REST APIs, THE System SHALL include endpoint descriptions, request/response schemas, and example payloads
-2. WHEN documenting authentication, THE System SHALL include authentication flows, token formats, and security requirements
-3. WHEN documenting error handling, THE System SHALL include error codes, error messages, and troubleshooting guidance
-4. WHEN providing examples, THE System SHALL include curl commands, code samples, and Postman collections
-5. WHILE maintaining API docs, THE System SHALL ensure OpenAPI/Swagger specifications are synchronized with documentation
+1. 當記錄 REST API 時，系統應包括端點描述、請求/回應架構和範例有效負載
+2. 當記錄認證時，系統應包括認證流程、令牌格式和安全要求
+3. 當記錄錯誤處理時，系統應包括錯誤代碼、錯誤訊息和故障排除指南
+4. 當提供範例時，系統應包括 curl 命令、代碼範例和 Postman 集合
+5. 在維護 API 文檔時，系統應確保 OpenAPI/Swagger 規範與文檔同步
 
-### Requirement 7: Operational Documentation
+### 需求 7：運營文檔
 
-**User Story:** As an operations engineer, I want detailed operational runbooks and procedures, so that I can effectively operate and troubleshoot the system.
+**用戶故事：** 作為運營工程師，我想要詳細的運營 Runbook 和程序，以便我可以有效地運營和故障排除系統。
 
-#### Acceptance Criteria
+#### 驗收準則
 
-1. WHEN documenting deployment procedures, THE System SHALL include step-by-step instructions with verification steps
-2. WHEN documenting monitoring, THE System SHALL include key metrics, alert thresholds, and dashboard configurations
-3. WHEN documenting incident response, THE System SHALL include troubleshooting guides, escalation procedures, and recovery steps
-4. WHEN documenting backup and recovery, THE System SHALL include backup schedules, restoration procedures, and RTO/RPO targets
-5. WHILE maintaining operational docs, THE System SHALL ensure runbooks are tested and validated regularly
+1. 當記錄部署程序時，系統應包括分步驟說明和驗證步驟
+2. 當記錄監控時，系統應包括關鍵指標、警報閾值和儀表板配置
+3. 當記錄事故回應時，系統應包括故障排除指南、上報程序和恢復步驟
+4. 當記錄備份和恢復時，系統應包括備份計劃、恢復程序和 RTO/RPO 目標
+5. 在維護運營文檔時，系統應確保 Runbook 定期進行測試和驗證
 
-### Requirement 8: Development Guides
+### 需求 8：開發指南
 
-**User Story:** As a new developer, I want comprehensive development guides, so that I can quickly onboard and contribute to the project.
+**用戶故事：** 作為新開發人員，我想要全面的開發指南，以便我可以快速入職並對項目做出貢獻。
 
-#### Acceptance Criteria
+#### 驗收準則
 
-1. WHEN onboarding new developers, THE System SHALL provide setup instructions for local development environment
-2. WHEN explaining the codebase, THE System SHALL include module organization, coding standards, and architectural patterns
-3. WHEN describing the development workflow, THE System SHALL include branching strategy, code review process, and testing requirements
-4. WHEN providing examples, THE System SHALL include sample implementations for common tasks
-5. WHILE maintaining dev guides, THE System SHALL ensure examples are tested and up-to-date
+1. 當入職新開發人員時，系統應提供本地開發環境的設置說明
+2. 當解釋代碼庫時，系統應包括模組組織、代碼標準和架構模式
+3. 當描述開發工作流程時，系統應包括分支策略、代碼審查流程和測試要求
+4. 當提供範例時，系統應包括常見任務的範例實現
+5. 在維護開發指南時，系統應確保範例經過測試且是最新的
 
-### Requirement 9: Testing Documentation
+### 需求 9：測試文檔
 
-**User Story:** As a QA engineer, I want comprehensive testing documentation, so that I understand the testing strategy and can contribute effectively.
+**用戶故事：** 作為品質保證工程師，我想要全面的測試文檔，以便我了解測試策略並有效貢獻。
 
-#### Acceptance Criteria
+#### 驗收準則
 
-1. WHEN documenting the testing strategy, THE System SHALL include test pyramid, test types, and coverage requirements
-2. WHEN documenting BDD scenarios, THE System SHALL include Gherkin feature files, step definitions, and test data management
-3. WHEN documenting test environments, THE System SHALL include environment-specific testing approaches (local, staging, production)
-4. WHEN documenting performance testing, THE System SHALL include load testing scenarios, performance benchmarks, and optimization guidelines
-5. WHILE maintaining test docs, THE System SHALL ensure test examples are executable and validated
+1. 當記錄測試策略時，系統應包括測試金字塔、測試類型和覆蓋率要求
+2. 當記錄 BDD 場景時，系統應包括 Gherkin 功能文件、步驟定義和測試資料管理
+3. 當記錄測試環境時，系統應包括特定於環境的測試方法 (本地、暫存、生產)
+4. 當記錄效能測試時，系統應包括負載測試場景、效能基準和優化指南
+5. 在維護測試文檔時，系統應確保測試範例可執行和驗證
 
-### Requirement 10: Cross-Reference and Navigation
+### 需求 10：交叉參考和導航
 
-**User Story:** As any stakeholder, I want easy navigation between related documents, so that I can find information efficiently.
+**用戶故事：** 作為任何利益相關者，我想要相關文檔之間的輕鬆導航，以便我可以有效地查找信息。
 
-#### Acceptance Criteria
+#### 驗收準則
 
-1. WHEN viewing any document, THE System SHALL provide clear links to related documents
-2. WHEN navigating the documentation, THE System SHALL provide a comprehensive table of contents in the main README
-3. WHEN searching for information, THE System SHALL provide a searchable index of key topics
-4. WHEN viewing diagrams, THE System SHALL provide links back to the source documentation
-5. WHILE maintaining navigation, THE System SHALL ensure all cross-references are valid and up-to-date
+1. 當查看任何文檔時，系統應提供相關文檔的清晰連結
+2. 當導航文檔時，系統應在主 README 中提供全面的目錄
+3. 當搜尋信息時，系統應提供關鍵主題的可搜尋索引
+4. 當查看圖表時，系統應提供回到源文檔的連結
+5. 在維護導航時，系統應確保所有交叉參考都有效且是最新的
 
-### Requirement 11: Documentation Quality Standards
+### 需求 11：文檔品質標準
 
-**User Story:** As a documentation maintainer, I want clear quality standards for documentation, so that all contributions maintain consistent quality.
+**用戶故事：** 作為文檔維護者，我想要清晰的文檔品質標準，以便所有貢獻都保持一致的品質。
 
-#### Acceptance Criteria
+#### 驗收準則
 
-1. WHEN writing documentation, THE System SHALL follow consistent formatting, style, and tone
-2. WHEN including code examples, THE System SHALL ensure examples are tested and functional
-3. WHEN creating diagrams, THE System SHALL ensure diagrams are clear, properly labeled, and follow standard notation
-4. WHEN documenting technical details, THE System SHALL ensure accuracy and completeness
-5. WHILE reviewing documentation, THE System SHALL use automated checks for broken links, spelling, and formatting
+1. 當編寫文檔時，系統應遵循一致的格式、風格和語氣
+2. 當包括代碼範例時，系統應確保範例經過測試且可運行
+3. 當創建圖表時，系統應確保圖表清晰、正確標籤和遵循標準表示法
+4. 當記錄技術細節時，系統應確保準確性和完整性
+5. 在檢查文檔時，系統應使用自動化檢查斷開的連結、拼寫和格式
 
-### Requirement 12: Documentation Maintenance
+### 需求 12：文檔維護
 
-**User Story:** As a project maintainer, I want a sustainable documentation maintenance process, so that documentation stays current with the codebase.
+**用戶故事：** 作為項目維護者，我想要可持續的文檔維護流程，以便文檔與代碼庫保持最新。
 
-#### Acceptance Criteria
+#### 驗收準則
 
-1. WHEN code changes affect architecture, THE System SHALL require corresponding documentation updates
-2. WHEN documentation becomes outdated, THE System SHALL provide mechanisms to identify and flag stale content
-3. WHEN reviewing pull requests, THE System SHALL include documentation review as part of the process
-4. WHEN releasing new versions, THE System SHALL ensure documentation is updated and versioned accordingly
-5. WHILE maintaining documentation, THE System SHALL use automated hooks to detect documentation drift
+1. 當代碼變更影響架構時，系統應要求相應的文檔更新
+2. 當文檔變得過時時，系統應提供識別和標記陳舊內容的機制
+3. 當審查 Pull Request 時，系統應將文檔審查作為流程的一部分
+4. 當發布新版本時，系統應確保文檔已更新並版本化
+5. 在維護文檔時，系統應使用自動化鉤子檢測文檔漂移
 
-## Constraints
+## 約束條件
 
-- Documentation MUST follow Rozanski & Woods methodology structure
-- All diagrams MUST be generated from source files (PlantUML or Mermaid)
-- Documentation MUST be written in English with clear, professional language
-- All code examples MUST be tested and functional
-- Documentation MUST be stored in the `docs/` directory with clear organization
-- Cross-references MUST use relative paths for portability
-- Documentation MUST be version-controlled alongside code
-- Automated checks MUST validate documentation quality (links, formatting, etc.)
+- 文檔必須遵循 Rozanski & Woods 方法論結構
+- 所有圖表必須從源文件生成 (PlantUML 或 Mermaid)
+- 文檔必須用清晰、專業的繁體中文編寫
+- 所有代碼範例必須經過測試且可運行
+- 文檔必須存儲在 `docs/` 目錄中，組織清晰
+- 交叉參考必須使用相對路徑以便於移植
+- 文檔必須與代碼一起進行版本控制
+- 自動化檢查必須驗證文檔品質 (連結、格式等)
 
-## Success Criteria
+## 成功準則
 
-- All 7 viewpoints have complete documentation
-- All 8 perspectives have complete documentation
-- At least 20 ADRs documenting major architectural decisions
-- Complete API documentation with examples
-- Operational runbooks for all critical procedures
-- Development guides enabling new developer onboarding in < 1 week
-- All diagrams generated from source and properly referenced
-- Zero broken links in documentation
-- Documentation review included in PR process
-- Automated documentation quality checks in CI/CD pipeline
+- 所有 7 個視點都有完整文檔
+- 所有 8 個觀點都有完整文檔
+- 至少 20 個 ADR 記錄主要架構決策
+- 包含範例的完整 API 文檔
+- 所有關鍵程序的運營 Runbook
+- 開發指南使新開發人員可在 1 週內入職
+- 所有圖表從源代碼生成並正確參考
+- 文檔中沒有斷開的連結
+- PR 流程中包括文檔審查
+- CI/CD 管道中有自動化文檔品質檢查

@@ -1,55 +1,55 @@
-# REST API Documentation
+# REST API 文件
 
-## Overview
+## 概述
 
-The Enterprise E-Commerce Platform provides a comprehensive RESTful API following OpenAPI 3.0 specification. The API is designed using Domain-Driven Design (DDD) principles and organized around bounded contexts.
+企業級電子商務平台提供遵循 OpenAPI 3.0 規範的完整 RESTful API。API 採用領域驅動設計 (DDD) 原則設計,並依限界上下文組織。
 
-## API Design Principles
+## API 設計原則
 
-### RESTful Architecture
+### RESTful 架構
 
-Our API follows REST (Representational State Transfer) architectural principles:
+我們的 API 遵循 REST (Representational State Transfer) 架構原則:
 
-- **Resource-Based URLs**: URLs represent resources, not actions
-- **Standard HTTP Methods**: GET, POST, PUT, PATCH, DELETE
-- **Stateless Communication**: Each request contains all necessary information
-- **Standard HTTP Status Codes**: Consistent use of status codes
-- **JSON Format**: All requests and responses use JSON
+- **資源導向 URL**: URL 代表資源,而非動作
+- **標準 HTTP Method**: GET、POST、PUT、PATCH、DELETE
+- **無狀態通訊**: 每個 request 包含所有必要資訊
+- **標準 HTTP 狀態碼**: 一致使用狀態碼
+- **JSON 格式**: 所有 request 和 response 使用 JSON
 
-### Design Guidelines
+### 設計指南
 
-**URL Naming Conventions**:
+**URL 命名慣例**:
 
-- Use nouns, not verbs: `/customers` not `/getCustomers`
-- Use plural nouns: `/customers` not `/customer`
-- Use kebab-case: `/order-items` not `/orderItems`
-- Nest resources logically: `/customers/{id}/orders`
-- Keep URLs simple and intuitive
+- 使用名詞,而非動詞: `/customers` 而非 `/getCustomers`
+- 使用複數名詞: `/customers` 而非 `/customer`
+- 使用 kebab-case: `/order-items` 而非 `/orderItems`
+- 合理地巢狀資源: `/customers/{id}/orders`
+- 保持 URL 簡潔直觀
 
-**HTTP Methods**:
+**HTTP Method**:
 
-- `GET`: Retrieve resource(s) - Safe and idempotent
-- `POST`: Create new resource - Not idempotent
-- `PUT`: Update entire resource - Idempotent
-- `PATCH`: Partial update - Idempotent
-- `DELETE`: Remove resource - Idempotent
+- `GET`: 檢索資源 - 安全且具冪等性
+- `POST`: 建立新資源 - 非冪等性
+- `PUT`: 更新整個資源 - 冪等性
+- `PATCH`: 部分更新 - 冪等性
+- `DELETE`: 刪除資源 - 冪等性
 
-**HTTP Status Codes**:
+**HTTP 狀態碼**:
 
-- `200 OK`: Successful GET, PUT, PATCH
-- `201 Created`: Successful POST
-- `204 No Content`: Successful DELETE
-- `400 Bad Request`: Validation error, malformed request
-- `401 Unauthorized`: Authentication required
-- `403 Forbidden`: Authorization failed
-- `404 Not Found`: Resource not found
-- `409 Conflict`: Business rule violation
-- `422 Unprocessable Entity`: Semantic validation error
-- `500 Internal Server Error`: System error
+- `200 OK`: 成功的 GET、PUT、PATCH
+- `201 Created`: 成功的 POST
+- `204 No Content`: 成功的 DELETE
+- `400 Bad Request`: 驗證錯誤、格式錯誤的 request
+- `401 Unauthorized`: 需要身份驗證
+- `403 Forbidden`: 授權失敗
+- `404 Not Found`: 找不到資源
+- `409 Conflict`: 違反業務規則
+- `422 Unprocessable Entity`: 語義驗證錯誤
+- `500 Internal Server Error`: 系統錯誤
 
-## Base URL and Versioning
+## Base URL 和版本控制
 
-### Base URLs
+### Base URL
 
 **Production**:
 
@@ -69,23 +69,23 @@ https://api-staging.ecommerce.com
 http://localhost:8080
 ```
 
-### API Versioning
+### API 版本控制
 
-The API uses URL-based versioning to ensure backward compatibility:
+API 使用基於 URL 的版本控制以確保向後相容性:
 
 ```text
 /api/v1/customers
 /api/v2/customers
 ```
 
-**Versioning Strategy**:
+**版本控制策略**:
 
-- Major version in URL path (`v1`, `v2`)
-- Backward compatibility maintained for at least 2 versions
-- Deprecation warnings provided 6 months before removal
-- Breaking changes require new major version
+- 在 URL 路徑中使用主版本 (`v1`、`v2`)
+- 至少維持 2 個版本的向後相容性
+- 移除前 6 個月提供廢棄警告
+- 破壞性變更需要新的主版本
 
-**Deprecation Headers**:
+**廢棄標頭**:
 
 ```http
 Deprecation: true
@@ -93,29 +93,29 @@ Sunset: 2026-12-31T23:59:59Z
 Link: </api/v2/customers>; rel="successor-version"
 ```
 
-## API Structure
+## API 結構
 
-### Bounded Contexts
+### 限界上下文
 
-The API is organized around the following bounded contexts:
+API 依以下限界上下文組織:
 
-| Context | Base Path | Description |
-|---------|-----------|-------------|
-| Customer | `/api/v1/customers` | Customer management and profiles |
-| Order | `/api/v1/orders` | Order processing and management |
-| Product | `/api/v1/products` | Product catalog and inventory |
-| Shopping Cart | `/api/v1/carts` | Shopping cart operations |
-| Payment | `/api/v1/payments` | Payment processing |
-| Promotion | `/api/v1/promotions` | Promotions and discounts |
-| Inventory | `/api/v1/inventory` | Inventory management |
-| Logistics | `/api/v1/logistics` | Shipping and delivery |
-| Notification | `/api/v1/notifications` | Notifications and alerts |
+| Context | Base Path | 描述 |
+|---------|-----------|------|
+| Customer | `/api/v1/customers` | 客戶管理和資料 |
+| Order | `/api/v1/orders` | 訂單處理和管理 |
+| Product | `/api/v1/products` | 產品目錄和庫存 |
+| Shopping Cart | `/api/v1/carts` | 購物車操作 |
+| Payment | `/api/v1/payments` | 付款處理 |
+| Promotion | `/api/v1/promotions` | 促銷和折扣 |
+| Inventory | `/api/v1/inventory` | 庫存管理 |
+| Logistics | `/api/v1/logistics` | 運送和配送 |
+| Notification | `/api/v1/notifications` | 通知和提醒 |
 
-### Standard Response Format
+### 標準回應格式
 
-All API responses follow a consistent format:
+所有 API response 遵循一致的格式:
 
-**Success Response**:
+**成功回應**:
 
 ```json
 {
@@ -132,7 +132,7 @@ All API responses follow a consistent format:
 }
 ```
 
-**Error Response**:
+**錯誤回應**:
 
 ```json
 {
@@ -152,9 +152,9 @@ All API responses follow a consistent format:
 }
 ```
 
-### Pagination
+### 分頁
 
-List endpoints support pagination using query parameters:
+列表 endpoint 支援使用查詢參數進行分頁:
 
 **Request**:
 
@@ -190,17 +190,17 @@ GET /api/v1/customers?page=0&size=20&sort=createdAt,desc
 }
 ```
 
-**Pagination Parameters**:
+**分頁參數**:
 
-- `page`: Page number (0-based, default: 0)
-- `size`: Page size (default: 20, max: 100)
-- `sort`: Sort field and direction (e.g., `createdAt,desc`)
+- `page`: 頁碼 (從 0 開始,預設: 0)
+- `size`: 頁面大小 (預設: 20,最大: 100)
+- `sort`: 排序欄位和方向 (例如 `createdAt,desc`)
 
-## Interactive Documentation
+## 互動式文件
 
 ### Swagger UI
 
-Access interactive API documentation at:
+在以下位置存取互動式 API 文件:
 
 **Development**:
 
@@ -216,50 +216,50 @@ https://api.ecommerce.com/swagger-ui.html
 
 ### OpenAPI Specification
 
-Download the OpenAPI 3.0 specification:
+下載 OpenAPI 3.0 規格:
 
-**JSON Format**:
+**JSON 格式**:
 
 ```yaml
 http://localhost:8080/v3/api-docs
 ```
 
-**YAML Format**:
+**YAML 格式**:
 
 ```yaml
 http://localhost:8080/v3/api-docs.yaml
 ```
 
-## API Endpoints
+## API Endpoint
 
-### Core APIs
+### 核心 API
 
-- [Authentication](authentication.md) - JWT-based authentication
-- [Error Handling](error-handling.md) - Error codes and troubleshooting
-- [Customer API](endpoints/customers.md) - Customer management
-- [Order API](endpoints/orders.md) - Order processing
-- [Product API](endpoints/products.md) - Product catalog
-- [Payment API](endpoints/payments.md) - Payment processing
+- [身份驗證](authentication.md) - 基於 JWT 的身份驗證
+- [錯誤處理](error-handling.md) - 錯誤代碼和疑難排解
+- [Customer API](endpoints/customers.md) - 客戶管理
+- [Order API](endpoints/orders.md) - 訂單處理
+- [Product API](endpoints/products.md) - 產品目錄
+- [Payment API](endpoints/payments.md) - 付款處理
 
-### Additional APIs
+### 其他 API
 
-- [Shopping Cart API](endpoints/shopping-cart.md) - Cart operations
-- [Promotion API](endpoints/promotions.md) - Promotions and discounts
-- [Inventory API](endpoints/inventory.md) - Inventory management
-- [Logistics API](endpoints/logistics.md) - Shipping and delivery
-- [Notification API](endpoints/notifications.md) - Notifications
+- [Shopping Cart API](endpoints/shopping-cart.md) - 購物車操作
+- [Promotion API](endpoints/promotions.md) - 促銷和折扣
+- [Inventory API](endpoints/inventory.md) - 庫存管理
+- [Logistics API](endpoints/logistics.md) - 運送和配送
+- [Notification API](endpoints/notifications.md) - 通知
 
-## Getting Started
+## 開始使用
 
-### Prerequisites
+### 先決條件
 
-- Valid API credentials (API key or JWT token)
-- HTTP client (curl, Postman, or programming language HTTP library)
-- Understanding of REST principles
+- 有效的 API 憑證 (API key 或 JWT token)
+- HTTP client (curl、Postman 或程式語言的 HTTP library)
+- 了解 REST 原則
 
-### Quick Start
+### 快速開始
 
-1. **Obtain Authentication Token**:
+1. **取得身份驗證 Token**:
 
    ```bash
    curl -X POST https://api.ecommerce.com/api/v1/auth/login \
@@ -270,14 +270,14 @@ http://localhost:8080/v3/api-docs.yaml
      }'
    ```
 
-2. **Make Authenticated Request**:
+2. **發送已驗證的 Request**:
 
    ```bash
    curl -X GET https://api.ecommerce.com/api/v1/customers/me \
      -H "Authorization: Bearer YOUR_JWT_TOKEN"
    ```
 
-3. **Create a Resource**:
+3. **建立資源**:
 
    ```bash
    curl -X POST https://api.ecommerce.com/api/v1/customers \
@@ -294,33 +294,33 @@ http://localhost:8080/v3/api-docs.yaml
      }'
    ```
 
-### Testing Tools
+### 測試工具
 
 **Postman Collection**:
 
-- Download: [Postman Collection](postman/ecommerce-api.json)
-- Import into Postman for easy testing
+- 下載: [Postman Collection](postman/ecommerce-api.json)
+- 匯入 Postman 以便於測試
 
-**curl Examples**:
+**curl 範例**:
 
-- See individual endpoint documentation for curl examples
+- 參見各別 endpoint 文件的 curl 範例
 
-**Client SDKs**:
+**Client SDK**:
 
-- Generate client SDKs from OpenAPI specification
-- Supported languages: Java, JavaScript, Python, Go
+- 從 OpenAPI specification 產生 client SDK
+- 支援的語言: Java、JavaScript、Python、Go
 
-## Rate Limiting
+## 流量限制
 
-API requests are rate-limited to ensure fair usage:
+API request 受流量限制以確保公平使用:
 
-**Limits**:
+**限制**:
 
-- Authenticated users: 1000 requests per hour
-- Unauthenticated users: 100 requests per hour
-- Burst limit: 20 requests per second
+- 已驗證使用者: 每小時 1000 次 request
+- 未驗證使用者: 每小時 100 次 request
+- 突發限制: 每秒 20 次 request
 
-**Rate Limit Headers**:
+**流量限制標頭**:
 
 ```http
 X-RateLimit-Limit: 1000
@@ -328,7 +328,7 @@ X-RateLimit-Remaining: 999
 X-RateLimit-Reset: 1635789600
 ```
 
-**Rate Limit Exceeded Response**:
+**超過流量限制回應**:
 
 ```http
 HTTP/1.1 429 Too Many Requests
@@ -344,68 +344,68 @@ Retry-After: 3600
 }
 ```
 
-## CORS Configuration
+## CORS 配置
 
-Cross-Origin Resource Sharing (CORS) is configured to allow requests from approved origins:
+跨來源資源共用 (CORS) 配置為允許來自批准來源的 request:
 
-**Allowed Origins**:
+**允許的來源**:
 
 - `https://www.ecommerce.com`
 - `https://admin.ecommerce.com`
 - `http://localhost:3000` (development)
 
-**Allowed Methods**:
+**允許的 Method**:
 
-- GET, POST, PUT, PATCH, DELETE, OPTIONS
+- GET、POST、PUT、PATCH、DELETE、OPTIONS
 
-**Allowed Headers**:
+**允許的標頭**:
 
-- Authorization, Content-Type, X-Request-ID
+- Authorization、Content-Type、X-Request-ID
 
-## Best Practices
+## 最佳實踐
 
-### Request Best Practices
+### Request 最佳實踐
 
-1. **Use Appropriate HTTP Methods**: Use GET for reads, POST for creates, PUT/PATCH for updates
-2. **Include Request ID**: Add `X-Request-ID` header for tracing
-3. **Set Content-Type**: Always set `Content-Type: application/json`
-4. **Handle Errors Gracefully**: Check status codes and handle errors appropriately
-5. **Implement Retry Logic**: Use exponential backoff for retries
-6. **Cache Responses**: Cache GET responses when appropriate
+1. **使用適當的 HTTP Method**: 讀取使用 GET,建立使用 POST,更新使用 PUT/PATCH
+2. **包含 Request ID**: 新增 `X-Request-ID` 標頭以進行追蹤
+3. **設定 Content-Type**: 始終設定 `Content-Type: application/json`
+4. **優雅地處理錯誤**: 檢查狀態碼並適當地處理錯誤
+5. **實作重試邏輯**: 使用指數退避進行重試
+6. **快取回應**: 適當時快取 GET response
 
-### Security Best Practices
+### 安全性最佳實踐
 
-1. **Use HTTPS**: Always use HTTPS in production
-2. **Secure Tokens**: Store JWT tokens securely (not in localStorage)
-3. **Validate Input**: Validate all input on client side
-4. **Handle Sensitive Data**: Never log sensitive data
-5. **Implement Timeout**: Set reasonable request timeouts
-6. **Monitor API Usage**: Track API usage and errors
+1. **使用 HTTPS**: 在 production 中始終使用 HTTPS
+2. **保護 Token**: 安全地儲存 JWT token (不要儲存在 localStorage)
+3. **驗證輸入**: 在客戶端驗證所有輸入
+4. **處理敏感資料**: 絕不記錄敏感資料
+5. **實作逾時**: 設定合理的 request 逾時
+6. **監控 API 使用**: 追蹤 API 使用和錯誤
 
-## Support and Resources
+## 支援和資源
 
-### Documentation
+### 文件
 
-- [API Reference](endpoints/) - Detailed endpoint documentation
-- [Authentication Guide](authentication.md) - Authentication and authorization
-- [Error Handling](error-handling.md) - Error codes and troubleshooting
-- [Postman Collection](postman/) - Ready-to-use API collection
+- [API 參考](endpoints/) - 詳細的 endpoint 文件
+- [身份驗證指南](authentication.md) - 身份驗證和授權
+- [錯誤處理](error-handling.md) - 錯誤代碼和疑難排解
+- [Postman Collection](postman/) - 可直接使用的 API collection
 
-### Support Channels
+### 支援管道
 
 - **Email**: <api-support@ecommerce.com>
-- **Documentation**: <https://docs.ecommerce.com>
-- **Status Page**: <https://status.ecommerce.com>
+- **文件**: <https://docs.ecommerce.com>
+- **狀態頁**: <https://status.ecommerce.com>
 - **GitHub Issues**: <https://github.com/ecommerce/api/issues>
 
-### Related Documentation
+### 相關文件
 
-- [Architecture Decision Records](../../architecture/adrs/) - API design decisions
-- [Domain Events](../events/) - Event-driven architecture
-- [Development Guide](../../development/) - Developer resources
+- [架構決策記錄](../../architecture/adrs/) - API 設計決策
+- [Domain Event](../events/) - Event-driven 架構
+- [開發指南](../../development/) - 開發人員資源
 
 ---
 
-**API Version**: v1  
-**Last Updated**: 2025-10-25  
-**OpenAPI Specification**: [Download](http://localhost:8080/v3/api-docs)
+**API 版本**: v1
+**最後更新**: 2025-10-25
+**OpenAPI Specification**: [下載](http://localhost:8080/v3/api-docs)

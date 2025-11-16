@@ -1,21 +1,21 @@
-# Error Handling
+# 錯誤處理
 
-## Overview
+## 概述
 
-The Enterprise E-Commerce Platform API uses standard HTTP status codes and provides detailed error information in a consistent format. This document describes error response formats, error codes, and troubleshooting guidance.
+企業級電子商務平台 API 使用標準 HTTP 狀態碼,並以一致的格式提供詳細的錯誤資訊。本文件描述錯誤回應格式、錯誤代碼和疑難排解指南。
 
-## Error Response Format
+## 錯誤回應格式
 
-### Standard Error Response
+### 標準錯誤回應
 
-All error responses follow this consistent structure:
+所有錯誤回應遵循此一致的結構:
 
 ```json
 {
   "errors": [
     {
       "code": "ERROR_CODE",
-      "message": "Human-readable error message",
+      "message": "人類可讀的錯誤訊息",
       "field": "fieldName",
       "rejectedValue": "invalid-value"
     }
@@ -28,20 +28,20 @@ All error responses follow this consistent structure:
 }
 ```
 
-**Fields**:
+**欄位**:
 
-- `errors`: Array of error objects
-- `code`: Machine-readable error code
-- `message`: Human-readable error description
-- `field`: Field name (for validation errors)
-- `rejectedValue`: The invalid value that was rejected
-- `metadata.requestId`: Unique request identifier for tracking
-- `metadata.timestamp`: Error occurrence timestamp
-- `metadata.version`: API version
+- `errors`: 錯誤物件陣列
+- `code`: 機器可讀的錯誤代碼
+- `message`: 人類可讀的錯誤說明
+- `field`: 欄位名稱 (用於驗證錯誤)
+- `rejectedValue`: 被拒絕的無效值
+- `metadata.requestId`: 唯一 request 識別碼用於追蹤
+- `metadata.timestamp`: 錯誤發生時間戳
+- `metadata.version`: API 版本
 
-### Multiple Errors
+### 多個錯誤
 
-When multiple validation errors occur, all errors are returned:
+當發生多個驗證錯誤時,會回傳所有錯誤:
 
 ```json
 {
@@ -67,54 +67,54 @@ When multiple validation errors occur, all errors are returned:
 }
 ```
 
-## HTTP Status Codes
+## HTTP 狀態碼
 
-### Success Codes (2xx)
+### 成功碼 (2xx)
 
-| Code | Status | Description | Usage |
-|------|--------|-------------|-------|
-| 200 | OK | Request successful | GET, PUT, PATCH |
-| 201 | Created | Resource created | POST |
-| 204 | No Content | Success with no response body | DELETE |
+| 代碼 | 狀態 | 描述 | 使用時機 |
+|------|------|------|----------|
+| 200 | OK | Request 成功 | GET、PUT、PATCH |
+| 201 | Created | 資源已建立 | POST |
+| 204 | No Content | 成功但無回應內容 | DELETE |
 
-### Client Error Codes (4xx)
+### 客戶端錯誤碼 (4xx)
 
-| Code | Status | Description | Usage |
-|------|--------|-------------|-------|
-| 400 | Bad Request | Invalid request format or validation error | Malformed JSON, validation failures |
-| 401 | Unauthorized | Authentication required or failed | Missing/invalid token |
-| 403 | Forbidden | Insufficient permissions | Authorization failure |
-| 404 | Not Found | Resource not found | Invalid resource ID |
-| 405 | Method Not Allowed | HTTP method not supported | Wrong HTTP method |
-| 409 | Conflict | Business rule violation | Duplicate resource, state conflict |
-| 422 | Unprocessable Entity | Semantic validation error | Business logic validation |
-| 429 | Too Many Requests | Rate limit exceeded | Too many requests |
+| 代碼 | 狀態 | 描述 | 使用時機 |
+|------|------|------|----------|
+| 400 | Bad Request | 無效的 request 格式或驗證錯誤 | 格式錯誤的 JSON、驗證失敗 |
+| 401 | Unauthorized | 需要身份驗證或身份驗證失敗 | 缺少/無效的 token |
+| 403 | Forbidden | 權限不足 | 授權失敗 |
+| 404 | Not Found | 找不到資源 | 無效的資源 ID |
+| 405 | Method Not Allowed | 不支援的 HTTP method | 錯誤的 HTTP method |
+| 409 | Conflict | 違反業務規則 | 重複資源、狀態衝突 |
+| 422 | Unprocessable Entity | 語義驗證錯誤 | 業務邏輯驗證 |
+| 429 | Too Many Requests | 超過流量限制 | 太多 request |
 
-### Server Error Codes (5xx)
+### 伺服器錯誤碼 (5xx)
 
-| Code | Status | Description | Usage |
-|------|--------|-------------|-------|
-| 500 | Internal Server Error | Unexpected server error | System failures |
-| 502 | Bad Gateway | Upstream service error | External service failure |
-| 503 | Service Unavailable | Service temporarily unavailable | Maintenance, overload |
-| 504 | Gateway Timeout | Upstream service timeout | External service timeout |
+| 代碼 | 狀態 | 描述 | 使用時機 |
+|------|------|------|----------|
+| 500 | Internal Server Error | 未預期的伺服器錯誤 | 系統故障 |
+| 502 | Bad Gateway | 上游服務錯誤 | 外部服務故障 |
+| 503 | Service Unavailable | 服務暫時無法使用 | 維護中、過載 |
+| 504 | Gateway Timeout | 上游服務逾時 | 外部服務逾時 |
 
-## Error Codes
+## 錯誤代碼
 
-### Authentication Errors (AUTH_*)
+### 身份驗證錯誤 (AUTH_*)
 
-| Code | HTTP Status | Description | Solution |
-|------|-------------|-------------|----------|
-| `AUTH_INVALID_CREDENTIALS` | 401 | Invalid email or password | Check credentials |
-| `AUTH_TOKEN_EXPIRED` | 401 | Access token expired | Refresh token |
-| `AUTH_TOKEN_INVALID` | 401 | Malformed or invalid token | Re-authenticate |
-| `AUTH_REFRESH_TOKEN_EXPIRED` | 401 | Refresh token expired | Re-authenticate |
-| `AUTH_REFRESH_TOKEN_INVALID` | 401 | Invalid refresh token | Re-authenticate |
-| `AUTH_ACCOUNT_LOCKED` | 401 | Account locked due to failed attempts | Wait or contact support |
-| `AUTH_ACCOUNT_DISABLED` | 401 | Account has been disabled | Contact support |
-| `AUTH_EMAIL_NOT_VERIFIED` | 401 | Email not verified | Verify email |
+| 代碼 | HTTP 狀態 | 描述 | 解決方案 |
+|------|-----------|------|----------|
+| `AUTH_INVALID_CREDENTIALS` | 401 | 無效的 email 或密碼 | 檢查憑證 |
+| `AUTH_TOKEN_EXPIRED` | 401 | Access token 過期 | 更新 token |
+| `AUTH_TOKEN_INVALID` | 401 | 格式錯誤或無效的 token | 重新驗證 |
+| `AUTH_REFRESH_TOKEN_EXPIRED` | 401 | Refresh token 過期 | 重新驗證 |
+| `AUTH_REFRESH_TOKEN_INVALID` | 401 | 無效的 refresh token | 重新驗證 |
+| `AUTH_ACCOUNT_LOCKED` | 401 | 因失敗嘗試次數過多而鎖定帳號 | 等待或聯絡支援 |
+| `AUTH_ACCOUNT_DISABLED` | 401 | 帳號已停用 | 聯絡支援 |
+| `AUTH_EMAIL_NOT_VERIFIED` | 401 | Email 尚未驗證 | 驗證 email |
 
-**Example**:
+**範例**:
 
 ```json
 {
@@ -127,15 +127,15 @@ When multiple validation errors occur, all errors are returned:
 }
 ```
 
-### Authorization Errors (AUTHZ_*)
+### 授權錯誤 (AUTHZ_*)
 
-| Code | HTTP Status | Description | Solution |
-|------|-------------|-------------|----------|
-| `AUTHZ_INSUFFICIENT_PERMISSIONS` | 403 | Missing required permissions | Check required roles |
-| `AUTHZ_RESOURCE_ACCESS_DENIED` | 403 | Cannot access this resource | Check resource ownership |
-| `AUTHZ_ROLE_REQUIRED` | 403 | Specific role required | Contact administrator |
+| 代碼 | HTTP 狀態 | 描述 | 解決方案 |
+|------|-----------|------|----------|
+| `AUTHZ_INSUFFICIENT_PERMISSIONS` | 403 | 缺少必要權限 | 檢查必要角色 |
+| `AUTHZ_RESOURCE_ACCESS_DENIED` | 403 | 無法存取此資源 | 檢查資源擁有權 |
+| `AUTHZ_ROLE_REQUIRED` | 403 | 需要特定角色 | 聯絡管理員 |
 
-**Example**:
+**範例**:
 
 ```json
 {
@@ -148,20 +148,20 @@ When multiple validation errors occur, all errors are returned:
 }
 ```
 
-### Validation Errors (VALIDATION_*)
+### 驗證錯誤 (VALIDATION_*)
 
-| Code | HTTP Status | Description | Solution |
-|------|-------------|-------------|----------|
-| `VALIDATION_ERROR` | 400 | Field validation failed | Check field requirements |
-| `VALIDATION_REQUIRED_FIELD` | 400 | Required field missing | Provide required field |
-| `VALIDATION_INVALID_FORMAT` | 400 | Invalid field format | Check format requirements |
-| `VALIDATION_OUT_OF_RANGE` | 400 | Value out of acceptable range | Check min/max values |
-| `VALIDATION_INVALID_LENGTH` | 400 | String length invalid | Check length requirements |
-| `VALIDATION_INVALID_EMAIL` | 400 | Invalid email format | Provide valid email |
-| `VALIDATION_INVALID_PHONE` | 400 | Invalid phone format | Provide valid phone |
-| `VALIDATION_INVALID_DATE` | 400 | Invalid date format | Use ISO 8601 format |
+| 代碼 | HTTP 狀態 | 描述 | 解決方案 |
+|------|-----------|------|----------|
+| `VALIDATION_ERROR` | 400 | 欄位驗證失敗 | 檢查欄位需求 |
+| `VALIDATION_REQUIRED_FIELD` | 400 | 缺少必填欄位 | 提供必填欄位 |
+| `VALIDATION_INVALID_FORMAT` | 400 | 無效的欄位格式 | 檢查格式需求 |
+| `VALIDATION_OUT_OF_RANGE` | 400 | 值超出可接受範圍 | 檢查最小/最大值 |
+| `VALIDATION_INVALID_LENGTH` | 400 | 字串長度無效 | 檢查長度需求 |
+| `VALIDATION_INVALID_EMAIL` | 400 | 無效的 email 格式 | 提供有效的 email |
+| `VALIDATION_INVALID_PHONE` | 400 | 無效的電話格式 | 提供有效的電話 |
+| `VALIDATION_INVALID_DATE` | 400 | 無效的日期格式 | 使用 ISO 8601 格式 |
 
-**Example**:
+**範例**:
 
 ```json
 {
@@ -176,18 +176,18 @@ When multiple validation errors occur, all errors are returned:
 }
 ```
 
-### Business Rule Errors (BUSINESS_*)
+### 業務規則錯誤 (BUSINESS_*)
 
-| Code | HTTP Status | Description | Solution |
-|------|-------------|-------------|----------|
-| `BUSINESS_RULE_VIOLATION` | 409 | Business rule violated | Check business constraints |
-| `BUSINESS_DUPLICATE_RESOURCE` | 409 | Resource already exists | Use existing resource |
-| `BUSINESS_INVALID_STATE` | 409 | Invalid state transition | Check current state |
-| `BUSINESS_INSUFFICIENT_INVENTORY` | 409 | Not enough inventory | Reduce quantity |
-| `BUSINESS_PAYMENT_FAILED` | 422 | Payment processing failed | Check payment details |
-| `BUSINESS_ORDER_CANNOT_BE_CANCELLED` | 409 | Order cannot be cancelled | Check order status |
+| 代碼 | HTTP 狀態 | 描述 | 解決方案 |
+|------|-----------|------|----------|
+| `BUSINESS_RULE_VIOLATION` | 409 | 違反業務規則 | 檢查業務約束 |
+| `BUSINESS_DUPLICATE_RESOURCE` | 409 | 資源已存在 | 使用現有資源 |
+| `BUSINESS_INVALID_STATE` | 409 | 無效的狀態轉換 | 檢查目前狀態 |
+| `BUSINESS_INSUFFICIENT_INVENTORY` | 409 | 庫存不足 | 減少數量 |
+| `BUSINESS_PAYMENT_FAILED` | 422 | 付款處理失敗 | 檢查付款詳細資訊 |
+| `BUSINESS_ORDER_CANNOT_BE_CANCELLED` | 409 | 訂單無法取消 | 檢查訂單狀態 |
 
-**Example**:
+**範例**:
 
 ```json
 {
@@ -202,15 +202,15 @@ When multiple validation errors occur, all errors are returned:
 }
 ```
 
-### Resource Errors (RESOURCE_*)
+### 資源錯誤 (RESOURCE_*)
 
-| Code | HTTP Status | Description | Solution |
-|------|-------------|-------------|----------|
-| `RESOURCE_NOT_FOUND` | 404 | Resource not found | Check resource ID |
-| `RESOURCE_ALREADY_EXISTS` | 409 | Resource already exists | Use different identifier |
-| `RESOURCE_DELETED` | 410 | Resource has been deleted | Cannot be recovered |
+| 代碼 | HTTP 狀態 | 描述 | 解決方案 |
+|------|-----------|------|----------|
+| `RESOURCE_NOT_FOUND` | 404 | 找不到資源 | 檢查資源 ID |
+| `RESOURCE_ALREADY_EXISTS` | 409 | 資源已存在 | 使用不同的識別碼 |
+| `RESOURCE_DELETED` | 410 | 資源已被刪除 | 無法復原 |
 
-**Example**:
+**範例**:
 
 ```json
 {
@@ -223,14 +223,14 @@ When multiple validation errors occur, all errors are returned:
 }
 ```
 
-### Rate Limiting Errors (RATE_LIMIT_*)
+### 流量限制錯誤 (RATE_LIMIT_*)
 
-| Code | HTTP Status | Description | Solution |
-|------|-------------|-------------|----------|
-| `RATE_LIMIT_EXCEEDED` | 429 | Too many requests | Wait and retry |
-| `RATE_LIMIT_QUOTA_EXCEEDED` | 429 | Daily quota exceeded | Wait until reset |
+| 代碼 | HTTP 狀態 | 描述 | 解決方案 |
+|------|-----------|------|----------|
+| `RATE_LIMIT_EXCEEDED` | 429 | 太多 request | 等待並重試 |
+| `RATE_LIMIT_QUOTA_EXCEEDED` | 429 | 超過每日配額 | 等到重置 |
 
-**Example**:
+**範例**:
 
 ```json
 {
@@ -243,7 +243,7 @@ When multiple validation errors occur, all errors are returned:
 }
 ```
 
-**Response Headers**:
+**回應標頭**:
 
 ```http
 HTTP/1.1 429 Too Many Requests
@@ -253,17 +253,17 @@ X-RateLimit-Reset: 1635793200
 Retry-After: 3600
 ```
 
-### System Errors (SYSTEM_*)
+### 系統錯誤 (SYSTEM_*)
 
-| Code | HTTP Status | Description | Solution |
-|------|-------------|-------------|----------|
-| `SYSTEM_INTERNAL_ERROR` | 500 | Unexpected system error | Contact support |
-| `SYSTEM_SERVICE_UNAVAILABLE` | 503 | Service temporarily unavailable | Retry later |
-| `SYSTEM_DATABASE_ERROR` | 500 | Database operation failed | Contact support |
-| `SYSTEM_EXTERNAL_SERVICE_ERROR` | 502 | External service error | Retry or contact support |
-| `SYSTEM_TIMEOUT` | 504 | Request timeout | Retry with smaller payload |
+| 代碼 | HTTP 狀態 | 描述 | 解決方案 |
+|------|-----------|------|----------|
+| `SYSTEM_INTERNAL_ERROR` | 500 | 未預期的系統錯誤 | 聯絡支援 |
+| `SYSTEM_SERVICE_UNAVAILABLE` | 503 | 服務暫時無法使用 | 稍後重試 |
+| `SYSTEM_DATABASE_ERROR` | 500 | 資料庫操作失敗 | 聯絡支援 |
+| `SYSTEM_EXTERNAL_SERVICE_ERROR` | 502 | 外部服務錯誤 | 重試或聯絡支援 |
+| `SYSTEM_TIMEOUT` | 504 | Request 逾時 | 使用較小的 payload 重試 |
 
-**Example**:
+**範例**:
 
 ```json
 {
@@ -280,49 +280,49 @@ Retry-After: 3600
 }
 ```
 
-## Error Handling Best Practices
+## 錯誤處理最佳實踐
 
-### Client-Side Error Handling
+### 客戶端錯誤處理
 
-**1. Check HTTP Status Code**:
+**1. 檢查 HTTP 狀態碼**:
 
 ```javascript
 async function makeRequest() {
   const response = await fetch('/api/v1/customers');
-  
+
   if (!response.ok) {
     const error = await response.json();
     handleError(response.status, error);
     return;
   }
-  
+
   return response.json();
 }
 
 function handleError(status, error) {
   switch (status) {
     case 400:
-      // Validation error - show field errors
+      // 驗證錯誤 - 顯示欄位錯誤
       showValidationErrors(error.errors);
       break;
     case 401:
-      // Authentication error - redirect to login
+      // 身份驗證錯誤 - 重新導向到登入
       redirectToLogin();
       break;
     case 403:
-      // Authorization error - show access denied
+      // 授權錯誤 - 顯示拒絕存取
       showAccessDenied();
       break;
     case 404:
-      // Not found - show not found page
+      // 找不到 - 顯示找不到頁面
       showNotFound();
       break;
     case 429:
-      // Rate limit - show retry message
+      // 流量限制 - 顯示重試訊息
       showRateLimitError(error);
       break;
     case 500:
-      // Server error - show error message with request ID
+      // 伺服器錯誤 - 顯示錯誤訊息和 request ID
       showServerError(error.metadata.requestId);
       break;
     default:
@@ -331,7 +331,7 @@ function handleError(status, error) {
 }
 ```
 
-**2. Display User-Friendly Messages**:
+**2. 顯示使用者友善的訊息**:
 
 ```javascript
 function showValidationErrors(errors) {
@@ -348,27 +348,27 @@ function showValidationErrors(errors) {
 }
 ```
 
-**3. Implement Retry Logic**:
+**3. 實作重試邏輯**:
 
 ```javascript
 async function fetchWithRetry(url, options, maxRetries = 3) {
   for (let i = 0; i < maxRetries; i++) {
     try {
       const response = await fetch(url, options);
-      
+
       if (response.status === 429) {
-        // Rate limited - wait and retry
+        // 流量限制 - 等待並重試
         const retryAfter = response.headers.get('Retry-After') || 60;
         await sleep(retryAfter * 1000);
         continue;
       }
-      
+
       if (response.status >= 500) {
-        // Server error - exponential backoff
+        // 伺服器錯誤 - 指數退避
         await sleep(Math.pow(2, i) * 1000);
         continue;
       }
-      
+
       return response;
     } catch (error) {
       if (i === maxRetries - 1) throw error;
@@ -378,7 +378,7 @@ async function fetchWithRetry(url, options, maxRetries = 3) {
 }
 ```
 
-**4. Log Errors with Request ID**:
+**4. 記錄錯誤並包含 Request ID**:
 
 ```javascript
 function logError(error, requestId) {
@@ -388,26 +388,26 @@ function logError(error, requestId) {
     message: error.message,
     timestamp: new Date().toISOString()
   });
-  
-  // Send to error tracking service
+
+  // 發送到錯誤追蹤服務
   errorTracker.captureException(error, {
     extra: { requestId }
   });
 }
 ```
 
-### Server-Side Error Handling
+### 伺服器端錯誤處理
 
-**Java Example**:
+**Java 範例**:
 
 ```java
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    
+
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ApiResponse<Void>> handleValidation(
         ValidationException ex) {
-        
+
         List<ApiError> errors = ex.getErrors().stream()
             .map(error -> new ApiError(
                 "VALIDATION_ERROR",
@@ -416,59 +416,59 @@ public class GlobalExceptionHandler {
                 error.getRejectedValue()
             ))
             .toList();
-        
+
         return ResponseEntity
             .badRequest()
             .body(ApiResponse.error(errors));
     }
-    
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleNotFound(
         ResourceNotFoundException ex) {
-        
+
         ApiError error = new ApiError(
             "RESOURCE_NOT_FOUND",
             ex.getMessage(),
             null,
             null
         );
-        
+
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
             .body(ApiResponse.error(List.of(error)));
     }
-    
+
     @ExceptionHandler(BusinessRuleViolationException.class)
     public ResponseEntity<ApiResponse<Void>> handleBusinessRule(
         BusinessRuleViolationException ex) {
-        
+
         ApiError error = new ApiError(
             "BUSINESS_RULE_VIOLATION",
             ex.getMessage(),
             null,
             null
         );
-        
+
         return ResponseEntity
             .status(HttpStatus.CONFLICT)
             .body(ApiResponse.error(List.of(error)));
     }
-    
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGeneric(
         Exception ex, HttpServletRequest request) {
-        
+
         String requestId = request.getHeader("X-Request-ID");
-        
+
         logger.error("Unexpected error for request {}", requestId, ex);
-        
+
         ApiError error = new ApiError(
             "SYSTEM_INTERNAL_ERROR",
             "An unexpected error occurred. Request ID: " + requestId,
             null,
             null
         );
-        
+
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(ApiResponse.error(List.of(error)));
@@ -476,108 +476,108 @@ public class GlobalExceptionHandler {
 }
 ```
 
-## Troubleshooting Guide
+## 疑難排解指南
 
-### Common Scenarios
+### 常見情境
 
-#### Scenario 1: 401 Unauthorized
+#### 情境 1: 401 Unauthorized
 
-**Symptoms**:
+**症狀**:
 
-- API returns 401 status code
-- Error code: `AUTH_TOKEN_EXPIRED` or `AUTH_TOKEN_INVALID`
+- API 回傳 401 狀態碼
+- 錯誤代碼: `AUTH_TOKEN_EXPIRED` 或 `AUTH_TOKEN_INVALID`
 
-**Diagnosis**:
+**診斷**:
 
-1. Check if token is included in Authorization header
-2. Verify token format: `Bearer <token>`
-3. Check token expiration time
-4. Verify token signature
+1. 檢查 Authorization 標頭中是否包含 token
+2. 驗證 token 格式: `Bearer <token>`
+3. 檢查 token 過期時間
+4. 驗證 token 簽章
 
-**Solution**:
+**解決方案**:
 
 ```javascript
-// Check token expiration
+// 檢查 token 是否過期
 function isTokenExpired(token) {
   const payload = JSON.parse(atob(token.split('.')[1]));
   return payload.exp * 1000 < Date.now();
 }
 
-// Refresh if expired
+// 如果過期則更新
 if (isTokenExpired(accessToken)) {
   await refreshToken();
 }
 ```
 
-#### Scenario 2: 400 Bad Request with Validation Errors
+#### 情境 2: 400 Bad Request 包含驗證錯誤
 
-**Symptoms**:
+**症狀**:
 
-- API returns 400 status code
-- Multiple validation errors in response
+- API 回傳 400 狀態碼
+- Response 中有多個驗證錯誤
 
-**Diagnosis**:
+**診斷**:
 
-1. Check all required fields are provided
-2. Verify field formats (email, phone, date)
-3. Check field length constraints
-4. Verify data types
+1. 檢查所有必填欄位是否已提供
+2. 驗證欄位格式 (email、電話、日期)
+3. 檢查欄位長度限制
+4. 驗證資料類型
 
-**Solution**:
+**解決方案**:
 
 ```javascript
-// Validate before sending
+// 發送前驗證
 function validateCustomer(customer) {
   const errors = [];
-  
+
   if (!customer.email || !isValidEmail(customer.email)) {
     errors.push({ field: 'email', message: 'Invalid email format' });
   }
-  
+
   if (!customer.name || customer.name.length < 2) {
     errors.push({ field: 'name', message: 'Name must be at least 2 characters' });
   }
-  
+
   return errors;
 }
 ```
 
-#### Scenario 3: 409 Conflict - Business Rule Violation
+#### 情境 3: 409 Conflict - 違反業務規則
 
-**Symptoms**:
+**症狀**:
 
-- API returns 409 status code
-- Error code: `BUSINESS_RULE_VIOLATION`
+- API 回傳 409 狀態碼
+- 錯誤代碼: `BUSINESS_RULE_VIOLATION`
 
-**Diagnosis**:
+**診斷**:
 
-1. Check current resource state
-2. Verify business rule constraints
-3. Check for duplicate resources
+1. 檢查目前資源狀態
+2. 驗證業務規則限制
+3. 檢查重複資源
 
-**Solution**:
+**解決方案**:
 
-- Read error message for specific constraint
-- Adjust request to satisfy business rules
-- Check resource state before operation
+- 閱讀錯誤訊息以了解特定限制
+- 調整 request 以滿足業務規則
+- 在操作前檢查資源狀態
 
-#### Scenario 4: 429 Too Many Requests
+#### 情境 4: 429 Too Many Requests
 
-**Symptoms**:
+**症狀**:
 
-- API returns 429 status code
-- Error code: `RATE_LIMIT_EXCEEDED`
+- API 回傳 429 狀態碼
+- 錯誤代碼: `RATE_LIMIT_EXCEEDED`
 
-**Diagnosis**:
+**診斷**:
 
-1. Check rate limit headers
-2. Count recent requests
-3. Verify rate limit tier
+1. 檢查流量限制標頭
+2. 計算最近的 request 數量
+3. 驗證流量限制層級
 
-**Solution**:
+**解決方案**:
 
 ```javascript
-// Implement exponential backoff
+// 實作指數退避
 async function retryWithBackoff(fn, maxRetries = 3) {
   for (let i = 0; i < maxRetries; i++) {
     try {
@@ -594,36 +594,36 @@ async function retryWithBackoff(fn, maxRetries = 3) {
 }
 ```
 
-#### Scenario 5: 500 Internal Server Error
+#### 情境 5: 500 Internal Server Error
 
-**Symptoms**:
+**症狀**:
 
-- API returns 500 status code
-- Error code: `SYSTEM_INTERNAL_ERROR`
+- API 回傳 500 狀態碼
+- 錯誤代碼: `SYSTEM_INTERNAL_ERROR`
 
-**Diagnosis**:
+**診斷**:
 
-1. Note the request ID from error response
-2. Check if error is reproducible
-3. Verify request payload
+1. 記下錯誤回應中的 request ID
+2. 檢查錯誤是否可重現
+3. 驗證 request payload
 
-**Solution**:
+**解決方案**:
 
-- Contact support with request ID
-- Retry request after some time
-- Check API status page
+- 使用 request ID 聯絡支援
+- 一段時間後重試 request
+- 檢查 API 狀態頁
 
-### Debugging Tips
+### 除錯技巧
 
-**1. Enable Request/Response Logging**:
+**1. 啟用 Request/Response 記錄**:
 
 ```javascript
-// Log all API requests
+// 記錄所有 API request
 fetch = new Proxy(fetch, {
   apply(target, thisArg, args) {
     const [url, options] = args;
     console.log('API Request:', { url, options });
-    
+
     return Reflect.apply(target, thisArg, args)
       .then(response => {
         console.log('API Response:', {
@@ -637,7 +637,7 @@ fetch = new Proxy(fetch, {
 });
 ```
 
-**2. Include Request ID in All Logs**:
+**2. 在所有日誌中包含 Request ID**:
 
 ```javascript
 function generateRequestId() {
@@ -646,14 +646,14 @@ function generateRequestId() {
 
 async function apiCall(url, options = {}) {
   const requestId = generateRequestId();
-  
+
   options.headers = {
     ...options.headers,
     'X-Request-ID': requestId
   };
-  
+
   console.log(`[${requestId}] Request:`, url);
-  
+
   try {
     const response = await fetch(url, options);
     console.log(`[${requestId}] Response:`, response.status);
@@ -665,75 +665,75 @@ async function apiCall(url, options = {}) {
 }
 ```
 
-**3. Use Browser DevTools**:
+**3. 使用瀏覽器開發者工具**:
 
-- Network tab: Inspect request/response
-- Console: Check for JavaScript errors
-- Application tab: Verify token storage
+- Network 標籤: 檢查 request/response
+- Console: 檢查 JavaScript 錯誤
+- Application 標籤: 驗證 token 儲存
 
-**4. Test with curl**:
+**4. 使用 curl 測試**:
 
 ```bash
-# Add verbose output
+# 新增詳細輸出
 curl -v -X GET https://api.ecommerce.com/api/v1/customers/me \
   -H "Authorization: Bearer $TOKEN"
 
-# Save response to file
+# 儲存 response 到檔案
 curl -X GET https://api.ecommerce.com/api/v1/customers/me \
   -H "Authorization: Bearer $TOKEN" \
   -o response.json
 
-# Show only HTTP status
+# 僅顯示 HTTP 狀態碼
 curl -s -o /dev/null -w "%{http_code}" \
   https://api.ecommerce.com/api/v1/customers/me
 ```
 
-## Support
+## 支援
 
-### Getting Help
+### 取得協助
 
-**1. Check Documentation**:
+**1. 查看文件**:
 
-- [API Reference](endpoints/) - Endpoint documentation
-- [Authentication Guide](authentication.md) - Authentication issues
-- [FAQ](#frequently-asked-questions) - Common questions
+- [API 參考](endpoints/) - Endpoint 文件
+- [身份驗證指南](authentication.md) - 身份驗證問題
+- [常見問題](#frequently-asked-questions) - 常見問題
 
-**2. Check API Status**:
+**2. 檢查 API 狀態**:
 
-- Status Page: <https://status.ecommerce.com>
-- Incident History: <https://status.ecommerce.com/history>
+- 狀態頁: <https://status.ecommerce.com>
+- 事件歷史: <https://status.ecommerce.com/history>
 
-**3. Contact Support**:
+**3. 聯絡支援**:
 
 - Email: <api-support@ecommerce.com>
-- Include: Request ID, timestamp, error code
-- Response Time: 24 hours
+- 包含: Request ID、時間戳、錯誤代碼
+- 回應時間: 24 小時
 
-### Frequently Asked Questions
+### 常見問題
 
-**Q: Why am I getting 401 Unauthorized?**  
-A: Check if your token is valid and not expired. Try refreshing your token.
+**問: 為什麼我收到 401 Unauthorized?**
+答: 檢查您的 token 是否有效且未過期。嘗試更新您的 token。
 
-**Q: How do I handle rate limiting?**  
-A: Implement exponential backoff and respect the `Retry-After` header.
+**問: 如何處理流量限制?**
+答: 實作指數退避並遵守 `Retry-After` 標頭。
 
-**Q: What should I do with a 500 error?**  
-A: Note the request ID and contact support. The issue is on our end.
+**問: 收到 500 錯誤該怎麼辦?**
+答: 記下 request ID 並聯絡支援。問題出在我們這邊。
 
-**Q: Can I retry failed requests?**  
-A: Yes, but only for idempotent operations (GET, PUT, DELETE). Use exponential backoff.
+**問: 可以重試失敗的 request 嗎?**
+答: 可以,但僅限冪等操作 (GET、PUT、DELETE)。使用指數退避。
 
-**Q: How long are error logs retained?**  
-A: Error logs are retained for 30 days for troubleshooting.
+**問: 錯誤日誌保留多久?**
+答: 錯誤日誌保留 30 天用於疑難排解。
 
-## Related Documentation
+## 相關文件
 
-- [API Overview](README.md) - API design principles
-- [Authentication](authentication.md) - Authentication and authorization
-- [Customer API](endpoints/customers.md) - Customer endpoints
-- [ADR-009: RESTful API Design](../../architecture/adrs/009-restful-api-design-with-openapi.md) - API design decisions
+- [API 概述](README.md) - API 設計原則
+- [身份驗證](authentication.md) - 身份驗證和授權
+- [Customer API](endpoints/customers.md) - Customer endpoint
+- [ADR-009: RESTful API 設計](../../architecture/adrs/009-restful-api-design-with-openapi.md) - API 設計決策
 
 ---
 
-**Last Updated**: 2025-10-25  
-**API Version**: v1
+**最後更新**: 2025-10-25
+**API 版本**: v1

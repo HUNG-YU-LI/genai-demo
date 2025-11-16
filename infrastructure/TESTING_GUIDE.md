@@ -1,20 +1,20 @@
-# CDK Infrastructure Testing Guide
+# CDK Infrastructure 測試指南
 
-## Overview
+## 概述
 
-This document provides comprehensive guidance for testing the consolidated CDK infrastructure.
+本文件提供整合 CDK 基礎設施測試的完整指引。
 
-## Test Structure
+## 測試結構
 
-### Test Categories
+### 測試類別
 
-1. **Unit Tests** (`test/unit/`) - Fast, isolated tests for individual components (26 tests)
-2. **Integration Tests** (`test/integration/`) - Tests for stack interactions and full deployment (8 tests)
-3. **Consolidated Tests** (`test/consolidated-stack.test.ts`) - Main test suite for all stacks (18 tests)
-4. **Compliance Tests** (`test/cdk-nag-suppressions.test.ts`) - CDK Nag compliance validation (4 tests)
-5. **Stack Tests** (`test/*-stack.test.ts`) - Individual stack validation tests (47 tests)
+1. **Unit Tests** (`test/unit/`) - 個別元件的快速、獨立測試（26 個測試）
+2. **Integration Tests** (`test/integration/`) - Stack 互動和完整部署的測試（8 個測試）
+3. **Consolidated Tests** (`test/consolidated-stack.test.ts`) - 所有 stacks 的主要測試套件（18 個測試）
+4. **Compliance Tests** (`test/cdk-nag-suppressions.test.ts`) - CDK Nag 合規性驗證（4 個測試）
+5. **Stack Tests** (`test/*-stack.test.ts`) - 個別 stack 驗證測試（47 個測試）
 
-### Test Files
+### 測試檔案
 
 ```
 test/
@@ -34,15 +34,15 @@ test/
 └── setup.ts                       # Test configuration
 ```
 
-## Running Tests
+## 執行測試
 
-### All Tests
+### 所有測試
 
 ```bash
 npm test
 ```
 
-### Specific Test Categories
+### 特定測試類別
 
 ```bash
 # Unit tests only
@@ -58,7 +58,7 @@ npm test -- --testPathPatterns="consolidated-stack.test.ts"
 npm test -- --testPathPatterns="cdk-nag-suppressions.test.ts"
 ```
 
-### Individual Test Files
+### 個別測試檔案
 
 ```bash
 # Network stack tests
@@ -71,95 +71,95 @@ npm test -- --testPathPatterns="security-stack.test.ts"
 npm test -- --testPathPatterns="deployment.test.ts"
 ```
 
-## Test Configuration
+## 測試配置
 
-### Jest Configuration
+### Jest 配置
 
-- **Timeout**: 60 seconds for CDK synthesis operations
-- **Max Workers**: 1 (sequential execution to avoid CDK conflicts)
-- **Setup**: Automatic environment configuration and warning suppression
+- **Timeout**：CDK synthesis 操作 60 秒
+- **Max Workers**：1（循序執行以避免 CDK 衝突）
+- **Setup**：自動環境配置和警告抑制
 
-### Environment Variables
+### 環境變數
 
-Tests automatically set:
+測試自動設定：
 
 - `CDK_DEFAULT_REGION=us-east-1`
 - `CDK_DEFAULT_ACCOUNT=123456789012`
 - `JSII_DEPRECATED=quiet`
 
-## CDK Synthesis Testing
+## CDK Synthesis 測試
 
-### Without CDK Nag (Recommended for Development)
+### 不使用 CDK Nag（開發環境建議）
 
 ```bash
 npx cdk synth --context enableCdkNag=false
 ```
 
-### With CDK Nag (Security Compliance)
+### 使用 CDK Nag（安全合規性）
 
 ```bash
 npx cdk synth
 ```
 
-### Specific Stack
+### 特定 Stack
 
 ```bash
 npx cdk synth genai-demo-development-NetworkStack --context enableCdkNag=false
 ```
 
-## Test Coverage
+## 測試涵蓋範圍
 
-### Current Test Coverage
+### 目前測試涵蓋範圍
 
-- **NetworkStack**: ✅ VPC, Subnets, Security Groups, Route Tables, Outputs (15 tests)
-- **SecurityStack**: ✅ KMS Key, IAM Role, Policies, Outputs (8 tests)
-- **CoreInfrastructureStack**: ✅ ALB, Target Groups, Listeners (3 tests)
-- **AlertingStack**: ✅ SNS Topics, Subscriptions (2 tests)
-- **ObservabilityStack**: ✅ CloudWatch Logs, Dashboard (2 tests)
-- **AnalyticsStack**: ✅ S3, Kinesis Firehose, Lambda, Glue (3 tests)
-- **Integration Tests**: ✅ Full deployment, Cross-stack references (8 tests)
-- **Compliance Tests**: ✅ CDK Nag suppressions, Security validation (4 tests)
+- **NetworkStack**：✅ VPC、Subnets、Security Groups、Route Tables、Outputs（15 個測試）
+- **SecurityStack**：✅ KMS Key、IAM Role、Policies、Outputs（8 個測試）
+- **CoreInfrastructureStack**：✅ ALB、Target Groups、Listeners（3 個測試）
+- **AlertingStack**：✅ SNS Topics、Subscriptions（2 個測試）
+- **ObservabilityStack**：✅ CloudWatch Logs、Dashboard（2 個測試）
+- **AnalyticsStack**：✅ S3、Kinesis Firehose、Lambda、Glue（3 個測試）
+- **Integration Tests**：✅ 完整部署、Cross-stack references（8 個測試）
+- **Compliance Tests**：✅ CDK Nag suppressions、Security validation（4 個測試）
 
 ### Integration Tests
 
-- **Full Deployment**: ✅ All stacks with dependencies
-- **Cross-Stack References**: ✅ VPC, Security Groups, KMS Keys
-- **Optional Components**: ✅ Analytics stack enable/disable
+- **Full Deployment**：✅ 所有包含相依性的 stacks
+- **Cross-Stack References**：✅ VPC、Security Groups、KMS Keys
+- **Optional Components**：✅ Analytics stack 啟用/停用
 
-## CDK Nag Compliance
+## CDK Nag 合規性
 
-### Known Suppressions
+### 已知抑制規則
 
-The following CDK Nag rules are suppressed with justification:
+以下 CDK Nag 規則已被抑制並有正當理由：
 
-1. **AwsSolutions-VPC7**: VPC Flow Logs optional for development
-2. **AwsSolutions-EC23**: ALB requires internet access on ports 80/443
-3. **AwsSolutions-IAM4**: CloudWatch managed policy required
-4. **AwsSolutions-IAM5**: KMS wildcard permissions required
+1. **AwsSolutions-VPC7**：VPC Flow Logs 在開發環境為選用
+2. **AwsSolutions-EC23**：ALB 需要在埠 80/443 上的網際網路存取
+3. **AwsSolutions-IAM4**：需要 CloudWatch 託管政策
+4. **AwsSolutions-IAM5**：需要 KMS 萬用字元權限
 
-### Running Compliance Tests
+### 執行合規性測試
 
 ```bash
 npm test -- --testPathPatterns="cdk-nag-suppressions.test.ts"
 ```
 
-## Troubleshooting
+## 疑難排解
 
-### Common Issues
+### 常見問題
 
 1. **Multiple Synthesis Error**
-   - **Cause**: CDK App synthesized multiple times in same test
-   - **Solution**: Create new App instance for each test
+   - **原因**：CDK App 在同一測試中被多次 synthesized
+   - **解決方案**：為每個測試建立新的 App 實例
 
 2. **Resource Count Mismatch**
-   - **Cause**: CDK creates additional resources automatically
-   - **Solution**: Check actual template and update expected counts
+   - **原因**：CDK 自動建立額外的資源
+   - **解決方案**：檢查實際範本並更新預期計數
 
 3. **Template Property Mismatch**
-   - **Cause**: CDK generates different property structure than expected
-   - **Solution**: Use `Template.fromStack(stack).toJSON()` to inspect
+   - **原因**：CDK 產生的屬性結構與預期不同
+   - **解決方案**：使用 `Template.fromStack(stack).toJSON()` 進行檢查
 
-### Debugging Tests
+### 測試除錯
 
 ```bash
 # Run with verbose output
@@ -172,40 +172,40 @@ npm test -- --testPathPatterns="network-stack.test.ts" --verbose
 npx cdk synth --context enableCdkNag=false > template.yaml
 ```
 
-### Test Performance
+### 測試效能
 
-- **Unit Tests**: < 1 second each
-- **Integration Tests**: 2-5 seconds each
-- **Full Test Suite**: ~16 seconds (103 tests)
-- **Parallel Execution**: Optimized with maxWorkers=1 for CDK synthesis
+- **Unit Tests**：每個 < 1 秒
+- **Integration Tests**：每個 2-5 秒
+- **Full Test Suite**：~16 秒（103 個測試）
+- **Parallel Execution**：使用 maxWorkers=1 進行 CDK synthesis 最佳化
 
-## Best Practices
+## 最佳實踐
 
-### Writing Tests
+### 撰寫測試
 
-1. **Use Descriptive Names**: Test names should clearly describe what is being tested
-2. **Test One Thing**: Each test should verify a single aspect
-3. **Use Proper Setup**: Create fresh CDK App for each test suite
-4. **Check Resources**: Verify both existence and configuration
-5. **Test Outputs**: Ensure stack outputs are correctly configured
+1. **使用描述性名稱**：測試名稱應清楚描述正在測試的內容
+2. **測試單一項目**：每個測試應驗證單一面向
+3. **使用適當的設定**：為每個測試套件建立新的 CDK App
+4. **檢查資源**：驗證存在性和配置
+5. **測試輸出**：確保 stack 輸出正確配置
 
-### Test Organization
+### 測試組織
 
-1. **Group Related Tests**: Use `describe` blocks for logical grouping
-2. **Share Setup**: Use `beforeEach` for common test setup
-3. **Clean Isolation**: Avoid test interdependencies
-4. **Document Expectations**: Comment complex test logic
+1. **分組相關測試**：使用 `describe` 區塊進行邏輯分組
+2. **共享設定**：使用 `beforeEach` 進行共同測試設定
+3. **清潔隔離**：避免測試相依性
+4. **文件化期望**：註釋複雜的測試邏輯
 
-### Performance Optimization
+### 效能最佳化
 
-1. **Minimize Synthesis**: Reuse templates within test suites
-2. **Parallel Execution**: Use separate test files for independent tests
-3. **Mock External Dependencies**: Use mocks for external services
-4. **Selective Testing**: Run only relevant tests during development
+1. **最小化 Synthesis**：在測試套件中重複使用範本
+2. **平行執行**：為獨立測試使用單獨的測試檔案
+3. **Mock 外部相依性**：為外部服務使用 mocks
+4. **選擇性測試**：開發期間僅執行相關測試
 
-## Continuous Integration
+## 持續整合
 
-### GitHub Actions Integration
+### GitHub Actions 整合
 
 ```yaml
 - name: Run CDK Tests
@@ -223,23 +223,23 @@ npx cdk synth --context enableCdkNag=false > template.yaml
 npm test -- --testPathPatterns="consolidated-stack.test.ts"
 ```
 
-## Future Enhancements
+## 未來增強
 
-### Planned Test Additions
+### 規劃的測試新增
 
-1. **Performance Tests**: Resource creation time benchmarks
-2. **Security Tests**: Automated security scanning
-3. **Cost Tests**: Resource cost estimation validation
-4. **Multi-Region Tests**: Cross-region deployment validation
+1. **Performance Tests**：資源建立時間基準測試
+2. **Security Tests**：自動化安全掃描
+3. **Cost Tests**：資源成本估算驗證
+4. **Multi-Region Tests**：跨區域部署驗證
 
-### Test Automation
+### 測試自動化
 
-1. **Snapshot Testing**: Template change detection
-2. **Property Testing**: Random input validation
-3. **Load Testing**: Large-scale deployment simulation
-4. **Regression Testing**: Automated change impact analysis
+1. **Snapshot Testing**：範本變更偵測
+2. **Property Testing**：隨機輸入驗證
+3. **Load Testing**：大規模部署模擬
+4. **Regression Testing**：自動化變更影響分析
 
-## Resources
+## 資源
 
 - AWS CDK Testing Guide
 - CDK Assertions Library

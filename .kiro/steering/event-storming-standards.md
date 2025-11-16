@@ -1,90 +1,90 @@
 # Event Storming Standards and Guidelines
 
-## Overview
+## 概覽
 
-This document provides comprehensive guidelines for conducting Event Storming workshops and documenting the results in our DDD + Hexagonal Architecture project. Event Storming is a collaborative workshop technique for exploring complex business domains through domain events.
+本文件提供在我們的 DDD + Hexagonal Architecture 專案中進行 Event Storming workshops 和記錄結果的全面指南。Event Storming 是一種協作式 workshop 技術，透過 domain events 探索複雜的業務領域。
 
-> **🔗 Related Standards**:
+> **🔗 相關標準**：
 >
-> - [Domain Events](domain-events.md) - Implementation of discovered events
-> - [Development Standards](development-standards.md) - Architecture and coding standards
-> - [Diagram Generation Standards](diagram-generation-standards.md) - Visual documentation
+> - [Domain Events](domain-events.md) - 已發現事件的實作
+> - [Development Standards](development-standards.md) - 架構和編碼標準
+> - [Diagram Generation Standards](diagram-generation-standards.md) - 視覺化文件
 
-## Event Storming Fundamentals
+## Event Storming 基礎
 
-### What is Event Storming
+### 什麼是 Event Storming
 
-Event Storming is a rapid, lightweight, and often fun workshop technique for collaborative exploration of complex business domains. It was invented by Alberto Brandolini and focuses on domain events as the primary building blocks.
+Event Storming 是一種快速、輕量且通常很有趣的 workshop 技術，用於協作探索複雜的業務領域。它由 Alberto Brandolini 發明，專注於將 domain events 作為主要構建塊。
 
-### Core Principles
+### 核心原則
 
-1. **Invite the Right People**: Domain experts, developers, product owners, and stakeholders
-2. **Unlimited Modeling Space**: Use a large wall or digital whiteboard
-3. **Domain Events First**: Start with what happens in the domain
-4. **Temporal Flow**: Arrange events in chronological order
-5. **Collaborative Discovery**: Everyone participates equally
-6. **Visual Language**: Use color-coded sticky notes
+1. **邀請合適的人**：Domain experts、開發人員、product owners 和 stakeholders
+2. **無限的建模空間**：使用大型牆面或數位白板
+3. **Domain Events 優先**：從領域中發生的事件開始
+4. **時間流程**：按時間順序排列事件
+5. **協作發現**：每個人平等參與
+6. **視覺語言**：使用顏色編碼的便利貼
 
-## Event Storming Color Coding Standard
+## Event Storming 顏色編碼標準
 
-### Standard Color Palette
+### 標準色彩配置
 
-| Color | Element | Description | Example |
+| 顏色 | 元素 | 描述 | 範例 |
 |-------|---------|-------------|---------|
-| 🟧 **Orange** | Domain Event | Something that happened in the past | `CustomerRegistered`, `OrderPlaced` |
-| 🟦 **Blue** | Command | Action that triggers an event | `RegisterCustomer`, `PlaceOrder` |
-| 🟨 **Yellow** | Actor/User | Person or system initiating commands | `Customer`, `Admin`, `PaymentGateway` |
-| 🟪 **Purple** | Policy/Rule | Business rule or automation | `When OrderPlaced, then ReserveInventory` |
-| 🟩 **Green** | Read Model/View | Information displayed to users | `OrderSummary`, `CustomerProfile` |
-| 🟥 **Red** | Hot Spot | Problem, question, or concern | `What if payment fails?` |
-| 📄 **White** | External System | Third-party system or service | `PaymentGateway`, `EmailService` |
-| 🟫 **Brown** | Aggregate | Consistency boundary | `Order`, `Customer`, `Product` |
+| 🟧 **Orange** | Domain Event | 過去發生的事情 | `CustomerRegistered`, `OrderPlaced` |
+| 🟦 **Blue** | Command | 觸發事件的動作 | `RegisterCustomer`, `PlaceOrder` |
+| 🟨 **Yellow** | Actor/User | 發起 commands 的人或系統 | `Customer`, `Admin`, `PaymentGateway` |
+| 🟪 **Purple** | Policy/Rule | Business rule 或自動化 | `When OrderPlaced, then ReserveInventory` |
+| 🟩 **Green** | Read Model/View | 顯示給使用者的資訊 | `OrderSummary`, `CustomerProfile` |
+| 🟥 **Red** | Hot Spot | 問題、疑問或關注點 | `What if payment fails?` |
+| 📄 **White** | External System | 第三方系統或服務 | `PaymentGateway`, `EmailService` |
+| 🟫 **Brown** | Aggregate | 一致性邊界 | `Order`, `Customer`, `Product` |
 
-## Three Phases of Event Storming
+## Event Storming 的三個階段
 
-### Phase 1: Big Picture Event Storming
+### 階段 1：Big Picture Event Storming
 
-**Goal**: Understand the entire business process flow and identify domain events
+**目標**：理解整個業務流程並識別 domain events
 
-**Duration**: 2-4 hours
+**時長**：2-4 小時
 
-**Participants**: All stakeholders, domain experts, developers
+**參與者**：所有 stakeholders、domain experts、開發人員
 
-#### Activities
+#### 活動
 
-1. **Chaotic Exploration** (30-45 min)
-   - Everyone writes domain events on orange sticky notes
-   - Place events on the timeline without order
-   - Focus on "what happened" not "how it happened"
-   - Use past tense verbs
+1. **混亂探索**（30-45 分鐘）
+   - 每個人在橘色便利貼上寫下 domain events
+   - 將事件放在時間軸上，不用排序
+   - 專注於「發生了什麼」而非「如何發生」
+   - 使用過去式動詞
 
-2. **Enforce Timeline** (45-60 min)
-   - Arrange events in chronological order
-   - Identify parallel flows
-   - Group related events
-   - Mark unclear areas with red hot spots
+2. **強制時間軸**（45-60 分鐘）
+   - 按時間順序排列事件
+   - 識別平行流程
+   - 將相關事件分組
+   - 用紅色 hot spots 標記不清楚的區域
 
-3. **Add Actors and External Systems** (30-45 min)
-   - Identify who triggers each event
-   - Mark external systems involved
-   - Document system boundaries
+3. **添加 Actors 和 External Systems**（30-45 分鐘）
+   - 識別誰觸發每個事件
+   - 標記涉及的外部系統
+   - 記錄系統邊界
 
-4. **Identify Pivotal Events** (15-30 min)
-   - Mark events that change system state significantly
-   - Identify events that trigger multiple consequences
-   - These often become aggregate boundaries
+4. **識別關鍵事件**（15-30 分鐘）
+   - 標記顯著改變系統狀態的事件
+   - 識別觸發多個後果的事件
+   - 這些通常成為 aggregate 邊界
 
-#### Deliverables
+#### 交付成果
 
-- Complete timeline of domain events
-- Identified actors and external systems
-- Hot spots and questions documented
-- Initial understanding of business process flow
+- 完整的 domain events 時間軸
+- 已識別的 actors 和 external systems
+- 記錄的 hot spots 和問題
+- 對業務流程的初步理解
 
-#### Example Output Structure
+#### 範例輸出結構
 
 ```json
-[Customer] --RegisterCustomer--> [CustomerRegistered] 
+[Customer] --RegisterCustomer--> [CustomerRegistered]
     --> [WelcomeEmailSent]
     --> [CustomerProfileCreated]
 
@@ -95,59 +95,59 @@ Event Storming is a rapid, lightweight, and often fun workshop technique for col
     --> [ShippingScheduled]
 ```
 
-### Phase 2: Process Level Event Storming
+### 階段 2：Process Level Event Storming
 
-**Goal**: Deep dive into specific processes, identify commands, policies, and aggregates
+**目標**：深入特定流程，識別 commands、policies 和 aggregates
 
-**Duration**: 2-3 hours per process
+**時長**：每個流程 2-3 小時
 
-**Participants**: Domain experts, developers, product owners
+**參與者**：Domain experts、開發人員、product owners
 
-#### Activities
+#### 活動
 
-1. **Select Process** (15 min)
-   - Choose a specific business process from Phase 1
-   - Define process boundaries
-   - Set clear goals for the session
+1. **選擇流程**（15 分鐘）
+   - 從階段 1 選擇特定業務流程
+   - 定義流程邊界
+   - 設定 session 的明確目標
 
-2. **Add Commands** (45-60 min)
-   - For each event, identify the command that triggered it
-   - Place blue command sticky notes before events
-   - Connect commands to actors
+2. **添加 Commands**（45-60 分鐘）
+   - 對於每個事件，識別觸發它的 command
+   - 在事件前放置藍色 command 便利貼
+   - 將 commands 連接到 actors
 
-3. **Identify Policies** (30-45 min)
-   - Find automation rules: "When X happens, then do Y"
-   - Place purple policy sticky notes
-   - Document business rules and constraints
+3. **識別 Policies**（30-45 分鐘）
+   - 找到自動化規則：「當 X 發生時，則執行 Y」
+   - 放置紫色 policy 便利貼
+   - 記錄 business rules 和約束
 
-4. **Define Read Models** (30-45 min)
-   - Identify information needed to make decisions
-   - Place green read model sticky notes
-   - Connect to commands that use them
+4. **定義 Read Models**（30-45 分鐘）
+   - 識別做決策所需的資訊
+   - 放置綠色 read model 便利貼
+   - 連接到使用它們的 commands
 
-5. **Identify Aggregates** (45-60 min)
-   - Group related commands and events
-   - Define consistency boundaries
-   - Name aggregates (brown sticky notes)
-   - Validate with domain experts
+5. **識別 Aggregates**（45-60 分鐘）
+   - 將相關的 commands 和 events 分組
+   - 定義一致性邊界
+   - 命名 aggregates（棕色便利貼）
+   - 與 domain experts 驗證
 
-#### Deliverables
+#### 交付成果
 
-- Detailed process flow with commands, events, and policies
-- Identified aggregates and their boundaries
-- Read models and their relationships
-- Business rules documented
+- 包含 commands、events 和 policies 的詳細流程
+- 已識別的 aggregates 及其邊界
+- Read models 及其關係
+- 記錄的 business rules
 
-#### Example Output Structure
+#### 範例輸出結構
 
 ```json
-[Customer] 
+[Customer]
     --reads--> [ProductCatalog]
     --executes--> [AddToCart]
         --> [ItemAddedToCart]
             --policy--> "If cart total > $100, apply discount"
                 --> [DiscountApplied]
-    
+
 [ShoppingCart Aggregate]
 
     - AddToCart
@@ -157,53 +157,53 @@ Event Storming is a rapid, lightweight, and often fun workshop technique for col
 
 ```
 
-### Phase 3: Design Level Event Storming
+### 階段 3：Design Level Event Storming
 
-**Goal**: Translate discoveries into technical design and implementation details
+**目標**：將發現轉化為技術設計和實作細節
 
-**Duration**: 2-3 hours per aggregate
+**時長**：每個 aggregate 2-3 小時
 
-**Participants**: Developers, architects, technical leads
+**參與者**：開發人員、architects、technical leads
 
-#### Activities
+#### 活動
 
-1. **Refine Aggregates** (45-60 min)
-   - Define aggregate root
-   - Identify entities and value objects
-   - Define aggregate invariants
-   - Document state transitions
+1. **完善 Aggregates**（45-60 分鐘）
+   - 定義 aggregate root
+   - 識別 entities 和 value objects
+   - 定義 aggregate invariants
+   - 記錄狀態轉換
 
-2. **Design Commands** (30-45 min)
-   - Define command structure and validation
-   - Identify command handlers
-   - Document preconditions and postconditions
+2. **設計 Commands**（30-45 分鐘）
+   - 定義 command 結構和驗證
+   - 識別 command handlers
+   - 記錄前置條件和後置條件
 
-3. **Design Events** (30-45 min)
-   - Define event structure and payload
-   - Identify event handlers
-   - Document event versioning strategy
+3. **設計 Events**（30-45 分鐘）
+   - 定義 event 結構和 payload
+   - 識別 event handlers
+   - 記錄 event 版本控制策略
 
-4. **Define Bounded Contexts** (45-60 min)
-   - Group related aggregates
-   - Define context boundaries
-   - Identify context maps and relationships
-   - Document integration patterns
+4. **定義 Bounded Contexts**（45-60 分鐘）
+   - 將相關 aggregates 分組
+   - 定義 context 邊界
+   - 識別 context maps 和關係
+   - 記錄整合模式
 
-5. **Technical Decisions** (30-45 min)
-   - Database schema considerations
-   - API design
-   - Integration patterns
-   - Technology choices
+5. **技術決策**（30-45 分鐘）
+   - 資料庫 schema 考量
+   - API 設計
+   - 整合模式
+   - 技術選擇
 
-#### Deliverables
+#### 交付成果
 
-- Aggregate design with entities and value objects
-- Command and event specifications
+- 包含 entities 和 value objects 的 Aggregate 設計
+- Command 和 event 規格
 - Bounded context map
-- Technical architecture decisions
-- Implementation roadmap
+- 技術架構決策
+- 實作路線圖
 
-#### Example Output Structure
+#### 範例輸出結構
 
 ```java
 // Aggregate Root
@@ -213,7 +213,7 @@ public class ShoppingCart {
     private CustomerId customerId;
     private List<CartItem> items;
     private Money totalAmount;
-    
+
     // Commands
     public void addItem(AddItemCommand command) {
         validateItem(command);
@@ -221,7 +221,7 @@ public class ShoppingCart {
         items.add(item);
         collectEvent(ItemAddedToCart.create(id, item));
     }
-    
+
     // Business Rules
     private void validateItem(AddItemCommand command) {
         if (command.quantity() <= 0) {
@@ -241,39 +241,39 @@ public record ItemAddedToCart(
 ) implements DomainEvent { }
 ```
 
-## Diagram Generation for Event Storming
+## Event Storming 的圖表生成
 
-### Recommended Approach: Mermaid for Event Storming
+### 推薦方法：使用 Mermaid 進行 Event Storming
 
-**Why Mermaid?**
+**為什麼用 Mermaid？**
 
-- Native GitHub rendering
-- Easy to update and maintain
-- Collaborative editing
-- Version control friendly
-- Quick iterations
+- GitHub 原生渲染
+- 易於更新和維護
+- 協作編輯
+- 版本控制友好
+- 快速迭代
 
-**When to Use PlantUML?**
+**何時使用 PlantUML？**
 
-- Final documentation requiring precise layout
-- Complex aggregate diagrams
-- Professional presentations
-- Detailed class diagrams
+- 需要精確版面配置的最終文件
+- 複雜的 aggregate 圖表
+- 專業簡報
+- 詳細的類別圖
 
-### Phase 1: Big Picture - Mermaid Timeline
+### 階段 1：Big Picture - Mermaid Timeline
 
 ```mermaid
 graph LR
     A[Customer] -->|RegisterCustomer| B[CustomerRegistered]
     B --> C[WelcomeEmailSent]
     B --> D[CustomerProfileCreated]
-    
+
     A -->|PlaceOrder| E[OrderPlaced]
     E --> F[InventoryReserved]
     F --> G[PaymentProcessed]
     G --> H[OrderConfirmed]
     H --> I[ShippingScheduled]
-    
+
     style B fill:#ff9900
     style C fill:#ff9900
     style D fill:#ff9900
@@ -284,37 +284,37 @@ graph LR
     style I fill:#ff9900
 ```
 
-**File Location**: `docs/diagrams/mermaid/event-storming/phase1-big-picture.md`
+**檔案位置**：`docs/diagrams/mermaid/event-storming/phase1-big-picture.md`
 
-### Phase 2: Process Level - Mermaid Flowchart
+### 階段 2：Process Level - Mermaid Flowchart
 
 ```mermaid
 graph TB
     subgraph "Shopping Cart Process"
         Customer[Customer]
         ProductCatalog[Product Catalog]
-        
+
         Customer -->|reads| ProductCatalog
         Customer -->|AddToCart| AddToCart[AddToCart Command]
         AddToCart --> ItemAdded[ItemAddedToCart Event]
-        
+
         ItemAdded -->|policy: total > $100| CheckDiscount{Check Discount}
         CheckDiscount -->|yes| ApplyDiscount[DiscountApplied Event]
         CheckDiscount -->|no| Continue[Continue]
-        
+
         ApplyDiscount --> CartUpdated[CartUpdated Event]
         Continue --> CartUpdated
-        
+
         Customer -->|Checkout| CheckoutCmd[Checkout Command]
         CheckoutCmd --> OrderPlaced[OrderPlaced Event]
     end
-    
+
     subgraph "Shopping Cart Aggregate"
         CartRoot[ShoppingCart]
         CartItems[Cart Items]
         CartTotal[Total Amount]
     end
-    
+
     style ItemAdded fill:#ff9900
     style ApplyDiscount fill:#ff9900
     style CartUpdated fill:#ff9900
@@ -324,11 +324,11 @@ graph TB
     style CheckDiscount fill:#9933ff
 ```
 
-**File Location**: `docs/diagrams/mermaid/event-storming/phase2-shopping-cart-process.md`
+**檔案位置**：`docs/diagrams/mermaid/event-storming/phase2-shopping-cart-process.md`
 
-### Phase 3: Design Level - PlantUML Class Diagram
+### 階段 3：Design Level - PlantUML Class Diagram
 
-For Phase 3, use PlantUML for detailed aggregate design:
+對於階段 3，使用 PlantUML 進行詳細的 aggregate 設計：
 
 ```plantuml
 @startuml shopping-cart-aggregate
@@ -338,7 +338,7 @@ For Phase 3, use PlantUML for detailed aggregate design:
 !define DOMAIN_EVENT_COLOR #FFCCBC
 
 package "Shopping Cart Aggregate" <<Rectangle>> {
-    
+
     class ShoppingCart <<AggregateRoot>> AGGREGATE_ROOT_COLOR {
 
         - id: CartId
@@ -361,7 +361,7 @@ package "Shopping Cart Aggregate" <<Rectangle>> {
         - collectEvent(event: DomainEvent): void
 
     }
-    
+
     class CartItem <<Entity>> ENTITY_COLOR {
 
         - id: CartItemId
@@ -376,7 +376,7 @@ package "Shopping Cart Aggregate" <<Rectangle>> {
         + calculateSubtotal(): Money
 
     }
-    
+
     class CartId <<ValueObject>> VALUE_OBJECT_COLOR {
 
         - value: String
@@ -387,7 +387,7 @@ package "Shopping Cart Aggregate" <<Rectangle>> {
         + {static} of(value: String): CartId
 
     }
-    
+
     class Money <<ValueObject>> VALUE_OBJECT_COLOR {
 
         - amount: BigDecimal
@@ -399,7 +399,7 @@ package "Shopping Cart Aggregate" <<Rectangle>> {
         + multiply(factor: int): Money
 
     }
-    
+
     class ItemAddedToCart <<DomainEvent>> DOMAIN_EVENT_COLOR {
 
         + cartId: CartId
@@ -410,7 +410,7 @@ package "Shopping Cart Aggregate" <<Rectangle>> {
         + occurredOn: LocalDateTime
 
     }
-    
+
     ShoppingCart "1" *-- "many" CartItem
     ShoppingCart --> CartId
     ShoppingCart --> Money
@@ -421,24 +421,24 @@ package "Shopping Cart Aggregate" <<Rectangle>> {
 @enduml
 ```
 
-**File Location**: `docs/diagrams/viewpoints/functional/shopping-cart-aggregate.puml`
+**檔案位置**：`docs/diagrams/viewpoints/functional/shopping-cart-aggregate.puml`
 
-**Generated**: `docs/diagrams/generated/functional/shopping-cart-aggregate.png`
+**生成的圖表**：`docs/diagrams/generated/functional/shopping-cart-aggregate.png`
 
-## Documentation Structure
+## 文件結構
 
-### Event Storming Session Documentation
+### Event Storming Session 文件
 
-Create a dedicated directory for each Event Storming session:
+為每個 Event Storming session 創建專用目錄：
 
 ```text
 docs/event-storming/
 ├── sessions/
 │   ├── 2025-01-20-big-picture/
-│   │   ├── README.md                    # Session overview
-│   │   ├── participants.md              # Attendees and roles
+│   │   ├── README.md                    # Session 概述
+│   │   ├── participants.md              # 參與者和角色
 │   │   ├── timeline.md                  # Event timeline
-│   │   ├── hot-spots.md                 # Questions and concerns
+│   │   ├── hot-spots.md                 # 問題和關注點
 │   │   └── diagrams/
 │   │       └── big-picture-timeline.md  # Mermaid diagram
 │   │
@@ -465,7 +465,7 @@ docs/event-storming/
     └── design-level-template.md
 ```
 
-### Session Documentation Template
+### Session 文件模板
 
 ```markdown
 ---
@@ -480,27 +480,27 @@ status: "completed|in-progress|planned"
 
 # Event Storming: {Process Name}
 
-## Session Overview
+## Session 概述
 
-**Phase**: {Phase Number and Name}
-**Date**: YYYY-MM-DD
-**Duration**: X hours
-**Facilitator**: Name
+**階段**：{Phase Number and Name}
+**日期**：YYYY-MM-DD
+**時長**：X hours
+**主持人**：Name
 
-## Participants
+## 參與者
 
-- **Domain Experts**: Name1, Name2
-- **Developers**: Name3, Name4
-- **Product Owners**: Name5
-- **Stakeholders**: Name6
+- **Domain Experts**：Name1, Name2
+- **開發人員**：Name3, Name4
+- **Product Owners**：Name5
+- **Stakeholders**：Name6
 
-## Goals
+## 目標
 
-1. Goal 1
-2. Goal 2
-3. Goal 3
+1. 目標 1
+2. 目標 2
+3. 目標 3
 
-## Discoveries
+## 發現
 
 ### Domain Events
 
@@ -532,40 +532,40 @@ status: "completed|in-progress|planned"
 
 ## Hot Spots
 
-### Unresolved Questions
+### 未解決的問題
 
-1. **Question**: What happens if payment fails after inventory is reserved?
-   - **Impact**: High
-   - **Owner**: Product Team
-   - **Status**: Open
+1. **問題**：如果在保留庫存後付款失敗會怎樣？
+   - **影響**：高
+   - **負責人**：Product Team
+   - **狀態**：開放
 
-2. **Question**: How long should we hold inventory reservation?
-   - **Impact**: Medium
-   - **Owner**: Business Team
-   - **Status**: Resolved - 15 minutes
+2. **問題**：我們應該保留庫存多久？
+   - **影響**：中等
+   - **負責人**：Business Team
+   - **狀態**：已解決 - 15 分鐘
 
-### Technical Concerns
+### 技術關注點
 
-1. **Concern**: Handling concurrent cart updates
-   - **Solution**: Optimistic locking with version numbers
-   - **Status**: Resolved
+1. **關注點**：處理並發的購物車更新
+   - **解決方案**：使用版本號的樂觀鎖定
+   - **狀態**：已解決
 
-## Diagrams
+## 圖表
 
-### Process Flow
+### 流程圖
 
 ```mermaid
-[Include Mermaid diagram here]
-```text
+[在此包含 Mermaid diagram]
+```
 
-## Next Steps
+## 後續步驟
 
-1. [ ] Schedule follow-up session for {specific process}
-2. [ ] Resolve open hot spots
-3. [ ] Create technical design documents
-4. [ ] Begin implementation of {aggregate name}
+1. [ ] 為 {specific process} 安排後續 session
+2. [ ] 解決開放的 hot spots
+3. [ ] 創建技術設計文件
+4. [ ] 開始實作 {aggregate name}
 
-## Related Documentation
+## 相關文件
 
 - [Domain Events Implementation](../../architecture/domain-events.md)
 - [Aggregate Design](../../viewpoints/functional/aggregates.md)
@@ -573,83 +573,83 @@ status: "completed|in-progress|planned"
 
 ---
 
-**Session Notes**: [Link to detailed notes if available]
-**Recording**: [Link to session recording if available]
+**Session Notes**：[詳細筆記連結（如果有）]
+**Recording**：[Session 錄影連結（如果有）]
 
 ```
 
-## Best Practices
+## 最佳實踐
 
-### Workshop Facilitation
+### Workshop 主持
 
-1. **Preparation**
-   - Book a large room with wall space or use digital whiteboard
-   - Prepare sticky notes in all required colors
-   - Invite all necessary participants
-   - Set clear objectives and time limits
+1. **準備**
+   - 預訂有牆面空間的大房間或使用數位白板
+   - 準備所有需要顏色的便利貼
+   - 邀請所有必要的參與者
+   - 設定明確的目標和時間限制
 
-2. **During the Session**
-   - Start with domain events, not solutions
-   - Encourage everyone to participate
-   - Don't get stuck on details in Phase 1
-   - Use hot spots to park unresolved questions
-   - Take photos of the board regularly
+2. **Session 期間**
+   - 從 domain events 開始，而非解決方案
+   - 鼓勵每個人參與
+   - 階段 1 不要卡在細節上
+   - 使用 hot spots 暫存未解決的問題
+   - 定期拍攝白板照片
 
-3. **After the Session**
-   - Document discoveries immediately
-   - Create digital diagrams from photos
-   - Share results with all participants
-   - Schedule follow-up sessions
-   - Track action items
+3. **Session 之後**
+   - 立即記錄發現
+   - 從照片創建數位圖表
+   - 與所有參與者分享結果
+   - 安排後續 sessions
+   - 追蹤行動項目
 
-### Common Pitfalls to Avoid
+### 要避免的常見陷阱
 
-1. **Starting with Solutions**: Focus on "what happened" not "how to implement"
-2. **Skipping Phases**: Each phase builds on the previous one
-3. **Too Much Detail Too Soon**: Keep Phase 1 high-level
-4. **Ignoring Domain Experts**: They know the business best
-5. **Not Documenting Hot Spots**: Capture all questions and concerns
-6. **Forgetting to Take Photos**: Document the board state regularly
+1. **從解決方案開始**：專注於「發生了什麼」而非「如何實作」
+2. **跳過階段**：每個階段都建立在前一個階段上
+3. **太早過多細節**：保持階段 1 的高層次
+4. **忽略 Domain Experts**：他們最了解業務
+5. **不記錄 Hot Spots**：捕捉所有問題和關注點
+6. **忘記拍照**：定期記錄白板狀態
 
-### Integration with Development
+### 與開發的整合
 
-1. **From Event Storming to Code**
-   - Use discovered events to create domain event classes
-   - Implement aggregates based on consistency boundaries
-   - Create commands from identified actions
-   - Implement policies as event handlers
+1. **從 Event Storming 到程式碼**
+   - 使用發現的 events 創建 domain event classes
+   - 基於一致性邊界實作 aggregates
+   - 從已識別的動作創建 commands
+   - 將 policies 實作為 event handlers
 
-2. **Continuous Refinement**
-   - Update Event Storming diagrams as understanding evolves
-   - Conduct mini-sessions for new features
-   - Review and validate with domain experts regularly
+2. **持續完善**
+   - 隨著理解的演進更新 Event Storming 圖表
+   - 為新功能進行小型 sessions
+   - 定期與 domain experts 審查和驗證
 
-## Tools and Resources
+## 工具和資源
 
-### Digital Tools
+### 數位工具
 
-- **Miro**: Excellent for remote Event Storming
-- **Mural**: Good collaboration features
-- **FigJam**: Simple and intuitive
-- **EventStorming.com**: Official resources and templates
+- **Miro**：適合遠端 Event Storming
+- **Mural**：良好的協作功能
+- **FigJam**：簡單直觀
+- **EventStorming.com**：官方資源和模板
 
-### Physical Materials
+### 實體材料
 
-- **Sticky Notes**: Orange, blue, yellow, purple, green, red, white, brown
-- **Markers**: Black for writing, colored for highlighting
-- **Wall Space**: At least 4-6 meters of continuous wall
-- **Painter's Tape**: For creating timeline
-- **Camera**: For documenting the board
+- **便利貼**：橘色、藍色、黃色、紫色、綠色、紅色、白色、棕色
+- **麥克筆**：黑色用於書寫，彩色用於突出顯示
+- **牆面空間**：至少 4-6 公尺的連續牆面
+- **遮蔽膠帶**：用於創建時間軸
+- **相機**：用於記錄白板
 
-## References
+## 參考資料
 
-- **Book**: "Introducing EventStorming" by Alberto Brandolini
-- **Website**: https://www.eventstorming.com/
-- **Video**: "50,000 Orange Stickies Later" by Alberto Brandolini
-- **Community**: EventStorming Slack community
+- **書籍**："Introducing EventStorming" by Alberto Brandolini
+- **網站**：https://www.eventstorming.com/
+- **影片**："50,000 Orange Stickies Later" by Alberto Brandolini
+- **社群**：EventStorming Slack community
 
 ---
 
-**Document Version**: 1.0
-**Last Updated**: 2025-01-17
-**Owner**: Architecture Team
+**Document Version**：1.0
+**Last Updated**：2025-01-17
+**Owner**：Architecture Team

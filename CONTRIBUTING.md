@@ -1,17 +1,17 @@
 # Contributing to Enterprise E-Commerce Platform
 
-Thank you for your interest in contributing! This document provides guidelines and instructions for contributing to this project.
+感謝您有興趣為本專案做出貢獻！本文件提供了為本專案做出貢獻的指南和說明。
 
-## 📑 Table of Contents
+## 📑 目錄
 
-- [Code of Conduct](#code-of-conduct)
-- [Getting Started](#getting-started)
-- [Development Workflow](#development-workflow)
-- [Coding Standards](#coding-standards)
-- [Testing Requirements](#testing-requirements)
-- [Documentation](#documentation)
-- [Pull Request Process](#pull-request-process)
-- [Community](#community)
+- [行為準則](#code-of-conduct)
+- [開始使用](#getting-started)
+- [開發工作流程](#development-workflow)
+- [編碼標準](#coding-standards)
+- [測試要求](#testing-requirements)
+- [文件](#documentation)
+- [Pull Request 流程](#pull-request-process)
+- [社群](#community)
 
 ---
 
@@ -19,23 +19,23 @@ Thank you for your interest in contributing! This document provides guidelines a
 
 ### Our Pledge
 
-We are committed to providing a welcoming and inspiring community for all. Please be respectful and constructive in your interactions.
+我們致力於為所有人提供一個友善且鼓舞人心的社群。請在互動中保持尊重和建設性。
 
 ### Expected Behavior
 
-- Be respectful and inclusive
-- Welcome newcomers and help them get started
-- Focus on what is best for the community
-- Show empathy towards other community members
+- 尊重和包容
+- 歡迎新成員並幫助他們入門
+- 專注於對社群最有利的事情
+- 對其他社群成員展現同理心
 
 ### Unacceptable Behavior
 
-- Harassment, discrimination, or offensive comments
-- Trolling, insulting, or derogatory comments
-- Public or private harassment
-- Publishing others' private information
+- 騷擾、歧視或冒犯性評論
+- 惡意挑釁、侮辱或貶損性評論
+- 公開或私下騷擾
+- 發布他人的私人資訊
 
-**Report Issues**: yikaikao@gmail.com
+**回報問題**: yikaikao@gmail.com
 
 ---
 
@@ -43,25 +43,25 @@ We are committed to providing a welcoming and inspiring community for all. Pleas
 
 ### Prerequisites
 
-Before you begin, ensure you have:
+在開始之前，請確保您擁有：
 
-- Java 21 or higher
-- Gradle 8.x (included via wrapper)
-- Docker and Docker Compose
-- Node.js 18+ (for CDK)
+- Java 21 或更高版本
+- Gradle 8.x（透過 wrapper 包含）
+- Docker 和 Docker Compose
+- Node.js 18+（用於 CDK）
 - Git
 
 ### Fork and Clone
 
-1. **Fork the repository** on GitHub
-2. **Clone your fork** locally:
+1. **Fork the repository** 在 GitHub 上
+2. **Clone your fork** 到本地：
 
 ```bash
 git clone https://github.com/YOUR-USERNAME/genai-demo.git
 cd genai-demo
 ```
 
-3. **Add upstream remote**:
+3. **Add upstream remote**：
 
 ```bash
 git remote add upstream https://github.com/ORIGINAL-OWNER/genai-demo.git
@@ -70,16 +70,16 @@ git remote add upstream https://github.com/ORIGINAL-OWNER/genai-demo.git
 ### Set Up Development Environment
 
 ```bash
-# Run one-command setup
+# 執行一鍵設定
 make dev-setup
 
-# Or manually:
-docker-compose up -d              # Start dependencies
-./gradlew :app:build              # Build application
-make setup-hooks                  # Set up Git hooks
+# 或手動執行：
+docker-compose up -d              # 啟動相依服務
+./gradlew :app:build              # 建置應用程式
+make setup-hooks                  # 設定 Git hooks
 ```
 
-**Detailed Setup**: See [Development Setup Guide](docs/development/setup/README.md)
+**詳細設定**: 參見 [Development Setup Guide](docs/development/setup/README.md)
 
 ---
 
@@ -87,7 +87,7 @@ make setup-hooks                  # Set up Git hooks
 
 ### 1. Create a Branch
 
-Create a feature branch from `main`:
+從 `main` 建立功能分支：
 
 ```bash
 git checkout main
@@ -96,44 +96,44 @@ git checkout -b feature/your-feature-name
 ```
 
 **Branch Naming Convention**:
-- `feature/` - New features
-- `fix/` - Bug fixes
-- `docs/` - Documentation changes
-- `refactor/` - Code refactoring
-- `test/` - Test additions or fixes
-- `chore/` - Maintenance tasks
+- `feature/` - 新功能
+- `fix/` - 錯誤修復
+- `docs/` - 文件變更
+- `refactor/` - 程式碼重構
+- `test/` - 測試新增或修復
+- `chore/` - 維護任務
 
 ### 2. Make Changes
 
-Follow our coding standards and best practices:
+遵循我們的編碼標準和最佳實踐：
 
-- Write clean, readable code
-- Follow [Coding Standards](docs/development/coding-standards/README.md)
-- Add tests for new functionality
-- Update documentation as needed
+- 撰寫簡潔、可讀的程式碼
+- 遵循 [Coding Standards](docs/development/coding-standards/README.md)
+- 為新功能新增測試
+- 根據需要更新文件
 
 ### 3. Test Your Changes
 
 ```bash
-# Run unit tests
+# 執行單元測試
 ./gradlew :app:test
 
-# Run BDD tests
+# 執行 BDD 測試
 ./gradlew :app:cucumber
 
-# Check coverage
+# 檢查覆蓋率
 ./gradlew :app:jacocoTestReport
 
-# Run architecture tests
+# 執行架構測試
 ./gradlew :app:test --tests "*ArchitectureTest"
 
-# Run all pre-commit checks
+# 執行所有 pre-commit 檢查
 make pre-commit
 ```
 
 ### 4. Commit Your Changes
 
-Follow [Conventional Commits](https://www.conventionalcommits.org/) format:
+遵循 [Conventional Commits](https://www.conventionalcommits.org/) 格式：
 
 ```bash
 git add .
@@ -150,14 +150,14 @@ git commit -m "feat(context): add new feature"
 ```
 
 **Types**:
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation changes
-- `style`: Code style changes (formatting, etc.)
-- `refactor`: Code refactoring
-- `test`: Test additions or fixes
-- `chore`: Maintenance tasks
-- `perf`: Performance improvements
+- `feat`: 新功能
+- `fix`: 錯誤修復
+- `docs`: 文件變更
+- `style`: 程式碼樣式變更（格式化等）
+- `refactor`: 程式碼重構
+- `test`: 測試新增或修復
+- `chore`: 維護任務
+- `perf`: 效能改進
 
 **Examples**:
 ```
@@ -173,7 +173,7 @@ test(customer): add unit tests for customer service
 git push origin feature/your-feature-name
 ```
 
-Then create a pull request on GitHub.
+然後在 GitHub 上建立 pull request。
 
 ---
 
@@ -181,13 +181,13 @@ Then create a pull request on GitHub.
 
 ### Java Code Style
 
-We follow the **Google Java Style Guide** with some modifications:
+我們遵循 **Google Java Style Guide** 並進行一些修改：
 
 #### Formatting
 
-- **Indentation**: 4 spaces (not tabs)
-- **Line Length**: 120 characters maximum
-- **Braces**: K&R style (opening brace on same line)
+- **Indentation**: 4 個空格（不使用 tabs）
+- **Line Length**: 最多 120 個字元
+- **Braces**: K&R 樣式（左大括號在同一行）
 
 #### Naming Conventions
 
@@ -215,19 +215,19 @@ package solid.humank.genaidemo.domain.customer;
 public class Order {
     // 1. Static fields
     private static final Logger logger = LoggerFactory.getLogger(Order.class);
-    
+
     // 2. Instance fields
     private final OrderId id;
     private OrderStatus status;
-    
+
     // 3. Constructors
     public Order(OrderId id) {
         this.id = id;
     }
-    
+
     // 4. Public methods
     public void submit() { }
-    
+
     // 5. Private methods
     private void validate() { }
 }
@@ -235,7 +235,7 @@ public class Order {
 
 ### Architecture Patterns
 
-Follow **Domain-Driven Design** and **Hexagonal Architecture** principles:
+遵循 **Domain-Driven Design** 和 **Hexagonal Architecture** 原則：
 
 #### Domain Layer
 
@@ -279,21 +279,21 @@ public record CustomerCreatedEvent(
 public class CustomerApplicationService {
     private final CustomerRepository customerRepository;
     private final DomainEventApplicationService eventService;
-    
+
     public void createCustomer(CreateCustomerCommand command) {
         // 1. Create aggregate
         Customer customer = new Customer(command.name(), command.email());
-        
+
         // 2. Save aggregate
         customerRepository.save(customer);
-        
+
         // 3. Publish events
         eventService.publishEventsFromAggregate(customer);
     }
 }
 ```
 
-**Detailed Standards**: [Coding Standards](docs/development/coding-standards/README.md)
+**詳細標準**: [Coding Standards](docs/development/coding-standards/README.md)
 
 ---
 
@@ -301,9 +301,9 @@ public class CustomerApplicationService {
 
 ### Test Coverage
 
-- **Minimum Coverage**: 80% line coverage
-- **Focus**: Business logic and domain model
-- **Tools**: JaCoCo for coverage reporting
+- **最低覆蓋率**: 80% 行覆蓋率
+- **重點**: 業務邏輯和領域模型
+- **工具**: JaCoCo 用於覆蓋率報告
 
 ### Test Types
 
@@ -312,21 +312,21 @@ public class CustomerApplicationService {
 ```java
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
-    
+
     @Mock
     private CustomerRepository customerRepository;
-    
+
     @InjectMocks
     private CustomerService customerService;
-    
+
     @Test
     void should_create_customer_when_valid_data_provided() {
         // Given
         CreateCustomerCommand command = new CreateCustomerCommand("John", "john@example.com");
-        
+
         // When
         Customer customer = customerService.createCustomer(command);
-        
+
         // Then
         assertThat(customer).isNotNull();
         assertThat(customer.getName()).isEqualTo("John");
@@ -339,7 +339,7 @@ class CustomerServiceTest {
 
 ```gherkin
 Feature: Customer Registration
-  
+
   Scenario: Successful customer registration
     Given a new customer with valid information
     When they submit the registration form
@@ -360,21 +360,21 @@ static final ArchRule domainLayerRules = classes()
 ### Running Tests
 
 ```bash
-# Unit tests
+# 單元測試
 ./gradlew :app:test
 
-# BDD tests
+# BDD 測試
 ./gradlew :app:cucumber
 
-# Coverage report
+# 覆蓋率報告
 ./gradlew :app:jacocoTestReport
-# View: build/reports/jacoco/test/html/index.html
+# 檢視: build/reports/jacoco/test/html/index.html
 
-# Architecture tests
+# 架構測試
 ./gradlew :app:test --tests "*ArchitectureTest"
 ```
 
-**Detailed Testing Guide**: [Testing Strategy](docs/development/testing/testing-strategy.md)
+**詳細測試指南**: [Testing Strategy](docs/development/testing/testing-strategy.md)
 
 ---
 
@@ -382,12 +382,12 @@ static final ArchRule domainLayerRules = classes()
 
 ### Documentation Requirements
 
-When making changes, update relevant documentation:
+進行變更時，請更新相關文件：
 
-- **Code Changes**: Update inline comments and JavaDoc
-- **API Changes**: Update OpenAPI specifications
-- **Architecture Changes**: Update relevant viewpoint documentation
-- **New Features**: Add to functional viewpoint and user guides
+- **程式碼變更**: 更新行內註解和 JavaDoc
+- **API 變更**: 更新 OpenAPI 規格
+- **架構變更**: 更新相關 viewpoint 文件
+- **新功能**: 新增到 functional viewpoint 和使用者指南
 
 ### Documentation Structure
 
@@ -403,21 +403,21 @@ docs/
 
 ### Writing Documentation
 
-Follow our [Documentation Style Guide](docs/STYLE-GUIDE.md):
+遵循我們的 [Documentation Style Guide](docs/STYLE-GUIDE.md)：
 
 #### Markdown Standards
 
-- Use ATX-style headers (`#` not `===`)
-- One sentence per line for better diffs
-- Use relative links for internal references
-- Include code examples where appropriate
+- 使用 ATX 樣式標題（`#` 而非 `===`）
+- 每行一個句子以獲得更好的差異比較
+- 內部參考使用相對連結
+- 適當時包含程式碼範例
 
 #### Diagrams
 
-- Use PlantUML for architecture diagrams
-- Use Mermaid for simple flow diagrams
-- Store diagrams in `docs/diagrams/`
-- Generate diagrams: `make diagrams`
+- 使用 PlantUML 繪製架構圖
+- 使用 Mermaid 繪製簡單流程圖
+- 將圖表儲存在 `docs/diagrams/`
+- 產生圖表: `make diagrams`
 
 #### Examples
 
@@ -426,7 +426,7 @@ Follow our [Documentation Style Guide](docs/STYLE-GUIDE.md):
 
 ## Overview
 
-This component handles customer authentication using JWT tokens.
+此元件使用 JWT tokens 處理客戶驗證。
 
 ## Usage
 
@@ -441,7 +441,7 @@ Customer customer = service.findById("123");
 - [Authentication Guide](./authentication.md)
 ```
 
-**Detailed Guide**: [Documentation Style Guide](docs/STYLE-GUIDE.md)
+**詳細指南**: [Documentation Style Guide](docs/STYLE-GUIDE.md)
 
 ---
 
@@ -449,36 +449,36 @@ Customer customer = service.findById("123");
 
 ### Before Submitting
 
-1. **Run all checks**:
+1. **執行所有檢查**:
    ```bash
    make pre-commit
    ```
 
-2. **Ensure tests pass**:
+2. **確保測試通過**:
    ```bash
    ./gradlew :app:test
    ./gradlew :app:cucumber
    ```
 
-3. **Check coverage**:
+3. **檢查覆蓋率**:
    ```bash
    ./gradlew :app:jacocoTestReport
-   # Ensure coverage is above 80%
+   # 確保覆蓋率高於 80%
    ```
 
-4. **Update documentation**:
-   - Update relevant viewpoint documentation
-   - Add/update API documentation
-   - Update CHANGELOG.md
+4. **更新文件**:
+   - 更新相關 viewpoint 文件
+   - 新增/更新 API 文件
+   - 更新 CHANGELOG.md
 
 ### Pull Request Template
 
-When creating a pull request, include:
+建立 pull request 時，請包含：
 
 ```markdown
 ## Description
 
-Brief description of changes
+變更的簡要說明
 
 ## Type of Change
 
@@ -514,16 +514,16 @@ Closes #123
 
 ### Review Process
 
-1. **Automated Checks**: CI/CD runs automatically
-2. **Code Review**: At least one approval required
-3. **Architecture Review**: For significant changes
-4. **Merge**: Squash and merge to main
+1. **Automated Checks**: CI/CD 自動執行
+2. **Code Review**: 至少需要一個核准
+3. **Architecture Review**: 用於重大變更
+4. **Merge**: Squash and merge 到 main
 
 ### After Merge
 
-- Delete your feature branch
-- Update your local main branch
-- Close related issues
+- 刪除您的功能分支
+- 更新您的本地 main 分支
+- 關閉相關 issues
 
 ---
 
@@ -531,23 +531,23 @@ Closes #123
 
 ### Communication Channels
 
-- **GitHub Issues**: Bug reports and feature requests
-- **GitHub Discussions**: Questions and general discussion
+- **GitHub Issues**: 錯誤回報和功能請求
+- **GitHub Discussions**: 問題和一般討論
 - **Email**: yikaikao@gmail.com
 
 ### Getting Help
 
-- Check [FAQ](README.md#-faq)
-- Search [existing issues](https://github.com/yourusername/genai-demo/issues)
-- Ask in [Discussions](https://github.com/yourusername/genai-demo/discussions)
-- Email maintainer: yikaikao@gmail.com
+- 檢查 [FAQ](README.md#-faq)
+- 搜尋 [existing issues](https://github.com/yourusername/genai-demo/issues)
+- 在 [Discussions](https://github.com/yourusername/genai-demo/discussions) 提問
+- Email 維護者: yikaikao@gmail.com
 
 ### Recognition
 
-Contributors will be recognized in:
-- CONTRIBUTORS.md file
+貢獻者將被認可於：
+- CONTRIBUTORS.md 文件
 - Release notes
-- Project documentation
+- 專案文件
 
 ---
 
@@ -571,15 +571,15 @@ Contributors will be recognized in:
 
 ## Questions?
 
-If you have questions about contributing:
+如果您對貢獻有任何疑問：
 
-- Check this guide and linked documentation
-- Search [existing issues](https://github.com/yourusername/genai-demo/issues)
-- Ask in [Discussions](https://github.com/yourusername/genai-demo/discussions)
+- 檢查本指南和連結的文件
+- 搜尋 [existing issues](https://github.com/yourusername/genai-demo/issues)
+- 在 [Discussions](https://github.com/yourusername/genai-demo/discussions) 提問
 - Email: yikaikao@gmail.com
 
-**Thank you for contributing!** 🎉
+**感謝您的貢獻！**
 
 ---
 
-**Last Updated**: 2024-11-09
+**最後更新**: 2024-11-09

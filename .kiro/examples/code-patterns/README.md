@@ -1,38 +1,38 @@
-# Code Patterns Examples
+# 代碼模式範例
 
-This directory contains comprehensive examples and guides for common code patterns used in this project.
+本目錄包含本項目中使用的常見代碼模式的綜合範例和指南。
 
-## 📚 Contents
+## 📚 內容
 
-### Code Quality Patterns
+### 代碼品質模式
 
-- [Error Handling](error-handling.md) - Exception handling patterns and best practices
-- [API Design](api-design.md) - RESTful API design patterns
-- [Security Patterns](security-patterns.md) - Security implementation patterns
-- [Performance Optimization](performance-optimization.md) - Performance tuning techniques
+- [Error Handling](error-handling.md) - 異常處理模式和最佳實踐
+- [API Design](api-design.md) - RESTful API 設計模式
+- [Security Patterns](security-patterns.md) - 安全實現模式
+- [Performance Optimization](performance-optimization.md) - 性能調整技術
 
-## 🎯 Purpose
+## 🎯 目的
 
-These examples demonstrate:
+這些範例演示：
 
-- **Error handling** strategies with custom exceptions
-- **API design** best practices with real endpoints
-- **Security patterns** for authentication and authorization
-- **Performance optimization** techniques with benchmarks
+- **錯誤處理**帶有自定義異常的策略
+- **API 設計**具有真實端點的最佳實踐
+- **安全模式**用於身份驗證和授權
+- **性能優化**具有基準測試的技術
 
-## 📖 How to Use
+## 📖 如何使用
 
-1. **Error Handling**: Reference when implementing exception handling
-2. **API Development**: Use as templates for new endpoints
-3. **Security Implementation**: Follow patterns for auth features
-4. **Performance Tuning**: Apply optimization techniques
+1. **錯誤處理**：在實現異常處理時參考
+2. **API 開發**：用作新端點的模板
+3. **安全實現**：遵循身份驗證功能的模式
+4. **性能調整**：應用優化技術
 
-## 🔗 Related Documentation
+## 🔗 相關文檔
 
-- **Code Quality Checklist**: [../../steering/code-quality-checklist.md](../../steering/code-quality-checklist.md)
-- **Security Standards**: [../../steering/security-standards.md](../../steering/security-standards.md)
-- **Performance Standards**: [../../steering/performance-standards.md](../../steering/performance-standards.md)
+- **代碼品質清單**：[../../steering/code-quality-checklist.md](../../steering/code-quality-checklist.md)
+- **安全標準**：[../../steering/security-standards.md](../../steering/security-standards.md)
+- **性能標準**：[../../steering/performance-standards.md](../../steering/performance-standards.md)
 
 ---
 
-**Note**: These are detailed examples. For quick reference rules, see the steering files.
+**注意**：這些是詳細範例。有關快速參考規則，請查看方向文件。

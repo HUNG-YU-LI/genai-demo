@@ -1,49 +1,49 @@
-# Deployment Monitoring - Quick Start Guide
+# Deployment Monitoring - 快速開始指南
 
-## 5-Minute Setup
+## 5 分鐘設定
 
-### Step 1: Deploy the Stack (2 minutes)
+### 步驟 1：部署 Stack（2 分鐘）
 
 ```bash
 cd infrastructure
 cdk deploy DeploymentMonitoring --require-approval never
 ```
 
-### Step 2: Subscribe to Alerts (1 minute)
+### 步驟 2：訂閱告警（1 分鐘）
 
 ```bash
-# Get the topic ARN
+# 取得 topic ARN
 TOPIC_ARN=$(aws cloudformation describe-stacks \
     --stack-name DeploymentMonitoring \
     --query 'Stacks[0].Outputs[?OutputKey==`DeploymentAlertTopicArn`].OutputValue' \
     --output text)
 
-# Subscribe your email
+# 訂閱您的電子郵件
 aws sns subscribe \
     --topic-arn $TOPIC_ARN \
     --protocol email \
     --notification-endpoint your-email@example.com
 
-# Confirm subscription in your email
+# 在您的電子郵件中確認訂閱
 ```
 
-### Step 3: Access Dashboard (1 minute)
+### 步驟 3：存取 Dashboard（1 分鐘）
 
 ```bash
-# Get dashboard URL
+# 取得 dashboard URL
 aws cloudformation describe-stacks \
     --stack-name DeploymentMonitoring \
     --query 'Stacks[0].Outputs[?OutputKey==`DeploymentDashboardUrl`].OutputValue' \
     --output text
 
-# Or open directly
+# 或直接開啟
 open "https://$(aws configure get region).console.aws.amazon.com/cloudwatch/home?region=$(aws configure get region)#dashboards:name=genai-demo-production-deployment-monitoring"
 ```
 
-### Step 4: Verify Metrics (1 minute)
+### 步驟 4：驗證 Metrics（1 分鐘）
 
 ```bash
-# Wait 5 minutes for first metrics collection, then check
+# 等待 5 分鐘進行首次指標收集，然後檢查
 aws cloudwatch get-metric-statistics \
     --namespace genai-demo/Deployment \
     --metric-name PipelineSuccessRate \
@@ -53,43 +53,43 @@ aws cloudwatch get-metric-statistics \
     --statistics Average
 ```
 
-## What You Get
+## 您將獲得什麼
 
-### 📊 Real-time Dashboard
+### 📊 即時 Dashboard
 
-- Pipeline success rates
-- Deployment success rates
-- Execution time trends
-- Failure tracking
+- Pipeline 成功率
+- 部署成功率
+- 執行時間趨勢
+- 失敗追蹤
 
-### 🔔 Instant Alerts
+### 🔔 即時告警
 
-You'll receive email notifications for:
-- Any pipeline failure
-- Any deployment failure
-- Success rate drops below 80%
-- Deployments taking longer than 30 minutes
-- Pipeline executions taking longer than 60 minutes
+您將收到以下電子郵件通知：
+- 任何 pipeline 失敗
+- 任何部署失敗
+- 成功率低於 80%
+- 部署時間超過 30 分鐘
+- Pipeline 執行時間超過 60 分鐘
 
-### 📈 Historical Data
+### 📈 歷史資料
 
-- Track deployment trends over time
-- Identify patterns in failures
-- Monitor performance improvements
-- Analyze deployment frequency
+- 追蹤隨時間變化的部署趨勢
+- 識別失敗模式
+- 監控效能改進
+- 分析部署頻率
 
-## Common Use Cases
+## 常見使用案例
 
-### Monitor Production Deployments
+### 監控 Production 部署
 
 ```bash
-# Deploy with production configuration
+# 使用 production 配置進行部署
 cdk deploy DeploymentMonitoring \
     -c environment=production \
     -c projectName=genai-demo
 ```
 
-### Multi-Region Monitoring
+### Multi-Region 監控
 
 ```typescript
 new DeploymentMonitoringStack(app, 'DeploymentMonitoring', {
@@ -103,7 +103,7 @@ new DeploymentMonitoringStack(app, 'DeploymentMonitoring', {
 });
 ```
 
-### Integration with Existing Alerts
+### 與現有告警整合
 
 ```typescript
 new DeploymentMonitoringStack(app, 'DeploymentMonitoring', {
@@ -113,60 +113,60 @@ new DeploymentMonitoringStack(app, 'DeploymentMonitoring', {
 });
 ```
 
-## Troubleshooting
+## 疑難排解
 
-### No Metrics Showing?
+### 未顯示 Metrics？
 
 ```bash
-# Check Lambda logs
+# 檢查 Lambda logs
 aws logs tail /aws/lambda/DeploymentMonitoring-DeploymentMetricsFunction --follow
 
-# Verify Lambda is running
+# 驗證 Lambda 正在執行
 aws lambda list-functions --query 'Functions[?contains(FunctionName, `DeploymentMetrics`)]'
 ```
 
-### Not Receiving Alerts?
+### 未收到告警？
 
 ```bash
-# Check SNS subscriptions
+# 檢查 SNS subscriptions
 aws sns list-subscriptions-by-topic --topic-arn $TOPIC_ARN
 
-# Verify subscription is confirmed
+# 驗證訂閱已確認
 aws sns get-subscription-attributes --subscription-arn <subscription-arn>
 ```
 
-### Dashboard Not Loading?
+### Dashboard 未載入？
 
 ```bash
-# Verify dashboard exists
+# 驗證 dashboard 存在
 aws cloudwatch list-dashboards | grep deployment-monitoring
 
-# Check dashboard content
+# 檢查 dashboard 內容
 aws cloudwatch get-dashboard --dashboard-name genai-demo-production-deployment-monitoring
 ```
 
-## Next Steps
+## 後續步驟
 
-1. **Customize Thresholds**: Adjust alarm thresholds based on your deployment patterns
-2. **Add More Subscribers**: Subscribe additional team members or tools
-3. **Integrate with Tools**: Connect to PagerDuty, Slack, or other incident management tools
-4. **Review Regularly**: Check dashboard weekly to identify improvement opportunities
+1. **自訂閾值**：根據您的部署模式調整告警閾值
+2. **新增更多訂閱者**：訂閱更多團隊成員或工具
+3. **與工具整合**：連接到 PagerDuty、Slack 或其他事件管理工具
+4. **定期檢視**：每週檢查 dashboard 以識別改進機會
 
-## Cost
+## 成本
 
-**~$12/month per environment**
+**每個環境每月約 $12**
 
-- Very cost-effective for the visibility provided
-- Scales with deployment frequency
-- No additional charges for viewing dashboard or receiving alerts
+- 對於提供的可見性而言非常具有成本效益
+- 隨部署頻率擴展
+- 查看 dashboard 或接收告警無需額外費用
 
-## Support
+## 支援
 
-For detailed documentation, see:
-- [Full Documentation](./DEPLOYMENT_MONITORING.md)
-- [AWS Code Services Guide](./AWS_CODE_SERVICES_DEPLOYMENT.md)
-- [Integration Examples](./examples/deployment-monitoring-integration.ts)
+詳細文件請參閱：
+- [完整文件](./DEPLOYMENT_MONITORING.md)
+- [AWS Code Services 指南](./AWS_CODE_SERVICES_DEPLOYMENT.md)
+- [整合範例](./examples/deployment-monitoring-integration.ts)
 
 ---
 
-**Ready to deploy?** Run `cdk deploy DeploymentMonitoring` now!
+**準備好部署了嗎？** 現在執行 `cdk deploy DeploymentMonitoring`！

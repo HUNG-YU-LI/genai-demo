@@ -1,37 +1,37 @@
-# Extreme Programming (XP) Practices Examples
+# 極限程式設計 (XP) 實踐範例
 
-This directory contains comprehensive examples and guides for Extreme Programming practices used in this project.
+本目錄包含本項目中使用的極限程式設計實踐的綜合示例和指南。
 
-## 📚 Contents
+## 📚 內容
 
-### XP Core Practices
+### XP 核心實踐
 
-- [Simple Design Examples](simple-design-examples.md) - Four Rules of Simple Design with examples
-- [Refactoring Guide](refactoring-guide.md) - Step-by-step refactoring techniques
-- [Pair Programming Guide](pair-programming-guide.md) - Effective pair programming practices
-- [Continuous Integration](continuous-integration.md) - CI/CD best practices
+- [Simple Design Examples](simple-design-examples.md) - 簡單設計的四條規則與示例
+- [Refactoring Guide](refactoring-guide.md) - 逐步重構技術
+- [Pair Programming Guide](pair-programming-guide.md) - 有效的配對程式設計實踐
+- [Continuous Integration](continuous-integration.md) - CI/CD 最佳實踐
 
-## 🎯 Purpose
+## 🎯 目的
 
-These examples demonstrate:
+這些示例演示：
 
-- **XP values in action** (Simplicity, Communication, Feedback, Courage)
-- **Practical refactoring techniques** with before/after code
-- **Test-first development** workflows
-- **Collaborative development** practices
+- **XP 價值觀在實踐中的應用**（簡潔性、溝通、反饋、勇氣）
+- **實用的重構技術**（包含前後代碼對比）
+- **測試驅動開發**工作流程
+- **協作開發**實踐
 
-## 📖 How to Use
+## 📖 如何使用
 
-1. **Learning XP**: Start with Simple Design Examples
-2. **Improving Code**: Use Refactoring Guide for code improvements
-3. **Team Practices**: Reference Pair Programming Guide for team collaboration
-4. **CI/CD Setup**: Follow Continuous Integration guide
+1. **學習 XP**：從簡單設計範例開始
+2. **改進代碼**：使用重構指南進行代碼改進
+3. **團隊實踐**：參考配對程式設計指南進行團隊協作
+4. **CI/CD 設置**：遵循持續整合指南
 
-## 🔗 Related Documentation
+## 🔗 相關文檔
 
-- **Design Principles**: [../../steering/design-principles.md](../../steering/design-principles.md)
-- **Development Standards**: [../../steering/development-standards.md](../../steering/development-standards.md)
+- **設計原則**：[../../steering/design-principles.md](../../steering/design-principles.md)
+- **開發標準**：[../../steering/development-standards.md](../../steering/development-standards.md)
 
 ---
 
-**Note**: These are detailed examples. For quick reference rules, see the steering files.
+**注意**：這些是詳細示例。有關快速參考規則，請查看方向文件。

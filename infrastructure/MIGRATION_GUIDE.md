@@ -1,158 +1,158 @@
-# Migration Guide: Separate Stacks → Consolidated Deployment
+# 遷移指南：獨立 Stacks → 整合部署
 
-## Overview
+## 概述
 
-This guide helps you migrate from the previous separate CDK applications to the new consolidated deployment approach.
+本指南協助您從先前的獨立 CDK 應用程式遷移到新的整合部署方法。
 
-## 🎯 Migration Benefits
+## 🎯 遷移優勢
 
-### Before: 3 Separate Applications
+### 之前：3 個獨立應用程式
 
-- **Main Infrastructure**: 4 stacks in `bin/infrastructure.ts`
-- **Analytics Pipeline**: 1 stack in `bin/analytics.ts`
-- **Multi-Region Setup**: 15+ stacks in `bin/multi-region-deployment.ts`
+- **Main Infrastructure**：`bin/infrastructure.ts` 中的 4 個 stacks
+- **Analytics Pipeline**：`bin/analytics.ts` 中的 1 個 stack
+- **Multi-Region Setup**：`bin/multi-region-deployment.ts` 中的 15+ 個 stacks
 
-### After: 1 Unified Application
+### 之後：1 個統一應用程式
 
-- **Consolidated Main**: 5-6 stacks in `bin/infrastructure.ts`
-- **Specialized Multi-Region**: Remains separate for complex DR scenarios
-- **Deprecated Analytics**: Functionality moved to main application
+- **Consolidated Main**：`bin/infrastructure.ts` 中的 5-6 個 stacks
+- **Specialized Multi-Region**：針對複雜 DR 場景保持獨立
+- **Deprecated Analytics**：功能移至主應用程式
 
-## 📋 Pre-Migration Checklist
+## 📋 遷移前檢查清單
 
-### 1. Backup Current Infrastructure
+### 1. 備份目前基礎設施
 
 ```bash
-# Export current stack outputs
+# 匯出目前 stack 輸出
 aws cloudformation describe-stacks --region us-east-1 > current-stacks-backup.json
 
-# List all existing stacks
+# 列出所有現有 stacks
 cdk list > current-cdk-stacks.txt
 ```
 
-### 2. Verify CDK Version
+### 2. 驗證 CDK 版本
 
 ```bash
-# Check current CDK version
+# 檢查目前 CDK 版本
 cdk --version
 
-# Should show: 2.208.0 or higher
-# If not, upgrade: npm install -g aws-cdk@latest
+# 應顯示：2.208.0 或更高版本
+# 如果不是，請升級：npm install -g aws-cdk@latest
 ```
 
-### 3. Review Current Configuration
+### 3. 檢視目前配置
 
 ```bash
-# Check current context settings
+# 檢查目前 context 設定
 cat cdk.context.json
 
-# Review current deployment parameters
+# 檢視目前部署參數
 grep -r "context" bin/
 ```
 
-## 🔄 Migration Scenarios
+## 🔄 遷移場景
 
-### Scenario 1: Currently Using `bin/infrastructure.ts` Only
+### 場景 1：目前僅使用 `bin/infrastructure.ts`
 
-**Status**: ✅ **No Migration Needed**
+**狀態**：✅ **無需遷移**
 
-Your deployment will continue to work. Optional improvements:
+您的部署將繼續運作。選用改進：
 
 ```bash
-# Add analytics capability
+# 新增分析功能
 cdk deploy --all --context enableAnalytics=true
 
-# Add alerting
+# 新增告警
 cdk deploy --all --context alertEmail=your-email@company.com
 ```
 
-### Scenario 2: Currently Using `bin/analytics.ts` Separately
+### 場景 2：目前單獨使用 `bin/analytics.ts`
 
-**Migration Required**: Move to consolidated deployment
+**需要遷移**：移至整合部署
 
-#### Step 1: Destroy Existing Analytics Stack
+#### 步驟 1：銷毀現有 Analytics Stack
 
 ```bash
-# If you have existing analytics deployment
+# 如果您有現有的 analytics 部署
 cdk destroy -a "npx ts-node bin/analytics.ts"
 ```
 
-#### Step 2: Deploy Consolidated Infrastructure
+#### 步驟 2：部署整合基礎設施
 
 ```bash
-# Deploy with analytics enabled
+# 啟用 analytics 部署
 ./deploy-consolidated.sh production us-east-1 true true
 ```
 
-#### Step 3: Verify Analytics Components
+#### 步驟 3：驗證 Analytics 元件
 
 ```bash
-# Check analytics stack deployment
+# 檢查 analytics stack 部署
 aws cloudformation describe-stacks --stack-name GenAIDemo-Prod-AnalyticsStack
 
-# Verify S3 data lake
+# 驗證 S3 data lake
 aws s3 ls | grep data-lake
 
-# Check Kinesis Firehose
+# 檢查 Kinesis Firehose
 aws firehose list-delivery-streams
 ```
 
-### Scenario 3: Using Both Main + Analytics Separately
+### 場景 3：同時使用 Main + Analytics
 
-**Migration Required**: Consolidate into single deployment
+**需要遷移**：整合為單一部署
 
-#### Step 1: Export Current Configuration
+#### 步驟 1：匯出目前配置
 
 ```bash
-# Save current outputs
+# 儲存目前輸出
 aws cloudformation describe-stacks --stack-name YourAnalyticsStack > analytics-outputs.json
 aws cloudformation describe-stacks --stack-name YourMainStack > main-outputs.json
 ```
 
-#### Step 2: Plan Migration
+#### 步驟 2：規劃遷移
 
 ```bash
-# Test consolidated deployment in development first
+# 首先在 development 中測試整合部署
 cdk deploy --all \
   --context environment=development \
   --context enableAnalytics=true \
   --context region=us-east-1
 ```
 
-#### Step 3: Migrate Production
+#### 步驟 3：遷移 Production
 
 ```bash
-# Destroy separate analytics stack
+# 銷毀獨立 analytics stack
 cdk destroy YourAnalyticsStack
 
-# Deploy consolidated infrastructure
+# 部署整合基礎設施
 ./deploy-consolidated.sh production us-east-1 true true
 ```
 
-### Scenario 4: Using Multi-Region Deployment
+### 場景 4：使用 Multi-Region 部署
 
-**Status**: ✅ **No Migration Needed**
+**狀態**：✅ **無需遷移**
 
-Multi-region deployment remains separate for specialized DR scenarios:
+Multi-region 部署針對專門的 DR 場景保持獨立：
 
 ```bash
-# Continue using multi-region deployment
+# 繼續使用 multi-region 部署
 cdk deploy --all -a "npx ts-node bin/multi-region-deployment.ts"
 ```
 
-**Optional**: Use consolidated deployment for single-region environments:
+**選用**：對單一區域環境使用整合部署：
 
 ```bash
-# Development/staging with consolidated approach
+# 使用整合方法的 Development/staging
 ./deploy-consolidated.sh development us-east-1 true
 
-# Production with multi-region approach
+# 使用 multi-region 方法的 Production
 cdk deploy --all -a "npx ts-node bin/multi-region-deployment.ts"
 ```
 
-## 🛠️ Migration Steps
+## 🛠️ 遷移步驟
 
-### Step 1: Update Dependencies
+### 步驟 1：更新相依套件
 
 ```bash
 cd infrastructure
@@ -160,34 +160,34 @@ npm install
 npm run build
 ```
 
-### Step 2: Test in Development
+### 步驟 2：在 Development 中測試
 
 ```bash
-# Deploy to development environment first
+# 首先部署到 development 環境
 ./deploy-consolidated.sh development us-east-1 true false
 ```
 
-### Step 3: Validate Functionality
+### 步驟 3：驗證功能
 
 ```bash
-# Check all stacks deployed successfully
+# 檢查所有 stacks 部署成功
 cdk list
 
-# Verify stack outputs
+# 驗證 stack 輸出
 aws cloudformation describe-stacks --stack-name GenAIDemo-Dev-CoreInfrastructureStack
 ```
 
-### Step 4: Migrate Staging
+### 步驟 4：遷移 Staging
 
 ```bash
-# Deploy to staging
+# 部署到 staging
 ./deploy-consolidated.sh staging us-east-1 true true
 ```
 
-### Step 5: Migrate Production
+### 步驟 5：遷移 Production
 
 ```bash
-# Deploy to production (with approval)
+# 部署到 production（需要核准）
 cdk deploy --all \
   --context environment=production \
   --context enableAnalytics=true \
@@ -196,81 +196,81 @@ cdk deploy --all \
   --require-approval broadening
 ```
 
-## 🔧 Configuration Mapping
+## 🔧 配置對應
 
-### Old Analytics Configuration → New Consolidated
+### 舊 Analytics 配置 → 新整合
 
-| Old Parameter | New Parameter | Notes |
+| 舊參數 | 新參數 | 備註 |
 |---------------|---------------|-------|
-| `--context vpc-id=vpc-xxx` | Automatic | VPC created by NetworkStack |
-| `--context kms-key-id=key-xxx` | Automatic | KMS key created by SecurityStack |
-| `--context msk-cluster-arn=arn:xxx` | Mock cluster | Real MSK integration available |
-| `--context alerting-topic-arn=arn:xxx` | Automatic | SNS topics created by AlertingStack |
+| `--context vpc-id=vpc-xxx` | Automatic | 由 NetworkStack 建立的 VPC |
+| `--context kms-key-id=key-xxx` | Automatic | 由 SecurityStack 建立的 KMS key |
+| `--context msk-cluster-arn=arn:xxx` | Mock cluster | 可用真實 MSK 整合 |
+| `--context alerting-topic-arn=arn:xxx` | Automatic | 由 AlertingStack 建立的 SNS topics |
 
-### Context Parameter Migration
+### Context 參數遷移
 
 ```bash
-# Old analytics deployment
+# 舊 analytics 部署
 cdk deploy -a "npx ts-node bin/analytics.ts" \
   --context vpc-id=vpc-12345 \
   --context kms-key-id=key-67890
 
-# New consolidated deployment  
+# 新整合部署
 cdk deploy --all \
   --context environment=production \
   --context enableAnalytics=true
 ```
 
-## 🚨 Troubleshooting
+## 🚨 疑難排解
 
-### Issue: Stack Dependencies
+### 問題：Stack 相依性
 
-**Problem**: Dependency conflicts during migration
+**問題**：遷移期間的相依性衝突
 
-**Solution**:
+**解決方案**：
 
 ```bash
-# Deploy stacks in correct order
+# 按正確順序部署 stacks
 cdk deploy GenAIDemo-Prod-NetworkStack
-cdk deploy GenAIDemo-Prod-SecurityStack  
+cdk deploy GenAIDemo-Prod-SecurityStack
 cdk deploy GenAIDemo-Prod-AlertingStack
 cdk deploy GenAIDemo-Prod-CoreInfrastructureStack
 cdk deploy GenAIDemo-Prod-ObservabilityStack
 cdk deploy GenAIDemo-Prod-AnalyticsStack
 ```
 
-### Issue: Resource Name Conflicts
+### 問題：資源名稱衝突
 
-**Problem**: Resource names conflict between old and new stacks
+**問題**：新舊 stacks 之間的資源名稱衝突
 
-**Solution**:
+**解決方案**：
 
 ```bash
-# Use different stack prefixes
+# 使用不同的 stack 前綴
 cdk deploy --all --context stackPrefix=GenAIDemoV2-
 ```
 
-### Issue: Missing Permissions
+### 問題：缺少權限
 
-**Problem**: IAM permissions missing after migration
+**問題**：遷移後缺少 IAM 權限
 
-**Solution**:
+**解決方案**：
 
 ```bash
-# Redeploy security stack first
+# 首先重新部署 security stack
 cdk deploy GenAIDemo-Prod-SecurityStack
 cdk deploy --all
 ```
 
-## ✅ Post-Migration Validation
+## ✅ 遷移後驗證
 
-### 1. Verify All Stacks
+### 1. 驗證所有 Stacks
 
 ```bash
-# List deployed stacks
+# 列出已部署的 stacks
 cdk list
 
-# Expected output:
+# 預期輸出：
 # GenAIDemo-Prod-NetworkStack
 # GenAIDemo-Prod-SecurityStack
 # GenAIDemo-Prod-AlertingStack
@@ -279,65 +279,65 @@ cdk list
 # GenAIDemo-Prod-AnalyticsStack (if enabled)
 ```
 
-### 2. Test Analytics Pipeline (if enabled)
+### 2. 測試 Analytics Pipeline（如已啟用）
 
 ```bash
-# Check S3 data lake
+# 檢查 S3 data lake
 aws s3 ls s3://genai-demo-production-data-lake-ACCOUNT/
 
-# Test Kinesis Firehose
+# 測試 Kinesis Firehose
 aws firehose put-record \
   --delivery-stream-name genai-demo-production-domain-events-firehose \
   --record '{"Data": "{\"test\": \"data\"}"}'
 ```
 
-### 3. Verify Monitoring
+### 3. 驗證監控
 
 ```bash
-# Check CloudWatch dashboards
+# 檢查 CloudWatch dashboards
 aws cloudwatch list-dashboards
 
-# Verify SNS topics
+# 驗證 SNS topics
 aws sns list-topics | grep genai-demo
 ```
 
-## 📚 Next Steps
+## 📚 後續步驟
 
-### 1. Update CI/CD Pipelines
+### 1. 更新 CI/CD Pipelines
 
 ```yaml
-# Update your CI/CD to use consolidated deployment
+# 更新您的 CI/CD 以使用整合部署
 deploy:
   script:
     - cd infrastructure
     - npm run deploy:prod
 ```
 
-### 2. Update Documentation
+### 2. 更新文件
 
-- Update deployment runbooks
-- Update team documentation
-- Update monitoring procedures
+- 更新部署 runbooks
+- 更新團隊文件
+- 更新監控程序
 
-### 3. Clean Up Old Resources
+### 3. 清理舊資源
 
 ```bash
-# Remove deprecated analytics deployment files (optional)
+# 移除已棄用的 analytics 部署檔案（選用）
 # git rm bin/analytics.ts
 
-# Update .gitignore if needed
+# 如需要更新 .gitignore
 echo "# Deprecated deployment files" >> .gitignore
 echo "bin/analytics.js" >> .gitignore
 ```
 
-## 🎉 Migration Complete
+## 🎉 遷移完成
 
-After successful migration, you'll have:
+成功遷移後，您將擁有：
 
-✅ **Unified Infrastructure**: Single deployment command  
-✅ **Better Dependencies**: Proper stack dependency management  
-✅ **Shared Resources**: Efficient resource utilization  
-✅ **Consistent Configuration**: Single configuration system  
-✅ **Enhanced Monitoring**: Integrated alerting and observability  
+✅ **統一基礎設施**：單一部署指令
+✅ **更好的相依性**：適當的 stack 相依性管理
+✅ **共享資源**：高效的資源利用
+✅ **一致的配置**：單一配置系統
+✅ **增強的監控**：整合的告警和可觀測性
 
-Your infrastructure is now consolidated and ready for production! 🚀
+您的基礎設施現已整合並準備好進入生產環境！🚀

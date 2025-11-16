@@ -1,27 +1,27 @@
-# ConsumerFrontend
+# 消費者前端
 
-This project was generated with Angular CLI version 18.2.20.
+本專案使用 Angular CLI 版本 18.2.20 產生。
 
-## Development server
+## 開發伺服器
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+執行 `ng serve` 啟動開發伺服器。瀏覽至 `http://localhost:4200/`。當您變更任何原始檔案時，應用程式將自動重新載入。
 
-## Code scaffolding
+## 程式碼腳手架
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+執行 `ng generate component component-name` 產生新的元件。您也可以使用 `ng generate directive|pipe|service|class|guard|interface|enum|module`。
 
-## Build
+## 建置
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+執行 `ng build` 建置專案。建置產物將儲存在 `dist/` 目錄中。
 
-## Running unit tests
+## 執行單元測試
 
-Run `ng test` to execute the unit tests via Karma.
+執行 `ng test` 透過 Karma 執行單元測試。
 
-## Running end-to-end tests
+## 執行端對端測試
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+執行 `ng e2e` 透過您選擇的平台執行端對端測試。要使用此指令，您需要先新增一個實作端對端測試功能的套件。
 
-## Further help
+## 進一步說明
 
-To get more help on the Angular CLI use `ng help` or go check out the Angular CLI Overview and Command Reference page.
+要取得 Angular CLI 的更多說明，請使用 `ng help` 或查看 Angular CLI Overview and Command Reference 頁面。

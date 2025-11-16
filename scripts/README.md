@@ -1,244 +1,244 @@
 # Documentation Quality Check Scripts
 
-This directory contains comprehensive documentation quality assurance tools for the Viewpoints & Perspectives documentation structure.
+此目錄包含 Viewpoints & Perspectives 文件結構的完整文件品質保證工具。
 
-## Overview
+## 概覽
 
-The documentation quality check system implements **Requirement 6: 文件維護的自動化** from the documentation restructure specification. It provides automated validation for:
+文件品質檢查系統實作了文件重組規格中的**需求6：文件維護的自動化**。它提供以下自動化驗證：
 
-- ✅ **Markdown syntax checking** using markdownlint
-- ✅ **Link validity verification** for internal and external links  
-- ✅ **Diagram rendering validation** for Mermaid, PlantUML, and Excalidraw
-- ✅ **Translation synchronization** between Chinese and English versions
-- ✅ **Document metadata validation** with YAML front matter checking
-- ✅ **Structure consistency** for Viewpoints & Perspectives organization
+- ✅ **Markdown 語法檢查**，使用 markdownlint
+- ✅ **連結有效性驗證**，針對內部和外部連結
+- ✅ **圖表渲染驗證**，支援 Mermaid、PlantUML 和 Excalidraw
+- ✅ **翻譯同步**，中英文版本之間
+- ✅ **文件 metadata 驗證**，包含 YAML front matter 檢查
+- ✅ **結構一致性**，針對 Viewpoints & Perspectives 組織
 
 ## Scripts
 
 ### Main Quality Check Script
 
-**`check-documentation-quality.sh`** - Comprehensive quality check runner
+**`check-documentation-quality.sh`** - 綜合品質檢查執行器
 ```bash
-# Run all quality checks
+# 執行所有品質檢查
 bash scripts/check-documentation-quality.sh
 
-# Or use npm script
+# 或使用 npm script
 npm run docs:quality
 ```
 
-**Features:**
-- Runs all quality checks in sequence
-- Generates comprehensive reports in `build/reports/documentation-quality/`
-- Provides colored output with pass/fail status
-- Creates summary report with recommendations
+**功能：**
+- 依序執行所有品質檢查
+- 在 `build/reports/documentation-quality/` 產生完整報告
+- 提供彩色輸出及通過/失敗狀態
+- 建立包含建議的摘要報告
 
 ### Individual Quality Check Tools
 
 #### 1. Advanced Link Checker
-**`check-links-advanced.js`** - Node.js-based link validation
+**`check-links-advanced.js`** - 基於 Node.js 的連結驗證
 ```bash
-# Check internal links only (fast)
+# 僅檢查內部連結（快速）
 node scripts/check-links-advanced.js
 
-# Check internal and external links (slower)
+# 檢查內部和外部連結（較慢）
 node scripts/check-links-advanced.js --external
 
-# Verbose output with progress
+# 詳細輸出及進度
 node scripts/check-links-advanced.js --verbose
 
-# Custom output file
+# 自訂輸出檔案
 node scripts/check-links-advanced.js --output reports/links.json
 
 # NPM scripts
-npm run docs:links          # Internal links only
-npm run docs:links:external # Include external links
+npm run docs:links          # 僅內部連結
+npm run docs:links:external # 包含外部連結
 ```
 
-**Features:**
-- Validates markdown `\1` and HTML `<a href="">` links
-- Supports both internal file links and external HTTP/HTTPS links
-- Generates JSON and Markdown reports
-- Handles relative paths and anchor links
-- Configurable timeout and user agent
-- Excludes localhost and example domains
+**功能：**
+- 驗證 markdown `[]()`和 HTML `<a href="">` 連結
+- 支援內部檔案連結和外部 HTTP/HTTPS 連結
+- 產生 JSON 和 Markdown 報告
+- 處理相對路徑和錨點連結
+- 可設定逾時和 user agent
+- 排除 localhost 和範例網域
 
 #### 2. Diagram Validator
-**`validate-diagrams.py`** - Python-based diagram syntax validation
+**`validate-diagrams.py`** - 基於 Python 的圖表語法驗證
 ```bash
-# Validate all diagrams
+# 驗證所有圖表
 python3 scripts/validate-diagrams.py
 
-# Verbose output
+# 詳細輸出
 python3 scripts/validate-diagrams.py --verbose
 
-# Custom output directory
+# 自訂輸出目錄
 python3 scripts/validate-diagrams.py --output reports/
 
-# Validate specific directory
+# 驗證特定目錄
 python3 scripts/validate-diagrams.py docs/diagrams/
 
 # NPM script
 npm run docs:diagrams
 ```
 
-**Supported Formats:**
-- **Mermaid** (`.mmd`): Validates diagram types, syntax structure
-- **PlantUML** (`.puml`, `.plantuml`): Checks `@startuml`/`@enduml` tags, balance
-- **Excalidraw** (`.excalidraw`): Validates JSON structure, required fields
+**支援的格式：**
+- **Mermaid** (`.mmd`)：驗證圖表類型、語法結構
+- **PlantUML** (`.puml`, `.plantuml`)：檢查 `@startuml`/`@enduml` 標籤、平衡性
+- **Excalidraw** (`.excalidraw`)：驗證 JSON 結構、必要欄位
 
-**Features:**
-- Detects diagram types automatically
-- Validates syntax structure and common errors
-- Generates detailed reports with error locations
-- Supports metadata extraction from diagrams
+**功能：**
+- 自動偵測圖表類型
+- 驗證語法結構和常見錯誤
+- 產生包含錯誤位置的詳細報告
+- 支援從圖表中提取 metadata
 
 #### 3. Metadata Validator
-**`validate-metadata.py`** - YAML front matter validation
+**`validate-metadata.py`** - YAML front matter 驗證
 ```bash
-# Validate document metadata
+# 驗證文件 metadata
 python3 scripts/validate-metadata.py
 
-# Verbose output
+# 詳細輸出
 python3 scripts/validate-metadata.py --verbose
 
-# Generate metadata templates
+# 產生 metadata templates
 python3 scripts/validate-metadata.py --generate-templates
 
 # NPM script
 npm run docs:metadata
 ```
 
-**Validation Rules:**
-- **Viewpoints**: Requires `title`, `viewpoint`, `description`, `stakeholders`
-- **Perspectives**: Requires `title`, `perspective`, `description`, `quality_attributes`
-- **Templates**: Requires `title`, `type`, `description`, `usage`
-- **General**: Requires `title`, `description`
+**驗證規則：**
+- **Viewpoints**：需要 `title`、`viewpoint`、`description`、`stakeholders`
+- **Perspectives**：需要 `title`、`perspective`、`description`、`quality_attributes`
+- **Templates**：需要 `title`、`type`、`description`、`usage`
+- **General**：需要 `title`、`description`
 
-**Features:**
-- Validates YAML front matter syntax
-- Checks required fields by document type
-- Validates viewpoint/perspective values against standard lists
-- Generates metadata templates for missing documents
-- Cross-references related documents
+**功能：**
+- 驗證 YAML front matter 語法
+- 依文件類型檢查必要欄位
+- 針對標準清單驗證 viewpoint/perspective 值
+- 為缺少的文件產生 metadata templates
+- 交叉參照相關文件
 
 #### 4. Translation Quality Checker
-**`check-translation-quality.sh`** - Enhanced translation synchronization
+**`check-translation-quality.sh`** - 增強的翻譯同步
 ```bash
-# Check translation quality
+# 檢查翻譯品質
 bash scripts/check-translation-quality.sh
 
 # NPM script
 npm run docs:translation
 ```
 
-**Features:**
-- Validates document structure and content
-- Validates Viewpoints & Perspectives structure
-- Supports new documentation organization
+**功能：**
+- 驗證文件結構和內容
+- 驗證 Viewpoints & Perspectives 結構
+- 支援新的文件組織
 
 ### Test and Validation Scripts
 
 #### System Test Runner
-**`test-documentation-quality.sh`** - Comprehensive system testing
+**`test-documentation-quality.sh`** - 綜合系統測試
 ```bash
-# Test all quality check components
+# 測試所有品質檢查元件
 bash scripts/test-documentation-quality.sh
 ```
 
-**Features:**
-- Tests all quality check scripts
-- Creates test files with known issues
-- Validates script functionality
-- Generates test reports
+**功能：**
+- 測試所有品質檢查腳本
+- 建立包含已知問題的測試檔案
+- 驗證腳本功能
+- 產生測試報告
 
 ## Configuration Files
 
 ### Markdown Linting
-**`.markdownlint.json`** - Markdown syntax rules
-- Line length: 120 characters
-- Allows HTML elements: `br`, `sub`, `sup`, `kbd`, `details`, `summary`
-- Ordered list style enforcement
-- Heading structure validation
+**`.markdownlint.json`** - Markdown 語法規則
+- 行長度：120 字元
+- 允許 HTML 元素：`br`、`sub`、`sup`、`kbd`、`details`、`summary`
+- 有序清單樣式強制執行
+- 標題結構驗證
 
 
 
 ## NPM Scripts
 
-Add to your workflow:
+新增至您的工作流程：
 ```bash
-# Individual checks
-npm run docs:quality      # Comprehensive quality check
-npm run docs:links        # Link validation (internal)
-npm run docs:links:external # Link validation (external)
-npm run docs:diagrams     # Diagram validation
-npm run docs:metadata     # Metadata validation
-npm run docs:translation  # Translation quality
+# 個別檢查
+npm run docs:quality      # 綜合品質檢查
+npm run docs:links        # 連結驗證（內部）
+npm run docs:links:external # 連結驗證（外部）
+npm run docs:diagrams     # 圖表驗證
+npm run docs:metadata     # Metadata 驗證
+npm run docs:translation  # 翻譯品質
 
-# Combined validation
-npm run docs:validate     # Run all checks
+# 組合驗證
+npm run docs:validate     # 執行所有檢查
 ```
 
 ## GitHub Actions Integration
 
-**`.github/workflows/documentation-quality.yml`** - Automated CI/CD checks
+**`.github/workflows/documentation-quality.yml`** - 自動化 CI/CD 檢查
 
-**Triggers:**
-- Push to `main`/`develop` branches
-- Pull requests affecting documentation
-- Manual workflow dispatch
+**觸發條件：**
+- 推送至 `main`/`develop` 分支
+- 影響文件的 pull requests
+- 手動 workflow dispatch
 
-**Features:**
-- Runs all quality checks automatically
-- Uploads reports as artifacts
-- Comments on PRs with quality summary
-- Supports external link checking option
+**功能：**
+- 自動執行所有品質檢查
+- 上傳報告作為 artifacts
+- 在 PRs 上留言品質摘要
+- 支援外部連結檢查選項
 
 ## Reports and Output
 
 ### Report Structure
 ```
 build/reports/documentation-quality/
-├── reports-summaries/frontend/documentation-quality-summary.md     # Main summary report
-├── markdown-lint-report.txt             # Markdown syntax issues
-├── link-check-report.txt                # Link validation results
-├── advanced-link-check.json             # Detailed link analysis
-├── advanced-link-check.md               # Link check summary
-├── diagram-validation-report.json       # Diagram validation data
-├── reports-summaries/diagrams/diagram-validation-report.md         # Diagram validation summary
-├── metadata-validation-report.json      # Metadata validation data
-├── metadata-validation-report.md        # Metadata validation summary
-└── translation-sync-report.txt          # Translation quality results
+├── reports-summaries/frontend/documentation-quality-summary.md     # 主要摘要報告
+├── markdown-lint-report.txt             # Markdown 語法問題
+├── link-check-report.txt                # 連結驗證結果
+├── advanced-link-check.json             # 詳細連結分析
+├── advanced-link-check.md               # 連結檢查摘要
+├── diagram-validation-report.json       # 圖表驗證資料
+├── reports-summaries/diagrams/diagram-validation-report.md         # 圖表驗證摘要
+├── metadata-validation-report.json      # Metadata 驗證資料
+├── metadata-validation-report.md        # Metadata 驗證摘要
+└── translation-sync-report.txt          # 翻譯品質結果
 ```
 
 ### Report Contents
-- **Pass/Fail Status**: Clear indicators for each check
-- **Error Details**: Specific file locations and error messages
-- **Recommendations**: Actionable steps to fix issues
-- **Statistics**: Coverage percentages and success rates
-- **Trends**: Historical comparison when available
+- **通過/失敗狀態**：每個檢查的清楚指示
+- **錯誤詳情**：特定檔案位置和錯誤訊息
+- **建議**：修復問題的可行步驟
+- **統計**：覆蓋率百分比和成功率
+- **趨勢**：可用時的歷史比較
 
 ## Prerequisites
 
 ### Required Tools
-- **Node.js 18+**: For link checking and npm scripts
-- **Python 3.8+**: For diagram and metadata validation
-- **Bash**: For shell scripts (macOS/Linux)
+- **Node.js 18+**：用於連結檢查和 npm scripts
+- **Python 3.8+**：用於圖表和 metadata 驗證
+- **Bash**：用於 shell scripts (macOS/Linux)
 
 ### Python Dependencies
 ```bash
-# Install PyYAML for metadata validation
+# 安裝 PyYAML 用於 metadata 驗證
 pip3 install pyyaml
 
-# Or use system package manager
+# 或使用系統套件管理器
 brew install python-yq  # macOS
 ```
 
 ### Node.js Dependencies
 ```bash
-# Install markdownlint globally
+# 全域安裝 markdownlint
 npm install -g markdownlint-cli
 
-# Or install project dependencies
+# 或安裝專案相依套件
 npm ci
 ```
 
@@ -246,33 +246,33 @@ npm ci
 
 ### Daily Development Workflow
 ```bash
-# Quick quality check before commit
+# commit 前的快速品質檢查
 npm run docs:quality
 
-# Fix any issues found
-# Re-run specific checks
+# 修復發現的任何問題
+# 重新執行特定檢查
 npm run docs:links
 npm run docs:metadata
 ```
 
 ### Pre-Release Validation
 ```bash
-# Comprehensive validation including external links
+# 包含外部連結的綜合驗證
 npm run docs:links:external
 npm run docs:validate
 
-# Review reports
+# 檢視報告
 open build/reports/documentation-quality/reports-summaries/frontend/documentation-quality-summary.md
 ```
 
 ### Continuous Integration
 ```bash
-# In CI/CD pipeline
+# 在 CI/CD pipeline 中
 npm ci
 npm run docs:validate
 
-# Upload reports for review
-# Fail build if critical issues found
+# 上傳報告以供檢視
+# 如果發現關鍵問題則建置失敗
 ```
 
 ## Troubleshooting
@@ -281,50 +281,50 @@ npm run docs:validate
 
 **1. PyYAML Not Available**
 ```bash
-# Install PyYAML
+# 安裝 PyYAML
 pip3 install --user pyyaml
-# Or use system package manager
+# 或使用系統套件管理器
 brew install python-yq
 ```
 
 **2. Markdownlint Not Found**
 ```bash
-# Install globally
+# 全域安裝
 npm install -g markdownlint-cli
-# Or use npx
+# 或使用 npx
 npx markdownlint docs/**/*.md
 ```
 
 **3. Permission Denied**
 ```bash
-# Make scripts executable
+# 使腳本可執行
 chmod +x scripts/*.sh scripts/*.js scripts/*.py
 ```
 
 **4. External Link Timeouts**
 ```bash
-# Skip external links for faster checking
-node scripts/check-links-advanced.js  # Internal only
+# 跳過外部連結以加快檢查速度
+node scripts/check-links-advanced.js  # 僅內部
 ```
 
 ### Performance Optimization
 
-**For Large Documentation Sets:**
-- Use internal-only link checking for daily development
-- Run external link checking in CI/CD only
-- Use `--verbose` flag to monitor progress
-- Consider parallel execution for multiple directories
+**對於大型文件集：**
+- 日常開發使用僅內部連結檢查
+- 僅在 CI/CD 中執行外部連結檢查
+- 使用 `--verbose` 旗標監控進度
+- 考慮對多個目錄進行並行執行
 
-**Memory Usage:**
-- Diagram validation: ~50MB for 100+ diagrams
-- Link checking: ~100MB for 300+ documents
-- Metadata validation: ~20MB for typical documentation
+**記憶體使用：**
+- 圖表驗證：100+ 圖表約 50MB
+- 連結檢查：300+ 文件約 100MB
+- Metadata 驗證：典型文件約 20MB
 
 ## Integration with Development Workflow
 
 ### Pre-Commit Hooks
 ```bash
-# Add to .git/hooks/pre-commit
+# 新增至 .git/hooks/pre-commit
 #!/bin/bash
 npm run docs:quality
 if [ $? -ne 0 ]; then
@@ -334,14 +334,14 @@ fi
 ```
 
 ### IDE Integration
-- Configure markdownlint extension for real-time syntax checking
-- Set up file watchers for automatic validation
-- Use task runners for integrated quality checks
+- 設定 markdownlint 擴充套件以進行即時語法檢查
+- 設定檔案監看器以進行自動驗證
+- 使用任務執行器進行整合的品質檢查
 
 ### Documentation Review Process
-1. **Author**: Run `npm run docs:quality` before creating PR
-2. **Reviewer**: Check quality reports in PR comments
-3. **Maintainer**: Ensure all quality checks pass before merge
-4. **Release**: Run comprehensive validation including external links
+1. **作者**：建立 PR 前執行 `npm run docs:quality`
+2. **審查者**：檢查 PR 留言中的品質報告
+3. **維護者**：確保所有品質檢查在合併前通過
+4. **發布**：執行包含外部連結的綜合驗證
 
-This comprehensive quality check system ensures consistent, high-quality documentation that meets the requirements of the Viewpoints & Perspectives restructure specification.
+此綜合品質檢查系統確保一致、高品質的文件，符合 Viewpoints & Perspectives 重組規格的要求。

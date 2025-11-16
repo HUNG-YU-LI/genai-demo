@@ -1,29 +1,29 @@
-# Performance Baselines
+# 效能基準
 
-This directory contains performance baselines for different test scenarios. Baselines are used to detect performance regressions and track performance trends over time.
+此目錄包含不同測試場景的效能基準。基準用於檢測效能回歸和追蹤效能趨勢。
 
-## Overview
+## 概述
 
-Performance baselines provide reference points for comparing current test results against historical performance. They help identify:
+效能基準提供了參考點，用於將目前測試結果與歷史效能進行比較。它們可幫助識別：
 
-- Performance regressions (degradation from baseline)
-- Performance improvements (better than baseline)
-- Performance stability (consistency with baseline)
-- Long-term performance trends
+- 效能回歸 (相對於基準的效能下降)
+- 效能改進 (優於基準)
+- 效能穩定性 (與基準一致)
+- 長期效能趨勢
 
-## Baseline Files
+## 基準檔案
 
-Each test scenario has its own baseline file:
+每個測試場景都有自己的基準檔案：
 
-- `normal-load_baseline.json` - Normal load test baseline
-- `peak-load_baseline.json` - Peak load test baseline  
-- `stress-test_baseline.json` - Stress test baseline
-- `endurance-test_baseline.json` - Endurance test baseline
-- `spike-test_baseline.json` - Spike test baseline
+- `normal-load_baseline.json` - 常規負載測試基準
+- `peak-load_baseline.json` - 尖峰負載測試基準
+- `stress-test_baseline.json` - 壓力測試基準
+- `endurance-test_baseline.json` - 耐久性測試基準
+- `spike-test_baseline.json` - 尖峰測試基準
 
-## Baseline Structure
+## 基準結構
 
-Each baseline file contains:
+每個基準檔案包含：
 
 ```json
 {
@@ -41,7 +41,7 @@ Each baseline file contains:
     },
     "p95_response_time": {
       "value": 1250.0,
-      "unit": "ms", 
+      "unit": "ms",
       "confidence_interval": [1200.0, 1300.0],
       "std_deviation": 75.5
     },
@@ -82,40 +82,40 @@ Each baseline file contains:
 }
 ```
 
-## Creating Baselines
+## 建立基準
 
-### Automatic Creation
+### 自動建立
 
-Baselines are automatically created when you run performance tests:
+執行效能測試時會自動建立基準：
 
 ```bash
-# Run test with baseline creation
+# 執行測試並建立基準
 ./scripts/run-performance-tests.sh --scenario normal --baseline
 
-# Create baseline from existing results
+# 從現有結果建立基準
 python scripts/performance-baseline.py create \
   --test-name normal-load \
   --results-file results/normal-load-results.json \
   --description "Initial baseline for normal load"
 ```
 
-### Manual Creation
+### 手動建立
 
-You can manually create baselines from multiple test results:
+你可以從多個測試結果手動建立基準：
 
 ```bash
-# Create baseline from multiple result files
+# 從多個結果檔案建立基準
 python scripts/performance-baseline.py create \
   --test-name normal-load \
   --results-files results/run1.json results/run2.json results/run3.json \
   --description "Baseline from 3 test runs"
 ```
 
-## Updating Baselines
+## 更新基準
 
-### Rolling Average Update
+### 移動平均更新
 
-Update baseline using rolling average of recent results:
+使用最近結果的移動平均更新基準：
 
 ```bash
 python scripts/performance-baseline.py update \
@@ -124,9 +124,9 @@ python scripts/performance-baseline.py update \
   --strategy rolling_average
 ```
 
-### Weighted Average Update
+### 加權平均更新
 
-Update baseline using weighted average:
+使用加權平均更新基準：
 
 ```bash
 python scripts/performance-baseline.py update \
@@ -136,9 +136,9 @@ python scripts/performance-baseline.py update \
   --new-weight 0.3
 ```
 
-### Replace Baseline
+### 取代基準
 
-Completely replace existing baseline:
+完全取代現有基準：
 
 ```bash
 python scripts/performance-baseline.py update \
@@ -147,102 +147,102 @@ python scripts/performance-baseline.py update \
   --strategy replace
 ```
 
-## Regression Detection
+## 回歸檢測
 
-### Compare Against Baseline
+### 與基準進行比較
 
 ```bash
-# Compare current results against baseline
+# 將目前結果與基準進行比較
 python scripts/performance-baseline.py compare \
   --test-name normal-load \
   --results-file results/current-results.json \
   --output regression-analysis.json
 ```
 
-### Automated Regression Detection
+### 自動回歸檢測
 
-Regression detection runs automatically during performance tests:
+回歸檢測在效能測試期間自動執行：
 
 ```bash
-# Run test with regression detection
+# 執行測試並進行回歸檢測
 ./scripts/run-performance-tests.sh --scenario normal --baseline --alerts
 ```
 
-## Regression Thresholds
+## 回歸閾值
 
-Different severity levels for performance regressions:
+效能回歸的不同嚴重程度：
 
-### Critical Regressions
-- Response time increase > 50%
-- Throughput decrease > 30% 
-- Success rate decrease > 5%
+### 嚴重回歸
+- 回應時間增加 > 50%
+- 吞吐量下降 > 30%
+- 成功率下降 > 5%
 
-### High Regressions
-- Response time increase > 30%
-- Throughput decrease > 20%
-- Success rate decrease > 3%
+### 高回歸
+- 回應時間增加 > 30%
+- 吞吐量下降 > 20%
+- 成功率下降 > 3%
 
-### Medium Regressions  
-- Response time increase > 20%
-- Throughput decrease > 15%
-- Success rate decrease > 2%
+### 中等回歸
+- 回應時間增加 > 20%
+- 吞吐量下降 > 15%
+- 成功率下降 > 2%
 
-### Low Regressions
-- Response time increase > 10%
-- Throughput decrease > 10%
-- Success rate decrease > 1%
+### 低回歸
+- 回應時間增加 > 10%
+- 吞吐量下降 > 10%
+- 成功率下降 > 1%
 
-## Baseline Management
+## 基準管理
 
-### List Baselines
+### 列出基準
 
 ```bash
-# List all baselines
+# 列出所有基準
 python scripts/performance-baseline.py list
 
-# List baselines for specific scenario
+# 列出特定場景的基準
 python scripts/performance-baseline.py list --test-name normal-load
 ```
 
-### Baseline Information
+### 基準資訊
 
 ```bash
-# Get baseline details
+# 取得基準詳細資訊
 python scripts/performance-baseline.py info --test-name normal-load
 ```
 
-### Backup Baselines
+### 備份基準
 
 ```bash
-# Backup all baselines
+# 備份所有基準
 python scripts/performance-baseline.py backup
 
-# Backup specific baseline
+# 備份特定基準
 python scripts/performance-baseline.py backup --test-name normal-load
 ```
 
-### Restore Baselines
+### 還原基準
 
 ```bash
-# Restore from backup
+# 從備份還原
 python scripts/performance-baseline.py restore --backup-file backup/normal-load_baseline_20250121.json
 ```
 
-## Configuration
+## 設定
 
-Baseline behavior is configured in `baseline-config.yml`:
+基準行為在 `baseline-config.yml` 中設定：
 
-### Key Configuration Options
+### 主要設定選項
 
-- **Calculation Method**: mean, median, percentile
-- **Outlier Detection**: IQR, Z-score, isolation forest
-- **Update Strategy**: rolling_average, weighted_average, replace
-- **Regression Thresholds**: Per severity level
-- **Retention Policy**: How long to keep baselines
+- **計算方法**: mean、median、percentile
+- **異常值偵測**: IQR、Z-score、isolation forest
+- **更新策略**: rolling_average、weighted_average、replace
+- **回歸閾值**: 按嚴重程度
+- **保留策略**: 基準保留多久
 
-### Test Scenario Specific Config
+### 測試場景特定設定
 
-Each test scenario can have custom configuration:
+每個測試場景都可以有自訂設定：
 
 ```yaml
 test_scenarios:
@@ -256,63 +256,63 @@ test_scenarios:
           response_time_increase_percent: 40
 ```
 
-## Best Practices
+## 最佳實踐
 
-### Baseline Creation
+### 基準建立
 
-1. **Sufficient Data**: Use at least 3-5 test runs for baseline creation
-2. **Stable Environment**: Create baselines in consistent test environment
-3. **Representative Load**: Ensure test scenarios represent real usage
-4. **Clean Data**: Remove outliers and failed test runs
+1. **充分的資料**: 用於基準建立至少使用 3-5 次測試執行
+2. **穩定的環境**: 在一致的測試環境中建立基準
+3. **代表性負載**: 確保測試場景代表實際使用情況
+4. **清潔資料**: 移除異常值和失敗的測試執行
 
-### Baseline Maintenance
+### 基準維護
 
-1. **Regular Updates**: Update baselines after significant improvements
-2. **Version Control**: Keep baseline versions for rollback capability
-3. **Documentation**: Document baseline changes and rationale
-4. **Validation**: Validate baselines after major system changes
+1. **定期更新**: 在重大改進後更新基準
+2. **版本控制**: 保留基準版本以便進行回復
+3. **文件**: 記錄基準變更和原因
+4. **驗證**: 在重大系統變更後驗證基準
 
-### Regression Detection
+### 回歸檢測
 
-1. **Appropriate Thresholds**: Set thresholds based on business requirements
-2. **Statistical Significance**: Use statistical tests for regression confirmation
-3. **Context Awareness**: Consider deployment and environment changes
-4. **Trend Analysis**: Look at trends, not just individual regressions
+1. **適當的閾值**: 根據業務需求設定閾值
+2. **統計顯著性**: 使用統計測試進行回歸確認
+3. **情境感知**: 考慮部署和環境變更
+4. **趨勢分析**: 查看趨勢，而不僅是個別回歸
 
-## Troubleshooting
+## 疑難排解
 
-### Common Issues
+### 常見問題
 
-#### Baseline Creation Fails
+#### 基準建立失敗
 
 ```bash
-# Check if enough data points
+# 檢查是否有足夠的資料點
 python scripts/performance-baseline.py info --test-name normal-load
 
-# Verify result file format
+# 驗證結果檔案格式
 python scripts/performance-baseline.py validate --results-file results/test-results.json
 ```
 
-#### High Baseline Variability
+#### 基準變異性高
 
 ```bash
-# Check coefficient of variation
+# 檢查變異係數
 python scripts/performance-baseline.py analyze --test-name normal-load
 
-# Review outlier detection settings in baseline-config.yml
+# 檢視 baseline-config.yml 中的異常值偵測設定
 ```
 
-#### False Positive Regressions
+#### 假陽性回歸
 
 ```bash
-# Adjust regression thresholds in baseline-config.yml
-# Enable statistical significance testing
-# Increase consecutive regression requirement
+# 在 baseline-config.yml 中調整回歸閾值
+# 啟用統計顯著性測試
+# 增加連續回歸要求
 ```
 
-### Debug Mode
+### 除錯模式
 
-Enable debug mode for detailed logging:
+啟用除錯模式以取得詳細日誌：
 
 ```bash
 python scripts/performance-baseline.py --debug compare \
@@ -320,16 +320,16 @@ python scripts/performance-baseline.py --debug compare \
   --results-file results/current-results.json
 ```
 
-## Integration
+## 整合
 
-### CI/CD Pipeline
+### CI/CD 管道
 
 ```yaml
-# GitHub Actions example
+# GitHub Actions 範例
 - name: Performance Test with Baseline
   run: |
     ./scripts/run-performance-tests.sh --scenario normal --baseline
-    
+
 - name: Check for Regressions
   run: |
     python scripts/performance-baseline.py compare \
@@ -338,38 +338,38 @@ python scripts/performance-baseline.py --debug compare \
       --fail-on-regression
 ```
 
-### Monitoring Integration
+### 監控整合
 
 ```bash
-# Send baseline metrics to monitoring system
+# 將基準指標傳送到監控系統
 python scripts/performance-baseline.py export \
   --test-name normal-load \
   --format prometheus \
   --output metrics.txt
 ```
 
-## File Naming Convention
+## 檔案命名慣例
 
-- Baseline files: `{test_scenario}_baseline.json`
-- Backup files: `{test_scenario}_baseline_{timestamp}.json`
-- Version files: `{test_scenario}_baseline_v{version}.json`
+- 基準檔案: `{test_scenario}_baseline.json`
+- 備份檔案: `{test_scenario}_baseline_{timestamp}.json`
+- 版本檔案: `{test_scenario}_baseline_v{version}.json`
 
-## Directory Structure
+## 目錄結構
 
 ```
 baselines/
-├── README.md                           # This file
-├── normal-load_baseline.json           # Normal load baseline
-├── peak-load_baseline.json             # Peak load baseline
-├── stress-test_baseline.json           # Stress test baseline
-├── endurance-test_baseline.json        # Endurance test baseline
-├── spike-test_baseline.json            # Spike test baseline
-├── backup/                             # Baseline backups
+├── README.md                           # 本檔案
+├── normal-load_baseline.json           # 常規負載基準
+├── peak-load_baseline.json             # 尖峰負載基準
+├── stress-test_baseline.json           # 壓力測試基準
+├── endurance-test_baseline.json        # 耐久性測試基準
+├── spike-test_baseline.json            # 尖峰測試基準
+├── backup/                             # 基準備份
 │   ├── normal-load_baseline_20250121.json
 │   └── peak-load_baseline_20250120.json
-└── versions/                           # Baseline versions
+└── versions/                           # 基準版本
     ├── normal-load_baseline_v1.0.json
     └── normal-load_baseline_v1.1.json
 ```
 
-This baseline system ensures consistent performance monitoring and helps maintain application performance quality over time.
+此基準系統確保一致的效能監控，並幫助維持應用程式效能品質。

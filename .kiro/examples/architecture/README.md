@@ -1,37 +1,37 @@
-# Architecture Examples and Guides
+# 架構範例和指南
 
-This directory contains comprehensive examples and guides for architectural patterns and practices used in this project.
+本目錄包含本項目中使用的架構模式和實踐的綜合範例和指南。
 
-## 📚 Contents
+## 📚 內容
 
-### Architecture Patterns
+### 架構模式
 
-- [Hexagonal Architecture](hexagonal-architecture.md) - Ports and adapters pattern implementation
-- [Event Storming Guide](event-storming-guide.md) - Collaborative domain modeling workshops
-- [Viewpoints Guide](viewpoints-guide.md) - Rozanski & Woods architecture viewpoints
+- [Hexagonal Architecture](hexagonal-architecture.md) - 端口和適配器模式實現
+- [Event Storming Guide](event-storming-guide.md) - 協作域建模工作坊
+- [Viewpoints Guide](viewpoints-guide.md) - Rozanski & Woods 架構視角
 
-## 🎯 Purpose
+## 🎯 目的
 
-These examples demonstrate:
+這些範例演示：
 
-- **Hexagonal architecture** implementation with real code
-- **Event Storming** workshop techniques and documentation
-- **Architecture viewpoints** application and documentation
-- **Bounded context** design and integration patterns
+- **六邊形架構**與真實代碼的實現
+- **Event Storming**工作坊技術和文檔
+- **架構視角**應用和文檔
+- **有界上下文**設計和整合模式
 
-## 📖 How to Use
+## 📖 如何使用
 
-1. **Understanding Architecture**: Start with Hexagonal Architecture guide
-2. **Domain Discovery**: Use Event Storming Guide for workshops
-3. **Architecture Documentation**: Follow Viewpoints Guide
-4. **System Design**: Reference all guides for comprehensive design
+1. **理解架構**：從六邊形架構指南開始
+2. **域發現**：使用 Event Storming 指南進行工作坊
+3. **架構文檔**：遵循視角指南
+4. **系統設計**：參考所有指南進行綜合設計
 
-## 🔗 Related Documentation
+## 🔗 相關文檔
 
-- **Architecture Constraints**: [../../steering/architecture-constraints.md](../../steering/architecture-constraints.md)
-- **Rozanski & Woods Methodology**: [../../steering/rozanski-woods-architecture-methodology.md](../../steering/rozanski-woods-architecture-methodology.md)
-- **Event Storming Standards**: [../../steering/event-storming-standards.md](../../steering/event-storming-standards.md)
+- **架構約束**：[../../steering/architecture-constraints.md](../../steering/architecture-constraints.md)
+- **Rozanski & Woods 方法論**：[../../steering/rozanski-woods-architecture-methodology.md](../../steering/rozanski-woods-architecture-methodology.md)
+- **Event Storming 標準**：[../../steering/event-storming-standards.md](../../steering/event-storming-standards.md)
 
 ---
 
-**Note**: These are detailed examples. For quick reference rules, see the steering files.
+**注意**：這些是詳細範例。有關快速參考規則，請查看方向文件。

@@ -1,92 +1,92 @@
-# Common Issues and Solutions
+# 常見問題與解決方案
 
-## Overview
+## 概述
 
-This document provides quick solutions for common issues encountered in the Enterprise E-Commerce Platform.
+本文件提供 Enterprise E-Commerce Platform 中常見問題的快速解決方案。
 
-## Application Issues
+## Application 問題
 
-### Issue: Application Won't Start
+### 問題：Application 無法啟動
 
-**Symptoms**: Pods in CrashLoopBackOff, application logs show startup errors
+**症狀**：Pod 處於 CrashLoopBackOff 狀態，application logs 顯示啟動錯誤
 
-**Quick Checks**:
+**快速檢查**：
 
 ```bash
 kubectl logs ${POD_NAME} -n ${NAMESPACE}
 kubectl describe pod ${POD_NAME} -n ${NAMESPACE}
 ```
 
-**Common Causes**:
+**常見原因**：
 
-1. **Database connection failure**
-   - Check database endpoint and credentials
-   - Verify security group rules
-   - Test connection: `pg_isready -h ${DB_HOST}`
+1. **Database 連線失敗**
+   - 檢查 database endpoint 和憑證
+   - 驗證 security group 規則
+   - 測試連線：`pg_isready -h ${DB_HOST}`
 
-2. **Missing environment variables**
-   - Check ConfigMap and Secrets
-   - Verify all required vars are set
+2. **缺少環境變數**
+   - 檢查 ConfigMap 和 Secrets
+   - 驗證所有必要變數已設定
 
-3. **Port already in use**
-   - Check for port conflicts
-   - Verify service configuration
+3. **Port 已被使用**
+   - 檢查 port 衝突
+   - 驗證 service 設定
 
-**Solution**: See [Service Outage Runbook](../runbooks/service-outage.md)
+**解決方案**：參見 [Service Outage Runbook](../runbooks/service-outage.md)
 
-### Issue: Slow API Responses
+### 問題：API 回應緩慢
 
-**Symptoms**: Response time > 2s, timeout errors
+**症狀**：回應時間 > 2s，timeout 錯誤
 
-**Quick Checks**:
+**快速檢查**：
 
 ```bash
 curl http://localhost:8080/actuator/metrics/http.server.requests
 kubectl top pods -n ${NAMESPACE}
 ```
 
-**Common Causes**:
+**常見原因**：
 
-1. High CPU/Memory usage
-2. Slow database queries
-3. Cache misses
-4. External API delays
+1. CPU/Memory 使用率高
+2. Database 查詢緩慢
+3. Cache 未命中
+4. 外部 API 延遲
 
-**Solution**:
+**解決方案**：
 
-- Quick fix: See [Slow API Responses Runbook](../runbooks/slow-api-responses.md)
-- Detailed investigation: See [Application Debugging Guide](application-debugging.md#performance-issues)
+- 快速修復：參見 [Slow API Responses Runbook](../runbooks/slow-api-responses.md)
+- 詳細調查：參見 [Application Debugging Guide](application-debugging.md#performance-issues)
 
-### Issue: Memory Leaks
+### 問題：Memory 洩漏
 
-**Symptoms**: Memory usage continuously increasing, OOMKilled pods
+**症狀**：Memory 使用量持續增加，Pod 被 OOMKilled
 
-**Quick Checks**:
+**快速檢查**：
 
 ```bash
 kubectl top pod ${POD_NAME} -n ${NAMESPACE}
 jmap -histo:live 1
 ```
 
-**Common Causes**:
+**常見原因**：
 
-1. Unclosed database connections
-2. Unbounded caches
-3. Static collections growing
-4. ThreadLocal not cleaned
+1. Database 連線未關閉
+2. Cache 無上限
+3. 靜態集合持續增長
+4. ThreadLocal 未清理
 
-**Solution**:
+**解決方案**：
 
-- Quick fix: See [High Memory Usage Runbook](../runbooks/high-memory-usage.md)
-- Detailed investigation: See [Application Debugging Guide](application-debugging.md#memory-issues)
+- 快速修復：參見 [High Memory Usage Runbook](../runbooks/high-memory-usage.md)
+- 詳細調查：參見 [Application Debugging Guide](application-debugging.md#memory-issues)
 
-## Database Issues
+## Database 問題
 
-### Issue: Connection Pool Exhausted
+### 問題：Connection Pool 耗盡
 
-**Symptoms**: "Too many connections" errors
+**症狀**：「Too many connections」錯誤
 
-**Quick Fix**:
+**快速修復**：
 
 ```bash
 # Kill idle connections
@@ -96,13 +96,13 @@ psql -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'i
 kubectl set env deployment/ecommerce-backend HIKARI_MAX_POOL_SIZE=30
 ```
 
-**Solution**: See [Database Connection Issues Runbook](../runbooks/database-connection-issues.md)
+**解決方案**：參見 [Database Connection Issues Runbook](../runbooks/database-connection-issues.md)
 
-### Issue: Slow Queries
+### 問題：查詢緩慢
 
-**Symptoms**: Query time > 1s, database CPU high
+**症狀**：查詢時間 > 1s，database CPU 過高
 
-**Quick Diagnosis**:
+**快速診斷**：
 
 ```sql
 SELECT query, calls, mean_time, max_time
@@ -110,41 +110,41 @@ FROM pg_stat_statements
 ORDER BY mean_time DESC LIMIT 10;
 ```
 
-**Quick Fix**:
+**快速修復**：
 
-- Add missing indexes
-- Optimize query
-- Use query caching
+- 新增缺少的索引
+- 優化查詢
+- 使用查詢快取
 
-**Solution**: See [Slow API Responses Runbook](../runbooks/slow-api-responses.md)
+**解決方案**：參見 [Slow API Responses Runbook](../runbooks/slow-api-responses.md)
 
-## Deployment Issues
+## Deployment 問題
 
-### Issue: Deployment Stuck
+### 問題：Deployment 卡住
 
-**Symptoms**: Rollout not progressing, pods pending
+**症狀**：Rollout 未進行，Pod 處於 pending 狀態
 
-**Quick Checks**:
+**快速檢查**：
 
 ```bash
 kubectl rollout status deployment/ecommerce-backend -n ${NAMESPACE}
 kubectl get events -n ${NAMESPACE} --sort-by='.lastTimestamp'
 ```
 
-**Quick Fix**:
+**快速修復**：
 
 ```bash
 # Rollback if needed
 kubectl rollout undo deployment/ecommerce-backend -n ${NAMESPACE}
 ```
 
-**Solution**: See [Failed Deployment Runbook](../runbooks/failed-deployment.md)
+**解決方案**：參見 [Failed Deployment Runbook](../runbooks/failed-deployment.md)
 
-### Issue: Image Pull Errors
+### 問題：Image Pull 錯誤
 
-**Symptoms**: ImagePullBackOff, ErrImagePull
+**症狀**：ImagePullBackOff、ErrImagePull
 
-**Quick Fix**:
+**快速修復**：
 
 ```bash
 # Update image pull secret
@@ -156,13 +156,13 @@ kubectl create secret docker-registry ecr-secret \
   --dry-run=client -o yaml | kubectl apply -f -
 ```
 
-## Network Issues
+## Network 問題
 
-### Issue: Service Unreachable
+### 問題：Service 無法連線
 
-**Symptoms**: Connection refused, timeout errors
+**症狀**：Connection refused、timeout 錯誤
 
-**Quick Checks**:
+**快速檢查**：
 
 ```bash
 kubectl get svc -n ${NAMESPACE}
@@ -170,20 +170,20 @@ kubectl get endpoints -n ${NAMESPACE}
 kubectl describe svc ecommerce-backend -n ${NAMESPACE}
 ```
 
-**Common Causes**:
+**常見原因**：
 
-1. Service selector mismatch
-2. Pod not ready
-3. Network policy blocking
-4. Security group rules
+1. Service selector 不匹配
+2. Pod 未就緒
+3. Network policy 阻擋
+4. Security group 規則
 
-**Solution**: See [Network and Connectivity Troubleshooting Guide](network-connectivity.md)
+**解決方案**：參見 [Network and Connectivity Troubleshooting Guide](network-connectivity.md)
 
-### Issue: DNS Resolution Failures
+### 問題：DNS 解析失敗
 
-**Symptoms**: "Name or service not known" errors
+**症狀**：「Name or service not known」錯誤
 
-**Quick Fix**:
+**快速修復**：
 
 ```bash
 # Test DNS resolution
@@ -193,54 +193,54 @@ kubectl exec -it ${POD_NAME} -- nslookup kubernetes.default
 kubectl rollout restart deployment/coredns -n kube-system
 ```
 
-**Solution**:
+**解決方案**：
 
-- Quick fix: Restart CoreDNS
-- Detailed investigation: See [Network and Connectivity Troubleshooting Guide](network-connectivity.md#dns-resolution-troubleshooting)
+- 快速修復：重啟 CoreDNS
+- 詳細調查：參見 [Network and Connectivity Troubleshooting Guide](network-connectivity.md#dns-resolution-troubleshooting)
 
-## Cache Issues
+## Cache 問題
 
-### Issue: Low Cache Hit Rate
+### 問題：Cache 命中率低
 
-**Symptoms**: Cache hit rate < 70%, slow responses
+**症狀**：Cache 命中率 < 70%，回應緩慢
 
-**Quick Diagnosis**:
+**快速診斷**：
 
 ```bash
 redis-cli INFO stats | grep keyspace
 ```
 
-**Quick Fix**:
+**快速修復**：
 
-- Increase cache TTL
-- Warm cache with frequently accessed data
-- Review cache key strategy
+- 增加 cache TTL
+- 使用常用資料預熱 cache
+- 檢視 cache key 策略
 
-### Issue: Redis Connection Failures
+### 問題：Redis 連線失敗
 
-**Symptoms**: "Connection refused" to Redis
+**症狀**：「Connection refused」到 Redis
 
-**Quick Checks**:
+**快速檢查**：
 
 ```bash
 redis-cli ping
 kubectl get pods -n ${NAMESPACE} -l app=redis
 ```
 
-**Quick Fix**:
+**快速修復**：
 
 ```bash
 # Restart Redis
 kubectl rollout restart statefulset/redis -n ${NAMESPACE}
 ```
 
-## Monitoring Issues
+## Monitoring 問題
 
-### Issue: Metrics Not Showing
+### 問題：Metrics 未顯示
 
-**Symptoms**: Grafana dashboards empty, no metrics
+**症狀**：Grafana dashboards 空白，沒有 metrics
 
-**Quick Checks**:
+**快速檢查**：
 
 ```bash
 # Check metrics endpoint
@@ -250,17 +250,17 @@ curl http://localhost:8080/actuator/metrics
 curl http://prometheus:9090/api/v1/targets
 ```
 
-**Quick Fix**:
+**快速修復**：
 
-- Verify Prometheus scrape config
-- Check service monitor
-- Restart Prometheus
+- 驗證 Prometheus scrape 設定
+- 檢查 service monitor
+- 重啟 Prometheus
 
-### Issue: Alerts Not Firing
+### 問題：Alerts 未觸發
 
-**Symptoms**: No alerts despite issues
+**症狀**：儘管有問題但沒有 alerts
 
-**Quick Checks**:
+**快速檢查**：
 
 ```bash
 # Check alert rules
@@ -270,7 +270,7 @@ curl http://prometheus:9090/api/v1/rules
 curl http://alertmanager:9093/api/v1/alerts
 ```
 
-## Quick Reference Commands
+## 快速參考指令
 
 ### Health Checks
 
@@ -288,7 +288,7 @@ redis-cli ping
 kafka-broker-api-versions --bootstrap-server ${KAFKA_BOOTSTRAP}
 ```
 
-### Resource Checks
+### 資源檢查
 
 ```bash
 # Pod resources
@@ -301,7 +301,7 @@ kubectl top nodes
 psql -c "SELECT count(*) FROM pg_stat_activity;"
 ```
 
-### Log Checks
+### Log 檢查
 
 ```bash
 # Application logs
@@ -314,38 +314,38 @@ kubectl logs ${POD_NAME} --previous -n ${NAMESPACE}
 kubectl logs -l app=ecommerce-backend -n ${NAMESPACE} --tail=100
 ```
 
-## Getting Help
+## 取得協助
 
-### Internal Resources
+### 內部資源
 
-- **Runbooks**: `/docs/operations/runbooks/`
-- **Monitoring**: Grafana dashboards
-- **Logs**: CloudWatch Logs, Kibana
+- **Runbooks**：`/docs/operations/runbooks/`
+- **Monitoring**：Grafana dashboards
+- **Logs**：CloudWatch Logs、Kibana
 
-### Escalation
+### 升級處理
 
-- **L1 Support**: DevOps team
-- **L2 Support**: Backend engineering team
-- **On-Call**: Check PagerDuty schedule
+- **L1 Support**：DevOps team
+- **L2 Support**：Backend engineering team
+- **On-Call**：查看 PagerDuty schedule
 
-### External Resources
+### 外部資源
 
-- **AWS Support**: Premium support available
-- **Kubernetes Docs**: <https://kubernetes.io/docs/>
-- **Spring Boot Docs**: <https://spring.io/projects/spring-boot>
+- **AWS Support**：Premium support available
+- **Kubernetes Docs**：<https://kubernetes.io/docs/>
+- **Spring Boot Docs**：<https://spring.io/projects/spring-boot>
 
-## Related Documentation
+## 相關文件
 
-- [Application Debugging Guide](application-debugging.md) - Detailed debugging workflows and analysis techniques
-- [Database Issues Guide](database-issues.md) - Comprehensive database troubleshooting
-- [Network and Connectivity Guide](network-connectivity.md) - Network, DNS, TLS, and connectivity troubleshooting
-- [Security Incidents Guide](security-incidents.md) - Security troubleshooting and incident response
-- [Runbooks](../runbooks/README.md) - Step-by-step operational procedures
-- [Monitoring Strategy](../monitoring/monitoring-strategy.md) - Monitoring and alerting setup
-- [Deployment Process](../deployment/deployment-process.md) - Deployment procedures
+- [Application Debugging Guide](application-debugging.md) - 詳細的除錯工作流程與分析技術
+- [Database Issues Guide](database-issues.md) - 完整的 database 疑難排解
+- [Network and Connectivity Guide](network-connectivity.md) - Network、DNS、TLS 和連線疑難排解
+- [Security Incidents Guide](security-incidents.md) - Security 疑難排解與事件回應
+- [Runbooks](../runbooks/README.md) - 逐步操作程序
+- [Monitoring Strategy](../monitoring/monitoring-strategy.md) - Monitoring 和 alerting 設定
+- [Deployment Process](../deployment/deployment-process.md) - Deployment 程序
 
 ---
 
-**Last Updated**: 2025-10-25  
-**Owner**: DevOps Team  
-**Review Cycle**: Monthly
+**Last Updated**：2025-10-25
+**Owner**：DevOps Team
+**Review Cycle**：Monthly

@@ -1,289 +1,289 @@
 # Architecture Documentation
 
-> **Last Updated**: 2025-01-17
+> **最後更新**：2025-01-17
 
-## Overview
+## 概述
 
-This section contains comprehensive architecture documentation for the GenAI Demo e-commerce platform, following the Rozanski & Woods methodology with viewpoints, perspectives, and Architecture Decision Records (ADRs).
+本節包含 GenAI Demo 電子商務平台的完整架構文檔，遵循 Rozanski & Woods 方法論，包含 viewpoints、perspectives 和 Architecture Decision Records (ADRs)。
 
-## Quick Navigation
+## 快速導航
 
 ### 📐 Architectural Viewpoints
 
-- [Viewpoints Overview](../viewpoints/README.md) - All architectural viewpoints
-- [Functional Viewpoint](../viewpoints/functional/README.md) - Business capabilities
-- [Information Viewpoint](../viewpoints/information/README.md) - Data structures
-- [Concurrency Viewpoint](../viewpoints/concurrency/README.md) - Concurrency model
-- [Development Viewpoint](../viewpoints/development/README.md) - Development structure
-- [Deployment Viewpoint](../viewpoints/deployment/README.md) - Deployment architecture
-- [Operational Viewpoint](../viewpoints/operational/README.md) - Operations concerns
-- [Context Viewpoint](../viewpoints/context/README.md) - System context
+- [Viewpoints Overview](../viewpoints/README.md) - 所有架構 viewpoints
+- [Functional Viewpoint](../viewpoints/functional/README.md) - 業務能力
+- [Information Viewpoint](../viewpoints/information/README.md) - 資料結構
+- [Concurrency Viewpoint](../viewpoints/concurrency/README.md) - 並發模型
+- [Development Viewpoint](../viewpoints/development/README.md) - 開發結構
+- [Deployment Viewpoint](../viewpoints/deployment/README.md) - 部署架構
+- [Operational Viewpoint](../viewpoints/operational/README.md) - 運營關注點
+- [Context Viewpoint](../viewpoints/context/README.md) - 系統上下文
 
 ### 🎯 Quality Perspectives
 
-- [Perspectives Overview](../perspectives/README.md) - All quality perspectives
-- [Security Perspective](../perspectives/security/README.md) - Security concerns
-- [Performance Perspective](../perspectives/performance/README.md) - Performance optimization
-- [Availability Perspective](../perspectives/availability/README.md) - High availability
-- [Evolution Perspective](../perspectives/evolution/README.md) - System evolution
-- [Accessibility Perspective](../perspectives/accessibility/README.md) - API accessibility
-- [Development Resource Perspective](../perspectives/development-resource/README.md) - Development resources
-- [Internationalization Perspective](../perspectives/internationalization/README.md) - I18n support
-- [Location Perspective](../perspectives/location/README.md) - Geographic distribution
+- [Perspectives Overview](../perspectives/README.md) - 所有品質 perspectives
+- [Security Perspective](../perspectives/security/README.md) - 安全關注點
+- [Performance Perspective](../perspectives/performance/README.md) - 效能優化
+- [Availability Perspective](../perspectives/availability/README.md) - 高可用性
+- [Evolution Perspective](../perspectives/evolution/README.md) - 系統演進
+- [Accessibility Perspective](../perspectives/accessibility/README.md) - API 可存取性
+- [Development Resource Perspective](../perspectives/development-resource/README.md) - 開發資源
+- [Internationalization Perspective](../perspectives/internationalization/README.md) - I18n 支援
+- [Location Perspective](../perspectives/location/README.md) - 地理分佈
 
 ### 📋 Architecture Decision Records
 
-- [ADRs Overview](adrs/README.md) - All architecture decisions
-- [ADR Roadmap](adrs/ADR-ROADMAP.md) - Planned and completed ADRs
-- [ADR Template](../templates/adr-template.md) - Template for new ADRs
+- [ADRs Overview](adrs/README.md) - 所有架構決策
+- [ADR Roadmap](adrs/ADR-ROADMAP.md) - 已規劃和已完成的 ADRs
+- [ADR Template](../templates/adr-template.md) - 新 ADRs 的範本
 
-## Architecture Overview
+## 架構概述
 
-### System Architecture
+### 系統架構
 
-The GenAI Demo platform is built using:
+GenAI Demo 平台採用以下架構：
 
 - **Hexagonal Architecture** (Ports and Adapters)
 - **Domain-Driven Design** (DDD) tactical patterns
-- **Event-Driven Architecture** for cross-context communication
-- **Microservices** deployed on AWS EKS
-- **Multi-Region Active-Active** for high availability
+- **Event-Driven Architecture** 用於跨 context 通訊
+- **Microservices** 部署在 AWS EKS 上
+- **Multi-Region Active-Active** 實現高可用性
 
-### Key Architectural Principles
+### 核心架構原則
 
-1. **Domain-Centric Design**: Business logic in domain layer
-2. **Dependency Inversion**: Domain has no infrastructure dependencies
-3. **Event-Driven Communication**: Bounded contexts communicate via events
-4. **Infrastructure as Code**: AWS CDK for infrastructure
-5. **Cloud-Native**: Designed for cloud deployment
+1. **Domain-Centric Design**：業務邏輯位於 domain 層
+2. **Dependency Inversion**：Domain 層沒有基礎設施依賴
+3. **Event-Driven Communication**：Bounded contexts 透過事件通訊
+4. **Infrastructure as Code**：使用 AWS CDK 管理基礎設施
+5. **Cloud-Native**：專為雲端部署而設計
 
-### Technology Stack
+### 技術堆疊
 
 #### Backend
 
-- **Language**: Java 21
-- **Framework**: Spring Boot 3.4.5
-- **Build Tool**: Gradle 8.x
-- **Database**: PostgreSQL (RDS)
-- **Cache**: Redis (ElastiCache)
-- **Messaging**: Apache Kafka (MSK)
+- **Language**：Java 21
+- **Framework**：Spring Boot 3.4.5
+- **Build Tool**：Gradle 8.x
+- **Database**：PostgreSQL (RDS)
+- **Cache**：Redis (ElastiCache)
+- **Messaging**：Apache Kafka (MSK)
 
 #### Frontend
 
-- **CMC Management**: Next.js 14 + React 18 + TypeScript
-- **Consumer App**: Angular 18 + TypeScript
-- **UI Components**: shadcn/ui + Radix UI
+- **CMC Management**：Next.js 14 + React 18 + TypeScript
+- **Consumer App**：Angular 18 + TypeScript
+- **UI Components**：shadcn/ui + Radix UI
 
 #### Infrastructure
 
-- **Cloud Provider**: AWS
-- **Container Orchestration**: Amazon EKS
-- **Infrastructure as Code**: AWS CDK
-- **Observability**: CloudWatch + X-Ray + Grafana
+- **Cloud Provider**：AWS
+- **Container Orchestration**：Amazon EKS
+- **Infrastructure as Code**：AWS CDK
+- **Observability**：CloudWatch + X-Ray + Grafana
 
 ## Architectural Viewpoints
 
 ### Functional Viewpoint
 
-Describes the system's functional capabilities and responsibilities.
+描述系統的功能能力和職責。
 
-**Key Elements**:
-- Bounded contexts and their responsibilities
-- Use cases and business processes
-- Domain model and aggregates
-- External interfaces
+**核心要素**：
+- Bounded contexts 及其職責
+- 使用案例和業務流程
+- Domain 模型和 aggregates
+- 外部介面
 
-[Full Functional Viewpoint](../viewpoints/functional/README.md)
+[完整 Functional Viewpoint](../viewpoints/functional/README.md)
 
 ### Information Viewpoint
 
-Describes how the system stores, manipulates, and distributes information.
+描述系統如何儲存、操作和分發資訊。
 
-**Key Elements**:
-- Data models and entity relationships
-- Data flow between components
-- Data lifecycle and persistence
-- Event data structures
+**核心要素**：
+- 資料模型和實體關係
+- 組件之間的資料流
+- 資料生命週期和持久化
+- 事件資料結構
 
-[Full Information Viewpoint](../viewpoints/information/README.md)
+[完整 Information Viewpoint](../viewpoints/information/README.md)
 
 ### Concurrency Viewpoint
 
-Describes the concurrency structure and how the system handles concurrent requests.
+描述並發結構以及系統如何處理並發請求。
 
-**Key Elements**:
-- Thread pools and async processing
-- Event processing concurrency
-- Distributed locking strategies
-- Transaction management
+**核心要素**：
+- Thread pools 和非同步處理
+- 事件處理並發
+- 分散式鎖定策略
+- 交易管理
 
-[Full Concurrency Viewpoint](../viewpoints/concurrency/README.md)
+[完整 Concurrency Viewpoint](../viewpoints/concurrency/README.md)
 
 ### Development Viewpoint
 
-Describes the architecture from a developer's perspective.
+從開發者角度描述架構。
 
-**Key Elements**:
-- Module structure and dependencies
-- Build process and tools
-- Development environment
-- Code organization
+**核心要素**：
+- 模組結構和依賴關係
+- 建置流程和工具
+- 開發環境
+- 程式碼組織
 
-[Full Development Viewpoint](../viewpoints/development/README.md)
+[完整 Development Viewpoint](../viewpoints/development/README.md)
 
 ### Deployment Viewpoint
 
-Describes how the system is deployed to runtime environments.
+描述系統如何部署到執行環境。
 
-**Key Elements**:
-- Deployment architecture
-- Infrastructure components
-- Network topology
-- Environment configuration
+**核心要素**：
+- 部署架構
+- 基礎設施組件
+- 網路拓撲
+- 環境配置
 
-[Full Deployment Viewpoint](../viewpoints/deployment/README.md)
+[完整 Deployment Viewpoint](../viewpoints/deployment/README.md)
 
 ### Operational Viewpoint
 
-Describes how the system is operated, monitored, and maintained.
+描述系統如何運營、監控和維護。
 
-**Key Elements**:
-- Monitoring and alerting
-- Backup and recovery
-- Incident response
-- Maintenance procedures
+**核心要素**：
+- 監控和告警
+- 備份和恢復
+- 事件回應
+- 維護程序
 
-[Full Operational Viewpoint](../viewpoints/operational/README.md)
+[完整 Operational Viewpoint](../viewpoints/operational/README.md)
 
 ### Context Viewpoint
 
-Describes the system's relationships with its environment.
+描述系統與其環境的關係。
 
-**Key Elements**:
-- System boundaries
-- External systems and integrations
-- Stakeholders
-- External dependencies
+**核心要素**：
+- 系統邊界
+- 外部系統和整合
+- 利害關係人
+- 外部依賴
 
-[Full Context Viewpoint](../viewpoints/context/README.md)
+[完整 Context Viewpoint](../viewpoints/context/README.md)
 
 ## Quality Perspectives
 
 ### Security Perspective
 
-Addresses security concerns across all viewpoints.
+處理所有 viewpoints 的安全關注點。
 
-**Key Concerns**:
-- Authentication and authorization
-- Data protection and encryption
-- Network security
-- Compliance requirements
+**核心關注點**：
+- 認證和授權
+- 資料保護和加密
+- 網路安全
+- 合規要求
 
-[Full Security Perspective](../perspectives/security/README.md)
+[完整 Security Perspective](../perspectives/security/README.md)
 
 ### Performance Perspective
 
-Addresses performance and scalability concerns.
+處理效能和可擴展性關注點。
 
-**Key Concerns**:
-- Response time requirements
-- Throughput capacity
-- Resource utilization
-- Scalability strategies
+**核心關注點**：
+- 回應時間要求
+- 吞吐量容量
+- 資源利用率
+- 可擴展性策略
 
-[Full Performance Perspective](../perspectives/performance/README.md)
+[完整 Performance Perspective](../perspectives/performance/README.md)
 
 ### Availability Perspective
 
-Addresses system availability and reliability.
+處理系統可用性和可靠性。
 
-**Key Concerns**:
-- High availability architecture
-- Disaster recovery
-- Fault tolerance
-- Business continuity
+**核心關注點**：
+- 高可用性架構
+- 災難恢復
+- 容錯能力
+- 業務連續性
 
-[Full Availability Perspective](../perspectives/availability/README.md)
+[完整 Availability Perspective](../perspectives/availability/README.md)
 
 ### Evolution Perspective
 
-Addresses how the system can evolve over time.
+處理系統如何隨時間演進。
 
-**Key Concerns**:
-- Extensibility mechanisms
-- Version management
-- Migration strategies
-- Technical debt management
+**核心關注點**：
+- 可擴展性機制
+- 版本管理
+- 遷移策略
+- 技術債務管理
 
-[Full Evolution Perspective](../perspectives/evolution/README.md)
+[完整 Evolution Perspective](../perspectives/evolution/README.md)
 
 ## Architecture Decision Records
 
-### What are ADRs?
+### 什麼是 ADRs？
 
-Architecture Decision Records document significant architectural decisions, including:
-- Context and problem statement
-- Considered options
-- Decision rationale
-- Consequences and trade-offs
+Architecture Decision Records 記錄重要的架構決策，包括：
+- 上下文和問題陳述
+- 考慮的選項
+- 決策理由
+- 後果和權衡
 
-### ADR Categories
+### ADR 類別
 
 #### Data Storage (8 ADRs)
 
-- PostgreSQL as primary database
-- Redis for distributed caching
-- Kafka for event streaming
-- Event store implementation
+- PostgreSQL 作為主要資料庫
+- Redis 用於分散式快取
+- Kafka 用於事件串流
+- Event store 實作
 
 [Data Storage ADRs](adrs/README.md#data-storage)
 
 #### Architecture Patterns (12 ADRs)
 
-- Hexagonal architecture adoption
-- Domain events communication
-- CQRS pattern implementation
-- Saga pattern for distributed transactions
+- Hexagonal architecture 採用
+- Domain events 通訊
+- CQRS pattern 實作
+- Saga pattern 用於分散式交易
 
 [Architecture Patterns ADRs](adrs/README.md#architecture-patterns)
 
 #### Infrastructure (15 ADRs)
 
-- AWS cloud infrastructure
-- Container orchestration with EKS
-- Multi-region deployment
-- Progressive deployment strategy
+- AWS 雲端基礎設施
+- 使用 EKS 的容器編排
+- Multi-region 部署
+- Progressive deployment 策略
 
 [Infrastructure ADRs](adrs/README.md#infrastructure)
 
 #### Security (10 ADRs)
 
-- JWT authentication strategy
-- RBAC implementation
-- Data encryption standards
-- WAF rules and policies
+- JWT 認證策略
+- RBAC 實作
+- 資料加密標準
+- WAF 規則和政策
 
 [Security ADRs](adrs/README.md#security)
 
 #### Observability (8 ADRs)
 
-- Observability platform selection
-- Distributed tracing strategy
-- Log aggregation approach
+- Observability 平台選擇
+- 分散式追蹤策略
+- 日誌聚合方法
 - Multi-region observability
 
 [Observability ADRs](adrs/README.md#observability)
 
 #### Multi-Region (7 ADRs)
 
-- Active-active architecture
-- Cross-region data replication
-- Regional failover strategy
-- Business continuity planning
+- Active-active 架構
+- 跨區域資料複製
+- 區域容錯移轉策略
+- 業務連續性規劃
 
 [Multi-Region ADRs](adrs/README.md#multi-region)
 
-### Recent ADRs
+### 最近的 ADRs
 
 - [ADR-060: Cost Optimization Strategy](adrs/060-cost-optimization-strategy.md)
 - [ADR-059: Compliance Automation](adrs/059-compliance-automation-strategy.md)
@@ -291,25 +291,25 @@ Architecture Decision Records document significant architectural decisions, incl
 - [ADR-057: Data Retention Policy](adrs/057-data-retention-policy-implementation.md)
 - [ADR-056: Network Segmentation](adrs/056-network-segmentation-isolation-strategy.md)
 
-[All ADRs](adrs/README.md)
+[所有 ADRs](adrs/README.md)
 
-## Architecture Patterns
+## 架構模式
 
 ### Domain-Driven Design
 
-We follow DDD tactical patterns:
+我們遵循 DDD tactical patterns：
 
-- **Aggregates**: Consistency boundaries
-- **Entities**: Objects with identity
-- **Value Objects**: Immutable objects
-- **Domain Events**: Business events
-- **Repositories**: Data access interfaces
-- **Domain Services**: Cross-aggregate logic
-- **Application Services**: Use case orchestration
+- **Aggregates**：一致性邊界
+- **Entities**：具有身份的物件
+- **Value Objects**：不可變物件
+- **Domain Events**：業務事件
+- **Repositories**：資料存取介面
+- **Domain Services**：跨 aggregate 邏輯
+- **Application Services**：使用案例編排
 
 ### Hexagonal Architecture
 
-Layers and dependencies:
+層次和依賴關係：
 
 ```
 interfaces/ (REST API, Web UI)
@@ -321,130 +321,130 @@ domain/ (Business Logic) ← infrastructure/ (Technical Implementations)
 
 ### Event-Driven Architecture
 
-- **Domain Events**: Published by aggregates
-- **Event Handlers**: React to events
-- **Event Store**: Persist events
-- **Event Sourcing**: Rebuild state from events
+- **Domain Events**：由 aggregates 發布
+- **Event Handlers**：對事件作出反應
+- **Event Store**：持久化事件
+- **Event Sourcing**：從事件重建狀態
 
-## Architecture Governance
+## 架構治理
 
-### Architecture Review Process
+### 架構審查流程
 
-1. **Proposal**: Submit ADR for significant decisions
-2. **Review**: Architecture team reviews
-3. **Discussion**: Stakeholder input
-4. **Decision**: Approve, reject, or defer
-5. **Implementation**: Execute decision
-6. **Validation**: Verify implementation
+1. **提案**：為重大決策提交 ADR
+2. **審查**：架構團隊審查
+3. **討論**：利害關係人意見
+4. **決策**：批准、拒絕或延期
+5. **實作**：執行決策
+6. **驗證**：驗證實作
 
-### Architecture Compliance
+### 架構合規性
 
-- **ArchUnit Tests**: Automated architecture testing
-- **Code Reviews**: Architecture review in PRs
-- **Regular Audits**: Quarterly architecture audits
-- **Metrics**: Track architecture metrics
+- **ArchUnit Tests**：自動化架構測試
+- **Code Reviews**：在 PRs 中進行架構審查
+- **定期稽核**：每季度進行架構稽核
+- **指標**：追蹤架構指標
 
-### Architecture Evolution
+### 架構演進
 
-- **Continuous Improvement**: Regular retrospectives
-- **Technology Radar**: Track emerging technologies
-- **Proof of Concepts**: Validate new approaches
-- **Migration Plans**: Planned architecture evolution
+- **持續改進**：定期回顧
+- **Technology Radar**：追蹤新興技術
+- **Proof of Concepts**：驗證新方法
+- **遷移計畫**：規劃架構演進
 
-## Getting Started
+## 入門指南
 
-### For Architects
+### 對於架構師
 
-1. **Review Viewpoints**: Understand all viewpoints
-2. **Study ADRs**: Learn past decisions
-3. **Review Perspectives**: Understand quality concerns
-4. **Participate in Reviews**: Join architecture reviews
+1. **審查 Viewpoints**：理解所有 viewpoints
+2. **研究 ADRs**：學習過去的決策
+3. **審查 Perspectives**：理解品質關注點
+4. **參與審查**：加入架構審查
 
-### For Developers
+### 對於開發者
 
-1. **Understand Architecture**: Read viewpoints
-2. **Follow Patterns**: Use established patterns
-3. **Consult ADRs**: Check for relevant decisions
-4. **Ask Questions**: Clarify architecture concerns
+1. **理解架構**：閱讀 viewpoints
+2. **遵循模式**：使用已建立的模式
+3. **參考 ADRs**：檢查相關決策
+4. **提出問題**：釐清架構關注點
 
-### For New Team Members
+### 對於新團隊成員
 
-1. **Start with Overview**: Read this document
-2. **Study Functional Viewpoint**: Understand business
-3. **Review Development Viewpoint**: Learn structure
-4. **Read Key ADRs**: Understand major decisions
+1. **從概述開始**：閱讀本文檔
+2. **研究 Functional Viewpoint**：理解業務
+3. **審查 Development Viewpoint**：學習結構
+4. **閱讀關鍵 ADRs**：理解主要決策
 
-## Related Documentation
+## 相關文檔
 
-### Development Documentation
+### 開發文檔
 
 - [Development Guide](../development/README.md)
 - [Coding Standards](../development/coding-standards/README.md)
 - [Testing Strategy](../development/testing/README.md)
 
-### Operations Documentation
+### 運營文檔
 
 - [Operations Guide](../operations/README.md)
 - [Deployment Procedures](../operations/deployment/README.md)
 - [Runbooks](../operations/runbooks/README.md)
 
-### API Documentation
+### API 文檔
 
 - [API Overview](../api/README.md)
 - [REST API](../api/rest/README.md)
 - [Domain Events](../api/events/README.md)
 
-## Tools and Resources
+## 工具和資源
 
-### Architecture Tools
+### 架構工具
 
-- **PlantUML**: Diagram generation
-- **Mermaid**: Simple diagrams
-- **ArchUnit**: Architecture testing
-- **SonarQube**: Code quality analysis
+- **PlantUML**：圖表生成
+- **Mermaid**：簡單圖表
+- **ArchUnit**：架構測試
+- **SonarQube**：程式碼品質分析
 
-### Documentation Tools
+### 文檔工具
 
-- **Markdown**: Documentation format
-- **GitHub**: Version control and collaboration
-- **Kiro**: AI-assisted development
+- **Markdown**：文檔格式
+- **GitHub**：版本控制和協作
+- **Kiro**：AI 輔助開發
 
-### External Resources
+### 外部資源
 
 - [Rozanski & Woods Book](https://www.viewpoints-and-perspectives.info/)
 - [Domain-Driven Design](https://www.domainlanguage.com/ddd/)
 - [Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/)
 - [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
 
-## Contributing
+## 貢獻
 
-### Adding New ADRs
+### 新增 ADRs
 
-1. Use [ADR template](../templates/adr-template.md)
-2. Follow ADR numbering convention
-3. Include all required sections
-4. Submit for architecture review
-5. Update [ADR index](adrs/README.md)
+1. 使用 [ADR template](../templates/adr-template.md)
+2. 遵循 ADR 編號慣例
+3. 包含所有必需章節
+4. 提交架構審查
+5. 更新 [ADR index](adrs/README.md)
 
-### Updating Architecture Documentation
+### 更新架構文檔
 
-1. Follow [style guide](../STYLE-GUIDE.md)
-2. Update relevant viewpoints
-3. Create/update diagrams
-4. Submit PR for review
-5. Update related documentation
+1. 遵循 [style guide](../STYLE-GUIDE.md)
+2. 更新相關 viewpoints
+3. 建立/更新圖表
+4. 提交 PR 進行審查
+5. 更新相關文檔
 
-### Proposing Architecture Changes
+### 提出架構變更
 
-1. Create ADR proposal
-2. Present to architecture team
-3. Gather stakeholder feedback
-4. Revise based on feedback
-5. Get approval and implement
+1. 建立 ADR 提案
+2. 向架構團隊呈現
+3. 收集利害關係人回饋
+4. 根據回饋修訂
+5. 獲得批准並實作
 
 ---
 
-**Document Owner**: Architecture Team
-**Last Review**: 2025-01-17
-**Next Review**: 2025-04-17
-**Status**: Active
+**文檔負責人**：Architecture Team
+**上次審查**：2025-01-17
+**下次審查**：2025-04-17
+**狀態**：Active

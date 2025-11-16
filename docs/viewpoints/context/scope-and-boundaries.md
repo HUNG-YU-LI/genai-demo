@@ -8,241 +8,241 @@ stakeholders: ["Product Managers", "Business Analysts", "Architects", "Developer
 
 # System Scope and Boundaries
 
-> **Viewpoint**: Context  
-> **Purpose**: Define what is within the system's scope and what is outside its boundaries  
-> **Audience**: Product Managers, Business Analysts, Architects, Developers
+> **Viewpoint**: Context
+> **目的**：定義系統範圍內的內容以及範圍外的邊界
+> **對象**：Product Managers、Business Analysts、Architects、Developers
 
-## Overview
+## 概述
 
-This document defines the scope and boundaries of the E-Commerce Platform, clearly delineating what functionality is provided by the system versus what is handled by external systems or out of scope entirely.
+本文件定義電子商務平台的範圍和邊界，清楚劃分系統提供的功能與外部系統處理的功能或完全不在範圍內的功能。
 
-## System Scope
+## 系統範圍
 
-### In Scope
+### 範圍內
 
-The E-Commerce Platform provides the following capabilities:
+電子商務平台提供以下能力：
 
-#### Core E-Commerce Functions
+#### 核心電子商務功能
 
 **Customer Management**
 
-- Customer registration and profile management
-- Customer authentication and authorization
-- Customer preference management
-- Customer segmentation and membership levels
+- 客戶註冊和個人檔案管理
+- 客戶驗證和授權
+- 客戶偏好設定管理
+- 客戶分群和會員等級
 
 **Product Catalog**
 
-- Product information management
-- Product categorization and taxonomy
-- Product search and filtering
-- Product recommendations
-- Inventory tracking and availability
+- 產品資訊管理
+- 產品分類和分類法
+- 產品搜尋和篩選
+- 產品推薦
+- 庫存追蹤和可用性
 
 **Shopping Experience**
 
-- Shopping cart management
-- Product browsing and search
-- Wishlist functionality
-- Product reviews and ratings
-- Price comparison and promotions
+- 購物車管理
+- 產品瀏覽和搜尋
+- 願望清單功能
+- 產品評論和評分
+- 價格比較和促銷
 
 **Order Management**
 
-- Order creation and submission
-- Order status tracking
-- Order history and reordering
-- Order cancellation and modification
-- Return and refund processing
+- 訂單建立和提交
+- 訂單狀態追蹤
+- 訂單歷史記錄和重新訂購
+- 訂單取消和修改
+- 退貨和退款處理
 
 **Payment Processing**
 
-- Payment method management
-- Payment transaction processing
-- Payment status tracking
-- Refund processing
-- Payment security and PCI compliance
+- 付款方式管理
+- 付款交易處理
+- 付款狀態追蹤
+- 退款處理
+- 付款安全和 PCI 合規
 
 **Logistics and Delivery**
 
-- Shipping address management
-- Delivery method selection
-- Shipping cost calculation
-- Order tracking and notifications
-- Delivery status updates
+- 配送地址管理
+- 配送方式選擇
+- 運費計算
+- 訂單追蹤和通知
+- 配送狀態更新
 
 **Promotions and Pricing**
 
-- Promotional campaign management
-- Discount code application
-- Dynamic pricing rules
-- Bundle and package deals
-- Loyalty program integration
+- 促銷活動管理
+- 折扣代碼應用
+- 動態定價規則
+- 組合和套裝優惠
+- 忠誠計劃整合
 
-**Seller Management** (Multi-vendor support)
+**Seller Management**（多賣家支援）
 
-- Seller registration and onboarding
-- Seller product management
-- Seller order fulfillment
-- Seller performance tracking
-- Commission and payment management
+- 賣家註冊和入職
+- 賣家產品管理
+- 賣家訂單履行
+- 賣家績效追蹤
+- 佣金和付款管理
 
 **Notifications**
 
-- Order confirmation emails
-- Shipping notifications
-- Promotional communications
-- System alerts and reminders
-- Customer service notifications
+- 訂單確認郵件
+- 配送通知
+- 促銷通訊
+- 系統警示和提醒
+- 客戶服務通知
 
-#### Platform Capabilities
+#### 平台能力
 
 **API Services**
 
-- RESTful API for all core functions
-- API authentication and rate limiting
-- API versioning and documentation
-- Webhook support for event notifications
+- 所有核心功能的 RESTful API
+- API 驗證和速率限制
+- API 版本控制和文件
+- 事件通知的 Webhook 支援
 
 **Event-Driven Architecture**
 
-- Domain event publishing and consumption
-- Asynchronous processing
-- Event sourcing for audit trails
-- Cross-context communication
+- Domain event 發布和消費
+- 非同步處理
+- 稽核追蹤的 Event sourcing
+- 跨 context 通訊
 
 **Data Management**
 
-- Transactional data storage
-- Data consistency and integrity
-- Data backup and recovery
-- Data archival and retention
+- 交易資料儲存
+- 資料一致性和完整性
+- 資料備份和復原
+- 資料歸檔和保留
 
 **Security**
 
-- User authentication (JWT-based)
-- Role-based access control (RBAC)
-- Data encryption (at rest and in transit)
-- Security audit logging
-- GDPR compliance features
+- 使用者驗證（基於 JWT）
+- 角色型存取控制（RBAC）
+- 資料加密（靜態和傳輸中）
+- 安全稽核記錄
+- GDPR 合規功能
 
 **Observability**
 
-- Application performance monitoring
-- Distributed tracing
-- Business metrics and analytics
-- Error tracking and alerting
-- Log aggregation and analysis
+- 應用程式效能監控
+- 分散式追蹤
+- 業務指標和分析
+- 錯誤追蹤和警示
+- 日誌聚合和分析
 
-### Out of Scope
+### 範圍外
 
-The following capabilities are explicitly **not** provided by the E-Commerce Platform:
+以下能力明確**不在**電子商務平台提供範圍內：
 
-#### External Services
+#### 外部服務
 
 **Payment Gateway Operations**
 
-- Credit card processing infrastructure
-- Payment fraud detection algorithms
-- PCI-DSS certification and compliance infrastructure
-- Bank account verification
-- Cryptocurrency payment processing
+- 信用卡處理基礎設施
+- 付款詐欺偵測演算法
+- PCI-DSS 認證和合規基礎設施
+- 銀行帳戶驗證
+- 加密貨幣付款處理
 
 **Shipping and Logistics Operations**
 
-- Physical warehouse management
-- Shipping carrier operations
-- Last-mile delivery services
-- International customs processing
-- Package tracking infrastructure
+- 實體倉庫管理
+- 運送承運商營運
+- 最後一哩配送服務
+- 國際海關處理
+- 包裹追蹤基礎設施
 
 **Email Delivery Infrastructure**
 
-- Email server operations
-- Email deliverability management
-- Spam filtering and reputation management
-- Email template rendering (basic templates provided)
+- 郵件伺服器營運
+- 郵件傳送率管理
+- 垃圾郵件過濾和信譽管理
+- 郵件範本渲染（提供基本範本）
 
 **Content Delivery Network (CDN)**
 
-- Static asset hosting and distribution
-- Image optimization and transformation
-- Video streaming infrastructure
-- Geographic content distribution
+- 靜態資產託管和分發
+- 圖片優化和轉換
+- 影片串流基礎設施
+- 地理內容分發
 
-#### Business Operations
+#### 業務營運
 
 **Inventory Management**
 
-- Physical inventory counting
-- Warehouse operations
-- Stock replenishment decisions
-- Supplier relationship management
+- 實體庫存盤點
+- 倉庫營運
+- 庫存補貨決策
+- 供應商關係管理
 
 **Customer Service Operations**
 
-- Live chat support (integration provided)
-- Phone support operations
-- Social media customer service
-- Customer service training and management
+- 即時聊天支援（提供整合）
+- 電話支援營運
+- 社群媒體客戶服務
+- 客戶服務培訓和管理
 
 **Marketing Campaign Execution**
 
-- Email marketing campaign management (integration provided)
-- Social media advertising
-- Search engine marketing
-- Affiliate marketing management
+- 郵件行銷活動管理（提供整合）
+- 社群媒體廣告
+- 搜尋引擎行銷
+- 聯盟行銷管理
 
 **Financial Operations**
 
-- Accounting and bookkeeping
-- Tax calculation and filing
-- Financial reporting and compliance
-- Payroll processing
+- 會計和簿記
+- 稅金計算和申報
+- 財務報表和合規
+- 薪資處理
 
 **Legal and Compliance**
 
-- Legal document preparation
-- Regulatory compliance monitoring
-- Intellectual property management
-- Contract negotiation and management
+- 法律文件準備
+- 監管合規監控
+- 智慧財產權管理
+- 合約談判和管理
 
-#### Technical Infrastructure
+#### 技術基礎設施
 
 **Cloud Infrastructure Management**
 
-- AWS account management
-- Infrastructure capacity planning
-- Cost optimization strategies
-- Disaster recovery site management
+- AWS 帳戶管理
+- 基礎設施容量規劃
+- 成本優化策略
+- 災難復原站點管理
 
 **Network Operations**
 
-- DNS management
-- SSL certificate management
-- DDoS protection
-- Network security monitoring
+- DNS 管理
+- SSL 憑證管理
+- DDoS 防護
+- 網路安全監控
 
 **Development Tools**
 
-- Source code repository hosting
-- CI/CD pipeline infrastructure
-- Development environment provisioning
-- Code quality analysis tools
+- 原始碼儲存庫託管
+- CI/CD pipeline 基礎設施
+- 開發環境配置
+- 程式碼品質分析工具
 
-## System Boundaries
+## 系統邊界
 
-### Boundary Definition
+### 邊界定義
 
-The system boundary is defined by the following interfaces:
+系統邊界由以下介面定義：
 
-#### Inbound Interfaces
+#### 入站介面
 
 **User Interfaces**
 
 - Consumer Web Application (Angular)
 - CMC Management Console (Next.js)
-- Mobile Applications (future, via API)
+- Mobile Applications（未來，透過 API）
 
 **API Interfaces**
 
@@ -256,27 +256,27 @@ The system boundary is defined by the following interfaces:
 - Shipping provider webhooks
 - Email service webhooks
 
-#### Outbound Interfaces
+#### 出站介面
 
 **External Service Integrations**
 
-- Payment gateway API calls
-- Shipping provider API calls
-- Email service API calls
-- SMS notification service calls
+- Payment gateway API 呼叫
+- Shipping provider API 呼叫
+- Email service API 呼叫
+- SMS notification service 呼叫
 
 **Event Publishing**
 
-- Domain events to Kafka topics
-- Webhook notifications to external systems
+- Domain events 到 Kafka topics
+- Webhook 通知到外部系統
 
 **Data Export**
 
-- Analytics data export
-- Reporting data export
-- Audit log export
+- 分析資料匯出
+- 報表資料匯出
+- 稽核日誌匯出
 
-### Boundary Diagram
+### 邊界圖
 
 ```mermaid
 graph TB
@@ -287,34 +287,34 @@ graph TB
         DATA[Data Storage]
         EVENTS[Event Bus]
     end
-    
+
     subgraph "External Systems"
         PAYMENT[Payment Gateway]
         SHIPPING[Shipping Providers]
         EMAIL[Email Service]
         SMS[SMS Service]
     end
-    
+
     subgraph "Users"
         CUSTOMER[Customers]
         ADMIN[Administrators]
         SELLER[Sellers]
     end
-    
+
     CUSTOMER -->|Browse/Order| WEB
     ADMIN -->|Manage| WEB
     SELLER -->|Manage Products| WEB
-    
+
     WEB -->|API Calls| API
     API -->|Business Logic| CORE
     CORE -->|Store Data| DATA
     CORE -->|Publish Events| EVENTS
-    
+
     CORE -->|Process Payment| PAYMENT
     CORE -->|Ship Order| SHIPPING
     CORE -->|Send Email| EMAIL
     CORE -->|Send SMS| SMS
-    
+
     PAYMENT -.->|Callback| API
     SHIPPING -.->|Webhook| API
     EMAIL -.->|Webhook| API
@@ -324,161 +324,161 @@ graph TB
 
 ### Context Map
 
-The system is organized into 13 bounded contexts, each with clear boundaries:
+系統組織成 13 個 bounded contexts，每個都有清晰的邊界：
 
-#### Core Contexts
+#### 核心 Contexts
 
 **Customer Context**
 
-- **Scope**: Customer identity, profile, preferences, authentication
-- **Boundary**: Does not handle orders, payments, or products
-- **Integration**: Publishes customer events, consumes no events
+- **範圍**：客戶身分、個人檔案、偏好設定、驗證
+- **邊界**：不處理訂單、付款或產品
+- **整合**：發布 customer events，不消費 events
 
 **Order Context**
 
-- **Scope**: Order lifecycle, order items, order status
-- **Boundary**: Does not handle payment processing or shipping
-- **Integration**: Publishes order events, consumes customer and product events
+- **範圍**：訂單生命週期、訂單項目、訂單狀態
+- **邊界**：不處理付款處理或配送
+- **整合**：發布 order events，消費 customer 和 product events
 
 **Product Context**
 
-- **Scope**: Product catalog, categories, attributes
-- **Boundary**: Does not handle inventory or pricing
-- **Integration**: Publishes product events, consumes no events
+- **範圍**：產品目錄、類別、屬性
+- **邊界**：不處理庫存或定價
+- **整合**：發布 product events，不消費 events
 
 **Inventory Context**
 
-- **Scope**: Stock levels, reservations, availability
-- **Boundary**: Does not handle product details or orders
-- **Integration**: Publishes inventory events, consumes order and product events
+- **範圍**：庫存水平、預留、可用性
+- **邊界**：不處理產品詳細資訊或訂單
+- **整合**：發布 inventory events，消費 order 和 product events
 
 **Payment Context**
 
-- **Scope**: Payment transactions, payment methods, refunds
-- **Boundary**: Does not handle order details or customer information
-- **Integration**: Publishes payment events, consumes order events
+- **範圍**：付款交易、付款方式、退款
+- **邊界**：不處理訂單詳細資訊或客戶資訊
+- **整合**：發布 payment events，消費 order events
 
-#### Supporting Contexts
+#### 支援 Contexts
 
 **Shopping Cart Context**
 
-- **Scope**: Cart items, cart management, checkout preparation
-- **Boundary**: Does not create orders or process payments
-- **Integration**: Publishes cart events, consumes product and customer events
+- **範圍**：購物車項目、購物車管理、結帳準備
+- **邊界**：不建立訂單或處理付款
+- **整合**：發布 cart events，消費 product 和 customer events
 
 **Pricing Context**
 
-- **Scope**: Price calculation, pricing rules, discounts
-- **Boundary**: Does not handle promotions or orders
-- **Integration**: Publishes pricing events, consumes product events
+- **範圍**：價格計算、定價規則、折扣
+- **邊界**：不處理促銷或訂單
+- **整合**：發布 pricing events，消費 product events
 
 **Promotion Context**
 
-- **Scope**: Promotional campaigns, discount codes, rules
-- **Boundary**: Does not handle pricing or orders
-- **Integration**: Publishes promotion events, consumes order events
+- **範圍**：促銷活動、折扣代碼、規則
+- **邊界**：不處理定價或訂單
+- **整合**：發布 promotion events，消費 order events
 
 **Delivery Context**
 
-- **Scope**: Shipping addresses, delivery methods, tracking
-- **Boundary**: Does not handle order details or inventory
-- **Integration**: Publishes delivery events, consumes order events
+- **範圍**：配送地址、配送方式、追蹤
+- **邊界**：不處理訂單詳細資訊或庫存
+- **整合**：發布 delivery events，消費 order events
 
 **Seller Context**
 
-- **Scope**: Seller profiles, seller products, seller performance
-- **Boundary**: Does not handle orders or payments
-- **Integration**: Publishes seller events, consumes product and order events
+- **範圍**：賣家個人檔案、賣家產品、賣家績效
+- **邊界**：不處理訂單或付款
+- **整合**：發布 seller events，消費 product 和 order events
 
 **Review Context**
 
-- **Scope**: Product reviews, ratings, review moderation
-- **Boundary**: Does not handle products or customers
-- **Integration**: Publishes review events, consumes product and customer events
+- **範圍**：產品評論、評分、評論審核
+- **邊界**：不處理產品或客戶
+- **整合**：發布 review events，消費 product 和 customer events
 
 **Notification Context**
 
-- **Scope**: Notification templates, delivery, preferences
-- **Boundary**: Does not handle business logic or data
-- **Integration**: Consumes events from all contexts, publishes notification events
+- **範圍**：通知範本、傳送、偏好設定
+- **邊界**：不處理業務邏輯或資料
+- **整合**：消費所有 contexts 的 events，發布 notification events
 
 **Observability Context**
 
-- **Scope**: Metrics, logs, traces, monitoring
-- **Boundary**: Does not handle business logic or data
-- **Integration**: Consumes events from all contexts for monitoring
+- **範圍**：指標、日誌、追蹤、監控
+- **邊界**：不處理業務邏輯或資料
+- **整合**：消費所有 contexts 的 events 以進行監控
 
-### Context Integration Rules
+### Context 整合規則
 
-**Integration Patterns**
+**整合模式**
 
-- Contexts communicate via domain events only
-- No direct database access between contexts
-- No direct API calls between contexts
-- Shared kernel limited to common value objects
+- Contexts 僅透過 domain events 通訊
+- Contexts 之間不直接存取資料庫
+- Contexts 之間不直接 API 呼叫
+- Shared kernel 限於常見的 value objects
 
-**Data Ownership**
+**資料所有權**
 
-- Each context owns its data exclusively
-- No shared database tables between contexts
-- Eventual consistency between contexts
-- Event sourcing for audit trails
+- 每個 context 獨佔擁有其資料
+- Contexts 之間不共享資料庫表
+- Contexts 之間的最終一致性
+- 稽核追蹤的 Event sourcing
 
-## Scope Evolution
+## 範圍演進
 
-### Future Scope Considerations
+### 未來範圍考量
 
-The following capabilities may be added to the system scope in future releases:
+以下能力可能在未來版本中加入系統範圍：
 
-**Phase 2 Enhancements**
+**階段 2 增強功能**
 
-- Advanced recommendation engine
-- Real-time inventory synchronization
-- Multi-currency support
-- Advanced analytics and reporting
+- 進階推薦引擎
+- 即時庫存同步
+- 多幣別支援
+- 進階分析和報表
 
-**Phase 3 Enhancements**
+**階段 3 增強功能**
 
-- Mobile application support
-- Social commerce integration
-- Subscription and recurring orders
-- Advanced seller analytics
+- 行動應用程式支援
+- 社群商務整合
+- 訂閱和定期訂單
+- 進階賣家分析
 
-**Phase 4 Enhancements**
+**階段 4 增強功能**
 
-- AI-powered customer service
-- Augmented reality product preview
-- Blockchain-based supply chain tracking
-- Voice commerce integration
+- AI 驅動的客戶服務
+- 擴增實境產品預覽
+- 基於區塊鏈的供應鏈追蹤
+- 語音商務整合
 
-### Scope Change Process
+### 範圍變更流程
 
-**Scope Change Request**
+**範圍變更請求**
 
-1. Submit scope change proposal
-2. Impact analysis (technical, business, resources)
-3. Stakeholder review and approval
-4. Architecture review and design
-5. Implementation planning
-6. Documentation update
+1. 提交範圍變更提案
+2. 影響分析（技術、業務、資源）
+3. 利害關係人審查和批准
+4. 架構審查和設計
+5. 實作規劃
+6. 文件更新
 
-**Approval Authority**
+**批准權限**
 
-- Minor scope changes: Tech Lead approval
-- Major scope changes: Architecture Board approval
-- Strategic scope changes: Executive approval
+- 次要範圍變更：Tech Lead 批准
+- 主要範圍變更：Architecture Board 批准
+- 策略範圍變更：Executive 批准
 
-## Related Documentation
+## 相關文件
 
-- [Context Viewpoint Overview](overview.md) - System context and relationships
-- [External Systems](external-systems.md) - External system integrations
-- [Stakeholders](stakeholders.md) - Stakeholder concerns and requirements
-- [Functional Viewpoint](../functional/overview.md) - System capabilities
-- [Bounded Contexts](../functional/bounded-contexts.md) - Context details
+- [Context Viewpoint Overview](overview.md) - 系統脈絡和關係
+- [External Systems](external-systems.md) - 外部系統整合
+- [Stakeholders](stakeholders.md) - 利害關係人關注點和需求
+- [Functional Viewpoint](../functional/overview.md) - 系統能力
+- [Bounded Contexts](../functional/bounded-contexts.md) - Context 詳細資訊
 
 ---
 
-**Document Status**: Active  
-**Last Review**: 2025-10-23  
-**Next Review**: 2025-11-23  
-**Owner**: Architecture Team
+**文件狀態**：使用中
+**最後審查**：2025-10-23
+**下次審查**：2025-11-23
+**負責人**：Architecture Team

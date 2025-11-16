@@ -1,88 +1,88 @@
-# Cross-Region EKS Service Mesh Implementation Summary
+# Cross-Region EKS Service Mesh 實作摘要
 
-## Task Completed: Update `infrastructure/src/stacks/eks-stack.ts` to Support Cross-Region Service Mesh
+## 已完成任務：更新 `infrastructure/src/stacks/eks-stack.ts` 以支援 Cross-Region Service Mesh
 
-### Changes Made
+### 已進行的變更
 
-#### 1. Extended `installKEDA()` Method with Istio Service Mesh
+#### 1. 擴展 `installKEDA()` 方法並加入 Istio Service Mesh
 
-- Added `installIstioServiceMesh()` call to the existing KEDA installation
-- Enhanced KEDA ScaledObject with cross-region metrics and intelligent routing labels
-- Added cross-region load balancing trigger based on Istio metrics
-- Created additional KEDA ScaledObject for cross-region scaling with latency and traffic-based triggers
+- 將 `installIstioServiceMesh()` 呼叫新增到現有的 KEDA 安裝
+- 使用跨區域指標和智慧路由標籤增強 KEDA ScaledObject
+- 基於 Istio 指標新增跨區域負載平衡觸發器
+- 為跨區域擴展建立額外的 KEDA ScaledObject，具有延遲和流量基礎的觸發器
 
-#### 2. Added Cross-Region Service Discovery Mechanisms
+#### 2. 新增 Cross-Region Service Discovery 機制
 
-- **ServiceEntry Configuration**: Created cross-region service entries for global service discovery
-- **WorkloadEntry Configuration**: Added cross-region workload registration
-- **Service Discovery ConfigMap**: Configured regional endpoints with health checks and priorities
-- **Endpoint Slice Controller**: Deployed controller for managing cross-region endpoints
+- **ServiceEntry 配置**：為全球服務探索建立跨區域 service entries
+- **WorkloadEntry 配置**：新增跨區域 workload 註冊
+- **Service Discovery ConfigMap**：配置具有 health checks 和優先順序的區域 endpoints
+- **Endpoint Slice Controller**：部署用於管理跨區域 endpoints 的控制器
 
-#### 3. Enhanced HPA Configuration for Intelligent Routing
+#### 3. 增強 HPA 配置以實現智慧路由
 
-- **Increased Replica Limits**: minReplicas: 3, maxReplicas: 20 for cross-region availability
-- **Added Istio Metrics**: P95 latency, requests per second, and regional load distribution
-- **Intelligent Scaling Behavior**: Faster scale-up (60s) and conservative scale-down (300s)
-- **Cross-Region Labels**: Added Istio injection and intelligent routing annotations
+- **增加 Replica 限制**：minReplicas: 3、maxReplicas: 20 用於跨區域可用性
+- **新增 Istio Metrics**：P95 延遲、每秒請求數和區域負載分配
+- **智慧擴展行為**：更快的擴展（60s）和保守的縮減（300s）
+- **跨區域標籤**：新增 Istio injection 和智慧路由註釋
 
-#### 4. Integrated Cross-Region Load Balancing with EKS IRSA
+#### 4. 整合 Cross-Region Load Balancing 與 EKS IRSA
 
-- **Service Account Integration**: Created cross-region load balancer service account with IRSA
-- **IAM Permissions**: Added ELB, Route53, and CloudWatch permissions for cross-region operations
-- **Load Balancer Deployment**: Deployed cross-region load balancer with Istio sidecar injection
-- **Enhanced HPA**: Created dedicated HPA for cross-region load balancer with intelligent scaling
+- **Service Account 整合**：使用 IRSA 建立跨區域 load balancer service account
+- **IAM 權限**：為跨區域操作新增 ELB、Route53 和 CloudWatch 權限
+- **Load Balancer 部署**：部署具有 Istio sidecar injection 的跨區域 load balancer
+- **增強 HPA**：為跨區域 load balancer 建立專用 HPA，具有智慧擴展
 
-### Key Features Implemented
+### 已實作的主要功能
 
-#### Istio Service Mesh Components
+#### Istio Service Mesh 元件
 
-1. **Istio Base**: Multi-cluster mesh configuration with network identification
-2. **Istiod**: Control plane with cross-cluster workload entry support
-3. **Istio Gateway**: Network Load Balancer for cross-region communication
-4. **VirtualService**: Intelligent routing with latency-sensitive and region-preference headers
-5. **DestinationRule**: Locality-aware load balancing with circuit breaker patterns
+1. **Istio Base**：具有網路識別的 multi-cluster mesh 配置
+2. **Istiod**：具有 cross-cluster workload entry 支援的控制平面
+3. **Istio Gateway**：用於跨區域通訊的 Network Load Balancer
+4. **VirtualService**：具有延遲敏感和區域偏好 headers 的智慧路由
+5. **DestinationRule**：具有斷路器模式的位置感知負載平衡
 
-#### Cross-Region Networking
+#### 跨區域網路
 
-1. **Mesh Configuration**: Cross-region mesh networks with gateway endpoints
-2. **Service Monitor**: Prometheus monitoring for cross-region metrics
-3. **Traffic Policy**: Sidecar configuration for cross-region egress/ingress
-4. **Network Security**: Istio mutual TLS for secure cross-region communication
+1. **Mesh 配置**：具有 gateway endpoints 的跨區域 mesh 網路
+2. **Service Monitor**：用於跨區域指標的 Prometheus 監控
+3. **流量政策**：用於跨區域 egress/ingress 的 Sidecar 配置
+4. **網路安全**：用於安全跨區域通訊的 Istio mutual TLS
 
-#### Intelligent Routing Features
+#### 智慧路由功能
 
-1. **Header-Based Routing**: Support for region preference and latency sensitivity
-2. **Weighted Distribution**: 70% local, 30% cross-region traffic distribution
-3. **Fault Injection**: Chaos engineering with delay injection for testing
-4. **Retry Policies**: Automatic retries with exponential backoff
-5. **Circuit Breaker**: Protection against cascading failures
+1. **基於 Header 的路由**：支援區域偏好和延遲敏感性
+2. **加權分配**：70% 本地、30% 跨區域流量分配
+3. **故障注入**：具有延遲注入的混沌工程用於測試
+4. **重試政策**：具有指數退避的自動重試
+5. **斷路器**：防止級聯故障
 
-#### Integration Points
+#### 整合點
 
-1. **EKS IRSA Stack**: Service accounts with proper IAM roles for AWS service integration
-2. **Existing Monitoring**: Integration with Prometheus and CloudWatch metrics
-3. **Network Stack**: Cross-region VPC connectivity support
-4. **Security Stack**: Encrypted cross-region communication
+1. **EKS IRSA Stack**：具有適當 IAM roles 的 service accounts 用於 AWS 服務整合
+2. **現有監控**：與 Prometheus 和 CloudWatch 指標整合
+3. **Network Stack**：跨區域 VPC 連線支援
+4. **Security Stack**：加密的跨區域通訊
 
-### Configuration Parameters
+### 配置參數
 
-- **Mesh ID**: `mesh1` for unified service mesh
-- **Network Names**: `network-{region}` for regional identification
-- **Gateway Ports**: 80 (HTTP), 443 (HTTPS), 15443 (mTLS)
-- **Health Check**: 30s interval, 5s timeout, 3 failure threshold
-- **Scaling Thresholds**: 200ms P95 latency, 50 RPS per pod
+- **Mesh ID**：`mesh1` 用於統一 service mesh
+- **Network Names**：`network-{region}` 用於區域識別
+- **Gateway Ports**：80（HTTP）、443（HTTPS）、15443（mTLS）
+- **Health Check**：30s 間隔、5s 逾時、3 失敗閾值
+- **Scaling Thresholds**：200ms P95 延遲、每個 pod 50 RPS
 
-### Requirements Satisfied
+### 滿足的需求
 
-- ✅ **4.1.2**: Cross-region service mesh with intelligent routing
-- ✅ Enhanced KEDA with cross-region metrics
-- ✅ Modified Kubernetes manifests for service discovery
-- ✅ Updated HPA with cross-region awareness
-- ✅ Integrated EKS IRSA for cross-region load balancing
+- ✅ **4.1.2**：具有智慧路由的跨區域 service mesh
+- ✅ 使用跨區域指標增強 KEDA
+- ✅ 為服務探索修改 Kubernetes manifests
+- ✅ 使用跨區域感知更新 HPA
+- ✅ 整合 EKS IRSA 用於跨區域負載平衡
 
-### Next Steps
+### 後續步驟
 
-1. Deploy and test the cross-region service mesh configuration
-2. Validate intelligent routing policies with traffic simulation
-3. Monitor cross-region latency and adjust thresholds as needed
-4. Implement additional security policies for production deployment
+1. 部署並測試跨區域 service mesh 配置
+2. 使用流量模擬驗證智慧路由政策
+3. 監控跨區域延遲並根據需要調整閾值
+4. 為生產部署實作額外的安全政策

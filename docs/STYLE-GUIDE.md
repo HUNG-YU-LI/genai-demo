@@ -1,193 +1,193 @@
-# Documentation Style Guide
+# 文件風格指南
 
-> **Last Updated**: 2024-11-09  
-> **Owner**: Documentation Team  
-> **Status**: Active
+> **最後更新**: 2024-11-09
+> **負責人**: Documentation Team
+> **狀態**: Active
 
-## Overview
+## 總覽
 
-This style guide defines the writing standards, formatting conventions, and best practices for all Enterprise E-Commerce Platform documentation. Consistent style ensures documentation is clear, professional, and easy to understand.
+本風格指南定義了 Enterprise E-Commerce Platform 所有文件的撰寫標準、格式慣例和最佳實務。一致的風格確保文件清晰、專業且易於理解。
 
-## Style Philosophy
+## 風格理念
 
-- **Clarity First**: Clear communication over clever writing
-- **Consistency**: Uniform style across all documentation
-- **Accessibility**: Understandable by all stakeholders
-- **Conciseness**: Say more with fewer words
-- **Accuracy**: Technical precision without jargon
-
----
-
-## Writing Style
-
-### Voice and Tone
-
-#### Active Voice
-
-**Use active voice** for clarity and directness.
-
-✅ **Good**:
-- "The system validates the input"
-- "Deploy the application using this command"
-- "The service processes requests asynchronously"
-
-❌ **Avoid**:
-- "The input is validated by the system"
-- "The application should be deployed using this command"
-- "Requests are processed asynchronously by the service"
-
-#### Present Tense
-
-**Use present tense** for current functionality.
-
-✅ **Good**:
-- "The API returns a JSON response"
-- "The system stores data in PostgreSQL"
-- "Users authenticate with JWT tokens"
-
-❌ **Avoid**:
-- "The API will return a JSON response"
-- "The system would store data in PostgreSQL"
-- "Users would authenticate with JWT tokens"
-
-#### Second Person
-
-**Address the reader directly** using "you".
-
-✅ **Good**:
-- "You can configure the timeout value"
-- "To deploy the application, you need to..."
-- "You should validate input before processing"
-
-❌ **Avoid**:
-- "One can configure the timeout value"
-- "The developer needs to..."
-- "It is recommended to validate input"
-
-### Clarity and Conciseness
-
-#### Be Direct
-
-Get to the point quickly.
-
-✅ **Good**:
-- "Use this command to deploy"
-- "The API requires authentication"
-- "Configure the database connection"
-
-❌ **Avoid**:
-- "In order to deploy the application, you should use this command"
-- "It is necessary for the API to have authentication"
-- "You need to make sure to configure the database connection"
-
-#### Avoid Jargon
-
-Use clear language; explain technical terms when necessary.
-
-✅ **Good**:
-- "The system uses optimistic locking to handle concurrent updates"
-- "JWT (JSON Web Token) provides stateless authentication"
-
-❌ **Avoid**:
-- "The system leverages OCC for concurrency control"
-- "We use JWT for auth"
-
-#### One Idea Per Sentence
-
-Keep sentences focused and simple.
-
-✅ **Good**:
-- "The API validates input. It returns an error if validation fails."
-
-❌ **Avoid**:
-- "The API validates input and returns an error if validation fails, which helps prevent invalid data from entering the system."
+- **清晰優先**：清楚溝通勝過巧妙寫作
+- **一致性**：所有文件採用統一風格
+- **無障礙性**：所有利害關係人都能理解
+- **簡潔性**：用更少的字表達更多
+- **準確性**：技術精確但不使用行話
 
 ---
 
-## Formatting Standards
+## 撰寫風格
 
-### Headings
+### 語態與語氣
 
-#### Hierarchy
+#### 主動語態
 
-Use heading levels consistently:
+**使用主動語態**以求清晰和直接。
+
+✅ **好**：
+- "系統驗證輸入"
+- "使用此命令部署應用程式"
+- "服務非同步處理請求"
+
+❌ **避免**：
+- "輸入由系統驗證"
+- "應用程式應該使用此命令部署"
+- "請求由服務非同步處理"
+
+#### 現在式
+
+**使用現在式**表達目前功能。
+
+✅ **好**：
+- "API 回傳 JSON 回應"
+- "系統將資料儲存在 PostgreSQL"
+- "使用者使用 JWT tokens 認證"
+
+❌ **避免**：
+- "API 將回傳 JSON 回應"
+- "系統會將資料儲存在 PostgreSQL"
+- "使用者會使用 JWT tokens 認證"
+
+#### 第二人稱
+
+**直接稱呼讀者**，使用「您」。
+
+✅ **好**：
+- "您可以配置逾時值"
+- "要部署應用程式，您需要..."
+- "您應該在處理前驗證輸入"
+
+❌ **避免**：
+- "可以配置逾時值"
+- "開發者需要..."
+- "建議驗證輸入"
+
+### 清晰與簡潔
+
+#### 直截了當
+
+快速切入重點。
+
+✅ **好**：
+- "使用此命令部署"
+- "API 需要認證"
+- "配置資料庫連線"
+
+❌ **避免**：
+- "為了部署應用程式，您應該使用此命令"
+- "API 必須要有認證"
+- "您需要確保配置資料庫連線"
+
+#### 避免行話
+
+使用清楚的語言；必要時解釋技術術語。
+
+✅ **好**：
+- "系統使用樂觀鎖定來處理併發更新"
+- "JWT (JSON Web Token) 提供無狀態認證"
+
+❌ **避免**：
+- "系統利用 OCC 進行併發控制"
+- "我們使用 JWT 進行 auth"
+
+#### 每句一個想法
+
+保持句子專注和簡單。
+
+✅ **好**：
+- "API 驗證輸入。如果驗證失敗，它會回傳錯誤。"
+
+❌ **避免**：
+- "API 驗證輸入並在驗證失敗時回傳錯誤，這有助於防止無效資料進入系統。"
+
+---
+
+## 格式標準
+
+### 標題
+
+#### 階層
+
+一致使用標題層級：
 
 ```markdown
-# Document Title (H1) - One per document
+# 文件標題 (H1) - 每個文件一個
 
-## Major Section (H2)
+## 主要章節 (H2)
 
-### Subsection (H3)
+### 子章節 (H3)
 
-#### Detail Section (H4)
+#### 細節章節 (H4)
 
-##### Minor Detail (H5) - Use sparingly
+##### 次要細節 (H5) - 謹慎使用
 ```
 
-#### Capitalization
+#### 大小寫
 
-Use **sentence case** for headings.
+標題使用**句子大小寫**。
 
-✅ **Good**:
+✅ **好**：
 - "Getting started with the API"
 - "Database configuration options"
 - "Troubleshooting common issues"
 
-❌ **Avoid**:
+❌ **避免**：
 - "Getting Started With The API"
 - "Database Configuration Options"
 - "Troubleshooting Common Issues"
 
-### Lists
+### 清單
 
-#### Bulleted Lists
+#### 項目符號清單
 
-Use for unordered items:
-
-```markdown
-- First item
-- Second item
-- Third item
-  - Nested item
-  - Another nested item
-```
-
-#### Numbered Lists
-
-Use for sequential steps or ordered items:
+用於無序項目：
 
 ```markdown
-1. First step
-2. Second step
-3. Third step
-   1. Sub-step
-   2. Another sub-step
+- 第一項
+- 第二項
+- 第三項
+  - 巢狀項目
+  - 另一個巢狀項目
 ```
 
-#### Checklist
+#### 編號清單
 
-Use for tasks or requirements:
+用於循序步驟或有序項目：
 
 ```markdown
-- [ ] Incomplete task
-- [x] Completed task
+1. 第一步
+2. 第二步
+3. 第三步
+   1. 子步驟
+   2. 另一個子步驟
 ```
 
-### Code Formatting
+#### 檢查清單
 
-#### Inline Code
-
-Use backticks for inline code, commands, file names, and technical terms:
+用於任務或需求：
 
 ```markdown
-Use the `kubectl apply` command to deploy.
-Edit the `application.yml` file.
-The `CustomerService` class handles business logic.
+- [ ] 未完成的任務
+- [x] 已完成的任務
 ```
 
-#### Code Blocks
+### 程式碼格式
 
-Use fenced code blocks with language specification:
+#### 行內程式碼
+
+使用反引號表示行內程式碼、命令、檔案名稱和技術術語：
+
+```markdown
+使用 `kubectl apply` 命令部署。
+編輯 `application.yml` 檔案。
+`CustomerService` 類別處理業務邏輯。
+```
+
+#### 程式碼區塊
+
+使用標記語言的程式碼區塊：
 
 ````markdown
 ```java
@@ -209,9 +209,9 @@ server:
 ```
 ````
 
-#### Command Examples
+#### 命令範例
 
-Show commands with expected output:
+顯示命令及預期輸出：
 
 ```markdown
 ```bash
@@ -221,259 +221,259 @@ app-deployment-abc123    1/1     Running   0          5m
 ```
 ```
 
-### Links
+### 連結
 
-#### Internal Links
+#### 內部連結
 
-Use relative paths for internal documentation:
+內部文件使用相對路徑：
 
 ```markdown
-See [Architecture Overview](../architecture/README.md) for details.
-Refer to the [API Documentation](../api/rest/README.md).
+詳情請見 [Architecture 總覽](../architecture/README.md)。
+參考 [API 文件](../api/rest/README.md)。
 ```
 
-#### External Links
+#### 外部連結
 
-Use descriptive link text:
+使用描述性連結文字：
 
-✅ **Good**:
+✅ **好**：
 ```markdown
-See the [Spring Boot documentation](https://spring.io/projects/spring-boot) for more information.
+更多資訊請參見 [Spring Boot 文件](https://spring.io/projects/spring-boot)。
 ```
 
-❌ **Avoid**:
+❌ **避免**：
 ```markdown
-Click [here](https://spring.io/projects/spring-boot) for more information.
-See https://spring.io/projects/spring-boot
+點擊[這裡](https://spring.io/projects/spring-boot)取得更多資訊。
+參見 https://spring.io/projects/spring-boot
 ```
 
-### Tables
+### 表格
 
-Use tables for structured data:
+用於結構化資料的表格：
 
 ```markdown
-| Column 1 | Column 2 | Column 3 |
+| 欄位 1 | 欄位 2 | 欄位 3 |
 |----------|----------|----------|
-| Data 1   | Data 2   | Data 3   |
-| Data 4   | Data 5   | Data 6   |
+| 資料 1   | 資料 2   | 資料 3   |
+| 資料 4   | 資料 5   | 資料 6   |
 ```
 
-**Alignment**:
-- Left-align text columns
-- Right-align number columns
-- Center-align status indicators
+**對齊**：
+- 文字欄位靠左對齊
+- 數字欄位靠右對齊
+- 狀態指示器置中對齊
 
 ```markdown
-| Name | Count | Status |
+| 名稱 | 數量 | 狀態 |
 |------|------:|:------:|
 | Item 1 | 100 | ✅ |
 | Item 2 | 250 | 🟡 |
 ```
 
-### Emphasis
+### 強調
 
-#### Bold
+#### 粗體
 
-Use **bold** for:
-- Important terms on first use
-- UI elements
-- Emphasis
-
-```markdown
-Click the **Save** button.
-The **aggregate root** is responsible for consistency.
-This is **critical** for security.
-```
-
-#### Italic
-
-Use *italic* for:
-- Technical terms
-- Variable names
-- Subtle emphasis
+使用**粗體**於：
+- 首次使用的重要術語
+- UI 元素
+- 強調
 
 ```markdown
-Replace *username* with your actual username.
-The *customerId* parameter is required.
+點擊**儲存**按鈕。
+**aggregate root** 負責一致性。
+這對安全性**至關重要**。
 ```
 
-#### Code Formatting
+#### 斜體
 
-Use `code formatting` for:
-- Code elements
-- Commands
-- File names
+使用*斜體*於：
+- 技術術語
+- 變數名稱
+- 微妙的強調
+
+```markdown
+將 *username* 替換為您實際的使用者名稱。
+*customerId* 參數是必需的。
+```
+
+#### 程式碼格式
+
+使用 `程式碼格式` 於：
+- 程式碼元素
+- 命令
+- 檔案名稱
 - API endpoints
 
 ```markdown
-The `CustomerService` class
-Run `./gradlew build`
-Edit `application.yml`
-Call `/api/v1/customers`
+`CustomerService` 類別
+執行 `./gradlew build`
+編輯 `application.yml`
+呼叫 `/api/v1/customers`
 ```
 
 ---
 
-## Document Structure
+## 文件結構
 
-### Standard Document Template
+### 標準文件範本
 
-Every documentation file should follow this structure:
+每個文件檔案應遵循此結構：
 
 ```markdown
-# Document Title
+# 文件標題
 
-> **Last Updated**: YYYY-MM-DD  
-> **Owner**: Team Name  
-> **Status**: Active|Draft|Deprecated
+> **最後更新**: YYYY-MM-DD
+> **負責人**: 團隊名稱
+> **狀態**: Active|Draft|Deprecated
 
-## Overview
+## 總覽
 
-Brief description of the document's purpose and scope.
+文件目的和範疇的簡要說明。
 
-## [Main Content Sections]
+## [主要內容章節]
 
-### Section 1
+### 章節 1
 
-Content...
+內容...
 
-### Section 2
+### 章節 2
 
-Content...
+內容...
 
-## Related Documentation
+## 相關文件
 
-- [Related Doc 1](link)
-- [Related Doc 2](link)
+- [相關文件 1](link)
+- [相關文件 2](link)
 
-## Change History
+## 變更歷史
 
-| Date | Version | Changes | Author |
+| 日期 | 版本 | 變更 | 作者 |
 |------|---------|---------|--------|
-| YYYY-MM-DD | 1.0 | Initial creation | Name |
+| YYYY-MM-DD | 1.0 | 初始建立 | 名稱 |
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: YYYY-MM-DD  
-**Next Review**: YYYY-MM-DD
+**文件版本**: 1.0
+**最後更新**: YYYY-MM-DD
+**下次審閱**: YYYY-MM-DD
 ```
 
 ### Frontmatter
 
-Include metadata at the top of each document:
+在每個文件頂部包含 metadata：
 
 ```markdown
-> **Last Updated**: 2024-11-09  
-> **Owner**: Documentation Team  
-> **Status**: Active  
-> **Reviewers**: Architecture Team, Security Team
+> **最後更新**: 2024-11-09
+> **負責人**: Documentation Team
+> **狀態**: Active
+> **審閱者**: Architecture Team, Security Team
 ```
 
-### Overview Section
+### 總覽章節
 
-Every document should start with an overview:
+每個文件應以總覽開始：
 
 ```markdown
-## Overview
+## 總覽
 
-This document describes [purpose]. It covers [scope] and is intended for [audience].
+本文件描述[目的]。它涵蓋[範疇]並面向[受眾]。
 
-Key topics include:
-- Topic 1
-- Topic 2
-- Topic 3
+關鍵主題包括：
+- 主題 1
+- 主題 2
+- 主題 3
 ```
 
-### Related Documentation
+### 相關文件
 
-Link to related documents at the end:
+在結尾連結到相關文件：
 
 ```markdown
-## Related Documentation
+## 相關文件
 
-- [Architecture Overview](../architecture/README.md)
-- [API Documentation](../api/rest/README.md)
-- [Deployment Guide](../operations/deployment/README.md)
+- [Architecture 總覽](../architecture/README.md)
+- [API 文件](../api/rest/README.md)
+- [部署指南](../operations/deployment/README.md)
 ```
 
 ---
 
-## Diagram Standards
+## 圖表標準
 
-### When to Use Diagrams
+### 何時使用圖表
 
-Use diagrams to:
-- Illustrate architecture
-- Show process flows
-- Explain relationships
-- Visualize data structures
+使用圖表來：
+- 說明架構
+- 顯示流程
+- 解釋關係
+- 視覺化資料結構
 
-### Diagram Types
+### 圖表類型
 
 #### PlantUML
 
-Use for:
-- Complex UML diagrams
-- Detailed class diagrams
-- Sequence diagrams
-- Component diagrams
+用於：
+- 複雜的 UML 圖表
+- 詳細的類別圖
+- 序列圖
+- 元件圖
 
-**Location**: `docs/diagrams/viewpoints/{viewpoint}/`
+**位置**：`docs/diagrams/viewpoints/{viewpoint}/`
 
-**Format**: PNG (primary), SVG (supplementary)
+**格式**：PNG (主要)、SVG (補充)
 
 #### Mermaid
 
-Use for:
-- Simple flowcharts
-- Basic sequence diagrams
-- State diagrams
-- Gantt charts
+用於：
+- 簡單流程圖
+- 基本序列圖
+- 狀態圖
+- Gantt 圖
 
-**Location**: Inline in markdown or `docs/diagrams/mermaid/`
+**位置**：Markdown 內嵌或 `docs/diagrams/mermaid/`
 
 #### ASCII Art
 
-Use for:
-- Very simple diagrams
-- Quick sketches
-- Terminal-friendly diagrams
+用於：
+- 非常簡單的圖表
+- 快速草圖
+- 終端機友善的圖表
 
-### Diagram Quality Standards
+### 圖表品質標準
 
-- [ ] Clear and readable
-- [ ] Properly labeled
-- [ ] Consistent style
-- [ ] Appropriate level of detail
-- [ ] Current and accurate
-- [ ] Alt text provided
+- [ ] 清晰可讀
+- [ ] 適當標記
+- [ ] 一致的風格
+- [ ] 適當的細節層級
+- [ ] 最新且準確
+- [ ] 提供 alt 文字
 
-### Diagram References
+### 圖表參考
 
-Always provide alt text and captions:
+始終提供 alt 文字和標題：
 
 ```markdown
-![Architecture Overview](../diagrams/generated/architecture-overview.png)
-*Figure 1: High-level system architecture showing major components and their interactions*
+![Architecture 總覽](../diagrams/generated/architecture-overview.png)
+*圖 1：顯示主要元件及其互動的高階系統架構*
 ```
 
 ---
 
-## Technical Writing Guidelines
+## 技術寫作指引
 
-### API Documentation
+### API 文件
 
-#### Endpoint Documentation
+#### Endpoint 文件
 
 ```markdown
-### Create Customer
+### 建立客戶
 
-**Endpoint**: `POST /api/v1/customers`
+**Endpoint**：`POST /api/v1/customers`
 
-**Description**: Creates a new customer account.
+**描述**：建立新的客戶帳號。
 
-**Request**:
+**請求**：
 ```json
 {
   "name": "John Doe",
@@ -482,7 +482,7 @@ Always provide alt text and captions:
 }
 ```
 
-**Response** (201 Created):
+**回應** (201 Created)：
 ```json
 {
   "id": "cust-123",
@@ -492,11 +492,11 @@ Always provide alt text and captions:
 }
 ```
 
-**Error Responses**:
-- `400 Bad Request`: Invalid input
-- `409 Conflict`: Email already exists
+**錯誤回應**：
+- `400 Bad Request`：無效輸入
+- `409 Conflict`：Email 已存在
 
-**Example**:
+**範例**：
 ```bash
 curl -X POST https://api.example.com/api/v1/customers \
   -H "Content-Type: application/json" \
@@ -504,24 +504,24 @@ curl -X POST https://api.example.com/api/v1/customers \
 ```
 ```
 
-#### Parameter Documentation
+#### 參數文件
 
 ```markdown
-**Parameters**:
+**參數**：
 
-| Name | Type | Required | Description |
+| 名稱 | 類型 | 必需 | 描述 |
 |------|------|----------|-------------|
-| name | string | Yes | Customer full name (2-100 characters) |
-| email | string | Yes | Valid email address |
-| phone | string | No | Phone number in E.164 format |
+| name | string | 是 | 客戶全名 (2-100 字元) |
+| email | string | 是 | 有效的 email 位址 |
+| phone | string | 否 | E.164 格式的電話號碼 |
 ```
 
-### Configuration Documentation
+### 配置文件
 
 ```markdown
-### Database Configuration
+### 資料庫配置
 
-Configure the database connection in `application.yml`:
+在 `application.yml` 中配置資料庫連線：
 
 ```yaml
 spring:
@@ -531,39 +531,39 @@ spring:
     password: ${DB_PASSWORD}
 ```
 
-**Configuration Options**:
+**配置選項**：
 
-| Property | Default | Description |
+| 屬性 | 預設值 | 描述 |
 |----------|---------|-------------|
-| `url` | - | Database connection URL |
-| `username` | - | Database username |
-| `password` | - | Database password |
-| `pool-size` | 10 | Connection pool size |
+| `url` | - | 資料庫連線 URL |
+| `username` | - | 資料庫使用者名稱 |
+| `password` | - | 資料庫密碼 |
+| `pool-size` | 10 | 連線池大小 |
 ```
 
-### Procedure Documentation
+### 程序文件
 
-Use numbered steps for procedures:
+使用編號步驟表示程序：
 
 ```markdown
-## Deploying the Application
+## 部署應用程式
 
-1. **Build the application**:
+1. **建置應用程式**：
    ```bash
    ./gradlew build
    ```
 
-2. **Create Docker image**:
+2. **建立 Docker image**：
    ```bash
    docker build -t myapp:latest .
    ```
 
-3. **Deploy to Kubernetes**:
+3. **部署到 Kubernetes**：
    ```bash
    kubectl apply -f deployment.yaml
    ```
 
-4. **Verify deployment**:
+4. **驗證部署**：
    ```bash
    kubectl get pods
    ```
@@ -571,53 +571,53 @@ Use numbered steps for procedures:
 
 ---
 
-## Language and Grammar
+## 語言與文法
 
-### Spelling
+### 拼字
 
-- Use American English spelling
-- Run spell check before committing
-- Add technical terms to custom dictionary
+- 使用美式英文拼字
+- 提交前執行拼字檢查
+- 將技術術語加入自訂字典
 
-### Grammar
+### 文法
 
-- Use complete sentences
-- Avoid sentence fragments
-- Use proper punctuation
-- Check grammar before committing
+- 使用完整句子
+- 避免句子片段
+- 使用適當的標點符號
+- 提交前檢查文法
 
-### Capitalization
+### 大小寫
 
-#### Product Names
+#### 產品名稱
 
-Capitalize product and service names:
+產品和服務名稱大寫：
 - Spring Boot
 - PostgreSQL
 - Amazon Web Services (AWS)
 - Kubernetes
 
-#### Technical Terms
+#### 技術術語
 
-Follow standard capitalization:
-- API (not Api or api)
-- JSON (not Json or json)
-- HTTP (not Http or http)
-- REST (not Rest or rest)
+遵循標準大小寫：
+- API (不是 Api 或 api)
+- JSON (不是 Json 或 json)
+- HTTP (不是 Http 或 http)
+- REST (不是 Rest 或 rest)
 
-### Abbreviations
+### 縮寫
 
-#### First Use
+#### 首次使用
 
-Spell out abbreviations on first use:
+首次使用時拼出縮寫：
 
 ```markdown
-The Application Programming Interface (API) provides...
-Use JSON Web Tokens (JWT) for authentication...
+Application Programming Interface (API) 提供...
+使用 JSON Web Tokens (JWT) 進行認證...
 ```
 
-#### Common Abbreviations
+#### 常見縮寫
 
-These don't need to be spelled out:
+這些不需要拼出：
 - API
 - HTTP/HTTPS
 - JSON
@@ -626,64 +626,64 @@ These don't need to be spelled out:
 - URL
 - ID
 
-### Numbers
+### 數字
 
-- Spell out numbers one through nine
-- Use numerals for 10 and above
-- Use numerals for technical values (5 MB, 3 seconds)
-- Use commas for thousands (1,000 not 1000)
-
----
-
-## Accessibility
-
-### Alt Text
-
-Provide descriptive alt text for all images:
-
-```markdown
-![System architecture diagram showing microservices communicating via message queue](architecture.png)
-```
-
-### Link Text
-
-Use descriptive link text:
-
-✅ **Good**:
-```markdown
-See the [deployment guide](deployment.md) for instructions.
-```
-
-❌ **Avoid**:
-```markdown
-Click [here](deployment.md) for instructions.
-```
-
-### Color
-
-Don't rely solely on color to convey information:
-
-✅ **Good**:
-```markdown
-- ✅ Complete
-- 🟡 In Progress
-- 🔴 Blocked
-```
-
-❌ **Avoid**:
-```markdown
-- 🟢 (no text)
-- 🟡 (no text)
-- 🔴 (no text)
-```
+- 拼出一到九的數字
+- 10 及以上使用數字
+- 技術值使用數字 (5 MB、3 秒)
+- 千位數使用逗號 (1,000 不是 1000)
 
 ---
 
-## Version Control
+## 無障礙性
 
-### Commit Messages
+### Alt 文字
 
-Use clear, descriptive commit messages:
+為所有圖片提供描述性 alt 文字：
+
+```markdown
+![顯示透過訊息佇列通訊的 microservices 的系統架構圖](architecture.png)
+```
+
+### 連結文字
+
+使用描述性連結文字：
+
+✅ **好**：
+```markdown
+說明請參見[部署指南](deployment.md)。
+```
+
+❌ **避免**：
+```markdown
+點擊[這裡](deployment.md)查看說明。
+```
+
+### 顏色
+
+不要僅依賴顏色傳達資訊：
+
+✅ **好**：
+```markdown
+- ✅ 完成
+- 🟡 進行中
+- 🔴 受阻
+```
+
+❌ **避免**：
+```markdown
+- 🟢 (無文字)
+- 🟡 (無文字)
+- 🔴 (無文字)
+```
+
+---
+
+## 版本控制
+
+### Commit 訊息
+
+使用清楚、描述性的 commit 訊息：
 
 ```
 docs: add API authentication guide
@@ -691,95 +691,95 @@ docs: update deployment instructions
 docs: fix broken links in architecture section
 ```
 
-### File Naming
+### 檔案命名
 
-Use lowercase with hyphens:
+使用小寫加連字號：
 
-✅ **Good**:
+✅ **好**：
 - `getting-started.md`
 - `api-authentication.md`
 - `deployment-guide.md`
 
-❌ **Avoid**:
+❌ **避免**：
 - `GettingStarted.md`
 - `API_Authentication.md`
 - `deployment guide.md`
 
 ---
 
-## Quality Checklist
+## 品質檢查清單
 
-Before submitting documentation:
+提交文件前：
 
-### Content
+### 內容
 
-- [ ] Accurate and complete
-- [ ] Clear and concise
-- [ ] Appropriate level of detail
-- [ ] Examples provided
-- [ ] Error cases covered
+- [ ] 準確且完整
+- [ ] 清晰且簡潔
+- [ ] 適當的細節層級
+- [ ] 提供範例
+- [ ] 涵蓋錯誤情況
 
-### Style
+### 風格
 
-- [ ] Active voice used
-- [ ] Present tense used
-- [ ] Consistent terminology
-- [ ] Proper capitalization
-- [ ] No jargon or explained
+- [ ] 使用主動語態
+- [ ] 使用現在式
+- [ ] 一致的術語
+- [ ] 適當的大小寫
+- [ ] 無行話或已解釋
 
-### Formatting
+### 格式
 
-- [ ] Proper heading hierarchy
-- [ ] Code blocks formatted correctly
-- [ ] Links work correctly
-- [ ] Tables formatted properly
-- [ ] Lists formatted consistently
+- [ ] 適當的標題階層
+- [ ] 程式碼區塊格式正確
+- [ ] 連結正常運作
+- [ ] 表格格式適當
+- [ ] 清單格式一致
 
-### Technical
+### 技術
 
-- [ ] Code examples tested
-- [ ] Commands verified
-- [ ] Configuration validated
-- [ ] Diagrams current
-- [ ] Cross-references correct
+- [ ] 程式碼範例已測試
+- [ ] 命令已驗證
+- [ ] 配置已驗證
+- [ ] 圖表最新
+- [ ] 交叉參考正確
 
-### Quality
+### 品質
 
-- [ ] Spelling checked
-- [ ] Grammar checked
-- [ ] Links validated
-- [ ] Diagrams validated
-- [ ] Metadata complete
+- [ ] 拼字已檢查
+- [ ] 文法已檢查
+- [ ] 連結已驗證
+- [ ] 圖表已驗證
+- [ ] Metadata 完整
 
 ---
 
-## Tools and Resources
+## 工具與資源
 
-### Recommended Tools
+### 推薦工具
 
-- **Markdown Editor**: VS Code with Markdown extensions
-- **Spell Check**: `cspell` or VS Code spell checker
-- **Link Checker**: `markdown-link-check`
-- **Diagram Tools**: PlantUML, Mermaid, draw.io
-- **Grammar Check**: Grammarly or LanguageTool
+- **Markdown 編輯器**：VS Code 加 Markdown 擴充功能
+- **拼字檢查**：`cspell` 或 VS Code 拼字檢查器
+- **連結檢查器**：`markdown-link-check`
+- **圖表工具**：PlantUML、Mermaid、draw.io
+- **文法檢查**：Grammarly 或 LanguageTool
 
-### Validation Scripts
+### 驗證 Scripts
 
 ```bash
-# Spell check
+# 拼字檢查
 ./scripts/check-spelling.sh
 
-# Link validation
+# 連結驗證
 ./scripts/validate-links.sh
 
-# Diagram validation
+# 圖表驗證
 ./scripts/validate-diagrams.sh
 
-# Complete validation
+# 完整驗證
 ./scripts/validate-docs.sh
 ```
 
-### Style Resources
+### 風格資源
 
 - [Microsoft Writing Style Guide](https://docs.microsoft.com/en-us/style-guide/)
 - [Google Developer Documentation Style Guide](https://developers.google.com/style)
@@ -787,32 +787,32 @@ Before submitting documentation:
 
 ---
 
-## Examples
+## 範例
 
-### Good Documentation Example
+### 好的文件範例
 
 ```markdown
 # Customer API
 
-## Overview
+## 總覽
 
-The Customer API provides endpoints for managing customer accounts. It supports creating, reading, updating, and deleting customer records.
+Customer API 提供管理客戶帳號的 endpoints。它支援建立、讀取、更新和刪除客戶記錄。
 
-## Authentication
+## 認證
 
-All endpoints require JWT authentication. Include the token in the Authorization header:
+所有 endpoints 需要 JWT 認證。在 Authorization header 中包含 token：
 
 ```bash
 Authorization: Bearer <your-token>
 ```
 
-## Create Customer
+## 建立客戶
 
-**Endpoint**: `POST /api/v1/customers`
+**Endpoint**：`POST /api/v1/customers`
 
-Creates a new customer account.
+建立新的客戶帳號。
 
-**Request**:
+**請求**：
 ```json
 {
   "name": "John Doe",
@@ -820,7 +820,7 @@ Creates a new customer account.
 }
 ```
 
-**Response** (201 Created):
+**回應** (201 Created)：
 ```json
 {
   "id": "cust-123",
@@ -830,7 +830,7 @@ Creates a new customer account.
 }
 ```
 
-**Example**:
+**範例**：
 ```bash
 curl -X POST https://api.example.com/api/v1/customers \
   -H "Authorization: Bearer <token>" \
@@ -838,7 +838,7 @@ curl -X POST https://api.example.com/api/v1/customers \
   -d '{"name":"John Doe","email":"john@example.com"}'
 ```
 
-## Related Documentation
+## 相關文件
 
 - [Authentication Guide](authentication.md)
 - [Error Handling](errors.md)
@@ -846,39 +846,39 @@ curl -X POST https://api.example.com/api/v1/customers \
 
 ---
 
-## Contact and Support
+## 聯絡與支援
 
-### Style Guide Questions
+### 風格指南問題
 
-- **Channel**: #documentation Slack channel
-- **Email**: docs-team@example.com
-- **Issues**: GitHub documentation repository
+- **頻道**：#documentation Slack 頻道
+- **Email**：docs-team@example.com
+- **Issues**：GitHub documentation repository
 
-### Requesting Changes
+### 請求變更
 
-Submit style guide change requests via:
-1. GitHub issue in documentation repository
-2. Discussion in #documentation channel
-3. Email to documentation team
+透過以下方式提交風格指南變更請求：
+1. 在 documentation repository 提交 GitHub issue
+2. 在 #documentation 頻道討論
+3. Email 給 documentation 團隊
 
 ---
 
-## Appendix
+## 附錄
 
-### Related Documents
+### 相關文件
 
-- [Documentation Maintenance Guide](MAINTENANCE.md)
-- [Documentation Metrics](METRICS.md)
-- [Diagram Generation Standards](diagrams/README.md)
+- [文件維護指南](MAINTENANCE.md)
+- [文件指標](METRICS.md)
+- [圖表生成標準](diagrams/README.md)
 
-### Change History
+### 變更歷史
 
-| Date | Version | Changes | Author |
+| 日期 | 版本 | 變更 | 作者 |
 |------|---------|---------|--------|
-| 2024-11-09 | 1.0 | Initial creation | Documentation Team |
+| 2024-11-09 | 1.0 | 初始建立 | Documentation Team |
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2024-11-09  
-**Next Review**: 2024-12-09
+**文件版本**: 1.0
+**最後更新**: 2024-11-09
+**下次審閱**: 2024-12-09

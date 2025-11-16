@@ -8,52 +8,52 @@ stakeholders: ["Architects", "Developers", "Operations Team", "Integration Team"
 
 # External Systems Integration
 
-> **Viewpoint**: Context  
-> **Purpose**: Document all external system integrations and their interfaces  
-> **Audience**: Architects, Developers, Operations Team, Integration Team
+> **Viewpoint**: Context
+> **目的**：記錄所有外部系統整合及其介面
+> **對象**：Architects、Developers、Operations Team、Integration Team
 
-## Overview
+## 概述
 
-This document describes all external systems that the E-Commerce Platform integrates with, including integration patterns, data flows, error handling, and operational considerations.
+本文件描述電子商務平台整合的所有外部系統，包括整合模式、資料流、錯誤處理和營運考量。
 
-## External System Catalog
+## 外部系統目錄
 
 ### Payment Gateway
 
-**System**: Stripe Payment Gateway  
-**Type**: Third-party SaaS  
-**Criticality**: Critical  
-**Integration Pattern**: Synchronous API + Webhooks
+**系統**：Stripe Payment Gateway
+**類型**：Third-party SaaS
+**關鍵性**：關鍵
+**整合模式**：Synchronous API + Webhooks
 
-#### Purpose
+#### 目的
 
-Process customer payments, manage payment methods, handle refunds, and ensure PCI-DSS compliance.
+處理客戶付款、管理付款方式、處理退款，並確保 PCI-DSS 合規。
 
-#### Integration Details
+#### 整合詳情
 
-**API Endpoints Used**
+**使用的 API Endpoints**
 
-- `POST /v1/payment_intents` - Create payment intent
-- `POST /v1/payment_intents/{id}/confirm` - Confirm payment
-- `POST /v1/refunds` - Process refund
-- `GET /v1/payment_methods` - List payment methods
-- `POST /v1/customers` - Create customer in Stripe
+- `POST /v1/payment_intents` - 建立付款意圖
+- `POST /v1/payment_intents/{id}/confirm` - 確認付款
+- `POST /v1/refunds` - 處理退款
+- `GET /v1/payment_methods` - 列出付款方式
+- `POST /v1/customers` - 在 Stripe 中建立客戶
 
-**Authentication**
+**驗證**
 
-- API Key authentication (Bearer token)
-- Separate keys for test and production environments
-- Keys stored in AWS Secrets Manager
-- Key rotation every 90 days
+- API Key 驗證（Bearer token）
+- 測試和生產環境使用分開的 keys
+- Keys 儲存在 AWS Secrets Manager
+- 每 90 天輪換 Key
 
-**Data Flow**
+**資料流**
 
 ```mermaid
 sequenceDiagram
     participant Customer
     participant Platform
     participant Stripe
-    
+
     Customer->>Platform: Submit Order
     Platform->>Stripe: Create Payment Intent
     Stripe-->>Platform: Payment Intent ID
@@ -65,88 +65,88 @@ sequenceDiagram
     Platform->>Customer: Order Confirmation
 ```
 
-**Webhook Events Consumed**
+**消費的 Webhook Events**
 
-- `payment_intent.succeeded` - Payment successful
-- `payment_intent.payment_failed` - Payment failed
-- `charge.refunded` - Refund processed
-- `customer.updated` - Customer information updated
+- `payment_intent.succeeded` - 付款成功
+- `payment_intent.payment_failed` - 付款失敗
+- `charge.refunded` - 退款已處理
+- `customer.updated` - 客戶資訊已更新
 
-**Error Handling**
+**錯誤處理**
 
-- Retry logic: 3 attempts with exponential backoff
-- Circuit breaker: Open after 5 consecutive failures
-- Fallback: Queue payment for manual processing
-- Timeout: 30 seconds for API calls
+- 重試邏輯：3 次嘗試，指數退避
+- Circuit breaker：連續 5 次失敗後開啟
+- 備援：將付款排入佇列以進行手動處理
+- 逾時：API 呼叫 30 秒
 
-**Rate Limits**
+**速率限制**
 
-- 100 requests per second per API key
-- Burst capacity: 200 requests
-- Monitoring: Alert when usage exceeds 80%
+- 每個 API key 每秒 100 個請求
+- 突發容量：200 個請求
+- 監控：使用率超過 80% 時警示
 
 **SLA**
 
-- Availability: 99.99%
-- Response time: < 500ms (95th percentile)
-- Support: 24/7 email and phone support
+- 可用性：99.99%
+- 回應時間：< 500ms（第 95 百分位）
+- 支援：24/7 郵件和電話支援
 
-**Cost Model**
+**成本模型**
 
-- 2.9% + $0.30 per successful transaction
-- No monthly fees
-- Refund fees: $0.30 per refund
+- 每筆成功交易 2.9% + $0.30
+- 無月費
+- 退款費用：每筆退款 $0.30
 
-**Security Considerations**
+**安全考量**
 
-- PCI-DSS Level 1 certified
-- All payment data encrypted in transit (TLS 1.3)
-- No card data stored in our system
-- Tokenization for recurring payments
+- PCI-DSS Level 1 認證
+- 所有付款資料傳輸加密（TLS 1.3）
+- 我們的系統不儲存卡片資料
+- 定期付款使用 Tokenization
 
-**Monitoring**
+**監控**
 
-- Payment success rate
-- Payment processing time
-- Failed payment reasons
-- Webhook delivery success rate
+- 付款成功率
+- 付款處理時間
+- 付款失敗原因
+- Webhook 傳送成功率
 
 ---
 
 ### Email Service
 
-**System**: SendGrid  
-**Type**: Third-party SaaS  
-**Criticality**: High  
-**Integration Pattern**: Asynchronous API + Webhooks
+**系統**：SendGrid
+**類型**：Third-party SaaS
+**關鍵性**：高
+**整合模式**：Asynchronous API + Webhooks
 
-#### Purpose
+#### 目的
 
-Send transactional emails (order confirmations, shipping notifications) and marketing emails to customers.
+發送交易郵件（訂單確認、配送通知）和行銷郵件給客戶。
 
-#### Integration Details
+#### 整合詳情
 
-**API Endpoints Used**
+**使用的 API Endpoints**
 
-- `POST /v3/mail/send` - Send email
-- `POST /v3/mail/batch` - Send batch emails
-- `GET /v3/stats` - Get email statistics
-- `POST /v3/templates` - Manage email templates
+- `POST /v3/mail/send` - 發送郵件
+- `POST /v3/mail/batch` - 發送批次郵件
+- `GET /v3/stats` - 取得郵件統計資料
+- `POST /v3/templates` - 管理郵件範本
 
-**Authentication**
+**驗證**
 
-- API Key authentication
-- Keys stored in AWS Secrets Manager
-- Separate keys for transactional and marketing emails
+- API Key 驗證
+- Keys 儲存在 AWS Secrets Manager
+- 交易和行銷郵件使用分開的 keys
 
-**Data Flow**
+**資料流**
 
 ```mermaid
 sequenceDiagram
     participant Platform
     participant SendGrid
     participant Customer
-    
+
     Platform->>SendGrid: Send Email Request
     SendGrid-->>Platform: Accepted (202)
     SendGrid->>Customer: Deliver Email
@@ -154,102 +154,102 @@ sequenceDiagram
     Platform->>Platform: Update Email Status
 ```
 
-**Email Types**
+**郵件類型**
 
-- Order confirmation
-- Shipping notification
-- Password reset
-- Welcome email
-- Promotional campaigns
-- Account notifications
+- 訂單確認
+- 配送通知
+- 密碼重設
+- 歡迎郵件
+- 促銷活動
+- 帳戶通知
 
-**Webhook Events Consumed**
+**消費的 Webhook Events**
 
-- `delivered` - Email delivered successfully
-- `open` - Email opened by recipient
-- `click` - Link clicked in email
-- `bounce` - Email bounced
-- `spam_report` - Marked as spam
-- `unsubscribe` - User unsubscribed
+- `delivered` - 郵件已成功傳送
+- `open` - 收件者已開啟郵件
+- `click` - 郵件中的連結已被點擊
+- `bounce` - 郵件退回
+- `spam_report` - 標記為垃圾郵件
+- `unsubscribe` - 使用者取消訂閱
 
-**Error Handling**
+**錯誤處理**
 
-- Retry logic: 5 attempts with exponential backoff
-- Dead letter queue for failed emails
-- Fallback: Log error and alert operations team
-- Timeout: 10 seconds for API calls
+- 重試邏輯：5 次嘗試，指數退避
+- 失敗郵件的 Dead letter queue
+- 備援：記錄錯誤並警示維運團隊
+- 逾時：API 呼叫 10 秒
 
-**Rate Limits**
+**速率限制**
 
-- 10,000 emails per hour (transactional)
-- 100,000 emails per day (marketing)
-- Monitoring: Alert when usage exceeds 80%
+- 10,000 封郵件/小時（交易）
+- 100,000 封郵件/天（行銷）
+- 監控：使用率超過 80% 時警示
 
 **SLA**
 
-- Availability: 99.95%
-- Delivery rate: > 98%
-- Support: 24/7 email support, phone for enterprise
+- 可用性：99.95%
+- 傳送率：> 98%
+- 支援：24/7 郵件支援，企業版提供電話支援
 
-**Cost Model**
+**成本模型**
 
-- $14.95/month for 40,000 emails
-- $0.00085 per additional email
-- Free tier: 100 emails/day
+- 每月 $14.95，包含 40,000 封郵件
+- 每封額外郵件 $0.00085
+- 免費方案：100 封郵件/天
 
-**Security Considerations**
+**安全考量**
 
-- DKIM and SPF configured
-- TLS encryption for email transmission
-- Unsubscribe link in all marketing emails
-- GDPR compliant data handling
+- 已配置 DKIM 和 SPF
+- 郵件傳輸使用 TLS 加密
+- 所有行銷郵件包含取消訂閱連結
+- 符合 GDPR 的資料處理
 
-**Monitoring**
+**監控**
 
-- Email delivery rate
-- Bounce rate
-- Open rate
-- Click-through rate
-- Spam complaint rate
+- 郵件傳送率
+- 退回率
+- 開啟率
+- 點擊率
+- 垃圾郵件投訴率
 
 ---
 
 ### Shipping Providers
 
-**Systems**: FedEx, UPS, DHL  
-**Type**: Third-party APIs  
-**Criticality**: High  
-**Integration Pattern**: Synchronous API + Webhooks
+**系統**：FedEx、UPS、DHL
+**類型**：Third-party APIs
+**關鍵性**：高
+**整合模式**：Synchronous API + Webhooks
 
-#### Purpose
+#### 目的
 
-Calculate shipping costs, create shipping labels, track shipments, and manage delivery logistics.
+計算運費、建立運送標籤、追蹤貨件，並管理配送物流。
 
-#### Integration Details
+#### 整合詳情
 
-**Common API Operations**
+**常見 API 操作**
 
-- Rate calculation
-- Label generation
-- Shipment tracking
-- Address validation
-- Pickup scheduling
+- 費率計算
+- 標籤產生
+- 貨件追蹤
+- 地址驗證
+- 取件排程
 
-**Authentication**
+**驗證**
 
-- OAuth 2.0 for FedEx and UPS
-- API Key for DHL
-- Credentials stored in AWS Secrets Manager
-- Token refresh automated
+- FedEx 和 UPS 使用 OAuth 2.0
+- DHL 使用 API Key
+- 憑證儲存在 AWS Secrets Manager
+- Token 刷新自動化
 
-**Data Flow**
+**資料流**
 
 ```mermaid
 sequenceDiagram
     participant Platform
     participant ShippingProvider
     participant Customer
-    
+
     Platform->>ShippingProvider: Calculate Rates
     ShippingProvider-->>Platform: Rate Options
     Customer->>Platform: Select Shipping Method
@@ -259,89 +259,89 @@ sequenceDiagram
     Platform->>Customer: Tracking Notification
 ```
 
-**FedEx Integration**
+**FedEx 整合**
 
 **API Endpoints**
 
-- `POST /rate/v1/rates/quotes` - Get shipping rates
-- `POST /ship/v1/shipments` - Create shipment
-- `POST /track/v1/trackingnumbers` - Track shipment
+- `POST /rate/v1/rates/quotes` - 取得運費
+- `POST /ship/v1/shipments` - 建立貨件
+- `POST /track/v1/trackingnumbers` - 追蹤貨件
 
-**Rate Limits**: 1,000 requests per hour  
-**SLA**: 99.9% availability  
-**Cost**: Volume-based pricing
+**速率限制**：每小時 1,000 個請求
+**SLA**：99.9% 可用性
+**成本**：基於量的定價
 
-**UPS Integration**
-
-**API Endpoints**
-
-- `POST /api/rating/v1/Rate` - Get shipping rates
-- `POST /api/shipments/v1/ship` - Create shipment
-- `GET /api/track/v1/details/{trackingNumber}` - Track shipment
-
-**Rate Limits**: 500 requests per hour  
-**SLA**: 99.9% availability  
-**Cost**: Volume-based pricing
-
-**DHL Integration**
+**UPS 整合**
 
 **API Endpoints**
 
-- `POST /rates` - Get shipping rates
-- `POST /shipments` - Create shipment
-- `GET /tracking/{trackingNumber}` - Track shipment
+- `POST /api/rating/v1/Rate` - 取得運費
+- `POST /api/shipments/v1/ship` - 建立貨件
+- `GET /api/track/v1/details/{trackingNumber}` - 追蹤貨件
 
-**Rate Limits**: 2,000 requests per hour  
-**SLA**: 99.5% availability  
-**Cost**: Volume-based pricing
+**速率限制**：每小時 500 個請求
+**SLA**：99.9% 可用性
+**成本**：基於量的定價
 
-**Error Handling**
+**DHL 整合**
 
-- Retry logic: 3 attempts with exponential backoff
-- Fallback: Try alternative shipping provider
-- Circuit breaker: Open after 5 consecutive failures
-- Timeout: 15 seconds for API calls
+**API Endpoints**
 
-**Monitoring**
+- `POST /rates` - 取得運費
+- `POST /shipments` - 建立貨件
+- `GET /tracking/{trackingNumber}` - 追蹤貨件
 
-- API response time
-- Success rate per provider
-- Shipping cost accuracy
-- Tracking update frequency
+**速率限制**：每小時 2,000 個請求
+**SLA**：99.5% 可用性
+**成本**：基於量的定價
+
+**錯誤處理**
+
+- 重試邏輯：3 次嘗試，指數退避
+- 備援：嘗試替代運送提供者
+- Circuit breaker：連續 5 次失敗後開啟
+- 逾時：API 呼叫 15 秒
+
+**監控**
+
+- API 回應時間
+- 每個提供者的成功率
+- 運費準確性
+- 追蹤更新頻率
 
 ---
 
 ### SMS Notification Service
 
-**System**: Twilio  
-**Type**: Third-party SaaS  
-**Criticality**: Medium  
-**Integration Pattern**: Asynchronous API + Webhooks
+**系統**：Twilio
+**類型**：Third-party SaaS
+**關鍵性**：中
+**整合模式**：Asynchronous API + Webhooks
 
-#### Purpose
+#### 目的
 
-Send SMS notifications for order updates, delivery alerts, and verification codes.
+發送訂單更新、配送警示和驗證碼的 SMS 通知。
 
-#### Integration Details
+#### 整合詳情
 
-**API Endpoints Used**
+**使用的 API Endpoints**
 
-- `POST /2010-04-01/Accounts/{AccountSid}/Messages.json` - Send SMS
-- `GET /2010-04-01/Accounts/{AccountSid}/Messages/{MessageSid}.json` - Get message status
+- `POST /2010-04-01/Accounts/{AccountSid}/Messages.json` - 發送 SMS
+- `GET /2010-04-01/Accounts/{AccountSid}/Messages/{MessageSid}.json` - 取得訊息狀態
 
-**Authentication**
+**驗證**
 
-- Account SID and Auth Token
-- Credentials stored in AWS Secrets Manager
+- Account SID 和 Auth Token
+- 憑證儲存在 AWS Secrets Manager
 
-**Data Flow**
+**資料流**
 
 ```mermaid
 sequenceDiagram
     participant Platform
     participant Twilio
     participant Customer
-    
+
     Platform->>Twilio: Send SMS Request
     Twilio-->>Platform: Message SID
     Twilio->>Customer: Deliver SMS
@@ -349,393 +349,393 @@ sequenceDiagram
     Platform->>Platform: Update SMS Status
 ```
 
-**SMS Types**
+**SMS 類型**
 
-- Order status updates
-- Delivery notifications
-- Two-factor authentication codes
-- Promotional messages (with opt-in)
+- 訂單狀態更新
+- 配送通知
+- 雙因素驗證碼
+- 促銷訊息（需選擇加入）
 
-**Webhook Events Consumed**
+**消費的 Webhook Events**
 
-- `delivered` - SMS delivered
-- `failed` - SMS delivery failed
-- `undelivered` - SMS undelivered
+- `delivered` - SMS 已傳送
+- `failed` - SMS 傳送失敗
+- `undelivered` - SMS 未傳送
 
-**Error Handling**
+**錯誤處理**
 
-- Retry logic: 3 attempts
-- Fallback: Send email notification instead
-- Timeout: 10 seconds
+- 重試邏輯：3 次嘗試
+- 備援：改發送郵件通知
+- 逾時：10 秒
 
-**Rate Limits**
+**速率限制**
 
-- 1,000 messages per second
-- Monitoring: Alert when usage exceeds 80%
+- 每秒 1,000 則訊息
+- 監控：使用率超過 80% 時警示
 
 **SLA**
 
-- Availability: 99.95%
-- Delivery rate: > 95%
-- Support: 24/7 email and phone
+- 可用性：99.95%
+- 傳送率：> 95%
+- 支援：24/7 郵件和電話
 
-**Cost Model**
+**成本模型**
 
-- $0.0075 per SMS (US)
-- $0.02 - $0.10 per SMS (international)
-- No monthly fees
+- 每則 SMS $0.0075（美國）
+- 每則 SMS $0.02 - $0.10（國際）
+- 無月費
 
-**Security Considerations**
+**安全考量**
 
-- End-to-end encryption
-- Opt-in required for marketing messages
-- Opt-out mechanism provided
-- TCPA compliance
+- 端到端加密
+- 行銷訊息需要選擇加入
+- 提供選擇退出機制
+- 符合 TCPA
 
-**Monitoring**
+**監控**
 
-- SMS delivery rate
-- Failed delivery reasons
-- Response time
-- Cost per message
+- SMS 傳送率
+- 傳送失敗原因
+- 回應時間
+- 每則訊息成本
 
 ---
 
 ### Cloud Infrastructure
 
-**System**: Amazon Web Services (AWS)  
-**Type**: Cloud Platform  
-**Criticality**: Critical  
-**Integration Pattern**: SDK + Infrastructure as Code
+**系統**：Amazon Web Services (AWS)
+**類型**：Cloud Platform
+**關鍵性**：關鍵
+**整合模式**：SDK + Infrastructure as Code
 
-#### Purpose
+#### 目的
 
-Provide cloud infrastructure for compute, storage, networking, and managed services.
+提供運算、儲存、網路和受管服務的雲端基礎設施。
 
-#### Services Used
+#### 使用的服務
 
-**Compute**
+**運算**
 
-- EKS (Elastic Kubernetes Service) - Container orchestration
+- EKS (Elastic Kubernetes Service) - Container 編排
 - Lambda - Serverless functions
-- EC2 - Virtual machines (bastion hosts)
+- EC2 - 虛擬機（bastion hosts）
 
-**Storage**
+**儲存**
 
-- RDS PostgreSQL - Primary database
-- ElastiCache Redis - Caching layer
-- S3 - Object storage for images and files
+- RDS PostgreSQL - 主要資料庫
+- ElastiCache Redis - 快取層
+- S3 - 圖片和檔案的物件儲存
 
-**Messaging**
+**訊息傳遞**
 
 - MSK (Managed Streaming for Apache Kafka) - Event streaming
 - SQS - Message queuing
-- SNS - Pub/sub notifications
+- SNS - Pub/sub 通知
 
-**Networking**
+**網路**
 
 - VPC - Virtual private cloud
 - ALB - Application load balancer
-- Route 53 - DNS management
+- Route 53 - DNS 管理
 - CloudFront - CDN
 
-**Security**
+**安全**
 
 - IAM - Identity and access management
-- Secrets Manager - Secrets storage
+- Secrets Manager - Secrets 儲存
 - KMS - Key management
 - WAF - Web application firewall
 
-**Observability**
+**可觀測性**
 
-- CloudWatch - Logging and monitoring
-- X-Ray - Distributed tracing
-- CloudTrail - Audit logging
+- CloudWatch - 日誌和監控
+- X-Ray - 分散式追蹤
+- CloudTrail - 稽核日誌
 
-**Authentication**
+**驗證**
 
-- IAM roles for service-to-service
-- IAM users for human access
-- MFA required for production access
+- Service-to-service 使用 IAM roles
+- 人員存取使用 IAM users
+- 生產環境存取需要 MFA
 
 **Infrastructure as Code**
 
 - AWS CDK (TypeScript)
-- Version controlled in Git
-- Automated deployment via CI/CD
+- Git 版本控制
+- 透過 CI/CD 自動部署
 
-**Cost Management**
+**成本管理**
 
-- Budget alerts configured
-- Cost allocation tags
-- Reserved instances for predictable workloads
-- Spot instances for batch processing
+- 已配置預算警示
+- 成本分配標籤
+- 可預測工作負載使用 Reserved instances
+- 批次處理使用 Spot instances
 
-**Security Considerations**
+**安全考量**
 
-- Least privilege IAM policies
-- Encryption at rest and in transit
-- VPC security groups and NACLs
-- Regular security audits
+- 最小權限 IAM 政策
+- 靜態和傳輸中加密
+- VPC security groups 和 NACLs
+- 定期安全稽核
 
-**Monitoring**
+**監控**
 
-- Service health dashboards
-- Cost monitoring
-- Security alerts
-- Performance metrics
+- 服務健康儀表板
+- 成本監控
+- 安全警示
+- 效能指標
 
 ---
 
-## Integration Patterns
+## 整合模式
 
-### Synchronous Integration
+### 同步整合
 
-**When to Use**
+**何時使用**
 
-- Real-time data required
-- Immediate response needed
-- Transactional operations
+- 需要即時資料
+- 需要立即回應
+- 交易操作
 
-**Implementation**
+**實作**
 
-- REST API calls
-- Timeout configuration
-- Retry logic with exponential backoff
-- Circuit breaker pattern
+- REST API 呼叫
+- 逾時配置
+- 指數退避的重試邏輯
+- Circuit breaker 模式
 
-**Example**: Payment processing, shipping rate calculation
+**範例**：付款處理、運費計算
 
-### Asynchronous Integration
+### 非同步整合
 
-**When to Use**
+**何時使用**
 
-- Non-critical operations
-- Batch processing
-- Event-driven workflows
+- 非關鍵操作
+- 批次處理
+- 事件驅動工作流程
 
-**Implementation**
+**實作**
 
 - Message queues (SQS)
 - Event streaming (Kafka)
 - Webhook callbacks
 - Dead letter queues
 
-**Example**: Email notifications, SMS alerts
+**範例**：郵件通知、SMS 警示
 
-### Webhook Integration
+### Webhook 整合
 
-**When to Use**
+**何時使用**
 
-- External system needs to notify us
-- Event-driven updates
-- Asynchronous callbacks
+- 外部系統需要通知我們
+- 事件驅動更新
+- 非同步 callbacks
 
-**Implementation**
+**實作**
 
-- Webhook endpoint exposed
-- Signature verification
-- Idempotency handling
-- Retry mechanism
+- 公開 Webhook endpoint
+- 簽章驗證
+- 冪等性處理
+- 重試機制
 
-**Example**: Payment status updates, shipping tracking updates
+**範例**：付款狀態更新、運送追蹤更新
 
-## Error Handling Strategy
+## 錯誤處理策略
 
-### Retry Logic
+### 重試邏輯
 
-**Transient Errors**
+**暫時性錯誤**
 
-- Network timeouts
-- Rate limit exceeded
-- Temporary service unavailability
+- 網路逾時
+- 超過速率限制
+- 暫時性服務不可用
 
-**Retry Configuration**
+**重試配置**
 
-- Max attempts: 3-5 depending on criticality
-- Backoff strategy: Exponential with jitter
-- Timeout: Service-specific (10-30 seconds)
+- 最大嘗試次數：根據關鍵性 3-5 次
+- 退避策略：指數退避加抖動
+- 逾時：服務特定（10-30 秒）
 
 ### Circuit Breaker
 
-**Purpose**: Prevent cascading failures
+**目的**：防止級聯失敗
 
-**States**
+**狀態**
 
-- Closed: Normal operation
-- Open: Failures exceed threshold, stop calling
-- Half-Open: Test if service recovered
+- 關閉：正常運作
+- 開啟：失敗超過閾值，停止呼叫
+- 半開啟：測試服務是否已復原
 
-**Configuration**
+**配置**
 
-- Failure threshold: 5 consecutive failures
-- Timeout: 60 seconds
-- Success threshold: 2 successful calls to close
+- 失敗閾值：連續 5 次失敗
+- 逾時：60 秒
+- 成功閾值：2 次成功呼叫以關閉
 
-### Fallback Strategies
+### 備援策略
 
-**Payment Gateway Failure**
+**Payment Gateway 失敗**
 
-- Queue payment for manual processing
-- Notify operations team
-- Display user-friendly error message
+- 將付款排入佇列以進行手動處理
+- 通知維運團隊
+- 顯示使用者友善的錯誤訊息
 
-**Email Service Failure**
+**Email Service 失敗**
 
-- Store email in dead letter queue
-- Retry after service recovery
-- Log for manual follow-up
+- 將郵件儲存在 dead letter queue
+- 服務復原後重試
+- 記錄以供手動跟進
 
-**Shipping Provider Failure**
+**Shipping Provider 失敗**
 
-- Try alternative provider
-- Use cached rates if available
-- Notify operations team
+- 嘗試替代提供者
+- 如果可用則使用快取費率
+- 通知維運團隊
 
-## Security Considerations
+## 安全考量
 
-### API Key Management
+### API Key 管理
 
-**Storage**
+**儲存**
 
-- AWS Secrets Manager for all API keys
-- Automatic rotation every 90 days
-- Separate keys for dev/staging/production
+- 所有 API keys 使用 AWS Secrets Manager
+- 每 90 天自動輪換
+- dev/staging/production 使用分開的 keys
 
-**Access Control**
+**存取控制**
 
-- IAM roles for service access
-- Least privilege principle
-- Audit logging enabled
+- 服務存取使用 IAM roles
+- 最小權限原則
+- 啟用稽核日誌
 
-### Data Protection
+### 資料保護
 
-**In Transit**
+**傳輸中**
 
-- TLS 1.3 for all external communications
-- Certificate pinning for critical services
-- Mutual TLS for high-security integrations
+- 所有外部通訊使用 TLS 1.3
+- 關鍵服務使用 Certificate pinning
+- 高安全性整合使用 Mutual TLS
 
-**At Rest**
+**靜態**
 
-- Encryption for sensitive data
-- No storage of payment card data
-- Tokenization for recurring payments
+- 敏感資料加密
+- 不儲存付款卡資料
+- 定期付款使用 Tokenization
 
-### Compliance
+### 合規
 
 **PCI-DSS**
 
-- Payment gateway handles card data
-- No card data in our systems
-- Annual compliance audit
+- Payment gateway 處理卡片資料
+- 我們的系統不儲存卡片資料
+- 年度合規稽核
 
 **GDPR**
 
-- Data processing agreements with vendors
-- Right to erasure implemented
-- Data portability supported
+- 與供應商簽訂資料處理協議
+- 實作刪除權
+- 支援資料可攜性
 
-## Monitoring and Alerting
+## 監控和警示
 
-### Key Metrics
+### 關鍵指標
 
-**Availability**
+**可用性**
 
-- External service uptime
-- API response time
-- Error rate
+- 外部服務正常運行時間
+- API 回應時間
+- 錯誤率
 
-**Performance**
+**效能**
 
-- Request latency (p50, p95, p99)
-- Throughput (requests per second)
-- Queue depth
+- 請求延遲（p50、p95、p99）
+- 吞吐量（每秒請求數）
+- 佇列深度
 
-**Business**
+**業務**
 
-- Payment success rate
-- Email delivery rate
-- Shipping cost accuracy
+- 付款成功率
+- 郵件傳送率
+- 運費準確性
 
-### Alerts
+### 警示
 
-**Critical Alerts** (Page on-call)
+**關鍵警示**（呼叫值班人員）
 
-- Payment gateway unavailable
-- Database connection failure
-- High error rate (> 5%)
+- Payment gateway 不可用
+- 資料庫連線失敗
+- 高錯誤率（> 5%）
 
-**Warning Alerts** (Email/Slack)
+**警告警示**（郵件/Slack）
 
-- Elevated error rate (> 1%)
-- Slow response time (> 2s)
-- Rate limit approaching (> 80%)
+- 錯誤率上升（> 1%）
+- 回應時間慢（> 2s）
+- 接近速率限制（> 80%）
 
-**Info Alerts** (Dashboard)
+**資訊警示**（儀表板）
 
-- Cost threshold exceeded
-- Unusual traffic patterns
-- Service degradation
+- 超過成本閾值
+- 異常流量模式
+- 服務降級
 
-## Operational Procedures
+## 營運程序
 
-### Service Outage Response
+### 服務中斷回應
 
-**Detection**
+**偵測**
 
-- Automated monitoring alerts
-- Customer reports
-- External status pages
+- 自動監控警示
+- 客戶回報
+- 外部狀態頁面
 
-**Response**
+**回應**
 
-1. Acknowledge alert
-2. Check service status page
-3. Activate fallback if available
-4. Notify stakeholders
-5. Monitor recovery
-6. Post-mortem after resolution
+1. 確認警示
+2. 檢查服務狀態頁面
+3. 如果可用則啟動備援
+4. 通知利害關係人
+5. 監控復原
+6. 解決後進行事後檢討
 
-### Vendor Communication
+### 供應商溝通
 
-**Regular Reviews**
+**定期審查**
 
-- Quarterly business reviews
-- Monthly operational sync
-- Weekly incident reviews (if needed)
+- 季度業務審查
+- 月度營運同步
+- 週度事件審查（如需要）
 
-**Escalation Contacts**
+**升級聯絡**
 
-- Technical support: 24/7 email/phone
-- Account manager: Business hours
-- Emergency escalation: Critical issues
+- 技術支援：24/7 郵件/電話
+- 帳戶經理：營業時間
+- 緊急升級：關鍵問題
 
-### Cost Optimization
+### 成本優化
 
-**Regular Reviews**
+**定期審查**
 
-- Monthly cost analysis
-- Quarterly vendor negotiation
-- Annual contract renewal
+- 月度成本分析
+- 季度供應商談判
+- 年度合約續約
 
-**Optimization Strategies**
+**優化策略**
 
-- Volume discounts negotiation
-- Reserved capacity for predictable load
-- Alternative vendor evaluation
+- 協商量折扣
+- 可預測負載使用 Reserved capacity
+- 替代供應商評估
 
-## Related Documentation
+## 相關文件
 
-- [Context Viewpoint Overview](overview.md) - System context
-- [System Scope and Boundaries](scope-and-boundaries.md) - What's in/out of scope
-- [Stakeholders](stakeholders.md) - Stakeholder concerns
-- [Security Perspective](../../perspectives/security/overview.md) - Security requirements
-- [Operational Viewpoint](../operational/overview.md) - Operations procedures
+- [Context Viewpoint Overview](overview.md) - 系統脈絡
+- [System Scope and Boundaries](scope-and-boundaries.md) - 範圍內/外的內容
+- [Stakeholders](stakeholders.md) - 利害關係人關注點
+- [Security Perspective](../../perspectives/security/overview.md) - 安全要求
+- [Operational Viewpoint](../operational/overview.md) - 營運程序
 
 ---
 
-**Document Status**: Active  
-**Last Review**: 2025-10-23  
-**Next Review**: 2025-11-23  
-**Owner**: Integration Team
+**文件狀態**：使用中
+**最後審查**：2025-10-23
+**下次審查**：2025-11-23
+**負責人**：Integration Team

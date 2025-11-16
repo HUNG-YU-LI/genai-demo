@@ -1,88 +1,88 @@
 # Development Viewpoint
 
-> **Status**: 📝 To be documented  
-> **Last Updated**: 2025-01-17  
-> **Owner**: Tech Lead
+> **狀態**：📝 待撰寫
+> **最後更新**：2025-01-17
+> **負責人**：技術主管
 
-## Overview
+## 概述
 
-The Development Viewpoint describes the code organization, module structure, build process, and development environment.
+Development Viewpoint 描述程式碼組織、模組結構、建置流程和開發環境。
 
-## Purpose
+## 目的
 
-This viewpoint answers:
+此 viewpoint 回答：
 
-- How is the code organized?
-- What are the module dependencies?
-- How is the system built and tested?
-- What tools do developers need?
+- 程式碼如何組織？
+- 模組相依性是什麼？
+- 系統如何建置和測試？
+- 開發人員需要哪些工具？
 
-## Stakeholders
+## 利害關係人
 
-- **Primary**: Developers, build engineers
-- **Secondary**: DevOps, architects
+- **主要**：開發人員、建置工程師
+- **次要**：DevOps、架構師
 
-## Contents
+## 內容
 
-### 📄 Documents
+### 📄 文件
 
-- [Overview](overview.md) - Code organization approach
-- [Module Organization](module-organization.md) - Package structure and bounded contexts
-- [Dependency Rules](dependency-rules.md) - Hexagonal architecture constraints
-- [Build Process](build-process.md) - Gradle build and test execution
+- [Overview](overview.md) - 程式碼組織方法
+- [Module Organization](module-organization.md) - 套件結構和 bounded contexts
+- [Dependency Rules](dependency-rules.md) - Hexagonal architecture 約束
+- [Build Process](build-process.md) - Gradle 建置和測試執行
 
-### 📊 Diagrams
+### 📊 圖表
 
-- Package structure diagram
-- Dependency diagram
-- Build pipeline diagram
+- 套件結構圖
+- 相依性圖
+- 建置管線圖
 
-## Key Concepts
+## 關鍵概念
 
-### Code Organization
+### 程式碼組織
 
 ```text
 app/src/main/java/solid/humank/genaidemo/
-├── domain/              # Domain layer (no external dependencies)
+├── domain/              # Domain 層（無外部相依性）
 │   ├── customer/       # Customer bounded context
 │   ├── order/          # Order bounded context
 │   └── ...
-├── application/        # Application services (use cases)
+├── application/        # Application services（使用案例）
 ├── infrastructure/     # Infrastructure adapters
-└── interfaces/         # API controllers, event handlers
+└── interfaces/         # API controllers、事件處理器
 ```
 
-### Dependency Rules
+### 相依性規則
 
-- Domain layer: No dependencies on other layers
-- Application layer: Depends only on domain
-- Infrastructure layer: Depends on domain (via interfaces)
-- Interface layer: Depends on application
+- Domain 層：不相依其他層
+- Application 層：僅相依 domain
+- Infrastructure 層：相依 domain（透過介面）
+- Interface 層：相依 application
 
-### Build Tools
+### 建置工具
 
-- **Build System**: Gradle 8.x
-- **Java Version**: Java 21
-- **Testing**: JUnit 5, Mockito, Cucumber
-- **Code Quality**: ArchUnit, JaCoCo
+- **建置系統**：Gradle 8.x
+- **Java 版本**：Java 21
+- **測試**：JUnit 5、Mockito、Cucumber
+- **程式碼品質**：ArchUnit、JaCoCo
 
-## Related Documentation
+## 相關文件
 
-### Related Viewpoints
+### 相關 Viewpoints
 
 - [Functional Viewpoint](../functional/README.md) - Bounded contexts
-- [Deployment Viewpoint](../deployment/README.md) - Build artifacts
+- [Deployment Viewpoint](../deployment/README.md) - 建置產物
 
-### Related Perspectives
+### 相關 Perspectives
 
-- [Evolution Perspective](../../perspectives/evolution/README.md) - Code maintainability
+- [Evolution Perspective](../../perspectives/evolution/README.md) - 程式碼可維護性
 
-### Related Guides
+### 相關指南
 
-- [Development Guide](../../development/README.md) - Detailed development instructions
+- [Development Guide](../../development/README.md) - 詳細開發指示
 - [Coding Standards](../../development/coding-standards/README.md)
 
-## Quick Links
+## 快速連結
 
-- [Back to All Viewpoints](../README.md)
-- [Main Documentation](../../README.md)
+- [返回所有 Viewpoints](../README.md)
+- [主文件](../../README.md)

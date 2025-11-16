@@ -1,245 +1,245 @@
-# Test Performance Measurement Scripts
+# 測試效能測量指令碼
 
-This directory contains comprehensive scripts for measuring, validating, and reporting on test performance improvements as part of the test code refactoring initiative.
+此目錄包含用於測量、驗證和報告測試效能改進的全面指令碼，這是測試程式碼重構計畫的一部分。
 
-## Overview
+## 概述
 
-The test code refactoring initiative aimed to achieve:
-- **>60% reduction** in unit test execution time
-- **>80% reduction** in memory usage for local testing
-- **>50% improvement** in CI/CD pipeline time
-- **>99% test reliability** success rate
-- **>80% test coverage** maintenance
+測試程式碼重構計畫旨在達成：
+- **>60% 減少**單元測試執行時間
+- **>80% 減少**本地測試的記憶體使用
+- **>50% 改進** CI/CD 管道時間
+- **>99% 測試可靠性**成功率
+- **>80% 測試覆蓋率**維護
 
-## Scripts
+## 指令碼
 
 ### 1. measure-test-performance-baseline.sh
 
-**Purpose:** Establishes performance baselines for comparison after refactoring
+**用途：** 建立效能基準以供重構後比較
 
-**Usage:**
+**使用方法：**
 ```bash
 ./scripts/measure-test-performance-baseline.sh
 ```
 
-**What it does:**
-- Measures execution time for different test tasks (test, quickTest, unitTest, integrationTest)
-- Captures memory usage during test execution
-- Generates baseline metrics CSV files
-- Creates summary report with baseline data
+**執行內容：**
+- 測量不同測試任務的執行時間（test、quickTest、unitTest、integrationTest）
+- 捕獲測試執行期間的記憶體使用量
+- 產生基準指標 CSV 檔案
+- 建立含基準資料的摘要報告
 
-**Output:**
+**輸出：**
 - `build/reports/performance-baseline/baseline_metrics_<timestamp>.csv`
 - `build/reports/performance-baseline/memory_baseline_<timestamp>.csv`
 - `build/reports/performance-baseline/baseline_summary_<timestamp>.md`
-- Detailed logs and GC logs for analysis
+- 詳細日誌和 GC 日誌供分析
 
-**When to run:**
-- Before starting test refactoring (to establish baseline)
-- After major changes (to track improvements)
-- Periodically (to monitor trends)
+**執行時機：**
+- 開始測試重構前（建立基準）
+- 進行重大變更後（追蹤改進）
+- 定期執行（監控趨勢）
 
 ### 2. compare-test-performance.sh
 
-**Purpose:** Compares baseline metrics with current metrics to validate improvements
+**用途：** 比較基準指標與目前指標以驗證改進
 
-**Usage:**
+**使用方法：**
 ```bash
 ./scripts/compare-test-performance.sh <baseline_metrics.csv> <current_metrics.csv>
 ```
 
-**Example:**
+**範例：**
 ```bash
 ./scripts/compare-test-performance.sh \
   build/reports/performance-baseline/baseline_metrics_20250123_143000.csv \
   build/reports/performance-baseline/baseline_metrics_20250124_100000.csv
 ```
 
-**What it does:**
-- Calculates percentage improvements for each test task
-- Compares against target thresholds (60%, 80%, 50%)
-- Validates test reliability improvements
-- Generates detailed comparison report
+**執行內容：**
+- 計算每個測試任務的百分比改進
+- 與目標閾值比較（60%、80%、50%）
+- 驗證測試可靠性改進
+- 產生詳細比較報告
 
-**Output:**
+**輸出：**
 - `build/reports/performance-comparison/comparison_report_<timestamp>.md`
-- Detailed before/after analysis
-- Target achievement status
-- Recommendations for improvement
+- 詳細的之前/之後分析
+- 目標達成狀態
+- 改進建議
 
-**When to run:**
-- After completing test refactoring
-- To validate improvement targets
-- For progress reporting
+**執行時機：**
+- 測試重構完成後
+- 驗證改進目標
+- 用於進度報告
 
 ### 3. detect-performance-regression.sh
 
-**Purpose:** Monitors test performance and alerts on regressions
+**用途：** 監控測試效能並在回歸時發出警報
 
-**Usage:**
+**使用方法：**
 ```bash
 ./scripts/detect-performance-regression.sh
 ```
 
-**What it does:**
-- Finds the most recent baseline metrics
-- Runs current test suite and captures metrics
-- Compares against baseline with thresholds
-- Alerts if regressions detected
+**執行內容：**
+- 尋找最新的基準指標
+- 執行目前測試套件並捕獲指標
+- 與基準進行閾值比較
+- 檢測到回歸時發出警報
 
-**Thresholds:**
-- Execution time: Alert if >10% increase
-- Memory usage: Alert if >15% increase
-- Failure rate: Alert if >1% increase
+**閾值：**
+- 執行時間：增加 >10% 時警報
+- 記憶體使用：增加 >15% 時警報
+- 失敗率：增加 >1% 時警報
 
-**Output:**
+**輸出：**
 - `build/reports/performance-regression/regression_report_<timestamp>.md`
-- Current metrics CSV
-- Regression analysis and alerts
+- 目前指標 CSV
+- 回歸分析和警報
 
-**Exit codes:**
-- `0`: No regressions detected
-- `1`: Regressions detected (fails CI/CD)
+**結束代碼：**
+- `0`：未偵測到回歸
+- `1`：偵測到回歸（失敗 CI/CD）
 
-**When to run:**
-- In CI/CD pipeline after test execution
-- Before merging pull requests
-- Regularly to monitor performance trends
+**執行時機：**
+- 測試執行後在 CI/CD 管道中
+- 合併 pull requests 前
+- 定期監控效能趨勢
 
 ### 4. validate-test-reliability.sh
 
-**Purpose:** Measures test success rates, failure patterns, and stability
+**用途：** 測量測試成功率、失敗模式和穩定性
 
-**Usage:**
+**使用方法：**
 ```bash
 ./scripts/validate-test-reliability.sh
 ```
 
-**What it does:**
-- Runs tests multiple times to check stability
-- Analyzes test coverage metrics
-- Detects flaky tests
-- Validates >99% success rate target
+**執行內容：**
+- 執行測試多次以檢查穩定性
+- 分析測試覆蓋率指標
+- 偵測不穩定的測試
+- 驗證 >99% 成功率目標
 
-**Configuration:**
+**配置：**
 - `SUCCESS_RATE_TARGET`: 99.0%
-- `TEST_RUNS`: 5 (for stability check)
-- `FLAKY_TEST_THRESHOLD`: 2 runs
+- `TEST_RUNS`: 5（用於穩定性檢查）
+- `FLAKY_TEST_THRESHOLD`: 2 次執行
 
-**Output:**
+**輸出：**
 - `build/reports/test-reliability/reliability_report_<timestamp>.md`
 - `build/reports/test-reliability/stability_summary_<timestamp>.csv`
 - `build/reports/test-reliability/coverage_metrics_<timestamp>.csv`
-- Detailed stability results per test task
+- 每個測試任務的詳細穩定性結果
 
-**When to run:**
-- After test refactoring completion
-- To validate test quality improvements
-- Before production deployment
+**執行時機：**
+- 測試重構完成後
+- 驗證測試品質改進
+- 生產部署前
 
 ### 5. measure-developer-productivity.sh
 
-**Purpose:** Measures feedback loop improvements and developer experience
+**用途：** 測量回饋循環改進和開發者體驗
 
-**Usage:**
+**使用方法：**
 ```bash
 ./scripts/measure-developer-productivity.sh
 ```
 
-**What it does:**
-- Measures feedback loop times for different scenarios
-- Analyzes CI/CD pipeline efficiency
-- Evaluates test distribution (unit/integration/e2e)
-- Calculates developer productivity improvements
+**執行內容：**
+- 測量不同場景的回饋循環時間
+- 分析 CI/CD 管道效率
+- 評估測試分佈（單元/整合/E2E）
+- 計算開發者效率改進
 
-**Feedback loops measured:**
-- Quick feedback during development (target: <2 min)
-- Pre-commit validation (target: <5 min)
-- Full test suite (target: <15 min)
+**測量的回饋循環：**
+- 開發期間的快速回饋（目標：<2 分鐘）
+- 提交前驗證（目標：<5 分鐘）
+- 完整測試套件（目標：<15 分鐘）
 
-**Output:**
+**輸出：**
 - `build/reports/developer-productivity/productivity_report_<timestamp>.md`
 - `build/reports/developer-productivity/feedback_loops_<timestamp>.csv`
 - `build/reports/developer-productivity/cicd_stages_<timestamp>.csv`
 - `build/reports/developer-productivity/test_distribution_<timestamp>.csv`
 
-**When to run:**
-- After test refactoring completion
-- To measure developer experience improvements
-- For productivity reporting
+**執行時機：**
+- 測試重構完成後
+- 測量開發者體驗改進
+- 效率報告
 
 ### 6. generate-success-metrics-report.sh
 
-**Purpose:** Generates comprehensive success validation and sign-off documentation
+**用途：** 產生全面的成功驗證和簽核文件
 
-**Usage:**
+**使用方法：**
 ```bash
 ./scripts/generate-success-metrics-report.sh
 ```
 
-**What it does:**
-- Collects all performance metrics from previous scripts
-- Validates all requirements (10.1-10.5) are met
-- Generates comprehensive success report
-- Provides project sign-off documentation
+**執行內容：**
+- 收集所有先前指令碼的效能指標
+- 驗證所有要求（10.1-10.5）都符合
+- 產生全面成功報告
+- 提供專案簽核文件
 
-**Output:**
+**輸出：**
 - `reports-summaries/task-execution/task-8-success-metrics-report.md`
-- Executive summary of achievements
-- Detailed performance analysis
-- Infrastructure implementation status
-- Lessons learned and recommendations
+- 成就的執行摘要
+- 詳細效能分析
+- 基礎設施實施狀態
+- 學習經驗和建議
 
-**When to run:**
-- After all other measurement scripts
-- For final project validation
-- For stakeholder reporting
+**執行時機：**
+- 所有其他測量指令碼之後
+- 最終專案驗證
+- 利益相關者報告
 
-## Workflow
+## 工作流程
 
-### Initial Baseline Establishment
+### 初始基準建立
 
 ```bash
-# 1. Establish baseline before refactoring
+# 1. 重構前建立基準
 ./scripts/measure-test-performance-baseline.sh
 
-# Output: baseline_metrics_<timestamp>.csv
+# 輸出：baseline_metrics_<timestamp>.csv
 ```
 
-### During Refactoring
+### 重構期間
 
 ```bash
-# 2. Monitor for regressions during development
+# 2. 在開發期間監控回歸
 ./scripts/detect-performance-regression.sh
 
-# Runs automatically in CI/CD
-# Alerts if performance degrades
+# 在 CI/CD 中自動執行
+# 效能降級時發出警報
 ```
 
-### After Refactoring
+### 重構後
 
 ```bash
-# 3. Measure new baseline after refactoring
+# 3. 重構後測量新基準
 ./scripts/measure-test-performance-baseline.sh
 
-# 4. Compare with original baseline
+# 4. 與原始基準比較
 ./scripts/compare-test-performance.sh \
   build/reports/performance-baseline/baseline_metrics_OLD.csv \
   build/reports/performance-baseline/baseline_metrics_NEW.csv
 
-# 5. Validate test reliability
+# 5. 驗證測試可靠性
 ./scripts/validate-test-reliability.sh
 
-# 6. Measure developer productivity
+# 6. 測量開發者效率
 ./scripts/measure-developer-productivity.sh
 
-# 7. Generate final success report
+# 7. 產生最終成功報告
 ./scripts/generate-success-metrics-report.sh
 ```
 
-## CI/CD Integration
+## CI/CD 整合
 
-### GitHub Actions Example
+### GitHub Actions 範例
 
 ```yaml
 name: Test Performance Monitoring
@@ -255,16 +255,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
-      
+
       - name: Run tests and detect regressions
         run: ./scripts/detect-performance-regression.sh
-      
+
       - name: Upload performance reports
         if: always()
         uses: actions/upload-artifact@v3
@@ -273,7 +273,7 @@ jobs:
           path: build/reports/performance-regression/
 ```
 
-### AWS CodeBuild Integration
+### AWS CodeBuild 整合
 
 ```yaml
 # buildspec-performance-check.yml
@@ -283,12 +283,12 @@ phases:
   install:
     runtime-versions:
       java: corretto21
-  
+
   build:
     commands:
       - echo "Running performance regression detection..."
       - ./scripts/detect-performance-regression.sh
-  
+
   post_build:
     commands:
       - echo "Performance check completed"
@@ -305,147 +305,147 @@ reports:
     file-format: 'CSV'
 ```
 
-## Report Locations
+## 報告位置
 
-All reports are generated in the `build/reports/` directory:
+所有報告在 `build/reports/` 目錄中產生：
 
 ```
 build/reports/
-├── performance-baseline/       # Baseline measurements
+├── performance-baseline/       # 基準測量
 │   ├── baseline_metrics_*.csv
 │   ├── memory_baseline_*.csv
 │   └── baseline_summary_*.md
 │
-├── performance-comparison/     # Before/after comparisons
+├── performance-comparison/     # 之前/之後比較
 │   └── comparison_report_*.md
 │
-├── performance-regression/     # Regression detection
+├── performance-regression/     # 回歸偵測
 │   ├── current_metrics_*.csv
 │   └── regression_report_*.md
 │
-├── test-reliability/          # Reliability validation
+├── test-reliability/          # 可靠性驗證
 │   ├── reliability_report_*.md
 │   ├── stability_summary_*.csv
 │   └── coverage_metrics_*.csv
 │
-└── developer-productivity/    # Productivity measurements
+└── developer-productivity/    # 效率測量
     ├── productivity_report_*.md
     ├── feedback_loops_*.csv
     ├── cicd_stages_*.csv
     └── test_distribution_*.csv
 ```
 
-Final success report:
+最終成功報告：
 ```
 reports-summaries/task-execution/
 └── task-8-success-metrics-report.md
 ```
 
-## Performance Targets
+## 效能目標
 
-### Requirement 10.1: Unit Test Execution Time
-- **Target:** >60% reduction
-- **Baseline:** 600-900 seconds
-- **Target:** <300 seconds
-- **Achieved:** 67-80% reduction
+### 要求 10.1：單元測試執行時間
+- **目標：** >60% 減少
+- **基準：** 600-900 秒
+- **目標：** <300 秒
+- **達成：** 67-80% 減少
 
-### Requirement 10.2: Memory Usage
-- **Target:** >80% reduction
-- **Baseline:** 6-8 GB
-- **Target:** <1.5 GB
-- **Achieved:** 87% reduction
+### 要求 10.2：記憶體使用
+- **目標：** >80% 減少
+- **基準：** 6-8 GB
+- **目標：** <1.5 GB
+- **達成：** 87% 減少
 
-### Requirement 10.3: CI/CD Pipeline
-- **Target:** >50% improvement
-- **Baseline:** 15-20 minutes
-- **Target:** <10 minutes
-- **Achieved:** 50-90% improvement
+### 要求 10.3：CI/CD 管道
+- **目標：** >50% 改進
+- **基準：** 15-20 分鐘
+- **目標：** <10 分鐘
+- **達成：** 50-90% 改進
 
-### Requirement 10.4: Test Reliability
-- **Target:** >99% success rate
-- **Baseline:** 95-97%
-- **Target:** >99%
-- **Achieved:** >99%
+### 要求 10.4：測試可靠性
+- **目標：** >99% 成功率
+- **基準：** 95-97%
+- **目標：** >99%
+- **達成：** >99%
 
-### Requirement 10.5: Test Coverage
-- **Target:** >80% maintained
-- **Baseline:** 82%
-- **Target:** >80%
-- **Achieved:** 85%
+### 要求 10.5：測試覆蓋率
+- **目標：** >80% 維護
+- **基準：** 82%
+- **目標：** >80%
+- **達成：** 85%
 
-## Troubleshooting
+## 故障排除
 
-### Script Fails to Find Baseline
+### 指令碼找不到基準
 
-**Problem:** `detect-performance-regression.sh` reports "No baseline metrics found"
+**問題：** `detect-performance-regression.sh` 報告「未找到基準指標」
 
-**Solution:**
+**解決方案：**
 ```bash
-# Run baseline measurement first
+# 首先執行基準測量
 ./scripts/measure-test-performance-baseline.sh
 ```
 
-### Out of Memory During Measurement
+### 測量期間記憶體不足
 
-**Problem:** Scripts fail with OutOfMemoryError
+**問題：** 指令碼失敗並出現 OutOfMemoryError
 
-**Solution:**
+**解決方案：**
 ```bash
-# Increase available memory
+# 增加可用記憶體
 export GRADLE_OPTS="-Xmx8g"
 ./scripts/measure-test-performance-baseline.sh
 ```
 
-### Tests Fail During Measurement
+### 測試在測量期間失敗
 
-**Problem:** Test failures prevent metric collection
+**問題：** 測試失敗防止指標收集
 
-**Solution:**
-- Fix failing tests first
-- Or use `|| true` in scripts to continue on failure
-- Check test logs in `build/reports/`
+**解決方案：**
+- 先修復失敗的測試
+- 或在指令碼中使用 `|| true` 以失敗時繼續
+- 檢查 `build/reports/` 中的測試日誌
 
-### Comparison Shows No Improvement
+### 比較未顯示改進
 
-**Problem:** Metrics show no improvement after refactoring
+**問題：** 重構後指標未顯示改進
 
-**Solution:**
-1. Verify refactoring was applied correctly
-2. Check if correct test tasks are being measured
-3. Review Gradle configuration for optimization
-4. Ensure JVM settings are optimized
+**解決方案：**
+1. 驗證重構已正確應用
+2. 檢查是否測量了正確的測試任務
+3. 查看 Gradle 配置以進行優化
+4. 確保 JVM 設定已優化
 
-## Best Practices
+## 最佳實踐
 
-1. **Establish Baseline Early**
-   - Run baseline measurement before any changes
-   - Keep baseline files for historical comparison
+1. **儘早建立基準**
+   - 在任何變更前執行基準測量
+   - 保留基準檔案以供歷史比較
 
-2. **Regular Monitoring**
-   - Run regression detection in CI/CD
-   - Monitor trends over time
-   - Alert on performance degradation
+2. **定期監控**
+   - 在 CI/CD 中執行回歸偵測
+   - 監控長期趨勢
+   - 效能降級時發出警報
 
-3. **Comprehensive Validation**
-   - Run all measurement scripts after refactoring
-   - Validate all requirements are met
-   - Document results thoroughly
+3. **全面驗證**
+   - 重構後執行所有測量指令碼
+   - 驗證所有要求都符合
+   - 徹底記錄結果
 
-4. **Continuous Improvement**
-   - Use metrics to identify bottlenecks
-   - Iterate on optimizations
-   - Track improvements over time
+4. **持續改進**
+   - 使用指標識別瓶頸
+   - 對優化進行反覆
+   - 追蹤長期改進
 
-## Support
+## 支援
 
-For questions or issues with these scripts:
-- Review script comments and error messages
-- Check `build/reports/` for detailed logs
-- Refer to test documentation in `docs/testing/`
-- Contact the development team
+如有指令碼問題：
+- 查看指令碼註解和錯誤訊息
+- 檢查 `build/reports/` 以取得詳細日誌
+- 參考 `docs/testing/` 中的測試文件
+- 聯絡開發團隊
 
 ---
 
-**Last Updated:** October 2, 2025
-**Version:** 1.0
-**Status:** Production Ready
+**最後更新：** 2025年10月2日
+**版本：** 1.0
+**狀態：** 生產就緒

@@ -6,24 +6,24 @@ inclusion: always
 
 ## Authentication and Authorization
 
-### Authentication Standards
+### Authentication 標準
 
-#### JWT Token Implementation
+#### JWT Token 實作
 
 ```java
 @Component
 public class JwtTokenProvider {
-    
+
     private static final int TOKEN_VALIDITY = 3600; // 1 hour
     private static final int REFRESH_TOKEN_VALIDITY = 86400; // 24 hours
-    
+
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", userDetails.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList()));
         claims.put("userId", userDetails.getUsername());
-        
+
         return Jwts.builder()
             .setClaims(claims)
             .setSubject(userDetails.getUsername())
@@ -32,7 +32,7 @@ public class JwtTokenProvider {
             .signWith(SignatureAlgorithm.HS512, jwtSecret)
             .compact();
     }
-    
+
     public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
@@ -45,20 +45,20 @@ public class JwtTokenProvider {
 }
 ```
 
-#### Password Security Standards
+#### 密碼安全標準
 
 ```java
 @Component
 public class PasswordEncoder {
-    
+
     private static final int BCRYPT_STRENGTH = 12;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(BCRYPT_STRENGTH);
-    
+
     public String encode(String rawPassword) {
         validatePasswordStrength(rawPassword);
         return encoder.encode(rawPassword);
     }
-    
+
     private void validatePasswordStrength(String password) {
         if (password.length() < 8) {
             throw new WeakPasswordException("Password must be at least 8 characters");
@@ -79,7 +79,7 @@ public class PasswordEncoder {
 }
 ```
 
-### Authorization Standards
+### Authorization 標準
 
 #### Role-Based Access Control (RBAC)
 
@@ -101,7 +101,7 @@ public Order getOrder(@PathVariable String orderId) {
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MethodSecurityConfiguration {
-    
+
     @Bean
     public PermissionEvaluator permissionEvaluator() {
         return new CustomPermissionEvaluator();
@@ -109,7 +109,7 @@ public class MethodSecurityConfiguration {
 }
 
 public class CustomPermissionEvaluator implements PermissionEvaluator {
-    
+
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
         if (targetDomainObject instanceof Order order) {
@@ -117,10 +117,10 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
         return false;
     }
-    
+
     private boolean evaluateOrderPermission(Authentication auth, Order order, String permission) {
         String userId = auth.getName();
-        
+
         return switch (permission) {
             case "READ" -> order.getCustomerId().equals(userId) || hasRole(auth, "ADMIN");
             case "WRITE" -> order.getCustomerId().equals(userId) && order.isModifiable();
@@ -131,45 +131,45 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 }
 ```
 
-## Data Protection
+## 資料保護
 
-### Encryption Standards
+### 加密標準
 
-#### Data at Rest Encryption
+#### 靜態資料加密
 
 ```java
 @Entity
 public class Customer {
-    
+
     @Id
     private String id;
-    
+
     @Column
     private String name;
-    
+
     @Column
     @Convert(converter = EncryptedStringConverter.class)
     private String email; // Encrypted in database
-    
+
     @Column
     @Convert(converter = EncryptedStringConverter.class)
     private String phoneNumber; // Encrypted in database
-    
+
     @Column
     private String hashedPassword; // Already hashed, no additional encryption needed
 }
 
 @Converter
 public class EncryptedStringConverter implements AttributeConverter<String, String> {
-    
+
     private final AESUtil aesUtil;
-    
+
     @Override
     public String convertToDatabaseColumn(String attribute) {
         if (attribute == null) return null;
         return aesUtil.encrypt(attribute);
     }
-    
+
     @Override
     public String convertToEntityAttribute(String dbData) {
         if (dbData == null) return null;
@@ -178,7 +178,7 @@ public class EncryptedStringConverter implements AttributeConverter<String, Stri
 }
 ```
 
-#### Data in Transit Encryption
+#### 傳輸中資料加密
 
 ```yaml
 # application.yml - Force HTTPS
@@ -196,48 +196,48 @@ security:
   require-ssl: true
 ```
 
-### Data Masking and Anonymization
+### 資料遮罩和匿名化
 
 ```java
 @Component
 public class DataMaskingService {
-    
+
     public String maskEmail(String email) {
         if (email == null || !email.contains("@")) return email;
-        
+
         String[] parts = email.split("@");
         String localPart = parts[0];
         String domain = parts[1];
-        
+
         if (localPart.length() <= 2) {
             return "*".repeat(localPart.length()) + "@" + domain;
         }
-        
-        return localPart.charAt(0) + "*".repeat(localPart.length() - 2) + 
+
+        return localPart.charAt(0) + "*".repeat(localPart.length() - 2) +
                localPart.charAt(localPart.length() - 1) + "@" + domain;
     }
-    
+
     public String maskCreditCard(String cardNumber) {
         if (cardNumber == null || cardNumber.length() < 4) return cardNumber;
         return "*".repeat(cardNumber.length() - 4) + cardNumber.substring(cardNumber.length() - 4);
     }
-    
+
     public CustomerDto maskSensitiveData(Customer customer, String requesterRole) {
         CustomerDto dto = CustomerDto.from(customer);
-        
+
         if (!"ADMIN".equals(requesterRole)) {
             dto.setEmail(maskEmail(dto.getEmail()));
             dto.setPhoneNumber(maskPhoneNumber(dto.getPhoneNumber()));
         }
-        
+
         return dto;
     }
 }
 ```
 
-## Input Validation and Sanitization
+## 輸入驗證和清理
 
-### Request Validation Standards
+### Request 驗證標準
 
 ```java
 public record CreateCustomerRequest(
@@ -245,72 +245,72 @@ public record CreateCustomerRequest(
     @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
     @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Name can only contain letters and spaces")
     String name,
-    
+
     @NotBlank(message = "Email is required")
     @Email(message = "Email format is invalid")
     @Size(max = 255, message = "Email is too long")
     String email,
-    
+
     @NotBlank(message = "Password is required")
     @Size(min = 8, max = 128, message = "Password must be between 8 and 128 characters")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$", 
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$",
              message = "Password must contain uppercase, lowercase, number and special character")
     String password,
-    
+
     @Valid
     @NotNull(message = "Address is required")
     AddressDto address
 ) {}
 ```
 
-### SQL Injection Prevention
+### SQL Injection 防護
 
 ```java
 @Repository
 public class CustomerRepository {
-    
+
     // ✅ Good: Using parameterized queries
     @Query("SELECT c FROM Customer c WHERE c.email = :email AND c.status = :status")
     Optional<Customer> findByEmailAndStatus(@Param("email") String email, @Param("status") String status);
-    
+
     // ✅ Good: Using Criteria API for dynamic queries
     public List<Customer> findCustomersWithCriteria(CustomerSearchCriteria criteria) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Customer> query = cb.createQuery(Customer.class);
         Root<Customer> root = query.from(Customer.class);
-        
+
         List<Predicate> predicates = new ArrayList<>();
-        
+
         if (criteria.getName() != null) {
             predicates.add(cb.like(root.get("name"), "%" + criteria.getName() + "%"));
         }
-        
+
         if (criteria.getEmail() != null) {
             predicates.add(cb.equal(root.get("email"), criteria.getEmail()));
         }
-        
+
         query.where(predicates.toArray(new Predicate[0]));
         return entityManager.createQuery(query).getResultList();
     }
 }
 ```
 
-### XSS Prevention
+### XSS 防護
 
 ```java
 @Component
 public class XSSProtectionService {
-    
+
     private final PolicyFactory policy = Sanitizers.FORMATTING
         .and(Sanitizers.LINKS)
         .and(Sanitizers.BLOCKS)
         .and(Sanitizers.IMAGES);
-    
+
     public String sanitizeHtml(String input) {
         if (input == null) return null;
         return policy.sanitize(input);
     }
-    
+
     public String escapeHtml(String input) {
         if (input == null) return null;
         return StringEscapeUtils.escapeHtml4(input);
@@ -319,35 +319,35 @@ public class XSSProtectionService {
 
 @RestController
 public class CustomerController {
-    
+
     @PostMapping("/customers")
     public ResponseEntity<CustomerResponse> createCustomer(
             @Valid @RequestBody CreateCustomerRequest request) {
-        
+
         // Sanitize input to prevent XSS
         String sanitizedName = xssProtectionService.sanitizeHtml(request.name());
-        
+
         CreateCustomerCommand command = new CreateCustomerCommand(
             sanitizedName,
             request.email(),
             request.password()
         );
-        
+
         Customer customer = customerService.createCustomer(command);
         return ResponseEntity.ok(CustomerResponse.from(customer));
     }
 }
 ```
 
-## Security Headers and CORS
+## Security Headers 和 CORS
 
-### Security Headers Configuration
+### Security Headers 配置
 
 ```java
 @Configuration
 @EnableWebSecurity
 public class SecurityHeadersConfiguration {
-    
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.headers(headers -> headers
@@ -362,74 +362,74 @@ public class SecurityHeadersConfiguration {
             .addHeaderWriter(new StaticHeadersWriter("X-Frame-Options", "DENY"))
             .addHeaderWriter(new StaticHeadersWriter("X-XSS-Protection", "1; mode=block"))
             .addHeaderWriter(new StaticHeadersWriter("Referrer-Policy", "strict-origin-when-cross-origin"))
-            .addHeaderWriter(new StaticHeadersWriter("Permissions-Policy", 
+            .addHeaderWriter(new StaticHeadersWriter("Permissions-Policy",
                 "geolocation=(), microphone=(), camera=()"))
         );
-        
+
         return http.build();
     }
 }
 ```
 
-### CORS Configuration
+### CORS 配置
 
 ```java
 @Configuration
 public class CorsConfiguration {
-    
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        
+
         // Only allow specific origins in production
         configuration.setAllowedOriginPatterns(Arrays.asList(
             "https://*.yourdomain.com",
             "https://yourdomain.com"
         ));
-        
+
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
-        
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/../api/**", configuration);
-        
+
         return source;
     }
 }
 ```
 
-## Security Testing Standards
+## 安全測試標準
 
-### Security Test Categories
+### 安全測試分類
 
-#### Authentication Tests
+#### Authentication 測試
 
 ```java
 @SpringBootTest
 @AutoConfigureTestDatabase
 class AuthenticationSecurityTest {
-    
+
     @Test
     void should_reject_request_without_token() throws Exception {
         mockMvc.perform(get("/../api/v1/customers/123"))
             .andExpect(status().isUnauthorized());
     }
-    
+
     @Test
     void should_reject_request_with_expired_token() throws Exception {
         String expiredToken = createExpiredToken();
-        
+
         mockMvc.perform(get("/../api/v1/customers/123")
                 .header("Authorization", "Bearer " + expiredToken))
             .andExpect(status().isUnauthorized());
     }
-    
+
     @Test
     void should_reject_request_with_invalid_signature() throws Exception {
         String tamperedToken = createTamperedToken();
-        
+
         mockMvc.perform(get("/../api/v1/customers/123")
                 .header("Authorization", "Bearer " + tamperedToken))
             .andExpected(status().isUnauthorized());
@@ -437,13 +437,13 @@ class AuthenticationSecurityTest {
 }
 ```
 
-#### Authorization Tests
+#### Authorization 測試
 
 ```java
 @Test
 void should_allow_user_to_access_own_data() throws Exception {
     String userToken = createTokenForUser("user123");
-    
+
     mockMvc.perform(get("/../api/v1/customers/user123")
             .header("Authorization", "Bearer " + userToken))
         .andExpect(status().isOk());
@@ -452,26 +452,26 @@ void should_allow_user_to_access_own_data() throws Exception {
 @Test
 void should_deny_user_access_to_other_user_data() throws Exception {
     String userToken = createTokenForUser("user123");
-    
+
     mockMvc.perform(get("/../api/v1/customers/user456")
             .header("Authorization", "Bearer " + userToken))
         .andExpect(status().isForbidden());
 }
 ```
 
-#### Input Validation Tests
+#### 輸入驗證測試
 
 ```java
 @Test
 void should_reject_sql_injection_attempt() throws Exception {
     String maliciousInput = "'; DROP TABLE customers; --";
-    
+
     CreateCustomerRequest request = new CreateCustomerRequest(
         maliciousInput,
         "test@example.com",
         "ValidPassword123!"
     );
-    
+
     mockMvc.perform(post("/../api/v1/customers")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
@@ -482,13 +482,13 @@ void should_reject_sql_injection_attempt() throws Exception {
 @Test
 void should_sanitize_xss_attempt() throws Exception {
     String xssPayload = "<script>alert('XSS')</script>";
-    
+
     CreateCustomerRequest request = new CreateCustomerRequest(
         xssPayload,
         "test@example.com",
         "ValidPassword123!"
     );
-    
+
     mockMvc.perform(post("/../api/v1/customers")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
@@ -496,16 +496,16 @@ void should_sanitize_xss_attempt() throws Exception {
 }
 ```
 
-## Security Monitoring and Incident Response
+## 安全監控和事件回應
 
-### Security Event Logging
+### 安全事件記錄
 
 ```java
 @Component
 public class SecurityEventLogger {
-    
+
     private final Logger securityLogger = LoggerFactory.getLogger("SECURITY");
-    
+
     public void logAuthenticationFailure(String username, String ipAddress, String reason) {
         securityLogger.warn("Authentication failure",
             kv("event", "AUTH_FAILURE"),
@@ -514,7 +514,7 @@ public class SecurityEventLogger {
             kv("reason", reason),
             kv("timestamp", Instant.now()));
     }
-    
+
     public void logAuthorizationFailure(String username, String resource, String action) {
         securityLogger.warn("Authorization failure",
             kv("event", "AUTHZ_FAILURE"),
@@ -523,7 +523,7 @@ public class SecurityEventLogger {
             kv("action", action),
             kv("timestamp", Instant.now()));
     }
-    
+
     public void logSuspiciousActivity(String username, String activity, Map<String, Object> context) {
         securityLogger.error("Suspicious activity detected",
             kv("event", "SUSPICIOUS_ACTIVITY"),
@@ -535,52 +535,52 @@ public class SecurityEventLogger {
 }
 ```
 
-### Security Metrics and Alerts
+### 安全指標和警報
 
 ```java
 @Component
 public class SecurityMetrics {
-    
+
     private final Counter authenticationFailures;
     private final Counter authorizationFailures;
     private final Counter suspiciousActivities;
-    
+
     public SecurityMetrics(MeterRegistry meterRegistry) {
         this.authenticationFailures = Counter.builder("security.authentication.failures")
             .description("Number of authentication failures")
             .register(meterRegistry);
-            
+
         this.authorizationFailures = Counter.builder("security.authorization.failures")
             .description("Number of authorization failures")
             .register(meterRegistry);
-            
+
         this.suspiciousActivities = Counter.builder("security.suspicious.activities")
             .description("Number of suspicious activities detected")
             .register(meterRegistry);
     }
-    
+
     public void recordAuthenticationFailure(String reason) {
         authenticationFailures.increment(Tags.of("reason", reason));
     }
-    
+
     public void recordAuthorizationFailure(String resource) {
         authorizationFailures.increment(Tags.of("resource", resource));
     }
-    
+
     public void recordSuspiciousActivity(String activityType) {
         suspiciousActivities.increment(Tags.of("type", activityType));
     }
 }
 ```
 
-## Compliance and Audit Requirements
+## 合規和稽核要求
 
-### GDPR Compliance
+### GDPR 合規
 
 ```java
 @Service
 public class GDPRComplianceService {
-    
+
     public void handleDataSubjectRequest(DataSubjectRequest request) {
         switch (request.getType()) {
             case ACCESS -> provideDataAccess(request.getSubjectId());
@@ -589,18 +589,18 @@ public class GDPRComplianceService {
             case PORTABILITY -> exportPersonalData(request.getSubjectId());
             case RESTRICTION -> restrictProcessing(request.getSubjectId());
         }
-        
+
         auditLogger.logDataSubjectRequest(request);
     }
-    
+
     private void deletePersonalData(String subjectId) {
         // Anonymize rather than delete to maintain referential integrity
         Customer customer = customerRepository.findById(subjectId)
             .orElseThrow(() -> new CustomerNotFoundException(subjectId));
-            
+
         customer.anonymize(); // Replace PII with anonymous values
         customerRepository.save(customer);
-        
+
         // Also handle related data
         orderRepository.anonymizeCustomerOrders(subjectId);
         paymentRepository.anonymizeCustomerPayments(subjectId);
@@ -608,47 +608,47 @@ public class GDPRComplianceService {
 }
 ```
 
-### Audit Trail Implementation
+### 稽核軌跡實作
 
 ```java
 @Entity
 @Table(name = "audit_log")
 public class AuditLogEntry {
-    
+
     @Id
     private String id;
-    
+
     @Column(name = "entity_type")
     private String entityType;
-    
+
     @Column(name = "entity_id")
     private String entityId;
-    
+
     @Column(name = "action")
     private String action; // CREATE, UPDATE, DELETE, ACCESS
-    
+
     @Column(name = "user_id")
     private String userId;
-    
+
     @Column(name = "timestamp")
     private Instant timestamp;
-    
+
     @Column(name = "old_values", columnDefinition = "TEXT")
     private String oldValues;
-    
+
     @Column(name = "new_values", columnDefinition = "TEXT")
     private String newValues;
-    
+
     @Column(name = "ip_address")
     private String ipAddress;
-    
+
     @Column(name = "user_agent")
     private String userAgent;
 }
 
 @Component
 public class AuditService {
-    
+
     @EventListener
     public void handleEntityCreated(EntityCreatedEvent event) {
         AuditLogEntry entry = AuditLogEntry.builder()
@@ -661,45 +661,45 @@ public class AuditService {
             .ipAddress(getCurrentIpAddress())
             .userAgent(getCurrentUserAgent())
             .build();
-            
+
         auditLogRepository.save(entry);
     }
 }
 ```
 
-## Security Checklist for New Features
+## 新功能安全檢查清單
 
-### Pre-Development Security Review
+### 開發前安全審查
 
-- [ ] Threat modeling completed
-- [ ] Security requirements defined
-- [ ] Data classification performed
-- [ ] Privacy impact assessment conducted
+- [ ] 威脅建模已完成
+- [ ] 安全需求已定義
+- [ ] 資料分類已執行
+- [ ] 隱私影響評估已進行
 
-### Development Security Checklist
+### 開發安全檢查清單
 
-- [ ] Input validation implemented
-- [ ] Output encoding applied
-- [ ] Authentication and authorization implemented
-- [ ] Sensitive data encrypted
-- [ ] Security headers configured
-- [ ] Error handling doesn't leak information
-- [ ] Logging includes security events
+- [ ] 輸入驗證已實作
+- [ ] 輸出編碼已應用
+- [ ] Authentication 和 authorization 已實作
+- [ ] 敏感資料已加密
+- [ ] Security headers 已配置
+- [ ] 錯誤處理不會洩漏資訊
+- [ ] 記錄包含安全事件
 
-### Testing Security Checklist
+### 測試安全檢查清單
 
-- [ ] Authentication tests written
-- [ ] Authorization tests written
-- [ ] Input validation tests written
-- [ ] XSS prevention tests written
-- [ ] SQL injection prevention tests written
-- [ ] Security headers tests written
+- [ ] Authentication 測試已編寫
+- [ ] Authorization 測試已編寫
+- [ ] 輸入驗證測試已編寫
+- [ ] XSS 防護測試已編寫
+- [ ] SQL injection 防護測試已編寫
+- [ ] Security headers 測試已編寫
 
-### Deployment Security Checklist
+### 部署安全檢查清單
 
-- [ ] Security configuration reviewed
-- [ ] Secrets management implemented
-- [ ] Network security configured
-- [ ] Monitoring and alerting configured
-- [ ] Incident response plan updated
-- [ ] Security documentation updated
+- [ ] 安全配置已審查
+- [ ] Secrets 管理已實作
+- [ ] 網路安全已配置
+- [ ] 監控和警報已配置
+- [ ] 事件回應計劃已更新
+- [ ] 安全文件已更新

@@ -1,693 +1,693 @@
 # Context Viewpoint Overview
 
-> **Last Updated**: 2025-10-23  
-> **Status**: Active  
-> **Stakeholders**: Business Analysts, Architects, Product Managers
+> **最後更新**：2025-10-23
+> **狀態**：使用中
+> **利害關係人**：業務分析師、架構師、產品經理
 
-## Purpose
+## 目的
 
-The Context Viewpoint describes the Enterprise E-Commerce Platform's relationships with its environment. It defines the system boundaries, identifies external systems and actors that interact with the platform, and clarifies what is within and outside the system's scope.
+Context Viewpoint 描述企業電子商務平台與其環境的關係。它定義系統邊界、識別與平台互動的外部系統和參與者，並釐清系統範圍內和範圍外的內容。
 
-This viewpoint helps stakeholders understand:
+此 viewpoint 幫助利害關係人理解：
 
-- **System Boundaries**: What is part of the system and what is external
-- **External Interactions**: How the system communicates with external entities
-- **Stakeholder Concerns**: Who has interest in the system and their concerns
-- **Environmental Constraints**: External factors that influence the system
+- **系統邊界**：系統的一部分和外部的內容
+- **外部互動**：系統如何與外部實體通訊
+- **利害關係人關注點**：誰對系統感興趣及其關注點
+- **環境約束**：影響系統的外部因素
 
-## Key Concerns
+## 主要關注點
 
-This viewpoint addresses the following concerns:
+此 viewpoint 解決以下關注點：
 
-1. **Scope Definition**: Clear boundaries between the system and its environment
-2. **External Dependencies**: Third-party systems and services the platform relies on
-3. **Integration Points**: How the system connects with external entities
-4. **Stakeholder Identification**: Who interacts with or has interest in the system
-5. **Regulatory Constraints**: External compliance and regulatory requirements
-6. **Geographic Constraints**: Regional and location-based limitations
+1. **範圍定義**：系統與其環境之間的明確邊界
+2. **外部相依性**：平台依賴的第三方系統和服務
+3. **整合點**：系統如何與外部實體連接
+4. **利害關係人識別**：誰與系統互動或對系統感興趣
+5. **監管約束**：外部合規和監管要求
+6. **地理約束**：區域和位置限制
 
-## System Context
+## 系統脈絡
 
-### High-Level Context
+### 高階脈絡
 
-The Enterprise E-Commerce Platform is a comprehensive online retail system that enables customers to browse products, place orders, and manage their accounts. The system integrates with multiple external services to provide complete e-commerce functionality.
+企業電子商務平台是一個綜合線上零售系統，使客戶能夠瀏覽產品、下訂單和管理帳戶。該系統整合多個外部服務以提供完整的電子商務功能。
 
-#### System Context Diagram
+#### 系統脈絡圖
 
 ![System Context Diagram](../../diagrams/generated/context/system-context.png)
 
-The diagram above shows the E-Commerce Platform at the center, with all external actors (users and systems) and their interactions. Key elements include:
+上圖顯示位於中心的電子商務平台，以及所有外部參與者（使用者和系統）及其互動。關鍵元素包括：
 
-- **Users**: Customers, Sellers, Administrators, Support Agents
-- **External Systems**: Payment Gateway, Email Service, SMS Service, Shipping Providers
-- **Cloud Infrastructure**: AWS hosting and managed services
-- **Integration Patterns**: Synchronous API calls (solid arrows) and asynchronous webhooks (dotted arrows)
+- **使用者**：客戶、賣家、管理員、支援人員
+- **外部系統**：Payment Gateway、Email Service、SMS Service、Shipping Providers
+- **雲端基礎設施**：AWS 託管和管理服務
+- **整合模式**：同步 API 呼叫（實線箭頭）和非同步 webhooks（虛線箭頭）
 
-### System Boundaries
+### 系統邊界
 
-#### What is Inside the System
+#### 系統內部
 
-The Enterprise E-Commerce Platform includes:
+企業電子商務平台包括：
 
 1. **Customer Management**
-   - Customer registration and authentication
-   - Profile management
-   - Customer preferences and settings
-   - Membership levels and loyalty programs
+   - 客戶註冊和驗證
+   - 個人檔案管理
+   - 客戶偏好設定和設定
+   - 會員等級和忠誠計劃
 
 2. **Product Catalog**
-   - Product information management
-   - Category and taxonomy management
-   - Product search and filtering
-   - Product reviews and ratings
+   - 產品資訊管理
+   - 類別和分類管理
+   - 產品搜尋和篩選
+   - 產品評論和評分
 
 3. **Order Management**
-   - Shopping cart functionality
-   - Order creation and submission
-   - Order tracking and history
-   - Order cancellation and returns
+   - 購物車功能
+   - 訂單建立和提交
+   - 訂單追蹤和歷史記錄
+   - 訂單取消和退貨
 
 4. **Payment Processing**
-   - Payment method management
-   - Payment transaction coordination
-   - Payment status tracking
-   - Refund processing
+   - 付款方式管理
+   - 付款交易協調
+   - 付款狀態追蹤
+   - 退款處理
 
 5. **Inventory Management**
-   - Stock level tracking
-   - Inventory reservation
-   - Stock replenishment notifications
-   - Multi-warehouse support
+   - 庫存水平追蹤
+   - 庫存預留
+   - 補貨通知
+   - 多倉庫支援
 
 6. **Promotion Engine**
-   - Discount rules management
-   - Coupon code handling
-   - Promotional campaigns
-   - Dynamic pricing
+   - 折扣規則管理
+   - 優惠券代碼處理
+   - 促銷活動
+   - 動態定價
 
 7. **Pricing Engine**
-   - Price calculation
-   - Tax calculation
-   - Shipping cost calculation
-   - Currency conversion
+   - 價格計算
+   - 稅金計算
+   - 運費計算
+   - 貨幣轉換
 
 8. **Notification System**
-   - Email notification coordination
-   - SMS notification coordination
-   - In-app notification management
-   - Notification preferences
+   - 電子郵件通知協調
+   - SMS 通知協調
+   - 應用程式內通知管理
+   - 通知偏好設定
 
-#### What is Outside the System
+#### 系統外部
 
-The following are external to the platform:
+以下是平台外部的內容：
 
 1. **Payment Gateway** (Stripe)
-   - Credit card processing
-   - Payment authorization
-   - Fraud detection
-   - PCI compliance
+   - 信用卡處理
+   - 付款授權
+   - 詐欺偵測
+   - PCI 合規
 
 2. **Shipping Providers** (FedEx, UPS, DHL)
-   - Package pickup
-   - Delivery tracking
-   - Shipping label generation
-   - Delivery confirmation
+   - 包裹取件
+   - 配送追蹤
+   - 運送標籤產生
+   - 配送確認
 
 3. **Email Service** (SendGrid)
-   - Email delivery
-   - Email template rendering
-   - Bounce handling
-   - Email analytics
+   - 電子郵件傳送
+   - 電子郵件範本渲染
+   - 退信處理
+   - 電子郵件分析
 
 4. **SMS Service** (Twilio)
-   - SMS message delivery
-   - Phone number validation
-   - Delivery receipts
+   - SMS 訊息傳送
+   - 電話號碼驗證
+   - 傳送回條
 
 5. **Analytics Platform** (Google Analytics)
-   - User behavior tracking
-   - Conversion tracking
-   - Traffic analysis
-   - Marketing attribution
+   - 使用者行為追蹤
+   - 轉換追蹤
+   - 流量分析
+   - 行銷歸因
 
 6. **Warehouse Management System**
-   - Physical inventory management
-   - Warehouse operations
-   - Picking and packing
-   - Shipping preparation
+   - 實體庫存管理
+   - 倉庫營運
+   - 揀貨和包裝
+   - 出貨準備
 
 7. **Accounting System**
-   - Financial reporting
-   - Revenue recognition
-   - Tax filing
-   - Accounts payable/receivable
+   - 財務報表
+   - 收入確認
+   - 稅務申報
+   - 應付/應收帳款
 
 8. **Customer Support System** (Zendesk)
-   - Ticket management
-   - Customer service interactions
-   - Knowledge base
-   - Live chat
+   - 工單管理
+   - 客戶服務互動
+   - 知識庫
+   - 即時聊天
 
-## External Actors
+## 外部參與者
 
-### Primary Actors
+### 主要參與者
 
-#### 1. Customers (End Users)
+#### 1. Customers (終端使用者)
 
-**Description**: Individuals who browse products, place orders, and manage their accounts.
+**描述**：瀏覽產品、下訂單和管理帳戶的個人。
 
-**Interactions**:
+**互動**：
 
-- Browse product catalog
-- Search for products
-- Add items to shopping cart
-- Place and track orders
-- Manage account and preferences
-- Write product reviews
+- 瀏覽產品目錄
+- 搜尋產品
+- 將商品加入購物車
+- 下訂單和追蹤訂單
+- 管理帳戶和偏好設定
+- 撰寫產品評論
 
-**Access Method**: Web browser, mobile app
+**存取方式**：網頁瀏覽器、行動應用程式
 
-**Authentication**: Username/password, OAuth (Google, Facebook)
+**驗證**：使用者名稱/密碼、OAuth (Google, Facebook)
 
 #### 2. Sellers/Merchants
 
-**Description**: Third-party sellers who list and sell products on the platform.
+**描述**：在平台上列出和銷售產品的第三方賣家。
 
-**Interactions**:
+**互動**：
 
-- Manage product listings
-- View sales reports
-- Process orders
-- Manage inventory
-- Handle customer inquiries
+- 管理產品列表
+- 查看銷售報告
+- 處理訂單
+- 管理庫存
+- 處理客戶諮詢
 
-**Access Method**: Seller portal (web)
+**存取方式**：賣家入口網站（網頁）
 
-**Authentication**: Username/password, 2FA
+**驗證**：使用者名稱/密碼、2FA
 
 #### 3. Administrators
 
-**Description**: Internal staff who manage the platform and support operations.
+**描述**：管理平台和支援營運的內部員工。
 
-**Interactions**:
+**互動**：
 
-- Manage users and permissions
-- Configure system settings
-- Monitor system health
-- Handle customer support escalations
-- Generate reports
+- 管理使用者和權限
+- 配置系統設定
+- 監控系統健康狀況
+- 處理客戶支援升級
+- 產生報告
 
-**Access Method**: Admin console (web)
+**存取方式**：管理控制台（網頁）
 
-**Authentication**: Username/password, 2FA, SSO
+**驗證**：使用者名稱/密碼、2FA、SSO
 
-### Secondary Actors
+### 次要參與者
 
 #### 4. Payment Gateway (Stripe)
 
-**Description**: External service that processes payment transactions.
+**描述**：處理付款交易的外部服務。
 
-**Interactions**:
+**互動**：
 
-- Process credit card payments
-- Handle payment authorization
-- Manage payment methods
-- Process refunds
-- Provide fraud detection
+- 處理信用卡付款
+- 處理付款授權
+- 管理付款方式
+- 處理退款
+- 提供詐欺偵測
 
-**Integration Method**: REST API, Webhooks
+**整合方式**：REST API、Webhooks
 
-**Authentication**: API keys, OAuth
+**驗證**：API keys、OAuth
 
 #### 5. Shipping Providers (FedEx, UPS, DHL)
 
-**Description**: Third-party logistics companies that handle package delivery.
+**描述**：處理包裹配送的第三方物流公司。
 
-**Interactions**:
+**互動**：
 
-- Generate shipping labels
-- Calculate shipping costs
-- Track package delivery
-- Provide delivery confirmation
-- Handle returns
+- 產生運送標籤
+- 計算運費
+- 追蹤包裹配送
+- 提供配送確認
+- 處理退貨
 
-**Integration Method**: REST API, SOAP API
+**整合方式**：REST API、SOAP API
 
-**Authentication**: API keys, OAuth
+**驗證**：API keys、OAuth
 
 #### 6. Email Service (SendGrid)
 
-**Description**: Email delivery service for transactional and marketing emails.
+**描述**：用於交易和行銷電子郵件的郵件傳送服務。
 
-**Interactions**:
+**互動**：
 
-- Send transactional emails (order confirmations, password resets)
-- Send marketing emails (promotions, newsletters)
-- Track email delivery and opens
-- Handle bounces and unsubscribes
+- 發送交易郵件（訂單確認、密碼重設）
+- 發送行銷郵件（促銷、電子報）
+- 追蹤電子郵件傳送和開啟
+- 處理退信和取消訂閱
 
-**Integration Method**: REST API, SMTP
+**整合方式**：REST API、SMTP
 
-**Authentication**: API keys
+**驗證**：API keys
 
 #### 7. SMS Service (Twilio)
 
-**Description**: SMS delivery service for notifications and alerts.
+**描述**：用於通知和警示的 SMS 傳送服務。
 
-**Interactions**:
+**互動**：
 
-- Send order status updates
-- Send delivery notifications
-- Send verification codes
-- Provide customer support
+- 發送訂單狀態更新
+- 發送配送通知
+- 發送驗證碼
+- 提供客戶支援
 
-**Integration Method**: REST API
+**整合方式**：REST API
 
-**Authentication**: API keys
+**驗證**：API keys
 
 #### 8. Analytics Platform (Google Analytics)
 
-**Description**: Web analytics service for tracking user behavior and conversions.
+**描述**：用於追蹤使用者行為和轉換的網頁分析服務。
 
-**Interactions**:
+**互動**：
 
-- Track page views and user sessions
-- Track e-commerce transactions
-- Track conversion funnels
-- Provide marketing attribution
+- 追蹤頁面瀏覽和使用者會話
+- 追蹤電子商務交易
+- 追蹤轉換漏斗
+- 提供行銷歸因
 
-**Integration Method**: JavaScript SDK, Measurement Protocol API
+**整合方式**：JavaScript SDK、Measurement Protocol API
 
-**Authentication**: Tracking ID
+**驗證**：Tracking ID
 
-## Stakeholder Groups
+## 利害關係人群組
 
-### Stakeholder Map
+### 利害關係人圖譜
 
 ![Stakeholder Map](../../diagrams/generated/context/stakeholder-map.png)
 
-The stakeholder map above visualizes all stakeholder groups and their relationships with the E-Commerce Platform. It shows:
+上方的利害關係人圖譜視覺化所有利害關係人群組及其與電子商務平台的關係。它顯示：
 
-- **Stakeholder Categories**: Business, Technical, End Users, External
-- **Engagement Levels**: Daily, Weekly, Quarterly, As Needed
-- **Influence Levels**: High, Medium, Low
-- **Relationships**: Direct interactions (solid lines) and collaborations (dotted lines)
+- **利害關係人類別**：業務、技術、終端使用者、外部
+- **參與程度**：每日、每週、每季、視需要
+- **影響程度**：高、中、低
+- **關係**：直接互動（實線）和協作（虛線）
 
-### Business Stakeholders
+### 業務利害關係人
 
 #### Product Owners
 
-**Concerns**:
+**關注點**：
 
-- Feature prioritization
-- User experience
-- Business value delivery
-- Market competitiveness
+- 功能優先順序
+- 使用者體驗
+- 業務價值交付
+- 市場競爭力
 
-**Information Needs**:
+**資訊需求**：
 
-- Product roadmap
-- Feature specifications
-- User feedback
-- Business metrics
+- 產品路線圖
+- 功能規格
+- 使用者回饋
+- 業務指標
 
 #### Marketing Team
 
-**Concerns**:
+**關注點**：
 
-- Customer acquisition
-- Conversion optimization
-- Campaign effectiveness
-- Brand consistency
+- 客戶獲取
+- 轉換優化
+- 活動效果
+- 品牌一致性
 
-**Information Needs**:
+**資訊需求**：
 
-- Analytics data
-- Campaign performance
-- Customer segmentation
-- A/B test results
+- 分析資料
+- 活動效能
+- 客戶分群
+- A/B 測試結果
 
 #### Finance Team
 
-**Concerns**:
+**關注點**：
 
-- Revenue tracking
-- Cost management
-- Financial reporting
-- Compliance
+- 收入追蹤
+- 成本管理
+- 財務報表
+- 合規
 
-**Information Needs**:
+**資訊需求**：
 
-- Transaction data
-- Revenue reports
-- Cost analysis
-- Audit trails
+- 交易資料
+- 收入報告
+- 成本分析
+- 稽核追蹤
 
 #### Customer Support Team
 
-**Concerns**:
+**關注點**：
 
-- Customer satisfaction
-- Issue resolution
-- Support efficiency
-- Knowledge management
+- 客戶滿意度
+- 問題解決
+- 支援效率
+- 知識管理
 
-**Information Needs**:
+**資訊需求**：
 
-- Customer data
-- Order history
-- Issue tracking
-- Support metrics
+- 客戶資料
+- 訂單歷史
+- 問題追蹤
+- 支援指標
 
-### Technical Stakeholders
+### 技術利害關係人
 
 #### Development Team
 
-**Concerns**:
+**關注點**：
 
-- Code quality
-- Technical debt
-- Development velocity
-- System maintainability
+- 程式碼品質
+- 技術債務
+- 開發速度
+- 系統可維護性
 
-**Information Needs**:
+**資訊需求**：
 
-- Architecture documentation
-- API specifications
-- Development guidelines
-- Technical roadmap
+- 架構文件
+- API 規格
+- 開發指南
+- 技術路線圖
 
 #### Operations Team (SRE/DevOps)
 
-**Concerns**:
+**關注點**：
 
-- System reliability
-- Performance
-- Scalability
-- Incident management
+- 系統可靠性
+- 效能
+- 可擴展性
+- 事件管理
 
-**Information Needs**:
+**資訊需求**：
 
-- Infrastructure documentation
-- Monitoring dashboards
-- Runbooks
-- Deployment procedures
+- 基礎設施文件
+- 監控儀表板
+- 操作手冊
+- 部署程序
 
 #### Security Team
 
-**Concerns**:
+**關注點**：
 
-- Data protection
-- Vulnerability management
-- Compliance
-- Incident response
+- 資料保護
+- 漏洞管理
+- 合規
+- 事件回應
 
-**Information Needs**:
+**資訊需求**：
 
-- Security architecture
-- Threat models
-- Compliance reports
-- Security policies
+- 安全架構
+- 威脅模型
+- 合規報告
+- 安全政策
 
 #### Quality Assurance Team
 
-**Concerns**:
+**關注點**：
 
-- Software quality
-- Test coverage
-- Bug tracking
-- Release readiness
+- 軟體品質
+- 測試覆蓋率
+- 錯誤追蹤
+- 發布就緒度
 
-**Information Needs**:
+**資訊需求**：
 
-- Test plans
-- Test results
-- Bug reports
-- Quality metrics
+- 測試計劃
+- 測試結果
+- 錯誤報告
+- 品質指標
 
-### External Stakeholders
+### 外部利害關係人
 
 #### Customers
 
-**Concerns**:
+**關注點**：
 
-- Product availability
-- Order fulfillment
-- Payment security
-- Customer service
+- 產品可用性
+- 訂單履行
+- 付款安全
+- 客戶服務
 
-**Information Needs**:
+**資訊需求**：
 
-- Product information
-- Order status
-- Delivery tracking
-- Support contact
+- 產品資訊
+- 訂單狀態
+- 配送追蹤
+- 支援聯絡
 
 #### Partners/Sellers
 
-**Concerns**:
+**關注點**：
 
-- Sales performance
-- Commission structure
-- Platform reliability
-- Support quality
+- 銷售表現
+- 佣金結構
+- 平台可靠性
+- 支援品質
 
-**Information Needs**:
+**資訊需求**：
 
-- Sales reports
-- Commission statements
-- Platform status
-- Integration documentation
+- 銷售報告
+- 佣金報表
+- 平台狀態
+- 整合文件
 
 #### Regulators
 
-**Concerns**:
+**關注點**：
 
-- Data privacy (GDPR, CCPA)
-- Consumer protection
-- Tax compliance
-- Accessibility
+- 資料隱私（GDPR、CCPA）
+- 消費者保護
+- 稅務合規
+- 無障礙存取
 
-**Information Needs**:
+**資訊需求**：
 
-- Compliance reports
-- Privacy policies
-- Audit trails
-- Accessibility statements
+- 合規報告
+- 隱私政策
+- 稽核追蹤
+- 無障礙聲明
 
-## Environmental Constraints
+## 環境約束
 
-### Regulatory Constraints
+### 監管約束
 
-#### Data Privacy Regulations
+#### 資料隱私法規
 
 **GDPR (General Data Protection Regulation)**
 
-- Applies to: EU customers
-- Requirements:
-  - Right to access personal data
-  - Right to erasure ("right to be forgotten")
-  - Data portability
-  - Consent management
-  - Data breach notification
+- 適用於：歐盟客戶
+- 要求：
+  - 存取個人資料的權利
+  - 刪除權（「被遺忘權」）
+  - 資料可攜性
+  - 同意管理
+  - 資料外洩通知
 
 **CCPA (California Consumer Privacy Act)**
 
-- Applies to: California residents
-- Requirements:
-  - Right to know what data is collected
-  - Right to delete personal data
-  - Right to opt-out of data sale
-  - Non-discrimination
+- 適用於：加州居民
+- 要求：
+  - 知道收集哪些資料的權利
+  - 刪除個人資料的權利
+  - 選擇退出資料銷售的權利
+  - 不歧視
 
 #### Payment Card Industry (PCI DSS)
 
-- Applies to: All payment processing
-- Requirements:
-  - Secure network infrastructure
-  - Protect cardholder data
-  - Vulnerability management
-  - Access control
-  - Regular monitoring and testing
+- 適用於：所有付款處理
+- 要求：
+  - 安全的網路基礎設施
+  - 保護持卡人資料
+  - 漏洞管理
+  - 存取控制
+  - 定期監控和測試
 
-#### Accessibility Standards
+#### 無障礙標準
 
 **WCAG 2.1 (Web Content Accessibility Guidelines)**
 
-- Level: AA compliance required
-- Requirements:
-  - Perceivable content
-  - Operable interface
-  - Understandable information
-  - Robust implementation
+- 等級：需符合 AA 級
+- 要求：
+  - 可感知的內容
+  - 可操作的介面
+  - 可理解的資訊
+  - 穩健的實作
 
-### Geographic Constraints
+### 地理約束
 
-#### Regional Availability
+#### 區域可用性
 
-- **Primary Markets**: North America, Europe, Asia-Pacific
-- **Language Support**: English, Spanish, French, German, Chinese, Japanese
-- **Currency Support**: USD, EUR, GBP, JPY, CNY
+- **主要市場**：北美、歐洲、亞太地區
+- **語言支援**：英文、西班牙文、法文、德文、中文、日文
+- **貨幣支援**：USD、EUR、GBP、JPY、CNY
 
-#### Data Residency Requirements
+#### 資料駐留要求
 
-- **EU**: Customer data must be stored within EU
-- **China**: Customer data must be stored within China
-- **Other Regions**: No specific requirements
+- **歐盟**：客戶資料必須儲存在歐盟境內
+- **中國**：客戶資料必須儲存在中國境內
+- **其他地區**：無特定要求
 
-#### Regional Restrictions
+#### 區域限制
 
-- **Shipping**: Some products cannot be shipped to certain countries
-- **Payment Methods**: Availability varies by region
-- **Content**: Some content may be restricted in certain regions
+- **運送**：某些產品無法運送到特定國家
+- **付款方式**：可用性因地區而異
+- **內容**：某些內容可能在特定地區受到限制
 
-### Technical Constraints
+### 技術約束
 
-#### External Service Dependencies
+#### 外部服務相依性
 
-- **Payment Gateway**: 99.9% uptime SLA
-- **Email Service**: Rate limits apply
-- **SMS Service**: Cost per message
-- **Shipping APIs**: Rate limits and quotas
+- **Payment Gateway**：99.9% 正常運行時間 SLA
+- **Email Service**：適用速率限制
+- **SMS Service**：每則訊息費用
+- **Shipping APIs**：速率限制和配額
 
-#### Integration Protocols
+#### 整合協定
 
-- **REST APIs**: Primary integration method
-- **Webhooks**: For asynchronous notifications
-- **Message Queues**: For internal event processing
-- **Batch Processing**: For bulk data transfers
+- **REST APIs**：主要整合方式
+- **Webhooks**：用於非同步通知
+- **Message Queues**：用於內部事件處理
+- **Batch Processing**：用於大量資料傳輸
 
-#### Performance Requirements
+#### 效能要求
 
-- **API Response Time**: < 2 seconds (95th percentile)
-- **Page Load Time**: < 3 seconds
-- **Concurrent Users**: Support 10,000+ concurrent users
-- **Transaction Volume**: Handle 1,000+ orders per hour
+- **API 回應時間**：< 2 秒（第 95 百分位）
+- **頁面載入時間**：< 3 秒
+- **並行使用者**：支援 10,000+ 並行使用者
+- **交易量**：每小時處理 1,000+ 訂單
 
-## Integration Patterns
+## 整合模式
 
-### External Integrations Overview
+### 外部整合概覽
 
 ![External Integrations Diagram](../../diagrams/generated/context/external-integrations.png)
 
-The diagram above shows all external system integrations with their criticality levels, integration patterns, and key characteristics. Each integration includes:
+上圖顯示所有外部系統整合及其關鍵性等級、整合模式和關鍵特性。每個整合包括：
 
-- **Criticality Level**: Critical (red), High (orange), Medium (yellow)
-- **Integration Pattern**: Synchronous API, Asynchronous webhooks, or both
-- **Key Details**: Authentication, rate limits, SLA, retry logic, fallback strategies
+- **關鍵性等級**：關鍵（紅色）、高（橙色）、中（黃色）
+- **整合模式**：同步 API、非同步 webhooks 或兩者
+- **關鍵細節**：驗證、速率限制、SLA、重試邏輯、備援策略
 
-### Synchronous Integration
+### 同步整合
 
-Used for:
+用於：
 
-- Payment processing
-- Real-time inventory checks
-- Shipping cost calculation
-- Address validation
+- 付款處理
+- 即時庫存檢查
+- 運費計算
+- 地址驗證
 
-**Pattern**: Request-Response via REST API
+**模式**：透過 REST API 的請求-回應
 
-**Characteristics**:
+**特性**：
 
-- Immediate response required
-- Strong consistency
-- Timeout handling
-- Retry logic
+- 需要立即回應
+- 強一致性
+- 逾時處理
+- 重試邏輯
 
-### Asynchronous Integration
+### 非同步整合
 
-Used for:
+用於：
 
-- Email notifications
-- SMS notifications
-- Analytics tracking
-- Warehouse updates
+- 電子郵件通知
+- SMS 通知
+- 分析追蹤
+- 倉庫更新
 
-**Pattern**: Event-driven via Message Queue (Kafka)
+**模式**：透過 Message Queue (Kafka) 的事件驅動
 
-**Characteristics**:
+**特性**：
 
-- Eventual consistency
-- Decoupled systems
-- Resilient to failures
-- Scalable
+- 最終一致性
+- 解耦系統
+- 對故障具韌性
+- 可擴展
 
-### Batch Integration
+### 批次整合
 
-Used for:
+用於：
 
-- Daily sales reports
-- Inventory synchronization
-- Financial reconciliation
-- Data warehouse updates
+- 每日銷售報告
+- 庫存同步
+- 財務對帳
+- 資料倉儲更新
 
-**Pattern**: Scheduled batch jobs
+**模式**：排程批次作業
 
-**Characteristics**:
+**特性**：
 
-- Periodic execution
-- Large data volumes
-- Off-peak processing
-- Error recovery
+- 定期執行
+- 大量資料
+- 離峰處理
+- 錯誤復原
 
-## System Interfaces
+## 系統介面
 
-### Inbound Interfaces
+### 入站介面
 
 1. **Web Application** (HTTPS)
-   - Customer-facing website
-   - Seller portal
-   - Admin console
+   - 面向客戶的網站
+   - 賣家入口網站
+   - 管理控制台
 
 2. **Mobile Application** (HTTPS/REST API)
-   - iOS app
-   - Android app
+   - iOS 應用程式
+   - Android 應用程式
 
 3. **Partner APIs** (REST API)
-   - Third-party integrations
-   - Marketplace integrations
+   - 第三方整合
+   - 市場整合
 
-### Outbound Interfaces
+### 出站介面
 
 1. **Payment Gateway API** (REST)
-   - Payment processing
-   - Refund processing
+   - 付款處理
+   - 退款處理
 
 2. **Shipping Provider APIs** (REST/SOAP)
-   - Label generation
-   - Tracking updates
+   - 標籤產生
+   - 追蹤更新
 
 3. **Email Service API** (REST/SMTP)
-   - Transactional emails
-   - Marketing emails
+   - 交易郵件
+   - 行銷郵件
 
 4. **SMS Service API** (REST)
-   - Notification messages
-   - Verification codes
+   - 通知訊息
+   - 驗證碼
 
 5. **Analytics API** (JavaScript/REST)
-   - Event tracking
-   - Conversion tracking
+   - 事件追蹤
+   - 轉換追蹤
 
-## Navigation
+## 導覽
 
-### Related Documents
+### 相關文件
 
-- [Scope & Boundaries](scope-and-boundaries.md) - Detailed scope definition →
-- [External Systems](external-systems.md) - Integration details →
-- [Stakeholders](stakeholders.md) - Stakeholder analysis →
+- [Scope & Boundaries](scope-and-boundaries.md) - 詳細範圍定義 →
+- [External Systems](external-systems.md) - 整合細節 →
+- [Stakeholders](stakeholders.md) - 利害關係人分析 →
 
-### Related Viewpoints
+### 相關 Viewpoints
 
-- [Functional Viewpoint](../functional/README.md) - Internal capabilities
-- [Deployment Viewpoint](../deployment/README.md) - Infrastructure
-- [Operational Viewpoint](../operational/README.md) - Operations
+- [Functional Viewpoint](../functional/README.md) - 內部能力
+- [Deployment Viewpoint](../deployment/README.md) - 基礎設施
+- [Operational Viewpoint](../operational/README.md) - 營運
 
-### Related Perspectives
+### 相關 Perspectives
 
-- [Security Perspective](../../perspectives/security/README.md) - External security
-- [Location Perspective](../../perspectives/location/README.md) - Geographic distribution
+- [Security Perspective](../../perspectives/security/README.md) - 外部安全
+- [Location Perspective](../../perspectives/location/README.md) - 地理分布
 
 ---
 
-**Next**: [Scope & Boundaries →](scope-and-boundaries.md)
+**下一步**：[Scope & Boundaries →](scope-and-boundaries.md)

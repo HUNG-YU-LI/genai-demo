@@ -1,12 +1,12 @@
 ---
-title: "{Viewpoint Name} Viewpoint"
+title: "{視點名稱} 視點"
 type: "viewpoint"
 category: "{functional|information|concurrency|development|deployment|operational|context}"
 stakeholders: ["stakeholder1", "stakeholder2"]
 last_updated: "YYYY-MM-DD"
 version: "1.0"
 status: "draft|active|deprecated"
-owner: "Team/Person Name"
+owner: "團隊/人員名稱"
 related_docs:
 
   - "path/to/related/doc1.md"
@@ -15,252 +15,252 @@ related_docs:
 tags: ["tag1", "tag2", "tag3"]
 ---
 
-# {Viewpoint Name} Viewpoint
+# {視點名稱} 視點
 
-> **Status**: 📝 Draft | ✅ Active | ⚠️ Deprecated  
-> **Last Updated**: YYYY-MM-DD  
-> **Owner**: Team/Person Name
+> **狀態**: 📝 草稿 | ✅ 有效 | ⚠️ 已棄用
+> **最後更新**: YYYY-MM-DD
+> **所有者**: 團隊/人員名稱
 
-## Overview
+## 概述
 
-[Provide a high-level description of this viewpoint. Explain what aspect of the system this viewpoint describes and why it's important.]
+[提供此視點的高層描述。解釋此視點描述系統的哪個面向，以及為什麼它很重要。]
 
-## Purpose
+## 用途
 
-This viewpoint answers the following key questions:
+此視點回答以下關鍵問題：
 
-- Question 1?
-- Question 2?
-- Question 3?
-- Question 4?
+- 問題 1？
+- 問題 2？
+- 問題 3？
+- 問題 4？
 
-## Stakeholders
+## 利益相關者
 
-### Primary Stakeholders
+### 主要利益相關者
 
-- **Stakeholder 1**: Their concerns and interests
-- **Stakeholder 2**: Their concerns and interests
+- **利益相關者 1**: 他們的關注和利益
+- **利益相關者 2**: 他們的關注和利益
 
-### Secondary Stakeholders
+### 次要利益相關者
 
-- **Stakeholder 3**: Their concerns and interests
-- **Stakeholder 4**: Their concerns and interests
+- **利益相關者 3**: 他們的關注和利益
+- **利益相關者 4**: 他們的關注和利益
 
-## Contents
+## 內容
 
-### 📄 Documents
+### 📄 文件
 
-- [Document 1](document1.md) - Description
-- [Document 2](document2.md) - Description
-- [Document 3](document3.md) - Description
+- [文件 1](document1.md) - 描述
+- [文件 2](document2.md) - 描述
+- [文件 3](document3.md) - 描述
 
-### 📊 Diagrams
+### 📊 圖表
 
-- [Diagram 1](../../diagrams/viewpoints/{category}/diagram1.puml) - Description
-- [Diagram 2](../../diagrams/viewpoints/{category}/diagram2.puml) - Description
+- [圖表 1](../../diagrams/viewpoints/{category}/diagram1.puml) - 描述
+- [圖表 2](../../diagrams/viewpoints/{category}/diagram2.puml) - 描述
 
-## Key Concerns
+## 主要關注
 
-### Concern 1: {Concern Title}
+### 關注 1：{關注標題}
 
-**Description**: [Describe the concern]
+**描述**: [描述該關注]
 
-**Why it matters**: [Explain the importance]
+**為什麼重要**: [解釋重要性]
 
-**How it's addressed**: [Explain the solution or approach]
+**如何解決**: [解釋解決方案或方法]
 
-### Concern 2: {Concern Title}
+### 關注 2：{關注標題}
 
-**Description**: [Describe the concern]
+**描述**: [描述該關注]
 
-**Why it matters**: [Explain the importance]
+**為什麼重要**: [解釋重要性]
 
-**How it's addressed**: [Explain the solution or approach]
+**如何解決**: [解釋解決方案或方法]
 
-### Concern 3: {Concern Title}
+### 關注 3：{關注標題}
 
-**Description**: [Describe the concern]
+**描述**: [描述該關注]
 
-**Why it matters**: [Explain the importance]
+**為什麼重要**: [解釋重要性]
 
-**How it's addressed**: [Explain the solution or approach]
+**如何解決**: [解釋解決方案或方法]
 
-## Architectural Models
+## 架構模型
 
-### Model 1: {Model Name}
+### 模型 1：{模型名稱}
 
-[Describe the architectural model, include diagrams if applicable]
+[描述架構模型，如適用包括圖表]
 
 ```json
-[Include diagram or code representation if applicable]
+[包含圖表或程式碼表示（如適用）]
 ```
 
-**Key Elements**:
+**主要元素**:
 
-- Element 1: Description
-- Element 2: Description
-- Element 3: Description
+- 元素 1: 描述
+- 元素 2: 描述
+- 元素 3: 描述
 
-### Model 2: {Model Name}
+### 模型 2：{模型名稱}
 
-[Describe the architectural model]
+[描述架構模型]
 
-## Design Decisions
+## 設計決策
 
-### Decision 1: {Decision Title}
+### 決策 1：{決策標題}
 
-**Context**: [Why this decision was needed]
+**背景**: [為什麼需要此決策]
 
-**Decision**: [What was decided]
+**決策**: [決定了什麼]
 
-**Rationale**: [Why this decision was made]
+**理由**: [為什麼做出此決策]
 
-**Consequences**: [Impact of this decision]
+**後果**: [此決策的影響]
 
-**Related ADR**: [Link to ADR if applicable]
+**相關 ADR**: [如適用，連結至 ADR]
 
-### Decision 2: {Decision Title}
+### 決策 2：{決策標題}
 
-**Context**: [Why this decision was needed]
+**背景**: [為什麼需要此決策]
 
-**Decision**: [What was decided]
+**決策**: [決定了什麼]
 
-**Rationale**: [Why this decision was made]
+**理由**: [為什麼做出此決策]
 
-**Consequences**: [Impact of this decision]
+**後果**: [此決策的影響]
 
-## Key Concepts
+## 關鍵概念
 
-### Concept 1
+### 概念 1
 
-[Explain key concept relevant to this viewpoint]
+[解釋與此視點相關的關鍵概念]
 
-### Concept 2
+### 概念 2
 
-[Explain key concept relevant to this viewpoint]
+[解釋與此視點相關的關鍵概念]
 
-### Concept 3
+### 概念 3
 
-[Explain key concept relevant to this viewpoint]
+[解釋與此視點相關的關鍵概念]
 
-## Constraints and Assumptions
+## 約束和假設
 
-### Constraints
+### 約束
 
-- Constraint 1: Description
-- Constraint 2: Description
-- Constraint 3: Description
+- 約束 1: 描述
+- 約束 2: 描述
+- 約束 3: 描述
 
-### Assumptions
+### 假設
 
-- Assumption 1: Description
-- Assumption 2: Description
-- Assumption 3: Description
+- 假設 1: 描述
+- 假設 2: 描述
+- 假設 3: 描述
 
-## Related Documentation
+## 相關文件
 
-### Related Viewpoints
+### 相關視點
 
-- [Viewpoint 1](../viewpoint1/README.md) - How they relate
-- [Viewpoint 2](../viewpoint2/README.md) - How they relate
-- [Viewpoint 3](../viewpoint3/README.md) - How they relate
+- [視點 1](../viewpoint1/README.md) - 它們如何關聯
+- [視點 2](../viewpoint2/README.md) - 它們如何關聯
+- [視點 3](../viewpoint3/README.md) - 它們如何關聯
 
-### Related Perspectives
+### 相關觀點
 
-- [Perspective 1](../../perspectives/perspective1/README.md) - How it applies
-- [Perspective 2](../../perspectives/perspective2/README.md) - How it applies
-- [Perspective 3](../../perspectives/perspective3/README.md) - How it applies
+- [觀點 1](../../perspectives/perspective1/README.md) - 如何應用
+- [觀點 2](../../perspectives/perspective2/README.md) - 如何應用
+- [觀點 3](../../perspectives/perspective3/README.md) - 如何應用
 
-### Related Architecture Decisions
+### 相關架構決策
 
-- [ADR-XXX: Decision Title](../../architecture/adrs/YYYYMMDD-XXX-decision-title.md)
-- [ADR-YYY: Decision Title](../../architecture/adrs/YYYYMMDD-YYY-decision-title.md)
+- [ADR-XXX: 決策標題](../../architecture/adrs/YYYYMMDD-XXX-decision-title.md)
+- [ADR-YYY: 決策標題](../../architecture/adrs/YYYYMMDD-YYY-decision-title.md)
 
-### Related Guides
+### 相關指南
 
-- [Guide 1](../../guide1/README.md) - Description
-- [Guide 2](../../guide2/README.md) - Description
+- [指南 1](../../guide1/README.md) - 描述
+- [指南 2](../../guide2/README.md) - 描述
 
-## Implementation Guidelines
+## 實施指南
 
-### For Developers
+### 對開發者
 
-[Provide specific guidance for developers implementing features related to this viewpoint]
+[為實施與此視點相關的功能的開發者提供具體指導]
 
-### For Architects
+### 對架構師
 
-[Provide specific guidance for architects making decisions related to this viewpoint]
+[為與此視點相關的決策的架構師提供具體指導]
 
-### For Operations
+### 對營運
 
-[Provide specific guidance for operations team managing systems related to this viewpoint]
+[為管理與此視點相關的系統的營運團隊提供具體指導]
 
-## Verification and Validation
+## 驗證和驗證
 
-### How to Verify
+### 如何驗證
 
-[Describe how to verify that the system conforms to this viewpoint]
+[描述如何驗證系統符合此視點]
 
-### Validation Criteria
+### 驗證標準
 
-- Criterion 1: Description
-- Criterion 2: Description
-- Criterion 3: Description
+- 標準 1: 描述
+- 標準 2: 描述
+- 標準 3: 描述
 
-### Testing Approach
+### 測試方法
 
-[Describe testing strategies relevant to this viewpoint]
+[描述與此視點相關的測試策略]
 
-## Known Issues and Limitations
+## 已知問題和限制
 
-### Current Limitations
+### 目前限制
 
-- Limitation 1: Description and mitigation plan
-- Limitation 2: Description and mitigation plan
+- 限制 1: 描述和緩解計畫
+- 限制 2: 描述和緩解計畫
 
-### Technical Debt
+### 技術債務
 
-- Debt Item 1: Description and plan to address
-- Debt Item 2: Description and plan to address
+- 債務項 1: 描述和解決計畫
+- 債務項 2: 描述和解決計畫
 
-## Future Considerations
+## 未來考量
 
-### Planned Improvements
+### 計畫的改進
 
-- Improvement 1: Description and timeline
-- Improvement 2: Description and timeline
+- 改進 1: 描述和時間線
+- 改進 2: 描述和時間線
 
-### Evolution Strategy
+### 演進策略
 
-[Describe how this viewpoint is expected to evolve]
+[描述此視點預期如何演進]
 
-## Quick Links
+## 快速連結
 
-- [Back to All Viewpoints](../README.md)
-- [Architecture Overview](../../architecture/README.md)
-- [Main Documentation](../../README.md)
+- [回到所有視點](../README.md)
+- [架構概述](../../architecture/README.md)
+- [主要文件](../../README.md)
 
-## Appendix
+## 附錄
 
-### Glossary
+### 詞彙表
 
-- **Term 1**: Definition
-- **Term 2**: Definition
-- **Term 3**: Definition
+- **術語 1**: 定義
+- **術語 2**: 定義
+- **術語 3**: 定義
 
-### References
+### 參考資料
 
-- Reference 1: [Title](URL)
-- Reference 2: [Title](URL)
+- 參考資料 1: [標題](URL)
+- 參考資料 2: [標題](URL)
 
-### Change History
+### 變更歷史
 
-| Date | Version | Author | Changes |
+| 日期 | 版本 | 作者 | 變更 |
 |------|---------|--------|---------|
-| YYYY-MM-DD | 1.0 | Name | Initial version |
-| YYYY-MM-DD | 1.1 | Name | Updates |
+| YYYY-MM-DD | 1.0 | 名稱 | 初始版本 |
+| YYYY-MM-DD | 1.1 | 名稱 | 更新 |
 
 ---
 
-**Template Version**: 1.0  
-**Last Template Update**: 2025-01-17
+**模板版本**: 1.0
+**最後模板更新**: 2025-01-17

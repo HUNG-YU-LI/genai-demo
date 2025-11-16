@@ -1,41 +1,41 @@
-# Domain-Driven Design (DDD) Patterns Examples
+# 域驅動設計 (DDD) 模式範例
 
-This directory contains comprehensive examples and guides for DDD tactical patterns used in this project.
+本目錄包含本項目中使用的 DDD 戰術模式的綜合範例和指南。
 
-## 📚 Contents
+## 📚 內容
 
-### DDD Tactical Patterns
+### DDD 戰術模式
 
-- [Aggregate Root Examples](aggregate-root-examples.md) - Complete aggregate root implementations
-- [Domain Events Examples](domain-events-examples.md) - Event design and implementation patterns
-- [Value Objects Examples](value-objects-examples.md) - Immutable value object patterns
-- [Repository Examples](repository-examples.md) - Repository pattern implementations
-- [Event Store Guide](event-store-guide.md) - Event sourcing and event store patterns
+- [Aggregate Root Examples](aggregate-root-examples.md) - 完整的聚合根實現
+- [Domain Events Examples](domain-events-examples.md) - 事件設計和實現模式
+- [Value Objects Examples](value-objects-examples.md) - 不可變值對象模式
+- [Repository Examples](repository-examples.md) - 儲存庫模式實現
+- [Event Store Guide](event-store-guide.md) - 事件溯源和事件存儲模式
 
-## 🎯 Purpose
+## 🎯 目的
 
-These examples demonstrate:
+這些範例演示：
 
-- **Complete DDD implementations** from the project
-- **Aggregate design patterns** with consistency boundaries
-- **Event-driven architecture** patterns
-- **Repository and persistence** patterns
-- **Event sourcing** strategies
+- **完整的 DDD 實現**來自項目
+- **聚合設計模式**具有一致性邊界
+- **事件驅動架構**模式
+- **儲存庫和持久化**模式
+- **事件溯源**策略
 
-## 📖 How to Use
+## 📖 如何使用
 
-1. **Learning DDD**: Start with Aggregate Root Examples
-2. **Implementing Events**: Use Domain Events Examples
-3. **Data Modeling**: Reference Value Objects Examples
-4. **Persistence**: Follow Repository Examples
-5. **Event Sourcing**: Study Event Store Guide
+1. **學習 DDD**：從聚合根範例開始
+2. **實現事件**：使用領域事件範例
+3. **數據建模**：參考值對象範例
+4. **持久化**：遵循儲存庫範例
+5. **事件溯源**：研究事件存儲指南
 
-## 🔗 Related Documentation
+## 🔗 相關文檔
 
-- **DDD Tactical Patterns**: [../../steering/ddd-tactical-patterns.md](../../steering/ddd-tactical-patterns.md)
-- **Domain Events**: [../../steering/domain-events.md](../../steering/domain-events.md)
-- **Architecture Constraints**: [../../steering/architecture-constraints.md](../../steering/architecture-constraints.md)
+- **DDD 戰術模式**：[../../steering/ddd-tactical-patterns.md](../../steering/ddd-tactical-patterns.md)
+- **領域事件**：[../../steering/domain-events.md](../../steering/domain-events.md)
+- **架構約束**：[../../steering/architecture-constraints.md](../../steering/architecture-constraints.md)
 
 ---
 
-**Note**: These are detailed examples. For quick reference rules, see the steering files.
+**注意**：這些是詳細範例。有關快速參考規則，請查看方向文件。

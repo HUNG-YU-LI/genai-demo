@@ -1,90 +1,90 @@
 ---
 name: Documentation Improvement
-about: Suggest improvements or report issues with documentation
+about: 建議改進或報告文件相關問題
 title: '[DOCS] '
 labels: documentation, enhancement
 assignees: ''
 ---
 
-## Documentation Issue Type
+## 文件 Issue 類型
 
-- [ ] Missing information
-- [ ] Incorrect information
-- [ ] Unclear explanation
-- [ ] Broken link
-- [ ] Outdated content
-- [ ] Formatting issue
-- [ ] Diagram issue
-- [ ] Other (please specify)
+- [ ] 缺少資訊
+- [ ] 資訊不正確
+- [ ] 說明不清楚
+- [ ] 連結已失效
+- [ ] 內容已過時
+- [ ] 格式化問題
+- [ ] 圖表問題
+- [ ] 其他 (請指定)
 
-## Affected Documentation
+## 受影響的文件
 
-**Document Path**: (e.g., `docs/viewpoints/functional/overview.md`)
+**文件路徑**: (例如 `docs/viewpoints/functional/overview.md`)
 
-**Section**: (e.g., "Bounded Contexts" section)
+**章節**: (例如 "Bounded Contexts" 章節)
 
-**URL/Line Number**: (if applicable)
+**URL/行號**: (如適用)
 
-## Current State
+## 目前狀態
 
-Describe what the documentation currently says or shows:
-
-```
-[Paste relevant excerpt or describe current state]
-```
-
-## Issue Description
-
-Clearly describe the problem or gap:
-
-- What is missing, incorrect, or unclear?
-- Why is this problematic?
-- Who is affected by this issue?
-
-## Suggested Improvement
-
-Describe how the documentation should be improved:
+描述文件目前所述或所示的內容：
 
 ```
-[Provide suggested text, structure, or approach]
+[貼上相關的摘錄或描述目前狀態]
 ```
 
-## Additional Context
+## Issue 說明
 
-**Impact**: 
-- [ ] Critical - Blocks understanding or usage
-- [ ] High - Significantly affects user experience
-- [ ] Medium - Noticeable but has workarounds
-- [ ] Low - Minor improvement
+清楚地描述問題或缺陷：
 
-**Affected Audience**:
-- [ ] Developers
-- [ ] Operations Team
-- [ ] Architects
-- [ ] Business Stakeholders
-- [ ] All Users
+- 缺少什麼、不正確或不清楚的地方？
+- 為什麼這是有問題的？
+- 誰受到此問題的影響？
 
-**Related Documentation**: (Links to related docs that might need updates)
+## 建議改進
 
-## Screenshots/Examples
+描述應該如何改進文件：
 
-If applicable, add screenshots or examples to help explain:
+```
+[提供建議的文字、結構或方法]
+```
 
-## Proposed Solution
+## 額外上下文
 
-If you have a specific solution in mind:
+**影響程度**:
+- [ ] Critical - 阻礙理解或使用
+- [ ] High - 顯著影響用戶體驗
+- [ ] Medium - 明顯但有替代方案
+- [ ] Low - 輕微改進
 
-- [ ] I can submit a PR to fix this
-- [ ] I need help implementing the fix
-- [ ] I'm just reporting the issue
+**受影響對象**:
+- [ ] Developers (開發者)
+- [ ] Operations Team (營運團隊)
+- [ ] Architects (架構師)
+- [ ] Business Stakeholders (業務利益相關者)
+- [ ] All Users (所有使用者)
 
-## Checklist
+**相關文件**: (連結至可能需要更新的相關文件)
 
-- [ ] I have searched existing issues to avoid duplicates
-- [ ] I have provided specific location information
-- [ ] I have described the impact clearly
-- [ ] I have suggested an improvement (if possible)
+## 螢幕截圖/範例
+
+如適用，新增螢幕截圖或範例以幫助說明：
+
+## 建議的解決方案
+
+如果您心中有具體的解決方案：
+
+- [ ] 我可以提交 Pull Request 來修復此問題
+- [ ] 我需要幫助實現修復
+- [ ] 我只是報告此問題
+
+## 檢查清單
+
+- [ ] 我已搜尋現有 issues 以避免重複
+- [ ] 我已提供具體的位置資訊
+- [ ] 我已清楚描述影響
+- [ ] 我已建議改進 (如可能)
 
 ---
 
-**Thank you for helping improve our documentation!**
+**感謝您幫助改進我們的文件！**

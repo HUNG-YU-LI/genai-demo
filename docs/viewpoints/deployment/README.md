@@ -1,83 +1,83 @@
 # Deployment Viewpoint
 
-> **Status**: 📝 To be documented  
-> **Last Updated**: 2025-01-17  
-> **Owner**: DevOps Lead
+> **狀態**：📝 待撰寫
+> **最後更新**：2025-01-17
+> **負責人**：DevOps 主管
 
-## Overview
+## 概述
 
-The Deployment Viewpoint describes how the system is deployed to AWS infrastructure, including network configuration and scaling strategies.
+Deployment Viewpoint 描述系統如何部署到 AWS 基礎設施，包括網路配置和擴展策略。
 
-## Purpose
+## 目的
 
-This viewpoint answers:
+此 viewpoint 回答：
 
-- What infrastructure is needed?
-- How is the network configured?
-- What is the deployment process?
-- How does the system scale?
+- 需要什麼基礎設施？
+- 網路如何配置？
+- 部署流程是什麼？
+- 系統如何擴展？
 
-## Stakeholders
+## 利害關係人
 
-- **Primary**: DevOps engineers, infrastructure architects
-- **Secondary**: Operations team, developers
+- **主要**：DevOps 工程師、基礎設施架構師
+- **次要**：維運團隊、開發人員
 
-## Contents
+## 內容
 
-### 📄 Documents
+### 📄 文件
 
-- [Overview](overview.md) - AWS infrastructure approach
-- [Physical Architecture](physical-architecture.md) - EKS, RDS, ElastiCache, MSK
-- [Network Architecture](network-architecture.md) - VPC, subnets, security groups
-- [Deployment Process](deployment-process.md) - CI/CD pipeline and deployment strategies
+- [Overview](overview.md) - AWS 基礎設施方法
+- [Physical Architecture](physical-architecture.md) - EKS、RDS、ElastiCache、MSK
+- [Network Architecture](network-architecture.md) - VPC、子網路、安全群組
+- [Deployment Process](deployment-process.md) - CI/CD 管線和部署策略
 
-### 📊 Diagrams
+### 📊 圖表
 
-- AWS infrastructure diagram
-- Network topology diagram
-- Deployment pipeline diagram
+- AWS 基礎設施圖
+- 網路拓撲圖
+- 部署管線圖
 
-## Key Concepts
+## 關鍵概念
 
-### Infrastructure Components
+### 基礎設施元件
 
-- **Compute**: Amazon EKS (Kubernetes)
-- **Database**: Amazon RDS PostgreSQL (Multi-AZ)
-- **Cache**: Amazon ElastiCache Redis
-- **Messaging**: Amazon MSK (Managed Kafka)
-- **Observability**: CloudWatch, X-Ray, Grafana
+- **運算**：Amazon EKS (Kubernetes)
+- **資料庫**：Amazon RDS PostgreSQL (Multi-AZ)
+- **快取**：Amazon ElastiCache Redis
+- **訊息傳遞**：Amazon MSK (Managed Kafka)
+- **可觀測性**：CloudWatch、X-Ray、Grafana
 
-### Network Architecture
+### 網路架構
 
-- **VPC**: 10.0.0.0/16
-- **Public Subnets**: ALB, NAT Gateway
-- **Private Subnets**: Application tier
-- **Data Subnets**: RDS, ElastiCache
+- **VPC**：10.0.0.0/16
+- **公有子網路**：ALB、NAT Gateway
+- **私有子網路**：應用程式層
+- **資料子網路**：RDS、ElastiCache
 
-### Deployment Strategy
+### 部署策略
 
-- **CI/CD**: GitHub Actions + ArgoCD
-- **Strategy**: Rolling deployment with health checks
-- **Environments**: Local, Staging, Production
+- **CI/CD**：GitHub Actions + ArgoCD
+- **策略**：滾動部署搭配健康檢查
+- **環境**：本機、Staging、正式環境
 
-## Related Documentation
+## 相關文件
 
-### Related Viewpoints
+### 相關 Viewpoints
 
-- [Operational Viewpoint](../operational/README.md) - Monitoring and operations
-- [Development Viewpoint](../development/README.md) - Build artifacts
+- [Operational Viewpoint](../operational/README.md) - 監控和維運
+- [Development Viewpoint](../development/README.md) - 建置產物
 
-### Related Perspectives
+### 相關 Perspectives
 
-- [Security Perspective](../../perspectives/security/README.md) - Network security
-- [Availability Perspective](../../perspectives/availability/README.md) - Multi-AZ deployment
-- [Performance Perspective](../../perspectives/performance/README.md) - Auto-scaling
+- [Security Perspective](../../perspectives/security/README.md) - 網路安全
+- [Availability Perspective](../../perspectives/availability/README.md) - Multi-AZ 部署
+- [Performance Perspective](../../perspectives/performance/README.md) - 自動擴展
 
-### Related Guides
+### 相關指南
 
-- [Deployment Guide](../../operations/deployment/README.md) - Step-by-step procedures
+- [Deployment Guide](../../operations/deployment/README.md) - 逐步程序
 
-## Quick Links
+## 快速連結
 
-- [Back to All Viewpoints](../README.md)
-- [Main Documentation](../../README.md)
+- [返回所有 Viewpoints](../README.md)
+- [主文件](../../README.md)

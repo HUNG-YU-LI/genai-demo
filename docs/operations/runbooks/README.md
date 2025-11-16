@@ -1,106 +1,106 @@
 # Operational Runbooks
 
-## Overview
+## 概述
 
-This directory contains operational runbooks for common issues and procedures in the Enterprise E-Commerce Platform.
+本目錄包含 Enterprise E-Commerce Platform 常見問題和程序的 operational runbooks。
 
-## What is a Runbook
+## 什麼是 Runbook
 
-A runbook is a step-by-step guide for diagnosing and resolving specific operational issues. Each runbook follows a standard format:
+Runbook 是診斷和解決特定操作問題的逐步指南。每個 runbook 遵循標準格式：
 
-- **Symptoms**: How to identify the issue
-- **Impact**: Effect on users and business
-- **Detection**: How the issue is detected
-- **Diagnosis**: Steps to confirm the issue
-- **Resolution**: Steps to fix the issue
-- **Verification**: How to confirm the fix
-- **Prevention**: How to prevent recurrence
+- **Symptoms**：如何識別問題
+- **Impact**：對使用者和業務的影響
+- **Detection**：如何偵測問題
+- **Diagnosis**：確認問題的步驟
+- **Resolution**：修復問題的步驟
+- **Verification**：如何確認修復
+- **Prevention**：如何防止再次發生
 
-## Runbook Index
+## Runbook 索引
 
-### Performance Issues
-
-| Runbook | Severity | Description |
-|---------|----------|-------------|
-| [High CPU Usage](high-cpu-usage.md) | P1 | CPU utilization > 80% |
-| [High Memory Usage](high-memory-usage.md) | P0 | Memory utilization > 90% |
-| [Slow API Responses](slow-api-responses.md) | P1 | API response time > 2s |
-
-### Database Issues
+### Performance 問題
 
 | Runbook | Severity | Description |
 |---------|----------|-------------|
-| [Database Connection Issues](database-connection-issues.md) | P0 | Cannot connect to database |
-| [Slow Database Queries](slow-queries.md) | P1 | Queries taking > 1s |
+| [High CPU Usage](high-cpu-usage.md) | P1 | CPU 使用率 > 80% |
+| [High Memory Usage](high-memory-usage.md) | P0 | Memory 使用率 > 90% |
+| [Slow API Responses](slow-api-responses.md) | P1 | API 回應時間 > 2s |
+
+### Database 問題
+
+| Runbook | Severity | Description |
+|---------|----------|-------------|
+| [Database Connection Issues](database-connection-issues.md) | P0 | 無法連線至 database |
+| [Slow Database Queries](slow-queries.md) | P1 | 查詢耗時 > 1s |
 | [Database Replication Lag](replication-lag.md) | P1 | Replica lag > 5s |
 
-### Service Issues
+### Service 問題
 
 | Runbook | Severity | Description |
 |---------|----------|-------------|
-| [Service Outage](service-outage.md) | P0 | Service completely down |
-| [Pod Restart Loop](pod-restart-loop.md) | P0 | Pods continuously restarting |
-| [Failed Deployment](failed-deployment.md) | P1 | Deployment fails |
+| [Service Outage](service-outage.md) | P0 | Service 完全停止 |
+| [Pod Restart Loop](pod-restart-loop.md) | P0 | Pod 持續重啟 |
+| [Failed Deployment](failed-deployment.md) | P1 | Deployment 失敗 |
 
-### Data Issues
-
-| Runbook | Severity | Description |
-|---------|----------|-------------|
-| [Data Inconsistency](data-inconsistency.md) | P1 | Data mismatch between systems |
-| [Cache Issues](cache-issues.md) | P2 | Cache hit rate < 70% |
-
-### Security Issues
+### Data 問題
 
 | Runbook | Severity | Description |
 |---------|----------|-------------|
-| [Security Incident](security-incident.md) | P0 | Security breach detected |
-| [DDoS Attack](ddos-attack.md) | P0 | Unusual traffic patterns |
+| [Data Inconsistency](data-inconsistency.md) | P1 | 系統間資料不一致 |
+| [Cache Issues](cache-issues.md) | P2 | Cache 命中率 < 70% |
 
-### Operational Procedures
+### Security 問題
+
+| Runbook | Severity | Description |
+|---------|----------|-------------|
+| [Security Incident](security-incident.md) | P0 | 偵測到安全漏洞 |
+| [DDoS Attack](ddos-attack.md) | P0 | 異常流量模式 |
+
+### Operational 程序
 
 | Runbook | Type | Description |
 |---------|------|-------------|
 | [Backup and Restore](backup-restore.md) | Procedure | Database backup/restore |
-| [Scaling Operations](scaling-operations.md) | Procedure | Manual scaling procedures |
+| [Scaling Operations](scaling-operations.md) | Procedure | 手動 scaling 程序 |
 
-## Using Runbooks
+## 使用 Runbooks
 
-### When to Use
+### 何時使用
 
-- **During Incidents**: Follow runbook steps to resolve issues quickly
-- **Training**: Use runbooks to train new team members
-- **Drills**: Practice runbook procedures during incident drills
-- **Documentation**: Reference runbooks when documenting incidents
+- **During Incidents**：遵循 runbook 步驟快速解決問題
+- **Training**：使用 runbooks 訓練新團隊成員
+- **Drills**：在 incident 演練期間練習 runbook 程序
+- **Documentation**：記錄 incidents 時參考 runbooks
 
-### How to Use
+### 如何使用
 
-1. **Identify** the issue using symptoms
-2. **Locate** the appropriate runbook
-3. **Follow** steps in order
-4. **Document** actions taken
-5. **Verify** resolution
-6. **Update** runbook if needed
+1. **Identify** 使用症狀識別問題
+2. **Locate** 找到適當的 runbook
+3. **Follow** 按順序遵循步驟
+4. **Document** 記錄採取的行動
+5. **Verify** 驗證解決方案
+6. **Update** 必要時更新 runbook
 
-## Runbook Maintenance
+## Runbook 維護
 
-### Review Schedule
+### 審查排程
 
-- **Weekly**: Review recently used runbooks
-- **Monthly**: Review all runbooks for accuracy
-- **Quarterly**: Update based on system changes
-- **After Incidents**: Update based on lessons learned
+- **週**：審查最近使用的 runbooks
+- **月**：審查所有 runbooks 的準確性
+- **季**：根據系統變更更新
+- **After Incidents**：根據經驗教訓更新
 
-### Update Process
+### 更新流程
 
-1. Identify need for update
-2. Create pull request with changes
-3. Review with team
-4. Test updated procedures
-5. Merge and communicate changes
+1. 識別更新需求
+2. 建立 pull request 與變更
+3. 與團隊審查
+4. 測試更新後的程序
+5. Merge 並溝通變更
 
-## Runbook Template
+## Runbook 範本
 
-Use this template when creating new runbooks:
+建立新 runbooks 時使用此範本：
 
 ```markdown
 # Runbook: [Issue Title]
@@ -127,13 +127,13 @@ Use this template when creating new runbooks:
 ### Step 1: [Diagnostic Step]
 ```bash
 # Commands
-```text
+```
 
 ### Step 2: [Diagnostic Step]
 
 ```bash
 # Commands
-```text
+```
 
 ## Resolution
 
@@ -175,17 +175,17 @@ Use this template when creating new runbooks:
 
 ### On-Call Rotation
 
-- **Primary On-Call**: Check PagerDuty schedule
-- **Secondary On-Call**: Check PagerDuty schedule
-- **Manager On-Call**: Check PagerDuty schedule
+- **Primary On-Call**：查看 PagerDuty schedule
+- **Secondary On-Call**：查看 PagerDuty schedule
+- **Manager On-Call**：查看 PagerDuty schedule
 
 ### External Contacts
 
-- **AWS Support**: 1-800-XXX-XXXX (Premium Support)
-- **Database Vendor**: support@vendor.com
-- **Payment Gateway**: support@payment.com
+- **AWS Support**：1-800-XXX-XXXX (Premium Support)
+- **Database Vendor**：support@vendor.com
+- **Payment Gateway**：support@payment.com
 
-## Related Documentation
+## 相關文件
 
 - [Monitoring Strategy](../monitoring/monitoring-strategy.md)
 - [Alert Configuration](../monitoring/alerts.md)
@@ -194,6 +194,6 @@ Use this template when creating new runbooks:
 
 ---
 
-**Last Updated**: 2025-10-25  
-**Owner**: DevOps Team  
-**Review Cycle**: Monthly
+**Last Updated**：2025-10-25
+**Owner**：DevOps Team
+**Review Cycle**：Monthly

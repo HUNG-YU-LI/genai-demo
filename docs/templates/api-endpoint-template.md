@@ -1,45 +1,45 @@
-# {Resource Name} API
+# {資源名稱} API
 
-> **Base URL**: `https://api.example.com/api/v1`  
-> **Last Updated**: YYYY-MM-DD  
-> **API Version**: v1
+> **基礎 URL**: `https://api.example.com/api/v1`
+> **最後更新**: YYYY-MM-DD
+> **API 版本**: v1
 
-## Overview
+## 概述
 
-[Brief description of what this API resource does and its purpose in the system]
+[簡要描述此 API 資源的功能及其在系統中的用途]
 
-## Authentication
+## 驗證
 
-All endpoints require authentication unless otherwise specified.
+除非另有說明，否則所有端點都需要驗證。
 
 ```http
 Authorization: Bearer {access_token}
 ```
 
-See [Authentication Guide](../authentication.md) for details on obtaining access tokens.
+詳細資訊，請參閱[驗證指南](../authentication.md)以了解如何取得存取權杖。
 
-## Endpoints
+## 端點
 
 ---
 
-### Create {Resource}
+### 建立 {資源}
 
-Create a new {resource} in the system.
+在系統中建立新的{資源}。
 
-#### Request
+#### 要求
 
-**Method**: `POST`
+**方法**: `POST`
 
-**Endpoint**: `/api/v1/{resources}`
+**端點**: `/api/v1/{resources}`
 
-**Headers**:
+**標題**:
 
 ```http
 Content-Type: application/json
 Authorization: Bearer {access_token}
 ```
 
-**Request Body**:
+**要求主體**:
 
 ```json
 {
@@ -53,20 +53,20 @@ Authorization: Bearer {access_token}
 }
 ```
 
-**Field Descriptions**:
+**欄位描述**:
 
-| Field | Type | Required | Description | Constraints |
+| 欄位 | 類型 | 必需 | 描述 | 約束 |
 |-------|------|----------|-------------|-------------|
-| field1 | string | Yes | Description of field1 | Min: 2, Max: 100 characters |
-| field2 | number | Yes | Description of field2 | Min: 0, Max: 1000 |
-| field3 | object | No | Description of field3 | - |
-| field3.nestedField1 | string | Yes | Description | - |
-| field3.nestedField2 | boolean | No | Description | Default: false |
-| field4 | array | No | Description | Max items: 10 |
+| field1 | string | 是 | field1 描述 | 最小: 2、最大: 100 個字元 |
+| field2 | number | 是 | field2 描述 | 最小: 0、最大: 1000 |
+| field3 | object | 否 | field3 描述 | - |
+| field3.nestedField1 | string | 是 | 描述 | - |
+| field3.nestedField2 | boolean | 否 | 描述 | 預設值: false |
+| field4 | array | 否 | 描述 | 最多項: 10 |
 
-#### Response
+#### 回應
 
-**Success Response** (201 Created):
+**成功回應** (201 已建立):
 
 ```http
 HTTP/1.1 201 Created
@@ -90,54 +90,54 @@ Location: /api/v1/{resources}/{id}
 }
 ```
 
-**Response Fields**:
+**回應欄位**:
 
-| Field | Type | Description |
+| 欄位 | 類型 | 描述 |
 |-------|------|-------------|
-| id | string | Unique identifier for the resource |
-| field1 | string | Description |
-| field2 | number | Description |
-| createdAt | string (ISO 8601) | Timestamp when resource was created |
-| updatedAt | string (ISO 8601) | Timestamp when resource was last updated |
-| status | string | Current status of the resource |
+| id | string | 資源的唯一識別碼 |
+| field1 | string | 描述 |
+| field2 | number | 描述 |
+| createdAt | string (ISO 8601) | 建立資源時的時間戳 |
+| updatedAt | string (ISO 8601) | 最後更新資源時的時間戳 |
+| status | string | 資源的目前狀態 |
 
-#### Error Responses
+#### 錯誤回應
 
-**400 Bad Request** - Invalid input:
+**400 不良要求** - 無效輸入:
 
 ```json
 {
   "errorCode": "INVALID_INPUT",
-  "message": "Validation failed",
+  "message": "驗證失敗",
   "timestamp": "2025-01-17T10:00:00Z",
   "path": "/api/v1/{resources}",
   "fieldErrors": [
     {
       "field": "field1",
-      "message": "Field1 must be between 2 and 100 characters",
+      "message": "Field1 必須介於 2 到 100 個字元",
       "rejectedValue": "a"
     }
   ]
 }
 ```
 
-**401 Unauthorized** - Missing or invalid authentication:
+**401 未授權** - 遺漏或無效的驗證:
 
 ```json
 {
   "errorCode": "UNAUTHORIZED",
-  "message": "Authentication required",
+  "message": "需要驗證",
   "timestamp": "2025-01-17T10:00:00Z",
   "path": "/api/v1/{resources}"
 }
 ```
 
-**409 Conflict** - Resource already exists:
+**409 衝突** - 資源已存在:
 
 ```json
 {
   "errorCode": "RESOURCE_EXISTS",
-  "message": "Resource with this identifier already exists",
+  "message": "具有此識別碼的資源已存在",
   "timestamp": "2025-01-17T10:00:00Z",
   "path": "/api/v1/{resources}",
   "context": {
@@ -146,30 +146,30 @@ Location: /api/v1/{resources}/{id}
 }
 ```
 
-**429 Too Many Requests** - Rate limit exceeded:
+**429 要求過多** - 超過速率限制:
 
 ```json
 {
   "errorCode": "RATE_LIMIT_EXCEEDED",
-  "message": "Too many requests. Please try again later.",
+  "message": "要求過多。請稍後再試。",
   "timestamp": "2025-01-17T10:00:00Z",
   "path": "/api/v1/{resources}",
   "retryAfter": 60
 }
 ```
 
-**500 Internal Server Error** - Server error:
+**500 內部伺服器錯誤** - 伺服器錯誤:
 
 ```json
 {
   "errorCode": "INTERNAL_ERROR",
-  "message": "An unexpected error occurred",
+  "message": "發生未預期的錯誤",
   "timestamp": "2025-01-17T10:00:00Z",
   "path": "/api/v1/{resources}"
 }
 ```
 
-#### Examples
+#### 範例
 
 **cURL**:
 
@@ -258,31 +258,31 @@ print(data)
 
 ---
 
-### Get {Resource}
+### 取得 {資源}
 
-Retrieve a specific {resource} by ID.
+按 ID 取得特定的{資源}。
 
-#### Request
+#### 要求
 
-**Method**: `GET`
+**方法**: `GET`
 
-**Endpoint**: `/api/v1/{resources}/{id}`
+**端點**: `/api/v1/{resources}/{id}`
 
-**Headers**:
+**標題**:
 
 ```http
 Authorization: Bearer {access_token}
 ```
 
-**Path Parameters**:
+**路徑參數**:
 
-| Parameter | Type | Required | Description |
+| 參數 | 類型 | 必需 | 描述 |
 |-----------|------|----------|-------------|
-| id | string | Yes | Unique identifier of the resource |
+| id | string | 是 | 資源的唯一識別碼 |
 
-#### Response
+#### 回應
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```http
 HTTP/1.1 200 OK
@@ -299,20 +299,20 @@ Content-Type: application/json
 }
 ```
 
-#### Error Responses
+#### 錯誤回應
 
-**404 Not Found** - Resource not found:
+**404 找不到** - 資源找不到:
 
 ```json
 {
   "errorCode": "RESOURCE_NOT_FOUND",
-  "message": "Resource with ID 'resource-123' not found",
+  "message": "找不到 ID 為 'resource-123' 的資源",
   "timestamp": "2025-01-17T10:00:00Z",
   "path": "/api/v1/{resources}/resource-123"
 }
 ```
 
-#### Examples
+#### 範例
 
 **cURL**:
 
@@ -323,34 +323,34 @@ curl -X GET https://api.example.com/api/v1/{resources}/resource-123 \
 
 ---
 
-### List {Resources}
+### 列出 {資源}
 
-Retrieve a paginated list of {resources}.
+取得分頁的{資源}清單。
 
-#### Request
+#### 要求
 
-**Method**: `GET`
+**方法**: `GET`
 
-**Endpoint**: `/api/v1/{resources}`
+**端點**: `/api/v1/{resources}`
 
-**Headers**:
+**標題**:
 
 ```http
 Authorization: Bearer {access_token}
 ```
 
-**Query Parameters**:
+**查詢參數**:
 
-| Parameter | Type | Required | Description | Default |
+| 參數 | 類型 | 必需 | 描述 | 預設值 |
 |-----------|------|----------|-------------|---------|
-| page | number | No | Page number (0-indexed) | 0 |
-| size | number | No | Number of items per page | 20 |
-| sort | string | No | Sort field and direction (e.g., "createdAt,desc") | "createdAt,desc" |
-| filter | string | No | Filter criteria | - |
+| page | number | 否 | 頁碼（從 0 開始） | 0 |
+| size | number | 否 | 每頁項數 | 20 |
+| sort | string | 否 | 排序欄位和方向（例如 "createdAt,desc"） | "createdAt,desc" |
+| filter | string | 否 | 篩選條件 | - |
 
-#### Response
+#### 回應
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -370,7 +370,7 @@ Authorization: Bearer {access_token}
 }
 ```
 
-#### Examples
+#### 範例
 
 **cURL**:
 
@@ -381,53 +381,53 @@ curl -X GET "https://api.example.com/api/v1/{resources}?page=0&size=20&sort=crea
 
 ---
 
-### Update {Resource}
+### 更新 {資源}
 
-Update an existing {resource}.
+更新現有的{資源}。
 
-#### Request
+#### 要求
 
-**Method**: `PUT`
+**方法**: `PUT`
 
-**Endpoint**: `/api/v1/{resources}/{id}`
+**端點**: `/api/v1/{resources}/{id}`
 
-**Headers**:
+**標題**:
 
 ```http
 Content-Type: application/json
 Authorization: Bearer {access_token}
 ```
 
-**Request Body**: [Same as Create]
+**要求主體**: [與建立相同]
 
-#### Response
+#### 回應
 
-**Success Response** (200 OK): [Same structure as Get]
+**成功回應** (200 OK): [與取得相同結構]
 
-#### Error Responses
+#### 錯誤回應
 
-[Same as Create, plus 404 Not Found]
+[與建立相同，加上 404 找不到]
 
 ---
 
-### Partial Update {Resource}
+### 部分更新 {資源}
 
-Partially update an existing {resource}.
+部分更新現有的{資源}。
 
-#### Request
+#### 要求
 
-**Method**: `PATCH`
+**方法**: `PATCH`
 
-**Endpoint**: `/api/v1/{resources}/{id}`
+**端點**: `/api/v1/{resources}/{id}`
 
-**Headers**:
+**標題**:
 
 ```http
 Content-Type: application/json
 Authorization: Bearer {access_token}
 ```
 
-**Request Body**:
+**要求主體**:
 
 ```json
 {
@@ -435,97 +435,97 @@ Authorization: Bearer {access_token}
 }
 ```
 
-#### Response
+#### 回應
 
-**Success Response** (200 OK): [Same structure as Get]
+**成功回應** (200 OK): [與取得相同結構]
 
 ---
 
-### Delete {Resource}
+### 刪除 {資源}
 
-Delete a {resource}.
+刪除一個{資源}。
 
-#### Request
+#### 要求
 
-**Method**: `DELETE`
+**方法**: `DELETE`
 
-**Endpoint**: `/api/v1/{resources}/{id}`
+**端點**: `/api/v1/{resources}/{id}`
 
-**Headers**:
+**標題**:
 
 ```http
 Authorization: Bearer {access_token}
 ```
 
-#### Response
+#### 回應
 
-**Success Response** (204 No Content):
+**成功回應** (204 無內容):
 
 ```http
 HTTP/1.1 204 No Content
 ```
 
-#### Error Responses
+#### 錯誤回應
 
-**404 Not Found**: Resource not found
+**404 找不到**: 資源找不到
 
-**409 Conflict**: Resource cannot be deleted (e.g., has dependencies)
+**409 衝突**: 無法刪除資源（例如有依賴項）
 
 ---
 
-## Rate Limiting
+## 速率限制
 
-- **Rate Limit**: 1000 requests per hour per user
-- **Headers**:
-  - `X-RateLimit-Limit`: Total requests allowed
-  - `X-RateLimit-Remaining`: Requests remaining
-  - `X-RateLimit-Reset`: Time when limit resets (Unix timestamp)
+- **速率限制**: 每位使用者每小時 1000 個要求
+- **標題**:
+  - `X-RateLimit-Limit`: 允許的總要求數
+  - `X-RateLimit-Remaining`: 剩餘要求
+  - `X-RateLimit-Reset`: 限制重設的時間（Unix 時間戳）
 
-## Pagination
+## 分頁
 
-All list endpoints support pagination:
+所有清單端點都支援分頁：
 
-- Default page size: 20
-- Maximum page size: 100
-- Page numbers are 0-indexed
+- 預設頁面大小: 20
+- 最大頁面大小: 100
+- 頁碼從 0 開始
 
-## Filtering and Sorting
+## 篩選和排序
 
-### Sorting
+### 排序
 
-Use the `sort` parameter: `sort=field,direction`
+使用 `sort` 參數: `sort=field,direction`
 
-- Example: `sort=createdAt,desc`
-- Multiple sorts: `sort=field1,asc&sort=field2,desc`
+- 範例: `sort=createdAt,desc`
+- 多個排序: `sort=field1,asc&sort=field2,desc`
 
-### Filtering
+### 篩選
 
-Use the `filter` parameter with format: `field:operator:value`
+使用 `filter` 參數，格式: `field:operator:value`
 
-- Operators: `eq`, `ne`, `gt`, `lt`, `gte`, `lte`, `like`, `in`
-- Example: `filter=status:eq:active`
-- Multiple filters: `filter=status:eq:active&filter=createdAt:gt:2025-01-01`
+- 運算子: `eq`、`ne`、`gt`、`lt`、`gte`、`lte`、`like`、`in`
+- 範例: `filter=status:eq:active`
+- 多個篩選: `filter=status:eq:active&filter=createdAt:gt:2025-01-01`
 
-## Versioning
+## 版本控制
 
-This API uses URL versioning. The current version is `v1`.
+此 API 使用 URL 版本控制。目前版本是 `v1`。
 
-When breaking changes are introduced, a new version will be released (e.g., `v2`).
+當引入重大變更時，將發行新版本（例如 `v2`）。
 
-## Related Documentation
+## 相關文件
 
-- [Authentication Guide](../authentication.md)
-- [Error Handling](../error-handling.md)
-- [Rate Limiting](../rate-limiting.md)
-- [API Versioning](../versioning.md)
+- [驗證指南](../authentication.md)
+- [錯誤處理](../error-handling.md)
+- [速率限制](../rate-limiting.md)
+- [API 版本控制](../versioning.md)
 
-## Changelog
+## 變更日誌
 
-| Date | Version | Changes |
+| 日期 | 版本 | 變更 |
 |------|---------|---------|
-| YYYY-MM-DD | 1.0 | Initial API version |
+| YYYY-MM-DD | 1.0 | 初始 API 版本 |
 
 ---
 
-**API Template Version**: 1.0  
-**Last Template Update**: 2025-01-17
+**API 模板版本**: 1.0
+**最後模板更新**: 2025-01-17

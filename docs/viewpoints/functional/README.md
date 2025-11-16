@@ -1,49 +1,49 @@
 # Functional Viewpoint
 
-> **Status**: 📝 To be documented  
-> **Last Updated**: 2025-01-17  
-> **Owner**: Product Manager / Architect
+> **狀態**：📝 待撰寫
+> **最後更新**：2025-01-17
+> **負責人**：產品經理 / 架構師
 
-## Overview
+## 概述
 
-The Functional Viewpoint describes the system's functional capabilities, how they're organized into bounded contexts, and how they interact to deliver business value.
+Functional Viewpoint 描述系統的功能能力、如何組織成 bounded contexts，以及它們如何互動以交付業務價值。
 
-## Purpose
+## 目的
 
-This viewpoint answers:
+此 viewpoint 回答：
 
-- What does the system do?
-- What are the main functional capabilities?
-- How are functions organized?
-- What interfaces does the system expose?
+- 系統做什麼？
+- 主要功能能力是什麼？
+- 功能如何組織？
+- 系統暴露哪些介面？
 
-## Stakeholders
+## 利害關係人
 
-- **Primary**: Business analysts, product managers
-- **Secondary**: Developers, architects, QA engineers
+- **主要**：業務分析師、產品經理
+- **次要**：開發人員、架構師、QA 工程師
 
-## Contents
+## 內容
 
-### 📄 Documents
+### 📄 文件
 
-- [Overview](overview.md) - High-level functional description
-- [Bounded Contexts](bounded-contexts.md) - 13 bounded contexts and their responsibilities
-- [Use Cases](use-cases.md) - Key use cases and scenarios
-- [Functional Elements](functional-elements.md) - Functional components and their interactions
-- [Interfaces](interfaces.md) - External interfaces and APIs
+- [Overview](overview.md) - 高階功能描述
+- [Bounded Contexts](bounded-contexts.md) - 13 個 bounded contexts 及其職責
+- [Use Cases](use-cases.md) - 關鍵使用案例和情境
+- [Functional Elements](functional-elements.md) - 功能元件及其互動
+- [Interfaces](interfaces.md) - 外部介面和 APIs
 
-### 📊 Diagrams
+### 📊 圖表
 
-- [Bounded Contexts Overview](../../diagrams/viewpoints/functional/bounded-contexts-overview.puml)
-- [Customer Context](../../diagrams/viewpoints/functional/customer-context.puml)
-- [Order Context](../../diagrams/viewpoints/functional/order-context.puml)
-- [Product Context](../../diagrams/viewpoints/functional/product-context.puml)
+- [Bounded Contexts Overview](../../diagrams/viewpoints/functional/bounded-contexts-overview.puml) - Bounded contexts 概覽
+- [Customer Context](../../diagrams/viewpoints/functional/customer-context.puml) - Customer Context
+- [Order Context](../../diagrams/viewpoints/functional/order-context.puml) - Order Context
+- [Product Context](../../diagrams/viewpoints/functional/product-context.puml) - Product Context
 
-## Key Concepts
+## 關鍵概念
 
 ### Bounded Contexts
 
-The system is organized into 13 bounded contexts following Domain-Driven Design:
+系統按照 Domain-Driven Design 組織成 13 個 bounded contexts：
 
 1. Customer Management
 2. Product Catalog
@@ -59,37 +59,37 @@ The system is organized into 13 bounded contexts following Domain-Driven Design:
 12. Analytics & Reporting
 13. Workflow Orchestration
 
-### Functional Architecture
+### 功能架構
 
-- **Architecture Pattern**: Hexagonal Architecture (Ports & Adapters)
-- **Communication**: Domain Events for cross-context communication
-- **API Style**: RESTful APIs with OpenAPI 3.0 specification
+- **架構模式**：Hexagonal Architecture (Ports & Adapters)
+- **通訊**：Domain Events 用於跨 context 通訊
+- **API 風格**：RESTful APIs 搭配 OpenAPI 3.0 規格
 
-## Related Documentation
+## 相關文件
 
-### Related Viewpoints
+### 相關 Viewpoints
 
-- [Information Viewpoint](../information/README.md) - Data models for each bounded context
-- [Development Viewpoint](../development/README.md) - Code organization by bounded context
-- [Context Viewpoint](../context/README.md) - External system interactions
+- [Information Viewpoint](../information/README.md) - 每個 bounded context 的資料模型
+- [Development Viewpoint](../development/README.md) - 按 bounded context 的程式碼組織
+- [Context Viewpoint](../context/README.md) - 外部系統互動
 
-### Related Perspectives
+### 相關 Perspectives
 
-- [Security Perspective](../../perspectives/security/README.md) - Authentication and authorization
-- [Performance Perspective](../../perspectives/performance/README.md) - API response times
-- [Evolution Perspective](../../perspectives/evolution/README.md) - API versioning
+- [Security Perspective](../../perspectives/security/README.md) - 驗證和授權
+- [Performance Perspective](../../perspectives/performance/README.md) - API 回應時間
+- [Evolution Perspective](../../perspectives/evolution/README.md) - API 版本控制
 
-### Related Guides
+### 相關指南
 
-- [API Documentation](../../api/README.md) - Detailed API reference
-- [Development Guide](../../development/README.md) - How to add new features
+- [API Documentation](../../api/README.md) - 詳細 API 參考
+- [Development Guide](../../development/README.md) - 如何新增功能
 
-## Quick Links
+## 快速連結
 
-- [Back to All Viewpoints](../README.md)
-- [Architecture Overview](../../architecture/README.md)
-- [Main Documentation](../../README.md)
+- [返回所有 Viewpoints](../README.md)
+- [架構概覽](../../architecture/README.md)
+- [主文件](../../README.md)
 
 ---
 
-**Note**: This viewpoint is currently being documented. Check back soon for complete content.
+**注意**：此 viewpoint 目前正在撰寫中。請稍後查看完整內容。

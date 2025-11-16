@@ -1,48 +1,48 @@
-# README.md Update Log
+# README.md 更新日誌
 
-## 2025-01-20: Added Make Commands Documentation
+## 2025-01-20: 新增 Make Commands 文件
 
-### Changes Made
+### 變更內容
 
-Added comprehensive documentation for Make commands to the root `README.md` file.
+在根目錄的 `README.md` 檔案中新增了完整的 Make commands 文件。
 
-### New Sections Added
+### 新增的章節
 
-#### 1. Development Commands (in Quick Start)
+#### 1. Development Commands (在 Quick Start 中)
 
-- Quick reference for common make commands
-- Organized by category (Diagrams, Development Setup, Pre-commit)
-- Includes practical examples
+- 常用 make commands 的快速參考
+- 依類別組織 (Diagrams, Development Setup, Pre-commit)
+- 包含實用範例
 
-#### 2. Development Workflow (New Section)
+#### 2. Development Workflow (新章節)
 
-- **Make Commands Reference**: Detailed explanation of all commands
+- **Make Commands Reference**: 所有指令的詳細說明
   - Diagram Management commands
   - Development Setup commands
   - Pre-commit Workflow
   - Maintenance Commands
-  
-- **Git Hooks**: How to set up and use Git hooks
+
+- **Git Hooks**: 如何設定和使用 Git hooks
   - Pre-commit hook
   - Commit message hook
   - Pre-push hook
-  - Commit message format guide
-  - How to bypass hooks when necessary
-  
-- **Automated Validation**: CI/CD integration
+  - Commit message 格式指南
+  - 如何在必要時繞過 hooks
+
+- **Automated Validation**: CI/CD 整合
   - GitHub Actions workflow
-  - What gets validated automatically
+  - 自動驗證的項目
 
-### Location in README
+### README 中的位置
 
-The new content is inserted between:
+新內容插入在:
 
-- **Before**: "Quick Start" section
-- **After**: "Testing Strategy" section
+- **之前**: "Quick Start" 章節
+- **之後**: "Testing Strategy" 章節
 
-### Quick Reference
+### 快速參考
 
-Users can now find:
+使用者現在可以找到:
 
 ```bash
 # In Quick Start section
@@ -58,22 +58,22 @@ make pre-commit     # Before committing
 # - CI/CD validation
 ```
 
-### Benefits
+### 優點
 
-1. **Discoverability**: Developers can easily find available commands
-2. **Onboarding**: New team members have clear setup instructions
-3. **Consistency**: Standardized workflow across the team
-4. **Documentation**: All commands documented in one place
+1. **可發現性**: 開發人員可以輕鬆找到可用的指令
+2. **新進人員引導**: 新團隊成員有清楚的設定說明
+3. **一致性**: 團隊之間的標準化工作流程
+4. **文件**: 所有指令都記錄在一個地方
 
-### Related Files
+### 相關檔案
 
-- `README.md` - Updated with make commands documentation
-- `Makefile` - Contains all command implementations
-- `scripts/setup-git-hooks.sh` - Git hooks setup script
-- `.github/workflows/validate-documentation.yml` - CI/CD validation
+- `README.md` - 已更新 make commands 文件
+- `Makefile` - 包含所有指令實作
+- `scripts/setup-git-hooks.sh` - Git hooks 設定腳本
+- `.github/workflows/validate-documentation.yml` - CI/CD 驗證
 
 ---
 
-**Updated By**: Development Team  
-**Date**: 2025-01-20  
-**Related**: Hooks Cleanup Initiative
+**更新者**: Development Team
+**日期**: 2025-01-20
+**相關**: Hooks Cleanup Initiative

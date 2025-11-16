@@ -1,45 +1,45 @@
 # Performance & Scalability Perspective
 
-> **Status**: 📝 To be documented  
-> **Last Updated**: 2025-01-17  
+> **Status**: 📝 待文檔化
+> **Last Updated**: 2025-01-17
 > **Owner**: Performance Engineer
 
 ## Overview
 
-The Performance & Scalability Perspective ensures the system meets response time requirements and can scale to handle load.
+Performance & Scalability Perspective 確保系統滿足回應時間要求並能擴展以處理負載。
 
-## Key Concerns
+## 關鍵關注點
 
-- API response times
-- Database query performance
-- Caching strategies
-- Horizontal and vertical scaling
+- API 回應時間
+- 資料庫查詢效能
+- 快取策略
+- 水平和垂直擴展
 
 ## Quality Attribute Scenarios
 
-### Scenario 1: Peak Load Handling
+### Scenario 1: 尖峰負載處理
 
-- **Source**: Marketing campaign
-- **Stimulus**: User load increases from 100 to 1000 concurrent users
-- **Environment**: Current system at 60% capacity
-- **Artifact**: Web application tier
-- **Response**: System auto-scales additional instances
-- **Response Measure**: Maintains response time ≤ 2s, handles 1000 users
+- **Source**: 行銷活動
+- **Stimulus**: 使用者負載從 100 個並行使用者增加到 1000 個
+- **Environment**: 當前系統在 60% 容量
+- **Artifact**: Web 應用程式層
+- **Response**: 系統自動擴展額外的實例
+- **Response Measure**: 維持回應時間 ≤ 2s，處理 1000 個使用者
 
-## Performance Targets
+## Performance 目標
 
 - **Critical APIs**: ≤ 500ms (95th percentile)
 - **Business APIs**: ≤ 1000ms (95th percentile)
 - **Database Queries**: ≤ 100ms (95th percentile)
 
-## Affected Viewpoints
+## 影響的視角
 
 - [Functional Viewpoint](../../viewpoints/functional/README.md) - API performance
-- [Information Viewpoint](../../viewpoints/information/README.md) - Database optimization
-- [Concurrency Viewpoint](../../viewpoints/concurrency/README.md) - Parallel processing
+- [Information Viewpoint](../../viewpoints/information/README.md) - 資料庫優化
+- [Concurrency Viewpoint](../../viewpoints/concurrency/README.md) - 並行處理
 - [Deployment Viewpoint](../../viewpoints/deployment/README.md) - Auto-scaling
 
-## Quick Links
+## 快速連結
 
-- [Back to All Perspectives](../README.md)
-- [Main Documentation](../../README.md)
+- [回到所有 Perspectives](../README.md)
+- [主文檔](../../README.md)

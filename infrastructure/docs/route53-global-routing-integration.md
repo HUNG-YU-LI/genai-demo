@@ -1,72 +1,70 @@
-# Route53 Global Routing Stack Integration Guide
+# Route53 Global Routing Stack 整合指南
 
-## Overview
+## 概述
 
-The `Route53GlobalRoutingStack` extends the existing Route53 failover capabilities to provide true 
-Active-Active multi-region DNS routing with intelligent traffic distribution, real-time health monitoring, 
-and A/B testing capabilities.
+`Route53GlobalRoutingStack` 擴展了現有的 Route53 容錯移轉功能，提供真正的 Active-Active 多區域 DNS 路由，具有智能流量分配、即時健康監控和 A/B 測試功能。
 
-## Key Features
+## 主要功能
 
-### 🌍 **Geolocation-Based Routing**
+### 🌍 **基於地理位置的路由**
 
-- Routes traffic based on user's geographic location
-- Optimizes performance by directing users to nearest region
-- Supports continent-level routing (North America, Europe, Asia)
-- Includes default fallback for unmatched locations
+- 根據使用者的地理位置路由流量
+- 將使用者導向最近的區域以優化效能
+- 支援洲級路由（北美、歐洲、亞洲）
+- 包含未匹配位置的預設後援
 
-### ⚖️ **Weighted Routing for A/B Testing**
+### ⚖️ **用於 A/B 測試的加權路由**
 
-- Configurable traffic distribution across regions
-- Default split: Primary (70%), Secondary (20%), Tertiary (10%)
-- Enables controlled rollouts and feature testing
-- Real-time traffic distribution monitoring
+- 可配置的跨區域流量分配
+- 預設分配：主要（70%）、次要（20%）、第三（10%）
+- 啟用受控的推出和功能測試
+- 即時流量分配監控
 
-### 🚀 **Latency-Based Routing**
+### 🚀 **基於延遲的路由**
 
-- Routes to region with lowest latency for optimal performance
-- Automatic performance optimization based on real-time measurements
-- Fallback mechanism when regions become unavailable
+- 路由到延遲最低的區域以獲得最佳效能
+- 基於即時測量的自動效能優化
+- 當區域變得不可用時的後援機制
 
-### 🏥 **Enhanced Health Monitoring**
+### 🏥 **增強的健康監控**
 
-- 30-second health check intervals (configurable)
-- HTTPS health checks on `/actuator/health` endpoint
-- Multi-region health check execution for reliability
-- Latency measurement and SNI support
+- 30 秒的健康檢查間隔（可配置）
+- `/actuator/health` 端點上的 HTTPS 健康檢查
+- 多區域健康檢查執行以提高可靠性
+- 延遲測量和 SNI 支援
 
-## Integration with Existing Infrastructure
+## 與現有基礎設施的整合
 
-### Based on Existing Route53 Failover Stack
+### 基於現有的 Route53 Failover Stack
 
 ```typescript
-// Extends existing route53-failover-stack.ts functionality
-// Maintains backward compatibility with current failover setup
-// Adds new routing types while preserving existing health checks
+// 擴展現有的 route53-failover-stack.ts 功能
+// 維持與當前容錯移轉設定的向後相容性
+// 在保留現有健康檢查的同時新增新的路由類型
 ```
 
-### Certificate Stack Integration
+### Certificate Stack 整合
 
 ```typescript
-// Uses existing SSL certificates from certificate-stack.ts
-// Leverages existing hosted zone configuration
-// Maintains certificate validation and monitoring
+// 使用來自 certificate-stack.ts 的現有 SSL 憑證
+// 利用現有的託管區域配置
+// 維護憑證驗證和監控
 ```
 
-### Core Infrastructure Integration
+### Core Infrastructure 整合
 
 ```typescript
-// Integrates with existing ALB from core-infrastructure-stack.ts
-// Uses existing load balancer health check endpoints
-// Maintains existing monitoring and alerting systems
+// 與來自 core-infrastructure-stack.ts 的現有 ALB 整合
+// 使用現有的負載平衡器健康檢查端點
+// 維護現有的監控和告警系統
 ```
 
-## Usage Example
+## 使用範例
 
 ```typescript
 import { Route53GlobalRoutingStack } from '../src/stacks/route53-global-routing-stack';
 
-// Create global routing with existing infrastructure
+// 使用現有基礎設施建立全域路由
 const globalRouting = new Route53GlobalRoutingStack(this, 'GlobalRouting', {
     environment: 'production',
     projectName: 'genai-demo',
@@ -77,169 +75,168 @@ const globalRouting = new Route53GlobalRoutingStack(this, 'GlobalRouting', {
         primary: {
             region: 'us-east-1',
             loadBalancer: primaryInfraStack.loadBalancer,
-            weight: 70 // 70% traffic for A/B testing
+            weight: 70 // 70% 流量用於 A/B 測試
         },
         secondary: {
             region: 'eu-west-1',
             loadBalancer: secondaryInfraStack.loadBalancer,
-            weight: 20 // 20% traffic for A/B testing
+            weight: 20 // 20% 流量用於 A/B 測試
         },
         tertiary: {
             region: 'ap-southeast-1',
             loadBalancer: tertiaryInfraStack.loadBalancer,
-            weight: 10 // 10% traffic for A/B testing
+            weight: 10 // 10% 流量用於 A/B 測試
         }
     },
     monitoringConfig: {
-        healthCheckInterval: 30, // 30-second intervals
-        failureThreshold: 3,     // 3 failures trigger failover
-        enableABTesting: true,   // Enable weighted routing
-        enableGeolocationRouting: true // Enable geo routing
+        healthCheckInterval: 30, // 30 秒間隔
+        failureThreshold: 3,     // 3 次失敗觸發容錯移轉
+        enableABTesting: true,   // 啟用加權路由
+        enableGeolocationRouting: true // 啟用地理路由
     }
 });
 ```
 
-## DNS Endpoints Created
+## 建立的 DNS 端點
 
 ### 1. Geolocation Routing
 
-- **Endpoint**: `api-geo.{domain}`
-- **Purpose**: Routes based on user's geographic location
-- **Routing Logic**:
-  - North America → Primary region
-  - Europe → Secondary region  
-  - Asia → Tertiary region
-  - Default → Primary region
+- **端點**：`api-geo.{domain}`
+- **用途**：根據使用者的地理位置進行路由
+- **路由邏輯**：
+  - 北美 → 主要區域
+  - 歐洲 → 次要區域
+  - 亞洲 → 第三區域
+  - 預設 → 主要區域
 
-### 2. Weighted Routing (A/B Testing)
+### 2. Weighted Routing（A/B 測試）
 
-- **Endpoint**: `api-weighted.{domain}`
-- **Purpose**: Distributes traffic based on configured weights
-- **Default Distribution**:
-  - Primary: 70%
-  - Secondary: 20%
-  - Tertiary: 10%
+- **端點**：`api-weighted.{domain}`
+- **用途**：根據配置的權重分配流量
+- **預設分配**：
+  - 主要：70%
+  - 次要：20%
+  - 第三：10%
 
 ### 3. Latency-Based Routing
 
-- **Endpoint**: `api-latency.{domain}`
-- **Purpose**: Routes to region with lowest latency
-- **Benefits**: Optimal performance for each user
+- **端點**：`api-latency.{domain}`
+- **用途**：路由到延遲最低的區域
+- **優勢**：為每個使用者提供最佳效能
 
-## Monitoring and Alerting
+## 監控和告警
 
-### CloudWatch Dashboard
+### CloudWatch 儀表板
 
-- Health check status for all regions
-- DNS query metrics by routing type
-- Latency comparison across regions
-- Traffic distribution visualization
+- 所有區域的健康檢查狀態
+- 按路由類型的 DNS 查詢指標
+- 跨區域的延遲比較
+- 流量分配視覺化
 
-### Automated Alerts
+### 自動化告警
 
-- Health check failure notifications
-- High latency warnings (>2 seconds)
-- Global system health composite alarms
-- DNS query rate monitoring (DDoS detection)
+- 健康檢查失敗通知
+- 高延遲警告（> 2 秒）
+- 全域系統健康複合警報
+- DNS 查詢率監控（DDoS 偵測）
 
-### SNS Integration
+### SNS 整合
 
-- Centralized alerting topic for all routing events
-- Integration with existing notification systems
-- Escalation policies for critical failures
+- 所有路由事件的集中告警主題
+- 與現有通知系統整合
+- 關鍵失敗的升級政策
 
-## Configuration Options
+## 配置選項
 
-### Health Check Configuration
+### 健康檢查配置
 
 ```typescript
 monitoringConfig: {
-    healthCheckInterval: 30,    // Seconds between checks
-    failureThreshold: 3,        // Failures before failover
-    enableABTesting: true,      // Enable weighted routing
-    enableGeolocationRouting: true // Enable geo routing
+    healthCheckInterval: 30,    // 檢查之間的秒數
+    failureThreshold: 3,        // 容錯移轉前的失敗次數
+    enableABTesting: true,      // 啟用加權路由
+    enableGeolocationRouting: true // 啟用地理路由
 }
 ```
 
-### Traffic Distribution
+### 流量分配
 
 ```typescript
 regions: {
-    primary: { weight: 70 },    // 70% of traffic
-    secondary: { weight: 20 },  // 20% of traffic
-    tertiary: { weight: 10 }    // 10% of traffic
+    primary: { weight: 70 },    // 70% 的流量
+    secondary: { weight: 20 },  // 20% 的流量
+    tertiary: { weight: 10 }    // 10% 的流量
 }
 ```
 
-## Requirements Fulfilled
+## 滿足的需求
 
-### ✅ Requirement 4.1.3 - Global Routing
+### ✅ 需求 4.1.3 - Global Routing
 
-- ✅ Geolocation-based intelligent routing
-- ✅ SSL certificate integration from existing Certificate Stack
-- ✅ Real-time health checks with 30-second intervals
-- ✅ Weighted routing for A/B testing support
-- ✅ Integration with existing monitoring systems
+- ✅ 基於地理位置的智能路由
+- ✅ 從現有 Certificate Stack 整合 SSL 憑證
+- ✅ 具有 30 秒間隔的即時健康檢查
+- ✅ 用於 A/B 測試支援的加權路由
+- ✅ 與現有監控系統整合
 
-## Deployment Considerations
+## 部署考量
 
-### Prerequisites
+### 前置條件
 
-1. Existing Certificate Stack deployed with SSL certificates
-2. Core Infrastructure Stack with Application Load Balancers
-3. Multi-region deployment with healthy endpoints
-4. Route53 hosted zone configured and accessible
+1. 已部署帶有 SSL 憑證的現有 Certificate Stack
+2. 具有 Application Load Balancers 的 Core Infrastructure Stack
+3. 具有健康端點的多區域部署
+4. 已配置並可存取的 Route53 託管區域
 
-### Deployment Order
+### 部署順序
 
-1. Deploy Certificate Stack (existing)
-2. Deploy Core Infrastructure Stacks in all regions (existing)
-3. Deploy Route53 Global Routing Stack (new)
-4. Verify health checks and DNS resolution
-5. Test traffic distribution and failover scenarios
+1. 部署 Certificate Stack（現有）
+2. 在所有區域部署 Core Infrastructure Stacks（現有）
+3. 部署 Route53 Global Routing Stack（新）
+4. 驗證健康檢查和 DNS 解析
+5. 測試流量分配和容錯移轉場景
 
-### Testing Checklist
+### 測試檢查清單
 
-- [ ] Health checks pass for all regions
-- [ ] DNS resolution works for all endpoint types
-- [ ] Geolocation routing directs traffic correctly
-- [ ] Weighted routing distributes traffic as configured
-- [ ] Latency routing selects optimal region
-- [ ] Failover works when regions become unhealthy
-- [ ] Monitoring dashboard shows accurate metrics
-- [ ] Alerts trigger correctly for failure scenarios
+- [ ] 所有區域的健康檢查通過
+- [ ] 所有端點類型的 DNS 解析正常
+- [ ] 地理位置路由正確導向流量
+- [ ] 加權路由按配置分配流量
+- [ ] 延遲路由選擇最佳區域
+- [ ] 當區域變得不健康時容錯移轉正常運作
+- [ ] 監控儀表板顯示準確的指標
+- [ ] 失敗場景正確觸發告警
 
-## Troubleshooting
+## 疑難排解
 
-### Common Issues
+### 常見問題
 
-1. **Health checks failing**: Verify `/actuator/health` endpoint accessibility
-2. **DNS not resolving**: Check hosted zone configuration and propagation
-3. **Incorrect routing**: Verify region configuration and weights
-4. **Missing metrics**: Ensure CloudWatch permissions are configured
+1. **健康檢查失敗**：驗證 `/actuator/health` 端點可存取性
+2. **DNS 無法解析**：檢查託管區域配置和傳播
+3. **路由不正確**：驗證區域配置和權重
+4. **缺少指標**：確保配置了 CloudWatch 權限
 
-### Debug Commands
+### 除錯指令
 
 ```bash
-# Test DNS resolution
+# 測試 DNS 解析
 dig api-geo.genai-demo.com
 dig api-weighted.genai-demo.com
 dig api-latency.genai-demo.com
 
-# Check health check status
+# 檢查健康檢查狀態
 aws route53 get-health-check --health-check-id <health-check-id>
 
-# Monitor CloudWatch metrics
+# 監控 CloudWatch 指標
 aws cloudwatch get-metric-statistics --namespace AWS/Route53 --metric-name HealthCheckStatus
 ```
 
-## Performance Targets
+## 效能目標
 
-- **Global P95 Response Time**: < 200ms
-- **Health Check Interval**: 30 seconds
-- **Failover Time**: < 2 minutes (RTO)
-- **Data Loss**: < 1 second (RPO)
-- **System Availability**: ≥ 99.99%
+- **全域 P95 回應時間**：< 200ms
+- **健康檢查間隔**：30 秒
+- **容錯移轉時間**：< 2 分鐘（RTO）
+- **資料遺失**：< 1 秒（RPO）
+- **系統可用性**：≥ 99.99%
 
-This implementation provides the foundation for true Active-Active multi-region architecture with 
-intelligent DNS routing, comprehensive monitoring, and automated failover capabilities.
+此實作為真正的 Active-Active 多區域架構提供了基礎，具有智能 DNS 路由、全面監控和自動化容錯移轉功能。

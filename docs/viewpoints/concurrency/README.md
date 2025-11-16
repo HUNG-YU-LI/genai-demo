@@ -1,69 +1,69 @@
 # Concurrency Viewpoint
 
-> **Status**: 📝 To be documented  
-> **Last Updated**: 2025-01-17  
-> **Owner**: Senior Developer / Architect
+> **狀態**：📝 待撰寫
+> **最後更新**：2025-01-17
+> **負責人**：資深開發人員 / 架構師
 
-## Overview
+## 概述
 
-The Concurrency Viewpoint describes how the system handles concurrent and parallel operations, including synchronization mechanisms and state management.
+Concurrency Viewpoint 描述系統如何處理並行和平行操作，包括同步機制和狀態管理。
 
-## Purpose
+## 目的
 
-This viewpoint answers:
+此 viewpoint 回答：
 
-- What operations can run in parallel?
-- How is concurrency managed?
-- What are the synchronization mechanisms?
-- How are race conditions prevented?
+- 哪些操作可以平行執行？
+- 並行如何管理？
+- 同步機制是什麼？
+- 如何防止競態條件？
 
-## Stakeholders
+## 利害關係人
 
-- **Primary**: Developers, performance engineers
-- **Secondary**: Architects, operations team
+- **主要**：開發人員、效能工程師
+- **次要**：架構師、維運團隊
 
-## Contents
+## 內容
 
-### 📄 Documents
+### 📄 文件
 
-- [Overview](overview.md) - Concurrency model and strategies
-- [Sync vs Async Operations](sync-async-operations.md) - Operation classification
-- [Synchronization Mechanisms](synchronization.md) - Locking and coordination
-- [State Management](state-management.md) - Stateless vs stateful components
+- [Overview](overview.md) - 並行模型和策略
+- [Sync vs Async Operations](sync-async-operations.md) - 操作分類
+- [Synchronization Mechanisms](synchronization.md) - 鎖定和協調
+- [State Management](state-management.md) - 無狀態 vs 有狀態元件
 
-### 📊 Diagrams
+### 📊 圖表
 
-- Concurrency model diagram
-- Thread pool configuration
-- Distributed locking sequence diagrams
+- 並行模型圖
+- 執行緒池配置
+- 分散式鎖定序列圖
 
-## Key Concepts
+## 關鍵概念
 
-### Concurrency Model
+### 並行模型
 
-- **Synchronous**: Customer registration, payment processing
-- **Asynchronous**: Email notifications, analytics collection
-- **Parallel**: Product search, inventory checks
+- **同步**：客戶註冊、付款處理
+- **非同步**：電子郵件通知、分析收集
+- **平行**：產品搜尋、庫存檢查
 
-### Synchronization
+### 同步化
 
-- **Distributed Locking**: Redis-based locks for critical sections
-- **Optimistic Locking**: JPA version fields
-- **Transaction Boundaries**: Spring @Transactional
+- **分散式鎖定**：基於 Redis 的關鍵區段鎖
+- **樂觀鎖定**：JPA 版本欄位
+- **交易邊界**：Spring @Transactional
 
-## Related Documentation
+## 相關文件
 
-### Related Viewpoints
+### 相關 Viewpoints
 
-- [Information Viewpoint](../information/README.md) - Data consistency
-- [Deployment Viewpoint](../deployment/README.md) - Distributed system considerations
+- [Information Viewpoint](../information/README.md) - 資料一致性
+- [Deployment Viewpoint](../deployment/README.md) - 分散式系統考量
 
-### Related Perspectives
+### 相關 Perspectives
 
-- [Performance Perspective](../../perspectives/performance/README.md) - Concurrency and performance
-- [Availability Perspective](../../perspectives/availability/README.md) - Fault tolerance
+- [Performance Perspective](../../perspectives/performance/README.md) - 並行和效能
+- [Availability Perspective](../../perspectives/availability/README.md) - 容錯
 
-## Quick Links
+## 快速連結
 
-- [Back to All Viewpoints](../README.md)
-- [Main Documentation](../../README.md)
+- [返回所有 Viewpoints](../README.md)
+- [主文件](../../README.md)

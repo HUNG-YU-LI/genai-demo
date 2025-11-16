@@ -1,53 +1,53 @@
-# Rozanski & Woods Architecture Methodology Guide
+# Rozanski & Woods Architecture 方法論指南
 
-> **Complete Guide to Viewpoints and Perspectives for Software Architecture Documentation**
+> **軟體 Architecture 文件的 Viewpoints 和 Perspectives 完整指南**
 
-## 📚 Table of Contents
+## 📚 目錄
 
-- [Introduction](#introduction)
-- [Methodology Overview](#methodology-overview)
-- [Viewpoints (System Structure)](#viewpoints-system-structure)
-- [Perspectives (Quality Attributes)](#perspectives-quality-attributes)
-- [How to Use This Guide](#how-to-use-this-guide)
-- [Practical Examples](#practical-examples)
-- [References](#references)
-
----
-
-## Introduction
-
-### What is Rozanski & Woods Methodology
-
-The Rozanski & Woods methodology is a comprehensive approach to software architecture documentation that separates concerns into:
-
-1. **Viewpoints** - Describe **WHAT** the system is and **HOW** it's structured
-2. **Perspectives** - Describe **QUALITY ATTRIBUTES** that cut across multiple viewpoints
-
-### Why Use This Methodology
-
-**Benefits:**
-
-- ✅ **Systematic Coverage**: Ensures no architectural aspect is overlooked
-- ✅ **Stakeholder Communication**: Different viewpoints for different audiences
-- ✅ **Quality Focus**: Perspectives ensure quality attributes are addressed
-- ✅ **Maintainability**: Clear structure makes documentation easier to maintain
-- ✅ **Traceability**: Links requirements to architecture decisions
-
-**When to Use:**
-
-- Designing new systems
-- Documenting existing systems
-- Architecture reviews
-- Stakeholder communication
-- Compliance and audit requirements
+- [簡介](#簡介)
+- [方法論總覽](#方法論總覽)
+- [Viewpoints (系統結構)](#viewpoints-系統結構)
+- [Perspectives (品質屬性)](#perspectives-品質屬性)
+- [如何使用本指南](#如何使用本指南)
+- [實務範例](#實務範例)
+- [參考資料](#參考資料)
 
 ---
 
-## Methodology Overview
+## 簡介
 
-### The Two-Dimensional Model
+### 什麼是 Rozanski & Woods 方法論
 
-The Rozanski & Woods methodology uses a two-dimensional model to comprehensively describe software architecture:
+Rozanski & Woods 方法論是一種全面的軟體架構文件方法，將關注點分為：
+
+1. **Viewpoints** - 描述系統**是什麼**以及**如何**結構化
+2. **Perspectives** - 描述跨越多個 viewpoints 的**品質屬性**
+
+### 為什麼使用這個方法論
+
+**優點：**
+
+- ✅ **系統化涵蓋**：確保不會遺漏任何架構面向
+- ✅ **利害關係人溝通**：不同 viewpoints 服務不同受眾
+- ✅ **品質焦點**：Perspectives 確保品質屬性得到處理
+- ✅ **可維護性**：清晰的結構使文件更易於維護
+- ✅ **可追溯性**：將需求連結到架構決策
+
+**使用時機：**
+
+- 設計新系統
+- 記錄現有系統
+- 架構審查
+- 利害關係人溝通
+- 合規與稽核需求
+
+---
+
+## 方法論總覽
+
+### 二維模型
+
+Rozanski & Woods 方法論使用二維模型來全面描述軟體架構：
 
 ```mermaid
 graph LR
@@ -60,7 +60,7 @@ graph LR
         V5["Deployment Viewpoint<br/><br/>How to deploy<br/>Infrastructure"]
         V6["Operational Viewpoint<br/><br/>How to operate<br/>Monitoring & maintenance"]
     end
-    
+
     subgraph PERSPECTIVES["🎯 PERSPECTIVES - Quality Dimension"]
         direction TB
         P1["Security Perspective<br/><br/>Protection & Authentication<br/>Data encryption"]
@@ -69,27 +69,27 @@ graph LR
         P4["Evolution Perspective<br/><br/>Changeability<br/>Maintainability"]
         P5["Scalability Perspective<br/><br/>Growth capability<br/>Load handling"]
     end
-    
+
     P1 -.->|"Applied across all viewpoints"| V1
     P1 -.-> V2
     P1 -.-> V3
     P1 -.-> V4
     P1 -.-> V5
     P1 -.-> V6
-    
+
     P2 -.->|"Applied to relevant viewpoints"| V1
     P2 -.-> V2
     P2 -.-> V3
-    
+
     P3 -.->|"Applied to operational aspects"| V5
     P3 -.-> V6
-    
+
     P4 -.->|"Applied to development aspects"| V4
     P4 -.-> V1
-    
+
     P5 -.->|"Applied to deployment aspects"| V5
     P5 -.-> V3
-    
+
     style VIEWPOINTS fill:#e1f5ff,stroke:#0066cc,stroke-width:3px
     style PERSPECTIVES fill:#fff4e1,stroke:#ff9900,stroke-width:3px
     style V1 fill:#b3d9ff,stroke:#0066cc,stroke-width:2px
@@ -105,83 +105,83 @@ graph LR
     style P5 fill:#ffe6cc,stroke:#ff9900,stroke-width:2px
 ```
 
-### Viewpoints vs Perspectives: Core Differences
+### Viewpoints vs Perspectives：核心差異
 
-#### 📐 Viewpoints - "Structure Dimension"
+#### 📐 Viewpoints - "結構維度"
 
-**Definition**: Describes the **structure and organization** of the system, answering "what the system is" and "how it's built"
+**定義**：描述系統的**結構與組織**，回答「系統是什麼」和「如何建構」
 
-**Characteristics**:
-- 🏗️ **Structural**: Focuses on static and dynamic structure of the system
-- 📦 **Modular**: Each viewpoint independently describes one aspect of the system
-- 👥 **Stakeholder-oriented**: Different viewpoints serve different stakeholders
-- 🎯 **Concrete**: Describes specific components, interfaces, deployments, etc.
+**特性**：
+- 🏗️ **結構性**：專注於系統的靜態和動態結構
+- 📦 **模組化**：每個 viewpoint 獨立描述系統的一個面向
+- 👥 **以利害關係人為導向**：不同 viewpoints 服務不同利害關係人
+- 🎯 **具體的**：描述特定元件、介面、部署等
 
-**Questions Answered**:
-- **Functional**: What capabilities does the system provide?
-- **Information**: How is data stored and flows?
-- **Concurrency**: How is concurrency handled?
-- **Development**: How is code organized?
-- **Deployment**: How is it deployed to environments?
-- **Operational**: How is it monitored and operated?
+**回答的問題**：
+- **Functional**：系統提供哪些能力？
+- **Information**：資料如何儲存和流動？
+- **Concurrency**：如何處理併發？
+- **Development**：程式碼如何組織？
+- **Deployment**：如何部署到環境？
+- **Operational**：如何監控和操作？
 
-**Example**:
+**範例**：
 ```
-Functional Viewpoint describes:
-- Customer Management module provides registration, login, profile management
-- Order module provides order placement, query, cancellation
-- These modules interact via REST APIs
-```
-
----
-
-#### 🎯 Perspectives - "Quality Dimension"
-
-**Definition**: Describes **quality attributes** of the system, answering "how good the system is" and "how to ensure quality"
-
-**Characteristics**:
-- 🌐 **Cross-cutting**: Spans across all viewpoints, affecting the entire system
-- 📊 **Quality-oriented**: Focuses on non-functional requirements
-- 🎚️ **Measurable**: Usually has clear metrics and targets
-- 🔄 **Continuous**: Requires continuous attention throughout development
-
-**Questions Answered**:
-- **Security**: Is the system secure enough? How to protect it?
-- **Performance**: Is the system fast enough? How much load can it handle?
-- **Availability**: Is the system stable enough? How to recover from failures?
-- **Evolution**: Is the system easy to modify? How to evolve?
-- **Scalability**: Can the system scale? How to scale?
-
-**Example**:
-```
-Security Perspective applied to:
-- Functional: Implement authentication and authorization
-- Information: Encrypt sensitive data
-- Deployment: Configure firewalls and network isolation
-- Operational: Monitor security events and anomalous logins
+Functional Viewpoint 描述：
+- Customer Management 模組提供註冊、登入、個人資料管理
+- Order 模組提供訂單下單、查詢、取消
+- 這些模組透過 REST APIs 互動
 ```
 
 ---
 
-### Complementary Relationship: How They Work Together
+#### 🎯 Perspectives - "品質維度"
 
-#### 🔄 Viewpoints Provide Structure, Perspectives Ensure Quality
+**定義**：描述系統的**品質屬性**，回答「系統有多好」和「如何確保品質」
+
+**特性**：
+- 🌐 **跨領域**：橫跨所有 viewpoints，影響整個系統
+- 📊 **品質導向**：專注於非功能性需求
+- 🎚️ **可測量**：通常有明確的指標和目標
+- 🔄 **持續性**：在整個開發過程中需要持續關注
+
+**回答的問題**：
+- **Security**：系統是否足夠安全？如何保護？
+- **Performance**：系統是否足夠快？能承受多少負載？
+- **Availability**：系統是否足夠穩定？如何從故障中恢復？
+- **Evolution**：系統是否易於修改？如何演進？
+- **Scalability**：系統能否擴展？如何擴展？
+
+**範例**：
+```
+Security Perspective 應用於：
+- Functional：實作認證和授權
+- Information：加密敏感資料
+- Deployment：配置防火牆和網路隔離
+- Operational：監控安全事件和異常登入
+```
+
+---
+
+### 互補關係：它們如何協同運作
+
+#### 🔄 Viewpoints 提供結構，Perspectives 確保品質
 
 ```mermaid
 graph LR
-    A["📐 Functional Viewpoint<br/><br/>Define login feature<br/>User authentication flow<br/>Session management"] 
-    B["🎯 Security Perspective<br/><br/>Ensure login security<br/>Protect credentials<br/>Prevent attacks"]
-    C["✅ Implementation Solution<br/><br/>JWT tokens for sessions<br/>Multi-Factor Authentication<br/>Password encryption bcrypt<br/>Rate limiting"]
-    
-    D["📐 Deployment Viewpoint<br/><br/>Define deployment architecture<br/>Infrastructure setup<br/>Service distribution"]
-    E["🎯 Availability Perspective<br/><br/>Ensure high availability<br/>Minimize downtime<br/>Fault tolerance"]
-    F["✅ Implementation Solution<br/><br/>Multi-region deployment<br/>Load balancing ALB/NLB<br/>Auto-scaling groups<br/>Health checks"]
-    
-    A -->|"Apply quality concerns"| B
-    B -->|"Results in"| C
-    D -->|"Apply quality concerns"| E
-    E -->|"Results in"| F
-    
+    A["📐 Functional Viewpoint<br/><br/>定義登入功能<br/>使用者認證流程<br/>會話管理"]
+    B["🎯 Security Perspective<br/><br/>確保登入安全<br/>保護憑證<br/>防止攻擊"]
+    C["✅ 實作方案<br/><br/>JWT tokens 用於會話<br/>多因素認證<br/>密碼加密 bcrypt<br/>速率限制"]
+
+    D["📐 Deployment Viewpoint<br/><br/>定義部署架構<br/>基礎設施設定<br/>服務分佈"]
+    E["🎯 Availability Perspective<br/><br/>確保高可用性<br/>最小化停機時間<br/>容錯"]
+    F["✅ 實作方案<br/><br/>多區域部署<br/>負載平衡 ALB/NLB<br/>Auto-scaling groups<br/>健康檢查"]
+
+    A -->|"應用品質關注點"| B
+    B -->|"得出"| C
+    D -->|"應用品質關注點"| E
+    E -->|"得出"| F
+
     style A fill:#e1f5ff,stroke:#0066cc,stroke-width:3px
     style D fill:#e1f5ff,stroke:#0066cc,stroke-width:3px
     style B fill:#fff4e1,stroke:#ff9900,stroke-width:3px
@@ -190,80 +190,80 @@ graph LR
     style F fill:#d4edda,stroke:#28a745,stroke-width:3px
 ```
 
-#### 📋 Complementary Examples
+#### 📋 互補範例
 
-| Viewpoint | + Perspective | = Implementation Decision |
+| Viewpoint | + Perspective | = 實作決策 |
 |-----------|---------------|---------------------------|
-| **Functional**<br/>Customer registration | **Security**<br/>Protect personal data | Password encryption (bcrypt)<br/>Email verification<br/>CAPTCHA anti-bot |
-| **Information**<br/>Order data model | **Performance**<br/>Fast queries | Database indexing<br/>Caching strategy<br/>Read-write separation |
-| **Deployment**<br/>Containerized deployment | **Scalability**<br/>Auto-scaling | Kubernetes HPA<br/>Service mesh<br/>Stateless design |
-| **Concurrency**<br/>Concurrent processing | **Availability**<br/>Fault tolerance | Optimistic locking<br/>Retry mechanism<br/>Circuit breaker pattern |
+| **Functional**<br/>客戶註冊 | **Security**<br/>保護個人資料 | 密碼加密 (bcrypt)<br/>Email 驗證<br/>CAPTCHA 防機器人 |
+| **Information**<br/>訂單資料模型 | **Performance**<br/>快速查詢 | 資料庫索引<br/>快取策略<br/>讀寫分離 |
+| **Deployment**<br/>容器化部署 | **Scalability**<br/>自動擴展 | Kubernetes HPA<br/>Service mesh<br/>無狀態設計 |
+| **Concurrency**<br/>併發處理 | **Availability**<br/>容錯 | 樂觀鎖定<br/>重試機制<br/>Circuit breaker pattern |
 
-#### 🎯 Practical Application Flow
+#### 🎯 實務應用流程
 
 ```mermaid
 sequenceDiagram
-    participant A as 👤 Architect
-    participant V as 📐 Viewpoints<br/>Structure Design
-    participant P as 🎯 Perspectives<br/>Quality Check
-    participant D as ✅ Design Decisions
-    
-    A->>V: Step 1: Design system structure
-    Note over V: Define functional modules<br/>Create data models<br/>Plan deployment architecture<br/>Organize code structure
-    
-    A->>P: Step 2: Apply quality perspectives
-    Note over P: Check security requirements<br/>Validate performance targets<br/>Ensure availability goals<br/>Assess scalability needs
-    
-    P->>V: Step 3: Identify issues and gaps
-    Note over P,V: Performance bottlenecks found<br/>Security vulnerabilities detected<br/>Scalability limits identified<br/>Availability risks discovered
-    
-    V->>D: Step 4: Adjust design based on findings
-    Note over D: Add caching layer for performance<br/>Implement encryption mechanisms<br/>Configure load balancing<br/>Add circuit breakers
-    
-    D->>P: Step 5: Validate quality improvements
-    Note over P: Confirm quality targets met<br/>Verify security measures<br/>Test performance benchmarks<br/>Validate availability SLAs
-    
-    P->>A: Step 6: Complete architectural design
-    Note over A: Architecture documented<br/>Quality goals achieved<br/>Ready for implementation
+    participant A as 👤 架構師
+    participant V as 📐 Viewpoints<br/>結構設計
+    participant P as 🎯 Perspectives<br/>品質檢查
+    participant D as ✅ 設計決策
+
+    A->>V: 步驟 1：設計系統結構
+    Note over V: 定義功能模組<br/>建立資料模型<br/>規劃部署架構<br/>組織程式碼結構
+
+    A->>P: 步驟 2：應用品質 perspectives
+    Note over P: 檢查安全需求<br/>驗證效能目標<br/>確保可用性目標<br/>評估擴展性需求
+
+    P->>V: 步驟 3：識別問題和差距
+    Note over P,V: 發現效能瓶頸<br/>檢測安全漏洞<br/>識別擴展性限制<br/>發現可用性風險
+
+    V->>D: 步驟 4：根據發現調整設計
+    Note over D: 新增快取層以提升效能<br/>實作加密機制<br/>配置負載平衡<br/>新增 circuit breakers
+
+    D->>P: 步驟 5：驗證品質改善
+    Note over P: 確認品質目標達成<br/>驗證安全措施<br/>測試效能基準<br/>驗證可用性 SLAs
+
+    P->>A: 步驟 6：完成架構設計
+    Note over A: 架構已記錄<br/>品質目標已達成<br/>準備實作
 ```
 
 ---
 
-### Why Two Dimensions Are Needed
+### 為什麼需要兩個維度
 
-#### ❌ Problems with Only Viewpoints
-
-```
-Only describing structure → May overlook quality attributes
-- Complete functionality but poor performance
-- Clear deployment architecture but insecure
-- Well-organized code but difficult to scale
-```
-
-#### ❌ Problems with Only Perspectives
+#### ❌ 只有 Viewpoints 的問題
 
 ```
-Only focusing on quality → Lacks concrete implementation guidance
-- Know need security but not how to implement
-- Know need high performance but not how to design architecture
-- Know need scalability but not how to deploy
+只描述結構 → 可能忽略品質屬性
+- 功能完整但效能不佳
+- 部署架構清晰但不安全
+- 程式碼組織良好但難以擴展
 ```
 
-#### ✅ Benefits of Combining Both
+#### ❌ 只有 Perspectives 的問題
 
 ```
-Structure + Quality = Complete architectural design
-- Clear system structure
-- Explicit quality goals
-- Concrete implementation solutions
-- Verifiable design decisions
+只關注品質 → 缺乏具體實作指引
+- 知道需要安全但不知如何實作
+- 知道需要高效能但不知如何設計架構
+- 知道需要可擴展但不知如何部署
+```
+
+#### ✅ 結合兩者的優點
+
+```
+結構 + 品質 = 完整的架構設計
+- 清晰的系統結構
+- 明確的品質目標
+- 具體的實作方案
+- 可驗證的設計決策
 ```
 
 ---
 
-### Practical Recommendations
+### 實務建議
 
-#### 📝 Documentation Organization
+#### 📝 文件組織
 
 ```
 docs/
@@ -277,79 +277,79 @@ docs/
 │   ├── performance.md         # Performance perspective
 │   └── ...
 └── decisions/
-    ├── ADR-001-auth.md        # Decisions combining both
+    ├── ADR-001-auth.md        # 結合兩者的決策
     └── ADR-002-cache.md
 ```
 
-#### 🔍 Review Checklist
+#### 🔍 審查檢查清單
 
-**Viewpoint Checks**:
-- [ ] All major functions documented?
-- [ ] Data models completely defined?
-- [ ] Deployment architecture clear?
-- [ ] Development guidelines explicit?
+**Viewpoint 檢查**：
+- [ ] 所有主要功能已記錄？
+- [ ] 資料模型完整定義？
+- [ ] 部署架構清晰？
+- [ ] 開發指引明確？
 
-**Perspective Checks**:
-- [ ] Security requirements satisfied?
-- [ ] Performance targets achieved?
-- [ ] Availability requirements implemented?
-- [ ] System evolvable and scalable?
+**Perspective 檢查**：
+- [ ] 安全需求已滿足？
+- [ ] 效能目標已達成？
+- [ ] 可用性需求已實作？
+- [ ] 系統可演進和擴展？
 
-**Integration Checks**:
-- [ ] Each Viewpoint considers relevant Perspectives?
-- [ ] Each Perspective applied to relevant Viewpoints?
-- [ ] Design decisions have clear quality goals?
+**整合檢查**：
+- [ ] 每個 Viewpoint 考慮了相關 Perspectives？
+- [ ] 每個 Perspective 應用到相關 Viewpoints？
+- [ ] 設計決策有明確的品質目標？
 
 ---
 
-## Viewpoints (System Structure)
+## Viewpoints (系統結構)
 
-Viewpoints describe the **structure and organization** of the system from different angles.
+Viewpoints 從不同角度描述系統的**結構與組織**。
 
 ### 1. Functional Viewpoint
 
-**Purpose:** Describes the system's functional elements, their responsibilities, and interactions
+**目的：** 描述系統的功能元素、責任與互動
 
-**Key Questions:**
+**關鍵問題：**
 
-- What are the main functional capabilities?
-- How do functional elements interact?
-- What are the key use cases?
-- What interfaces does the system expose?
+- 主要功能能力是什麼？
+- 功能元素如何互動？
+- 關鍵使用案例是什麼？
+- 系統公開哪些介面？
 
-**What to Document:**
+**要記錄什麼：**
 
-#### 1.1 Functional Elements
+#### 1.1 功能元素
 
 ```markdown
-## Example Structure
+## 範例結構
 
-### Customer Management Module
+### Customer Management 模組
 
-- **Responsibilities**: 
-  - Customer registration and authentication
-  - Profile management
-  - Membership level tracking
-  
-- **Provided Services**:
-  - `POST /api/v1/customers` - Create customer
-  - `GET /api/v1/customers/{id}` - Retrieve customer
-  - `PUT /api/v1/customers/{id}` - Update customer
-  
-- **Dependencies**:
-  - Email Service (for notifications)
-  - Authentication Service (for login)
-  - Payment Service (for membership upgrades)
+- **責任**:
+  - 客戶註冊與認證
+  - 個人資料管理
+  - 會員等級追蹤
+
+- **提供的服務**:
+  - `POST /api/v1/customers` - 建立客戶
+  - `GET /api/v1/customers/{id}` - 取得客戶
+  - `PUT /api/v1/customers/{id}` - 更新客戶
+
+- **相依性**:
+  - Email Service (用於通知)
+  - Authentication Service (用於登入)
+  - Payment Service (用於會員升級)
 
 ```
 
-#### 1.2 System Capabilities
+#### 1.2 系統能力
 
-- Core business functions
-- Supporting functions
-- Integration points with external systems
+- 核心業務功能
+- 支援功能
+- 與外部系統的整合點
 
-#### 1.3 Use Cases & Scenarios
+#### 1.3 Use Cases 與情境
 
 ```gherkin
 Feature: Customer Registration
@@ -360,33 +360,33 @@ Feature: Customer Registration
     And welcome email should be sent
 ```
 
-#### 1.4 Functional Architecture Diagram
+#### 1.4 Functional Architecture 圖表
 
-- Component diagram showing functional modules
-- Sequence diagrams for key workflows
-- Use case diagrams
+- 顯示功能模組的元件圖
+- 關鍵工作流程的序列圖
+- Use case 圖
 
-**Stakeholders:** Business analysts, product managers, developers
+**利害關係人：** 業務分析師、產品經理、開發者
 
 ---
 
 ### 2. Information Viewpoint
 
-**Purpose:** Describes how the system stores, manages, and distributes information
+**目的：** 描述系統如何儲存、管理和分發資訊
 
-**Key Questions:**
+**關鍵問題：**
 
-- What data does the system manage?
-- How is data structured and related?
-- How does data flow through the system?
-- Who owns which data?
+- 系統管理哪些資料？
+- 資料如何結構化和關聯？
+- 資料如何在系統中流動？
+- 誰擁有哪些資料？
 
-**What to Document:**
+**要記錄什麼：**
 
-#### 2.1 Data Models
+#### 2.1 資料模型
 
 ```markdown
-## Domain Model Example
+## Domain Model 範例
 
 ### Customer Entity
 
@@ -396,7 +396,7 @@ Feature: Customer Registration
 - MembershipLevel
 - RegistrationDate
 
-### Relationships
+### 關聯
 
 - Customer 1 ──── * Order
 - Order 1 ──── * OrderItem
@@ -404,97 +404,97 @@ Feature: Customer Registration
 
 ```
 
-#### 2.2 Data Ownership
+#### 2.2 資料所有權
 
 ```markdown
-## Data Ownership by Bounded Context
+## 依 Bounded Context 的資料所有權
 
-### Customer Context (Owner)
+### Customer Context (擁有者)
 
-- Customer profile data
-- Authentication credentials
-- Membership information
+- Customer 個人資料
+- 認證憑證
+- 會員資訊
 
-### Order Context (Owner)
+### Order Context (擁有者)
 
-- Order details and status
-- Order history
+- 訂單詳情和狀態
+- 訂單歷史
 
-### Shared Data (Read-only copies)
+### 共享資料 (唯讀副本)
 
-- Order Context maintains customer name/email (eventual consistency)
+- Order Context 維護客戶名稱/email (最終一致性)
 
 ```
 
-#### 2.3 Data Flow
+#### 2.3 資料流
 
-- How data moves between components
-- Data transformation points
-- Data validation rules
+- 資料如何在元件間移動
+- 資料轉換點
+- 資料驗證規則
 
-#### 2.4 Data Lifecycle
+#### 2.4 資料生命週期
 
-- Creation, update, deletion policies
-- Archival and retention policies
-- GDPR compliance (right to be forgotten)
+- 建立、更新、刪除政策
+- 封存和保留政策
+- GDPR 合規 (被遺忘權)
 
-#### 2.5 Data Quality & Integrity
+#### 2.5 資料品質與完整性
 
-- Validation rules
-- Consistency guarantees
-- Conflict resolution strategies
+- 驗證規則
+- 一致性保證
+- 衝突解決策略
 
-**Stakeholders:** Database administrators, data architects, developers
+**利害關係人：** 資料庫管理員、資料架構師、開發者
 
 ---
 
 ### 3. Concurrency Viewpoint
 
-**Purpose:** Describes how the system handles concurrent and parallel operations
+**目的：** 描述系統如何處理併發和平行操作
 
-**Key Questions:**
+**關鍵問題：**
 
-- What operations can run in parallel?
-- How is concurrency managed?
-- What are the synchronization mechanisms?
-- How are race conditions prevented?
+- 哪些操作可以平行執行？
+- 如何管理併發？
+- 同步機制是什麼？
+- 如何防止競態條件？
 
-**What to Document:**
+**要記錄什麼：**
 
-#### 3.1 Concurrency Model
+#### 3.1 併發模型
 
 ```markdown
-## Concurrency Strategy
+## 併發策略
 
-### Synchronous Operations
+### 同步操作
 
-- Customer registration (immediate response)
-- Payment processing (transactional)
-- Order validation (must complete before payment)
+- 客戶註冊 (立即回應)
+- 付款處理 (交易性)
+- 訂單驗證 (必須在付款前完成)
 
-### Asynchronous Operations
+### 非同步操作
 
-- Email notifications (fire-and-forget)
-- Analytics collection (eventual consistency)
-- Report generation (background jobs)
+- Email 通知 (fire-and-forget)
+- 分析收集 (最終一致性)
+- 報表生成 (背景工作)
 
-### Parallel Operations
+### 平行操作
 
-- Product search across categories
-- Inventory check across warehouses
+- 跨類別的產品搜尋
+- 跨倉庫的庫存檢查
 
 ```
 
-#### 3.2 Process/Thread Structure
+#### 3.2 Process/Thread 結構
 
-- Application processes and their responsibilities
-- Thread pools and their configurations
-- Message consumers and their concurrency
+- 應用程式 processes 及其責任
+- Thread pools 及其配置
+- Message consumers 及其併發性
 
-#### 3.3 Synchronization Mechanisms
+#### 3.3 同步機制
 
 ```java
-// Example: Distributed locking
+// 範例：分散式鎖定
 @Transactional
 public void reserveInventory(String productId, int quantity) {
     RLock lock = redissonClient.getLock("inventory:lock:" + productId);
@@ -508,40 +508,40 @@ public void reserveInventory(String productId, int quantity) {
 }
 ```
 
-#### 3.4 State Management
+#### 3.4 狀態管理
 
-- Stateless vs stateful components
-- Shared state management
-- State consistency strategies
+- 無狀態 vs 有狀態元件
+- 共享狀態管理
+- 狀態一致性策略
 
-#### 3.5 Deadlock Prevention
+#### 3.5 死鎖預防
 
-- Lock ordering rules
-- Timeout mechanisms
-- Deadlock detection strategies
+- 鎖定排序規則
+- 逾時機制
+- 死鎖檢測策略
 
-**Stakeholders:** Developers, performance engineers, architects
+**利害關係人：** 開發者、效能工程師、架構師
 
 ---
 
 ### 4. Development Viewpoint
 
-**Purpose:** Describes the code organization, build process, and development environment
+**目的：** 描述程式碼組織、建置流程和開發環境
 
-**Key Questions:**
+**關鍵問題：**
 
-- How is the code organized?
-- What are the module dependencies?
-- How is the system built and tested?
-- What tools do developers need?
+- 程式碼如何組織？
+- 模組相依性是什麼？
+- 系統如何建置和測試？
+- 開發者需要哪些工具？
 
-**What to Document:**
+**要記錄什麼：**
 
-#### 4.1 Module Organization
+#### 4.1 模組組織
 
 ```text
 app/
-├── domain/              # Domain layer (no external dependencies)
+├── domain/              # Domain layer (無外部相依性)
 │   ├── customer/       # Customer bounded context
 │   ├── order/          # Order bounded context
 │   └── product/        # Product bounded context
@@ -550,69 +550,69 @@ app/
 └── interfaces/         # API controllers, event handlers
 ```
 
-#### 4.2 Dependency Rules
+#### 4.2 相依性規則
 
 ```markdown
-## Layer Dependencies
+## Layer 相依性
 
-- Domain layer: No dependencies on other layers
-- Application layer: Depends only on domain
-- Infrastructure layer: Depends on domain (via interfaces)
-- Interface layer: Depends on application
+- Domain layer：對其他層無相依性
+- Application layer：僅相依於 domain
+- Infrastructure layer：相依於 domain (透過介面)
+- Interface layer：相依於 application
 
-## Prohibited Dependencies
+## 禁止的相依性
 
 - ❌ Domain → Infrastructure
 - ❌ Domain → Application
-- ❌ Circular dependencies between modules
+- ❌ 模組間的循環相依性
 
 ```
 
-#### 4.3 Build Process
+#### 4.3 建置流程
 
 ```bash
 # Build pipeline
-./gradlew clean build          # Compile and package
-./gradlew test                 # Run unit tests
-./gradlew integrationTest      # Run integration tests
-./gradlew bootJar              # Create executable JAR
-./gradlew bootBuildImage       # Create Docker image
+./gradlew clean build          # 編譯和封裝
+./gradlew test                 # 執行單元測試
+./gradlew integrationTest      # 執行整合測試
+./gradlew bootJar              # 建立可執行 JAR
+./gradlew bootBuildImage       # 建立 Docker image
 ```
 
-#### 4.4 Code Standards
+#### 4.4 程式碼標準
 
-- Naming conventions
-- Code style guidelines
-- Code review checklist
-- Quality gates (coverage, complexity)
+- 命名慣例
+- 程式碼風格指引
+- Code review 檢查清單
+- 品質門檻 (覆蓋率、複雜度)
 
-#### 4.5 Development Environment
+#### 4.5 開發環境
 
-- Required tools and versions
-- Local setup instructions
-- Debugging configuration
+- 需要的工具和版本
+- 本機設定說明
+- 除錯配置
 
-**Stakeholders:** Developers, build engineers, DevOps
+**利害關係人：** 開發者、建置工程師、DevOps
 
 ---
 
 ### 5. Deployment Viewpoint
 
-**Purpose:** Describes how the system is deployed to hardware and network infrastructure
+**目的：** 描述系統如何部署到硬體和網路基礎設施
 
-**Key Questions:**
+**關鍵問題：**
 
-- What hardware/cloud resources are needed?
-- How is the network configured?
-- What is the deployment process?
-- How does the system scale?
+- 需要哪些硬體/雲端資源？
+- 網路如何配置？
+- 部署流程是什麼？
+- 系統如何擴展？
 
-**What to Document:**
+**要記錄什麼：**
 
-#### 5.1 Physical Architecture
+#### 5.1 實體架構
 
 ```markdown
-## AWS Infrastructure
+## AWS 基礎設施
 
 ### Compute
 
@@ -633,7 +633,7 @@ app/
 
 ```
 
-#### 5.2 Network Architecture
+#### 5.2 網路架構
 
 ```text
 VPC: 10.0.0.0/16
@@ -651,235 +651,235 @@ VPC: 10.0.0.0/16
     └── 10.0.23.0/24 (AZ-3)
 ```
 
-#### 5.3 Deployment Process
+#### 5.3 部署流程
 
 - CI/CD pipeline
-- Deployment strategy (rolling, blue-green, canary)
-- Rollback procedures
+- 部署策略 (rolling, blue-green, canary)
+- 回滾程序
 
-#### 5.4 Environment Configuration
+#### 5.4 環境配置
 
-- Development, staging, production environments
-- Configuration management
-- Secrets management
+- 開發、預備、生產環境
+- 配置管理
+- Secrets 管理
 
-#### 5.5 Scaling Strategy
+#### 5.5 擴展策略
 
 - Horizontal pod autoscaling
 - Cluster autoscaling
-- Database scaling (read replicas)
+- 資料庫擴展 (read replicas)
 
-**Stakeholders:** DevOps engineers, infrastructure architects, operations
+**利害關係人：** DevOps 工程師、基礎設施架構師、維運人員
 
 ---
 
 ### 6. Operational Viewpoint
 
-**Purpose:** Describes how the system is installed, migrated, operated, and supported
+**目的：** 描述系統如何安裝、遷移、操作和支援
 
-**Key Questions:**
+**關鍵問題：**
 
-- How is the system installed?
-- How is it monitored?
-- How are backups performed?
-- What are the operational procedures?
+- 系統如何安裝？
+- 如何監控？
+- 如何執行備份？
+- 維運程序是什麼？
 
-**What to Document:**
+**要記錄什麼：**
 
-#### 6.1 Installation & Configuration
+#### 6.1 安裝與配置
 
 ```bash
-# Installation steps
+# 安裝步驟
 
-1. Deploy infrastructure (CDK)
-2. Configure kubectl
-3. Install application (Helm)
-4. Verify installation (smoke tests)
+1. 部署基礎設施 (CDK)
+2. 配置 kubectl
+3. 安裝應用程式 (Helm)
+4. 驗證安裝 (smoke tests)
 
 ```
 
-#### 6.2 Monitoring & Alerting
+#### 6.2 監控與告警
 
 ```markdown
-## Key Metrics
+## 關鍵指標
 
-### Business Metrics
+### 業務指標
 
-- Orders per minute
-- Revenue per hour
-- Conversion rate
+- 每分鐘訂單數
+- 每小時收入
+- 轉換率
 
-### Technical Metrics
+### 技術指標
 
-- API response time (p50, p95, p99)
-- Error rate (4xx, 5xx)
-- Database query time
-- Cache hit rate
+- API 回應時間 (p50, p95, p99)
+- 錯誤率 (4xx, 5xx)
+- 資料庫查詢時間
+- 快取命中率
 
-### Alerts
+### 告警
 
-- High error rate (> 10 errors in 5 min) → Critical
-- High response time (p95 > 2s for 5 min) → Warning
-- Database connections (> 90) → Critical
+- 高錯誤率 (5 分鐘內 > 10 個錯誤) → 嚴重
+- 高回應時間 (5 分鐘內 p95 > 2s) → 警告
+- 資料庫連線 (> 90) → 嚴重
 
 ```
 
-#### 6.3 Backup & Recovery
+#### 6.3 備份與復原
 
-- Backup schedule and retention
-- Recovery procedures
+- 備份排程和保留期
+- 復原程序
 - RTO (Recovery Time Objective)
 - RPO (Recovery Point Objective)
 
-#### 6.4 Operational Procedures
+#### 6.4 維運程序
 
-- Startup and shutdown procedures
-- Upgrade procedures
-- Incident response runbooks
-- Troubleshooting guides
+- 啟動和關閉程序
+- 升級程序
+- 事件回應 runbooks
+- 疑難排解指南
 
-#### 6.5 Support & Maintenance
+#### 6.5 支援與維護
 
-- Log aggregation and analysis
-- Performance tuning
-- Capacity planning
-- Patch management
+- 日誌聚合和分析
+- 效能調校
+- 容量規劃
+- 修補程式管理
 
-**Stakeholders:** Operations team, SRE, support engineers
+**利害關係人：** 維運團隊、SRE、支援工程師
 
 ---
 
 ### 7. Context Viewpoint
 
-**Purpose:** Describes the system's relationships with its environment
+**目的：** 描述系統與其環境的關係
 
-**Key Questions:**
+**關鍵問題：**
 
-- What are the system boundaries?
-- What external systems does it interact with?
-- Who are the stakeholders?
-- What are the external constraints?
+- 系統邊界是什麼？
+- 與哪些外部系統互動？
+- 利害關係人是誰？
+- 外部限制是什麼？
 
-**What to Document:**
+**要記錄什麼：**
 
-#### 7.1 System Scope & Boundaries
+#### 7.1 系統範疇與邊界
 
 ```markdown
-## System Context
+## 系統 Context
 
-### In Scope
+### 範圍內
 
-- Customer management
-- Order processing
-- Payment processing
-- Inventory management
+- 客戶管理
+- 訂單處理
+- 付款處理
+- 庫存管理
 
-### Out of Scope
+### 範圍外
 
-- Warehouse management (external system)
-- Shipping logistics (third-party)
-- Accounting (separate system)
+- 倉庫管理 (外部系統)
+- 物流運輸 (第三方)
+- 會計 (獨立系統)
 
 ```
 
-#### 7.2 External Entities
+#### 7.2 外部實體
 
 ```markdown
-## External Systems
+## 外部系統
 
 ### Payment Gateway (Stripe)
 
-- Protocol: REST API over HTTPS
-- Authentication: API Key
-- Data Exchange: JSON
+- 協定: REST API over HTTPS
+- 認證: API Key
+- 資料交換: JSON
 - SLA: 99.9% uptime
 
 ### Email Service (SendGrid)
 
-- Protocol: SMTP / REST API
-- Authentication: API Key
-- Rate Limit: 100 emails/second
+- 協定: SMTP / REST API
+- 認證: API Key
+- 速率限制: 100 emails/second
 
 ### Shipping Provider (FedEx)
 
-- Protocol: SOAP Web Service
-- Authentication: OAuth 2.0
-- Data Exchange: XML
+- 協定: SOAP Web Service
+- 認證: OAuth 2.0
+- 資料交換: XML
 
 ```
 
-#### 7.3 Stakeholders
+#### 7.3 利害關係人
 
 ```markdown
-## Stakeholder Map
+## Stakeholder 地圖
 
-### Business Stakeholders
+### 業務利害關係人
 
-- Product Owner: Feature prioritization
-- Marketing Team: Campaign requirements
-- Finance Team: Reporting requirements
+- Product Owner: 功能優先順序
+- Marketing Team: 行銷活動需求
+- Finance Team: 報表需求
 
-### Technical Stakeholders
+### 技術利害關係人
 
-- Development Team: Implementation
-- Operations Team: Deployment and monitoring
-- Security Team: Security compliance
+- Development Team: 實作
+- Operations Team: 部署和監控
+- Security Team: 安全合規
 
-### External Stakeholders
+### 外部利害關係人
 
-- Customers: End users
-- Partners: Integration requirements
-- Regulators: Compliance requirements
+- Customers: 終端使用者
+- Partners: 整合需求
+- Regulators: 合規需求
 
 ```
 
-#### 7.4 External Constraints
+#### 7.4 外部限制
 
-- Regulatory requirements (GDPR, PCI-DSS)
-- Organizational policies
-- Technology standards
-- Budget constraints
+- 法規需求 (GDPR, PCI-DSS)
+- 組織政策
+- 技術標準
+- 預算限制
 
-#### 7.5 Integration Patterns
+#### 7.5 整合 Patterns
 
-- API integration (REST, GraphQL)
-- Event-driven integration (Kafka)
-- Batch integration (file transfer)
-- Database integration (shared database)
+- API 整合 (REST, GraphQL)
+- Event-driven 整合 (Kafka)
+- Batch 整合 (檔案傳輸)
+- Database 整合 (共享資料庫)
 
-**Stakeholders:** Business analysts, architects, compliance officers
+**利害關係人：** 業務分析師、架構師、合規人員
 
 ---
 
-## Perspectives (Quality Attributes)
+## Perspectives (品質屬性)
 
-Perspectives describe **quality attributes** that cut across multiple viewpoints.
+Perspectives 描述跨越多個 viewpoints 的**品質屬性**。
 
 ### 1. Security Perspective
 
-**Purpose:** Ensure the system is protected from malicious attacks and unauthorized access
+**目的：** 確保系統免受惡意攻擊和未經授權的存取
 
-**Key Questions:**
+**關鍵問題：**
 
-- How is authentication handled?
-- How is authorization enforced?
-- How is sensitive data protected?
-- How are security threats mitigated?
+- 如何處理認證？
+- 如何執行授權？
+- 如何保護敏感資料？
+- 如何降低安全威脅？
 
-**What to Document:**
+**要記錄什麼：**
 
-#### 1.1 Authentication & Authorization
+#### 1.1 認證與授權
 
 ```markdown
-## Authentication Strategy
+## 認證策略
 
 ### JWT-Based Authentication
 
-- Token validity: 1 hour
-- Refresh token: 24 hours
-- Algorithm: HS512
+- Token 有效期: 1 小時
+- Refresh token: 24 小時
+- 演算法: HS512
 
-### Authorization Model
+### 授權模型
 
 - Role-Based Access Control (RBAC)
 - Roles: ADMIN, USER, GUEST
@@ -887,332 +887,332 @@ Perspectives describe **quality attributes** that cut across multiple viewpoints
 
 ```
 
-#### 1.2 Data Protection
+#### 1.2 資料保護
 
 ```markdown
-## Encryption
+## 加密
 
 ### Data in Transit
 
-- TLS 1.3 for all external communication
-- mTLS for service-to-service communication
+- TLS 1.3 用於所有外部通訊
+- mTLS 用於服務間通訊
 
 ### Data at Rest
 
-- Database: AES-256 encryption
-- Sensitive fields: Application-level encryption
+- Database: AES-256 加密
+- 敏感欄位: 應用程式層級加密
 - Secrets: AWS Secrets Manager
 
 ```
 
-#### 1.3 Security Controls
+#### 1.3 安全控制
 
-- Input validation and sanitization
-- SQL injection prevention
-- XSS prevention
-- CSRF protection
-- Rate limiting
+- 輸入驗證和清理
+- SQL injection 防護
+- XSS 防護
+- CSRF 保護
+- 速率限制
 
-#### 1.4 Security Monitoring
+#### 1.4 安全監控
 
-- Failed login attempts tracking
-- Suspicious activity detection
-- Security event logging
-- Vulnerability scanning
+- 失敗登入嘗試追蹤
+- 可疑活動檢測
+- 安全事件日誌記錄
+- 漏洞掃描
 
-#### 1.5 Compliance
+#### 1.5 合規
 
-- GDPR compliance (data privacy)
-- PCI-DSS compliance (payment data)
-- SOC 2 compliance (security controls)
+- GDPR 合規 (資料隱私)
+- PCI-DSS 合規 (付款資料)
+- SOC 2 合規 (安全控制)
 
-**Applied to Viewpoints:**
+**應用到 Viewpoints：**
 
-- Functional: Authentication/authorization features
-- Information: Data encryption, access control
-- Deployment: Network security, firewalls
-- Operational: Security monitoring, incident response
+- Functional: 認證/授權功能
+- Information: 資料加密、存取控制
+- Deployment: 網路安全、防火牆
+- Operational: 安全監控、事件回應
 
 ---
 
 ### 2. Performance & Scalability Perspective
 
-**Purpose:** Ensure the system meets performance requirements and can scale
+**目的：** 確保系統符合效能需求並能擴展
 
-**Key Questions:**
+**關鍵問題：**
 
-- What are the response time requirements?
-- How many concurrent users can it support?
-- How does it scale under load?
-- What are the bottlenecks?
+- 回應時間需求是什麼？
+- 可以支援多少併發使用者？
+- 在負載下如何擴展？
+- 瓶頸是什麼？
 
-**What to Document:**
+**要記錄什麼：**
 
-#### 2.1 Performance Requirements
+#### 2.1 效能需求
 
 ```markdown
-## Performance Targets
+## 效能目標
 
-### API Response Time
+### API 回應時間
 
-- Critical APIs: ≤ 500ms (p95)
-- Business APIs: ≤ 1000ms (p95)
-- Reporting APIs: ≤ 3000ms (p95)
+- 關鍵 APIs: ≤ 500ms (p95)
+- 業務 APIs: ≤ 1000ms (p95)
+- 報表 APIs: ≤ 3000ms (p95)
 
-### Throughput
+### 吞吐量
 
-- Peak load: 1000 requests/second
-- Sustained load: 500 requests/second
+- 尖峰負載: 1000 requests/second
+- 持續負載: 500 requests/second
 
 ### Database
 
-- Simple queries: ≤ 10ms (p95)
-- Complex queries: ≤ 100ms (p95)
+- 簡單查詢: ≤ 10ms (p95)
+- 複雜查詢: ≤ 100ms (p95)
 
 ```
 
-#### 2.2 Scalability Strategy
+#### 2.2 擴展策略
 
 ```markdown
-## Horizontal Scaling
+## 水平擴展
 
 ### Application Tier
 
-- Min replicas: 3
-- Max replicas: 10
-- Scale trigger: CPU > 70%
+- 最小 replicas: 3
+- 最大 replicas: 10
+- 擴展觸發: CPU > 70%
 
 ### Database Tier
 
 - Read replicas: 2
-- Connection pooling: 20 connections per instance
+- Connection pooling: 每個 instance 20 個連線
 
 ```
 
-#### 2.3 Performance Optimization
+#### 2.3 效能最佳化
 
-- Caching strategy (Redis)
-- Database indexing
-- Query optimization
-- Asynchronous processing
-- CDN for static content
+- 快取策略 (Redis)
+- 資料庫索引
+- 查詢最佳化
+- 非同步處理
+- CDN 用於靜態內容
 
-#### 2.4 Performance Testing
+#### 2.4 效能測試
 
-- Load testing scenarios
-- Stress testing limits
-- Performance benchmarks
-- Capacity planning
+- 負載測試情境
+- 壓力測試限制
+- 效能基準
+- 容量規劃
 
-**Applied to Viewpoints:**
+**應用到 Viewpoints：**
 
-- Functional: Async operations, caching
-- Information: Database optimization, indexing
-- Concurrency: Parallel processing
-- Deployment: Auto-scaling configuration
+- Functional: 非同步操作、快取
+- Information: 資料庫最佳化、索引
+- Concurrency: 平行處理
+- Deployment: Auto-scaling 配置
 
 ---
 
 ### 3. Availability & Resilience Perspective
 
-**Purpose:** Ensure the system remains operational and recovers from failures
+**目的：** 確保系統保持運作並從故障中復原
 
-**Key Questions:**
+**關鍵問題：**
 
-- What is the uptime requirement?
-- How does it handle component failures?
-- What is the disaster recovery plan?
-- How quickly can it recover?
+- 運行時間需求是什麼？
+- 如何處理元件故障？
+- 災難復原計畫是什麼？
+- 能多快復原？
 
-**What to Document:**
+**要記錄什麼：**
 
-#### 3.1 Availability Requirements
+#### 3.1 可用性需求
 
 ```markdown
-## Availability Targets
+## 可用性目標
 
 ### Service Level Objectives (SLO)
 
-- Availability: 99.9% (8.76 hours downtime/year)
-- RTO (Recovery Time Objective): 5 minutes
-- RPO (Recovery Point Objective): 1 minute
+- 可用性: 99.9% (每年 8.76 小時停機時間)
+- RTO (Recovery Time Objective): 5 分鐘
+- RPO (Recovery Point Objective): 1 分鐘
 
 ```
 
-#### 3.2 Fault Tolerance
+#### 3.2 容錯
 
 ```markdown
 ## Resilience Patterns
 
 ### Circuit Breaker
 
-- Failure threshold: 5 failures in 10 seconds
-- Open state duration: 30 seconds
-- Half-open test requests: 3
+- 故障門檻: 10 秒內 5 次失敗
+- 開啟狀態持續時間: 30 秒
+- 半開啟測試請求: 3
 
-### Retry Mechanism
+### Retry 機制
 
-- Max retries: 3
-- Backoff: Exponential (1s, 2s, 4s)
-- Retry on: Transient errors only
+- 最大重試: 3
+- Backoff: 指數 (1s, 2s, 4s)
+- 重試條件: 僅暫時性錯誤
 
 ```
 
-#### 3.3 High Availability Design
+#### 3.3 高可用性設計
 
-- Multi-AZ deployment
-- Load balancing
-- Health checks
-- Graceful degradation
-- Fallback mechanisms
+- Multi-AZ 部署
+- 負載平衡
+- 健康檢查
+- 優雅降級
+- Fallback 機制
 
-#### 3.4 Disaster Recovery
+#### 3.4 災難復原
 
 ```markdown
-## DR Strategy
+## DR 策略
 
-### Backup
+### 備份
 
-- Database: Automated daily backups
-- Retention: 30 days
-- Cross-region replication: Yes
+- Database: 每日自動備份
+- 保留期: 30 天
+- 跨區域複寫: Yes
 
-### Recovery Procedures
+### 復原程序
 
-1. Detect failure (monitoring alerts)
-2. Assess impact (runbook)
-3. Execute recovery (automated failover)
-4. Verify recovery (smoke tests)
+1. 偵測故障 (監控告警)
+2. 評估影響 (runbook)
+3. 執行復原 (自動容錯移轉)
+4. 驗證復原 (smoke tests)
 
 ```
 
-**Applied to Viewpoints:**
+**應用到 Viewpoints：**
 
-- Deployment: Multi-AZ, redundancy
-- Operational: Monitoring, alerting, runbooks
-- Concurrency: Timeout handling, retries
+- Deployment: Multi-AZ、冗餘
+- Operational: 監控、告警、runbooks
+- Concurrency: 逾時處理、重試
 
 ---
 
 ### 4. Evolution Perspective
 
-**Purpose:** Ensure the system can adapt to future changes
+**目的：** 確保系統能適應未來變化
 
-**Key Questions:**
+**關鍵問題：**
 
-- How easy is it to add new features?
-- How can technology be upgraded?
-- How is backward compatibility maintained?
-- How is technical debt managed?
+- 新增功能有多容易？
+- 如何升級技術？
+- 如何維持向後相容性？
+- 如何管理技術債？
 
-**What to Document:**
+**要記錄什麼：**
 
-#### 4.1 Extensibility
+#### 4.1 可擴展性
 
 ```markdown
-## Extension Points
+## 擴展點
 
 ### Plugin Architecture
 
-- New payment methods via PaymentProvider interface
-- New notification channels via NotificationChannel interface
-- New pricing strategies via PricingStrategy interface
+- 透過 PaymentProvider 介面新增新付款方式
+- 透過 NotificationChannel 介面新增新通知管道
+- 透過 PricingStrategy 介面新增新定價策略
 
 ```
 
-#### 4.2 Technology Evolution
+#### 4.2 技術演進
 
 ```markdown
-## Upgrade Strategy
+## 升級策略
 
-### Framework Upgrades
+### Framework 升級
 
-- Spring Boot: Upgrade every 6 months
-- Java: Upgrade every 2 years
-- Dependencies: Monthly security updates
+- Spring Boot: 每 6 個月升級
+- Java: 每 2 年升級
+- Dependencies: 每月安全更新
 
-### Migration Path
+### 遷移路徑
 
-1. Test in development environment
-2. Deploy to staging
-3. Run regression tests
-4. Gradual rollout to production
+1. 在開發環境測試
+2. 部署到預備環境
+3. 執行迴歸測試
+4. 逐步推出到生產環境
 
 ```
 
-#### 4.3 API Versioning
+#### 4.3 API 版本控制
 
 ```markdown
-## API Version Management
+## API 版本管理
 
-### Versioning Strategy
+### 版本控制策略
 
-- URL versioning: /api/v1/, /api/v2/
-- Maintain 2 versions simultaneously
-- Deprecation period: 6 months
+- URL 版本控制: /api/v1/, /api/v2/
+- 同時維護 2 個版本
+- 淘汰期: 6 個月
 
-### Backward Compatibility
+### 向後相容性
 
-- Additive changes only in minor versions
-- Breaking changes require new major version
+- 次要版本僅增量變更
+- 重大變更需要新的主要版本
 
 ```
 
-#### 4.4 Refactoring Strategy
+#### 4.4 重構策略
 
-- Technical debt tracking
-- Refactoring priorities
-- Code quality metrics
-- Continuous improvement
+- 技術債追蹤
+- 重構優先順序
+- 程式碼品質指標
+- 持續改善
 
-**Applied to Viewpoints:**
+**應用到 Viewpoints：**
 
-- Development: Modular architecture, clean code
-- Functional: Plugin architecture, extension points
-- Information: Schema evolution, data migration
+- Development: 模組化架構、乾淨程式碼
+- Functional: Plugin architecture、擴展點
+- Information: Schema 演進、資料遷移
 
 ---
 
 ### 5. Accessibility Perspective
 
-**Purpose:** Ensure the system is usable by all users, including those with disabilities
+**目的：** 確保所有使用者（包括身心障礙者）都能使用系統
 
-**Key Questions:**
+**關鍵問題：**
 
-- Can users with disabilities use the system?
-- Does it meet accessibility standards?
-- Is the API easy to use?
-- Is documentation clear?
+- 身心障礙者能使用系統嗎？
+- 是否符合無障礙標準？
+- API 是否易於使用？
+- 文件是否清晰？
 
-**What to Document:**
+**要記錄什麼：**
 
-#### 5.1 UI Accessibility
+#### 5.1 UI 無障礙
 
 ```markdown
-## WCAG 2.1 Compliance
+## WCAG 2.1 合規
 
-### Level AA Requirements
+### Level AA 需求
 
-- Color contrast ratio: ≥ 4.5:1
-- Keyboard navigation: Full support
-- Screen reader: ARIA labels
-- Focus indicators: Visible
+- 顏色對比度: ≥ 4.5:1
+- 鍵盤導航: 完整支援
+- 螢幕閱讀器: ARIA 標籤
+- 焦點指示器: 可見
 
 ```
 
-#### 5.2 API Usability
+#### 5.2 API 可用性
 
 ```markdown
-## API Design Principles
+## API 設計原則
 
-### RESTful Design
+### RESTful 設計
 
-- Consistent naming conventions
-- Proper HTTP methods and status codes
-- Clear error messages
-- Comprehensive documentation
+- 一致的命名慣例
+- 正確的 HTTP 方法和狀態碼
+- 清晰的錯誤訊息
+- 完整的文件
 
-### Error Handling
+### 錯誤處理
 ```json
 {
   "errorCode": "CUSTOMER_NOT_FOUND",
@@ -1224,73 +1224,73 @@ Perspectives describe **quality attributes** that cut across multiple viewpoints
 
 ```
 
-#### 5.3 Documentation
+#### 5.3 文件
 
-- API documentation (OpenAPI/Swagger)
-- User guides
-- Developer guides
-- Troubleshooting guides
+- API 文件 (OpenAPI/Swagger)
+- 使用者指南
+- 開發者指南
+- 疑難排解指南
 
-**Applied to Viewpoints:**
+**應用到 Viewpoints：**
 
-- Functional: User interface design
-- Operational: Clear error messages, logs
+- Functional: 使用者介面設計
+- Operational: 清晰的錯誤訊息、日誌
 
 ---
 
 ### 6. Development Resource Perspective
 
-**Purpose:** Ensure efficient use of development resources
+**目的：** 確保有效利用開發資源
 
-**Key Questions:**
+**關鍵問題：**
 
-- What skills are required?
-- What tools are needed?
-- How is knowledge transferred?
-- How is productivity measured?
+- 需要哪些技能？
+- 需要哪些工具？
+- 如何轉移知識？
+- 如何衡量生產力？
 
-**What to Document:**
+**要記錄什麼：**
 
-#### 6.1 Team Structure
+#### 6.1 團隊結構
 ```markdown
-## Team Organization
+## 團隊組織
 
-### Backend Team (5 developers)
+### Backend Team (5 個開發者)
 
-- Skills: Java, Spring Boot, PostgreSQL, AWS
-- Responsibilities: API development, business logic
+- 技能: Java, Spring Boot, PostgreSQL, AWS
+- 責任: API 開發、業務邏輯
 
-### Frontend Team (3 developers)
+### Frontend Team (3 個開發者)
 
-- Skills: React, TypeScript, Next.js
-- Responsibilities: UI/UX implementation
+- 技能: React, TypeScript, Next.js
+- 責任: UI/UX 實作
 
-### DevOps Team (2 engineers)
+### DevOps Team (2 個工程師)
 
-- Skills: AWS, Kubernetes, Terraform, CI/CD
-- Responsibilities: Infrastructure, deployment
+- 技能: AWS, Kubernetes, Terraform, CI/CD
+- 責任: 基礎設施、部署
 
 ```
 
-#### 6.2 Required Skills
+#### 6.2 需要的技能
 
-- Programming languages (Java 21, TypeScript)
+- 程式語言 (Java 21, TypeScript)
 - Frameworks (Spring Boot, React)
-- Cloud platforms (AWS)
-- Tools (Git, Docker, Kubernetes)
+- 雲端平台 (AWS)
+- 工具 (Git, Docker, Kubernetes)
 
-#### 6.3 Development Tools
+#### 6.3 開發工具
 
 ```markdown
 ## Toolchain
 
-### Development
+### 開發
 
 - IDE: IntelliJ IDEA / VS Code
 - Version Control: Git + GitHub
 - Build: Gradle 8.x
 
-### Testing
+### 測試
 
 - Unit: JUnit 5, Mockito
 - Integration: Testcontainers
@@ -1304,282 +1304,282 @@ Perspectives describe **quality attributes** that cut across multiple viewpoints
 
 ```
 
-#### 6.4 Knowledge Management
+#### 6.4 知識管理
 
-- Code documentation
+- 程式碼文件
 - Architecture decision records (ADRs)
-- Onboarding guides
+- 新人訓練指南
 - Pair programming
 - Code reviews
 
-**Applied to Viewpoints:**
+**應用到 Viewpoints：**
 
-- Development: Build tools, code standards
-- Operational: Runbooks, troubleshooting guides
+- Development: 建置工具、程式碼標準
+- Operational: Runbooks、疑難排解指南
 
 ---
 
 ### 7. Internationalization Perspective
 
-**Purpose:** Ensure the system supports multiple languages and regions
+**目的：** 確保系統支援多種語言和地區
 
-**Key Questions:**
+**關鍵問題：**
 
-- What languages are supported?
-- How are dates/times/currencies handled?
-- How is content localized?
-- What are the cultural considerations?
+- 支援哪些語言？
+- 如何處理日期/時間/貨幣？
+- 如何在地化內容？
+- 文化考量是什麼？
 
-**What to Document:**
+**要記錄什麼：**
 
-#### 7.1 Language Support
+#### 7.1 語言支援
 
 ```markdown
-## Supported Languages
+## 支援的語言
 
-### Phase 1 (Launch)
+### Phase 1 (發布)
 
 - English (US)
 - Traditional Chinese (Taiwan)
 - Simplified Chinese (China)
 
-### Phase 2 (6 months)
+### Phase 2 (6 個月)
 
 - Japanese
 - Korean
 
 ```
 
-#### 7.2 Localization
+#### 7.2 在地化
 
 ```markdown
-## Localization Strategy
+## 在地化策略
 
-### Text Translation
+### 文字翻譯
 
 - i18n framework: Spring MessageSource
-- Translation files: messages_en.properties, messages_zh_TW.properties
+- 翻譯檔案: messages_en.properties, messages_zh_TW.properties
 - Fallback: English
 
 ### Date/Time
 
-- Format: ISO 8601
-- Timezone: User's local timezone
-- Display: Localized format (MM/DD/YYYY vs DD/MM/YYYY)
+- 格式: ISO 8601
+- Timezone: 使用者本地時區
+- 顯示: 在地化格式 (MM/DD/YYYY vs DD/MM/YYYY)
 
 ### Currency
 
-- Storage: USD (base currency)
-- Display: User's local currency
-- Exchange rates: Daily update
+- 儲存: USD (基礎貨幣)
+- 顯示: 使用者本地貨幣
+- 匯率: 每日更新
 
 ```
 
-#### 7.3 Cultural Adaptation
+#### 7.3 文化適應
 
-- Color meanings (red = luck in China, danger in US)
-- Icon appropriateness
-- Content sensitivity
-- Legal requirements per region
+- 顏色意義 (紅色 = 中國的好運、美國的危險)
+- 圖示適當性
+- 內容敏感性
+- 各地區的法律要求
 
-**Applied to Viewpoints:**
+**應用到 Viewpoints：**
 
-- Functional: Multi-language UI
-- Information: Unicode support, locale data
-- Deployment: Region-specific deployments
+- Functional: 多語言 UI
+- Information: Unicode 支援、地區資料
+- Deployment: 特定區域部署
 
 ---
 
 ### 8. Location Perspective
 
-**Purpose:** Ensure the system serves users across different geographic locations
+**目的：** 確保系統服務不同地理位置的使用者
 
-**Key Questions:**
+**關鍵問題：**
 
-- Where are users located?
-- How is latency minimized?
-- Where is data stored?
-- How is data replicated?
+- 使用者位於何處？
+- 如何最小化延遲？
+- 資料儲存在哪裡？
+- 如何複寫資料？
 
-**What to Document:**
+**要記錄什麼：**
 
-#### 8.1 Geographic Distribution
+#### 8.1 地理分佈
 
 ```markdown
-## Multi-Region Deployment
+## Multi-Region 部署
 
 ### Primary Region: US East (N. Virginia)
 
-- Application servers
-- Primary database
-- Main user base: North America
+- 應用程式伺服器
+- 主資料庫
+- 主要使用者群: 北美
 
 ### Secondary Region: EU West (Ireland)
 
-- Application servers
-- Read replica database
-- Main user base: Europe
+- 應用程式伺服器
+- Read replica 資料庫
+- 主要使用者群: 歐洲
 
 ### Tertiary Region: AP Southeast (Singapore)
 
-- Application servers
-- Read replica database
-- Main user base: Asia Pacific
+- 應用程式伺服器
+- Read replica 資料庫
+- 主要使用者群: 亞太地區
 
 ```
 
-#### 8.2 Data Residency
+#### 8.2 資料駐留
 
 ```markdown
-## Data Location Requirements
+## 資料位置需求
 
-### GDPR Compliance
+### GDPR 合規
 
-- EU customer data: Stored in EU region only
-- Data transfer: Prohibited outside EU
+- EU 客戶資料: 僅儲存在 EU 區域
+- 資料傳輸: 禁止傳出 EU
 
-### China Data Localization
+### 中國資料在地化
 
-- China customer data: Stored in China region
-- Separate deployment in China cloud
+- 中國客戶資料: 儲存在中國區域
+- 在中國雲端獨立部署
 
 ```
 
-#### 8.3 Latency Optimization
+#### 8.3 延遲最佳化
 
 ```markdown
-## Performance by Region
+## 各區域效能
 
-### CDN Strategy
+### CDN 策略
 
-- Static content: CloudFront edge locations
-- API Gateway: Regional endpoints
-- Database: Read replicas in each region
+- 靜態內容: CloudFront edge locations
+- API Gateway: 區域端點
+- Database: 每個區域的 read replicas
 
-### Target Latency
+### 目標延遲
 
-- Same region: < 50ms
-- Cross region: < 200ms
-- Global average: < 150ms
+- 同區域: < 50ms
+- 跨區域: < 200ms
+- 全球平均: < 150ms
 
 ```
 
-#### 8.4 Disaster Recovery
+#### 8.4 災難復原
 
-- Cross-region replication
-- Failover procedures
-- Data consistency across regions
+- 跨區域複寫
+- 容錯移轉程序
+- 跨區域資料一致性
 
-**Applied to Viewpoints:**
+**應用到 Viewpoints：**
 
-- Deployment: Multi-region infrastructure
-- Information: Data replication, consistency
-- Operational: Regional monitoring
+- Deployment: Multi-region 基礎設施
+- Information: 資料複寫、一致性
+- Operational: 區域監控
 
 ---
 
-## How to Use This Guide
+## 如何使用本指南
 
-### For New Projects
+### 新專案
 
-**Step 1: Start with Context Viewpoint**
+**步驟 1：從 Context Viewpoint 開始**
 
-- Define system boundaries
-- Identify stakeholders
-- Document external systems
+- 定義系統邊界
+- 識別利害關係人
+- 記錄外部系統
 
-**Step 2: Define Functional Viewpoint**
+**步驟 2：定義 Functional Viewpoint**
 
-- Identify bounded contexts
-- Define use cases
-- Design functional architecture
+- 識別 bounded contexts
+- 定義 use cases
+- 設計 functional architecture
 
-**Step 3: Design Information Viewpoint**
+**步驟 3：設計 Information Viewpoint**
 
-- Create domain model
-- Define data ownership
-- Plan data flow
+- 建立 domain model
+- 定義資料所有權
+- 規劃資料流
 
-**Step 4: Address Other Viewpoints**
+**步驟 4：處理其他 Viewpoints**
 
-- Concurrency (if needed)
-- Development (always)
-- Deployment (always)
-- Operational (always)
+- Concurrency (如需要)
+- Development (必要)
+- Deployment (必要)
+- Operational (必要)
 
-**Step 5: Apply Perspectives**
+**步驟 5：應用 Perspectives**
 
-- Security (always)
-- Performance (always)
-- Availability (always)
-- Evolution (always)
-- Others (as needed)
+- Security (必要)
+- Performance (必要)
+- Availability (必要)
+- Evolution (必要)
+- 其他 (視需要)
 
-### For Existing Projects
+### 現有專案
 
-**Step 1: Assess Current Documentation**
+**步驟 1：評估現有文件**
 
-- What viewpoints are covered?
-- What perspectives are addressed?
-- What gaps exist?
+- 涵蓋哪些 viewpoints？
+- 處理哪些 perspectives？
+- 存在哪些差距？
 
-**Step 2: Prioritize Gaps**
+**步驟 2：優先處理差距**
 
-- Critical: Security, Availability
-- Important: Performance, Evolution
-- Nice-to-have: Accessibility, Internationalization
+- 關鍵: Security, Availability
+- 重要: Performance, Evolution
+- 加分項: Accessibility, Internationalization
 
-**Step 3: Document Incrementally**
+**步驟 3：漸進式記錄**
 
-- Start with most critical viewpoint/perspective
-- Add one section at a time
-- Review and refine
+- 從最關鍵的 viewpoint/perspective 開始
+- 一次新增一個章節
+- 審查和改進
 
-### Documentation Templates
+### 文件範本
 
-Each viewpoint/perspective document should include:
+每個 viewpoint/perspective 文件應包含：
 
 ```markdown
-# [Viewpoint/Perspective Name]
+# [Viewpoint/Perspective 名稱]
 
-## Overview
+## 總覽
 
-- Purpose of this viewpoint/perspective
-- Key stakeholders
+- 此 viewpoint/perspective 的目的
+- 關鍵利害關係人
 
-## Current State
+## 現狀
 
-- What exists today
+- 今天存在什麼
 
-## Concerns & Requirements
+## 關注點與需求
 
-- What needs to be addressed
+- 需要處理什麼
 
-## Design Decisions
+## 設計決策
 
-- How concerns are addressed
-- Rationale for decisions
+- 如何處理關注點
+- 決策理由
 
-## Diagrams
+## 圖表
 
-- Visual representations
+- 視覺化呈現
 
-## Risks & Trade-offs
+## 風險與權衡
 
-- Known limitations
-- Mitigation strategies
+- 已知限制
+- 降低策略
 
-## Related Documents
+## 相關文件
 
-- Links to other viewpoints/perspectives
+- 連結到其他 viewpoints/perspectives
 
 ```
 
 ---
 
-## Practical Examples
+## 實務範例
 
-### Example 1: E-Commerce Platform
+### 範例 1：E-Commerce Platform
 
 **Functional Viewpoint:**
 
@@ -1588,61 +1588,61 @@ Each viewpoint/perspective document should include:
 - Order Processing
 - Payment Processing
 
-**Security Perspective Applied:**
+**Security Perspective 應用：**
 
-- Customer Management: JWT authentication, password hashing
-- Payment Processing: PCI-DSS compliance, encryption
-- All modules: HTTPS, input validation
+- Customer Management: JWT 認證、密碼雜湊
+- Payment Processing: PCI-DSS 合規、加密
+- 所有模組: HTTPS、輸入驗證
 
-### Example 2: Microservices Architecture
+### 範例 2：Microservices Architecture
 
 **Development Viewpoint:**
 
-- Service per bounded context
-- Shared libraries for common code
-- Independent deployment
+- 每個 bounded context 一個服務
+- 共用程式碼的共享函式庫
+- 獨立部署
 
-**Evolution Perspective Applied:**
+**Evolution Perspective 應用：**
 
-- API versioning strategy
-- Service contract testing
-- Backward compatibility rules
+- API 版本控制策略
+- 服務契約測試
+- 向後相容性規則
 
-### Example 3: Global SaaS Application
+### 範例 3：Global SaaS Application
 
 **Deployment Viewpoint:**
 
-- Multi-region AWS deployment
-- Regional databases
-- Global load balancing
+- Multi-region AWS 部署
+- 區域資料庫
+- 全球負載平衡
 
-**Location Perspective Applied:**
+**Location Perspective 應用：**
 
-- Data residency compliance
-- CDN for static content
-- Regional failover
+- 資料駐留合規
+- CDN 用於靜態內容
+- 區域容錯移轉
 
 ---
 
-## References
+## 參考資料
 
-### Books
+### 書籍
 
 - **"Software Systems Architecture"** by Nick Rozanski and Eoin Woods (2nd Edition)
-  - The definitive guide to this methodology
+  - 此方法論的權威指南
 
-### Online Resources
+### 線上資源
 
 - [Rozanski & Woods Website](http://www.viewpoints-and-perspectives.info/)
 - [Architecture Viewpoints](https://en.wikipedia.org/wiki/4%2B1_architectural_view_model)
 
-### Related Methodologies
+### 相關方法論
 
-- **C4 Model**: Complementary approach for diagrams
-- **Arc42**: Alternative documentation template
-- **ISO/IEC/IEEE 42010**: International standard for architecture description
+- **C4 Model**：圖表的互補方法
+- **Arc42**：替代的文件範本
+- **ISO/IEC/IEEE 42010**：架構描述的國際標準
 
-### Project-Specific Documents
+### 專案特定文件
 
 - [Development Standards](../.kiro/steering/development-standards.md)
 - [Security Standards](../.kiro/steering/security-standards.md)
@@ -1651,33 +1651,33 @@ Each viewpoint/perspective document should include:
 
 ---
 
-## Conclusion
+## 結論
 
-The Rozanski & Woods methodology provides a comprehensive framework for documenting software architecture. By systematically addressing all viewpoints and perspectives, you ensure:
+Rozanski & Woods 方法論提供了記錄軟體架構的全面框架。透過系統化地處理所有 viewpoints 和 perspectives，您可以確保：
 
-✅ **Complete Coverage**: No architectural aspect is overlooked  
-✅ **Stakeholder Alignment**: Each stakeholder gets relevant information  
-✅ **Quality Assurance**: Quality attributes are explicitly addressed  
-✅ **Maintainability**: Clear structure makes updates easier  
-✅ **Traceability**: Links requirements to architecture to implementation  
+✅ **完整涵蓋**：不會遺漏任何架構面向
+✅ **利害關係人對齊**：每個利害關係人獲得相關資訊
+✅ **品質保證**：明確處理品質屬性
+✅ **可維護性**：清晰的結構使更新更容易
+✅ **可追溯性**：將需求連結到架構再到實作
 
-**Remember:**
+**記住：**
 
-- Not every project needs all viewpoints/perspectives
-- Start with the most critical ones
-- Document incrementally
-- Keep documentation up-to-date
-- Use diagrams to complement text
+- 不是每個專案都需要所有 viewpoints/perspectives
+- 從最關鍵的開始
+- 漸進式記錄
+- 保持文件更新
+- 使用圖表補充文字
 
-**Next Steps:**
+**下一步：**
 
-1. Identify which viewpoints/perspectives are most critical for your project
-2. Create documentation structure
-3. Start documenting incrementally
-4. Review and refine regularly
+1. 識別哪些 viewpoints/perspectives 對您的專案最關鍵
+2. 建立文件結構
+3. 開始漸進式記錄
+4. 定期審查和改進
 
 ---
 
-*Last Updated: 2025-01-17*  
-*Version: 1.0*  
-*Maintained by: Architecture Team*
+*最後更新: 2025-01-17*
+*版本: 1.0*
+*維護者: Architecture Team*

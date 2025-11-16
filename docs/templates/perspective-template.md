@@ -1,12 +1,12 @@
 ---
-title: "{Perspective Name} Perspective"
+title: "{觀點名稱} 觀點"
 type: "perspective"
 category: "{security|performance|availability|evolution|accessibility|development-resource|internationalization|location}"
 affected_viewpoints: ["viewpoint1", "viewpoint2"]
 last_updated: "YYYY-MM-DD"
 version: "1.0"
 status: "draft|active|deprecated"
-owner: "Team/Person Name"
+owner: "團隊/人員名稱"
 related_docs:
 
   - "path/to/related/doc1.md"
@@ -15,393 +15,393 @@ related_docs:
 tags: ["tag1", "tag2", "tag3"]
 ---
 
-# {Perspective Name} Perspective
+# {觀點名稱} 觀點
 
-> **Status**: 📝 Draft | ✅ Active | ⚠️ Deprecated  
-> **Last Updated**: YYYY-MM-DD  
-> **Owner**: Team/Person Name
+> **狀態**: 📝 草稿 | ✅ 有效 | ⚠️ 已棄用
+> **最後更新**: YYYY-MM-DD
+> **所有者**: 團隊/人員名稱
 
-## Overview
+## 概述
 
-[Provide a high-level description of this quality attribute perspective. Explain what quality concern this perspective addresses and why it's important for the system.]
+[提供此品質屬性觀點的高層描述。解釋此觀點解決什麼品質關注，以及為什麼對系統很重要。]
 
-## Purpose
+## 用途
 
-This perspective ensures:
+此觀點確保：
 
-- Quality attribute 1
-- Quality attribute 2
-- Quality attribute 3
-- Quality attribute 4
+- 品質屬性 1
+- 品質屬性 2
+- 品質屬性 3
+- 品質屬性 4
 
-## Stakeholders
+## 利益相關者
 
-### Primary Stakeholders
+### 主要利益相關者
 
-- **Stakeholder 1**: Their quality concerns
-- **Stakeholder 2**: Their quality concerns
+- **利益相關者 1**: 他們的品質關注
+- **利益相關者 2**: 他們的品質關注
 
-### Secondary Stakeholders
+### 次要利益相關者
 
-- **Stakeholder 3**: Their quality concerns
-- **Stakeholder 4**: Their quality concerns
+- **利益相關者 3**: 他們的品質關注
+- **利益相關者 4**: 他們的品質關注
 
-## Contents
+## 內容
 
-### 📄 Documents
+### 📄 文件
 
-- [Concerns](concerns.md) - Quality attribute concerns
-- [Requirements](requirements.md) - Quality attribute scenarios and requirements
-- [Design Decisions](design-decisions.md) - How concerns are addressed
-- [Implementation](implementation.md) - Implementation guidelines
-- [Verification](verification.md) - How to verify and test
+- [關注](concerns.md) - 品質屬性關注
+- [需求](requirements.md) - 品質屬性場景和需求
+- [設計決策](design-decisions.md) - 如何解決關注
+- [實施](implementation.md) - 實施指南
+- [驗證](verification.md) - 如何驗證和測試
 
-### 📊 Diagrams
+### 📊 圖表
 
-- [Diagram 1](../../diagrams/perspectives/{category}/diagram1.puml) - Description
-- [Diagram 2](../../diagrams/perspectives/{category}/diagram2.puml) - Description
+- [圖表 1](../../diagrams/perspectives/{category}/diagram1.puml) - 描述
+- [圖表 2](../../diagrams/perspectives/{category}/diagram2.puml) - 描述
 
-## Key Concerns
+## 主要關注
 
-### Concern 1: {Concern Title}
+### 關注 1：{關注標題}
 
-**Description**: [Describe the quality concern]
+**描述**: [描述品質關注]
 
-**Impact**: [Explain the impact if not addressed]
+**影響**: [說明不解決此問題的影響]
 
-**Priority**: High | Medium | Low
+**優先級**: 高 | 中 | 低
 
-**Affected Viewpoints**: [List affected viewpoints]
+**受影響的視點**: [列出受影響的視點]
 
-### Concern 2: {Concern Title}
+### 關注 2：{關注標題}
 
-**Description**: [Describe the quality concern]
+**描述**: [描述品質關注]
 
-**Impact**: [Explain the impact if not addressed]
+**影響**: [說明不解決此問題的影響]
 
-**Priority**: High | Medium | Low
+**優先級**: 高 | 中 | 低
 
-**Affected Viewpoints**: [List affected viewpoints]
+**受影響的視點**: [列出受影響的視點]
 
-### Concern 3: {Concern Title}
+### 關注 3：{關注標題}
 
-**Description**: [Describe the quality concern]
+**描述**: [描述品質關注]
 
-**Impact**: [Explain the impact if not addressed]
+**影響**: [說明不解決此問題的影響]
 
-**Priority**: High | Medium | Low
+**優先級**: 高 | 中 | 低
 
-**Affected Viewpoints**: [List affected viewpoints]
+**受影響的視點**: [列出受影響的視點]
 
-## Quality Attribute Requirements
+## 品質屬性需求
 
-### Requirement 1: {Requirement Title}
+### 需求 1：{需求標題}
 
-**Description**: [Describe the requirement]
+**描述**: [描述需求]
 
-**Target**: [Specific measurable target]
+**目標**: [特定可測量的目標]
 
-**Rationale**: [Why this requirement exists]
+**理由**: [此需求存在的原因]
 
-**Verification**: [How to verify compliance]
+**驗證**: [如何驗證符合性]
 
-### Requirement 2: {Requirement Title}
+### 需求 2：{需求標題}
 
-**Description**: [Describe the requirement]
+**描述**: [描述需求]
 
-**Target**: [Specific measurable target]
+**目標**: [特定可測量的目標]
 
-**Rationale**: [Why this requirement exists]
+**理由**: [此需求存在的原因]
 
-**Verification**: [How to verify compliance]
+**驗證**: [如何驗證符合性]
 
-## Quality Attribute Scenarios
+## 品質屬性場景
 
-### Scenario 1: {Scenario Title}
+### 場景 1：{場景標題}
 
-**Source**: [Who/what generates the stimulus]
+**來源**: [誰/什麼產生刺激]
 
-**Stimulus**: [The condition that affects the system]
+**刺激**: [影響系統的條件]
 
-**Environment**: [System state when stimulus occurs]
+**環境**: [刺激發生時的系統狀態]
 
-**Artifact**: [The part of the system affected]
+**產物**: [受影響的系統部分]
 
-**Response**: [How the system responds]
+**回應**: [系統如何回應]
 
-**Response Measure**: [How to measure the response]
+**回應措施**: [如何測量回應]
 
-**Priority**: High | Medium | Low
+**優先級**: 高 | 中 | 低
 
-**Status**: ✅ Implemented | 🚧 In Progress | 📝 Planned
+**狀態**: ✅ 已實施 | 🚧 進行中 | 📝 計畫中
 
-### Scenario 2: {Scenario Title}
+### 場景 2：{場景標題}
 
-**Source**: [Who/what generates the stimulus]
+**來源**: [誰/什麼產生刺激]
 
-**Stimulus**: [The condition that affects the system]
+**刺激**: [影響系統的條件]
 
-**Environment**: [System state when stimulus occurs]
+**環境**: [刺激發生時的系統狀態]
 
-**Artifact**: [The part of the system affected]
+**產物**: [受影響的系統部分]
 
-**Response**: [How the system responds]
+**回應**: [系統如何回應]
 
-**Response Measure**: [How to measure the response]
+**回應措施**: [如何測量回應]
 
-**Priority**: High | Medium | Low
+**優先級**: 高 | 中 | 低
 
-**Status**: ✅ Implemented | 🚧 In Progress | 📝 Planned
+**狀態**: ✅ 已實施 | 🚧 進行中 | 📝 計畫中
 
-### Scenario 3: {Scenario Title}
+### 場景 3：{場景標題}
 
-**Source**: [Who/what generates the stimulus]
+**來源**: [誰/什麼產生刺激]
 
-**Stimulus**: [The condition that affects the system]
+**刺激**: [影響系統的條件]
 
-**Environment**: [System state when stimulus occurs]
+**環境**: [刺激發生時的系統狀態]
 
-**Artifact**: [The part of the system affected]
+**產物**: [受影響的系統部分]
 
-**Response**: [How the system responds]
+**回應**: [系統如何回應]
 
-**Response Measure**: [How to measure the response]
+**回應措施**: [如何測量回應]
 
-**Priority**: High | Medium | Low
+**優先級**: 高 | 中 | 低
 
-**Status**: ✅ Implemented | 🚧 In Progress | 📝 Planned
+**狀態**: ✅ 已實施 | 🚧 進行中 | 📝 計畫中
 
-## Design Decisions
+## 設計決策
 
-### Decision 1: {Decision Title}
+### 決策 1：{決策標題}
 
-**Context**: [Why this decision was needed]
+**背景**: [為什麼需要此決策]
 
-**Decision**: [What was decided]
+**決策**: [決定了什麼]
 
-**Rationale**: [Why this decision was made]
+**理由**: [為什麼做出此決策]
 
-**Trade-offs**: [What was gained and what was sacrificed]
+**權衡**: [獲得和犧牲了什麼]
 
-**Impact on Quality Attribute**: [How this affects the quality attribute]
+**對品質屬性的影響**: [這如何影響品質屬性]
 
-**Related ADR**: [Link to ADR if applicable]
+**相關 ADR**: [如適用，連結至 ADR]
 
-### Decision 2: {Decision Title}
+### 決策 2：{決策標題}
 
-**Context**: [Why this decision was needed]
+**背景**: [為什麼需要此決策]
 
-**Decision**: [What was decided]
+**決策**: [決定了什麼]
 
-**Rationale**: [Why this decision was made]
+**理由**: [為什麼做出此決策]
 
-**Trade-offs**: [What was gained and what was sacrificed]
+**權衡**: [獲得和犧牲了什麼]
 
-**Impact on Quality Attribute**: [How this affects the quality attribute]
+**對品質屬性的影響**: [這如何影響品質屬性]
 
-## Implementation Guidelines
+## 實施指南
 
-### Architectural Patterns
+### 架構模式
 
-- **Pattern 1**: Description and when to use
-- **Pattern 2**: Description and when to use
-- **Pattern 3**: Description and when to use
+- **模式 1**: 描述和使用時機
+- **模式 2**: 描述和使用時機
+- **模式 3**: 描述和使用時機
 
-### Best Practices
+### 最佳實踐
 
-1. **Best Practice 1**: Description
-2. **Best Practice 2**: Description
-3. **Best Practice 3**: Description
+1. **最佳實踐 1**: 描述
+2. **最佳實踐 2**: 描述
+3. **最佳實踐 3**: 描述
 
-### Anti-Patterns to Avoid
+### 要避免的反模式
 
-- ❌ **Anti-Pattern 1**: Why to avoid and what to do instead
-- ❌ **Anti-Pattern 2**: Why to avoid and what to do instead
-- ❌ **Anti-Pattern 3**: Why to avoid and what to do instead
+- ❌ **反模式 1**: 為什麼要避免和改做什麼
+- ❌ **反模式 2**: 為什麼要避免和改做什麼
+- ❌ **反模式 3**: 為什麼要避免和改做什麼
 
-### Code Examples
+### 程式碼範例
 
-#### Example 1: {Example Title}
+#### 範例 1：{範例標題}
 
 ```java
-// Good example demonstrating the quality attribute
+// 展示品質屬性的好範例
 public class GoodExample {
-    // Implementation
+    // 實施
 }
 ```
 
-#### Example 2: {Example Title}
+#### 範例 2：{範例標題}
 
 ```java
-// Another example
+// 另一個範例
 public class AnotherExample {
-    // Implementation
+    // 實施
 }
 ```
 
-## Verification and Testing
+## 驗證和測試
 
-### Verification Methods
+### 驗證方法
 
-- **Method 1**: Description
-- **Method 2**: Description
-- **Method 3**: Description
+- **方法 1**: 描述
+- **方法 2**: 描述
+- **方法 3**: 描述
 
-### Testing Strategy
+### 測試策略
 
-#### Test Type 1: {Test Type}
+#### 測試類型 1：{測試類型}
 
-**Purpose**: [What this test verifies]
+**用途**: [此測試驗證什麼]
 
-**Approach**: [How to conduct the test]
+**方法**: [如何進行測試]
 
-**Success Criteria**: [What indicates success]
+**成功標準**: [什麼表示成功]
 
-**Frequency**: [How often to run]
+**頻率**: [多久執行一次]
 
-#### Test Type 2: {Test Type}
+#### 測試類型 2：{測試類型}
 
-**Purpose**: [What this test verifies]
+**用途**: [此測試驗證什麼]
 
-**Approach**: [How to conduct the test]
+**方法**: [如何進行測試]
 
-**Success Criteria**: [What indicates success]
+**成功標準**: [什麼表示成功]
 
-**Frequency**: [How often to run]
+**頻率**: [多久執行一次]
 
-### Metrics and Monitoring
+### 指標和監控
 
-| Metric | Target | Measurement Method | Alert Threshold |
+| 指標 | 目標 | 測量方法 | 警報閾值 |
 |--------|--------|-------------------|-----------------|
-| Metric 1 | Target value | How to measure | When to alert |
-| Metric 2 | Target value | How to measure | When to alert |
-| Metric 3 | Target value | How to measure | When to alert |
+| 指標 1 | 目標值 | 如何測量 | 何時警報 |
+| 指標 2 | 目標值 | 如何測量 | 何時警報 |
+| 指標 3 | 目標值 | 如何測量 | 何時警報 |
 
-## Affected Viewpoints
+## 受影響的視點
 
-### [Viewpoint 1](../../viewpoints/viewpoint1/README.md)
+### [視點 1](../../viewpoints/viewpoint1/README.md)
 
-**How this perspective applies**:
-[Describe how this quality attribute affects this viewpoint]
+**此觀點如何應用**:
+[描述此品質屬性如何影響此視點]
 
-**Specific concerns**:
+**特定關注**:
 
-- Concern 1
-- Concern 2
+- 關注 1
+- 關注 2
 
-**Implementation guidance**:
-[Specific guidance for this viewpoint]
+**實施指導**:
+[此視點的特定指導]
 
-### [Viewpoint 2](../../viewpoints/viewpoint2/README.md)
+### [視點 2](../../viewpoints/viewpoint2/README.md)
 
-**How this perspective applies**:
-[Describe how this quality attribute affects this viewpoint]
+**此觀點如何應用**:
+[描述此品質屬性如何影響此視點]
 
-**Specific concerns**:
+**特定關注**:
 
-- Concern 1
-- Concern 2
+- 關注 1
+- 關注 2
 
-**Implementation guidance**:
-[Specific guidance for this viewpoint]
+**實施指導**:
+[此視點的特定指導]
 
-### [Viewpoint 3](../../viewpoints/viewpoint3/README.md)
+### [視點 3](../../viewpoints/viewpoint3/README.md)
 
-**How this perspective applies**:
-[Describe how this quality attribute affects this viewpoint]
+**此觀點如何應用**:
+[描述此品質屬性如何影響此視點]
 
-**Specific concerns**:
+**特定關注**:
 
-- Concern 1
-- Concern 2
+- 關注 1
+- 關注 2
 
-**Implementation guidance**:
-[Specific guidance for this viewpoint]
+**實施指導**:
+[此視點的特定指導]
 
-## Related Documentation
+## 相關文件
 
-### Related Perspectives
+### 相關觀點
 
-- [Perspective 1](../perspective1/README.md) - How they interact
-- [Perspective 2](../perspective2/README.md) - How they interact
+- [觀點 1](../perspective1/README.md) - 它們如何互動
+- [觀點 2](../perspective2/README.md) - 它們如何互動
 
-### Related Architecture Decisions
+### 相關架構決策
 
-- [ADR-XXX: Decision Title](../../architecture/adrs/YYYYMMDD-XXX-decision-title.md)
-- [ADR-YYY: Decision Title](../../architecture/adrs/YYYYMMDD-YYY-decision-title.md)
+- [ADR-XXX: 決策標題](../../architecture/adrs/YYYYMMDD-XXX-decision-title.md)
+- [ADR-YYY: 決策標題](../../architecture/adrs/YYYYMMDD-YYY-decision-title.md)
 
-### Related Standards and Guidelines
+### 相關標準和指南
 
-- Standard 1: [Link or description]
-- Standard 2: [Link or description]
+- 標準 1: [連結或描述]
+- 標準 2: [連結或描述]
 
-### Related Tools
+### 相關工具
 
-- Tool 1: [Description and link]
-- Tool 2: [Description and link]
+- 工具 1: [描述和連結]
+- 工具 2: [描述和連結]
 
-## Known Issues and Limitations
+## 已知問題和限制
 
-### Current Limitations
+### 目前限制
 
-- **Limitation 1**: Description and mitigation plan
-- **Limitation 2**: Description and mitigation plan
+- **限制 1**: 描述和緩解計畫
+- **限制 2**: 描述和緩解計畫
 
-### Technical Debt
+### 技術債務
 
-- **Debt Item 1**: Description and plan to address
-- **Debt Item 2**: Description and plan to address
+- **債務項 1**: 描述和解決計畫
+- **債務項 2**: 描述和解決計畫
 
-### Risks
+### 風險
 
-| Risk | Probability | Impact | Mitigation Strategy |
+| 風險 | 可能性 | 影響 | 緩解策略 |
 |------|-------------|--------|-------------------|
-| Risk 1 | High/Med/Low | High/Med/Low | Strategy |
-| Risk 2 | High/Med/Low | High/Med/Low | Strategy |
+| 風險 1 | 高/中/低 | 高/中/低 | 策略 |
+| 風險 2 | 高/中/低 | 高/中/低 | 策略 |
 
-## Future Considerations
+## 未來考量
 
-### Planned Improvements
+### 計畫的改進
 
-- **Improvement 1**: Description and timeline
-- **Improvement 2**: Description and timeline
+- **改進 1**: 描述和時間線
+- **改進 2**: 描述和時間線
 
-### Evolution Strategy
+### 演進策略
 
-[Describe how this perspective is expected to evolve]
+[描述此觀點預期如何演進]
 
-### Emerging Technologies
+### 新興技術
 
-[Discuss relevant emerging technologies that might affect this quality attribute]
+[討論可能影響此品質屬性的相關新興技術]
 
-## Quick Links
+## 快速連結
 
-- [Back to All Perspectives](../README.md)
-- [Architecture Overview](../../architecture/README.md)
-- [Main Documentation](../../README.md)
+- [回到所有觀點](../README.md)
+- [架構概述](../../architecture/README.md)
+- [主要文件](../../README.md)
 
-## Appendix
+## 附錄
 
-### Glossary
+### 詞彙表
 
-- **Term 1**: Definition
-- **Term 2**: Definition
-- **Term 3**: Definition
+- **術語 1**: 定義
+- **術語 2**: 定義
+- **術語 3**: 定義
 
-### References
+### 參考資料
 
-- Reference 1: [Title](URL)
-- Reference 2: [Title](URL)
-- Reference 3: [Title](URL)
+- 參考資料 1: [標題](URL)
+- 參考資料 2: [標題](URL)
+- 參考資料 3: [標題](URL)
 
-### Change History
+### 變更歷史
 
-| Date | Version | Author | Changes |
+| 日期 | 版本 | 作者 | 變更 |
 |------|---------|--------|---------|
-| YYYY-MM-DD | 1.0 | Name | Initial version |
-| YYYY-MM-DD | 1.1 | Name | Updates |
+| YYYY-MM-DD | 1.0 | 名稱 | 初始版本 |
+| YYYY-MM-DD | 1.1 | 名稱 | 更新 |
 
 ---
 
-**Template Version**: 1.0  
-**Last Template Update**: 2025-01-17
+**模板版本**: 1.0
+**最後模板更新**: 2025-01-17

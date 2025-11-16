@@ -1,194 +1,194 @@
 # Security Incident Troubleshooting
 
-## Overview
+## 概述
 
-This document provides troubleshooting procedures for security-related incidents in the Enterprise E-Commerce Platform, including authentication failures, authorization issues, network security problems, and suspicious activity investigation.
+本文件提供 Enterprise E-Commerce Platform 中 security 相關 incidents 的疑難排解程序，包括 authentication 失敗、authorization 問題、network security 問題和可疑活動調查。
 
-## Authentication Issues
+## Authentication 問題
 
-### Issue: JWT Token Expiration
+### 問題：JWT Token 過期
 
-**Symptoms**:
+**症狀**：
 
-- Users getting logged out unexpectedly
-- "Token expired" errors in API responses
-- 401 Unauthorized errors after period of inactivity
+- 使用者意外登出
+- API 回應顯示「Token expired」錯誤
+- 閒置一段時間後出現 401 Unauthorized 錯誤
 
-**Quick Diagnosis**:
+**快速診斷**：
 
 ```bash
-# Check token expiration time in logs
+# 檢查 logs 中的 token 過期時間
 kubectl logs -l app=ecommerce-backend -n production | grep "JWT.*expired"
 
-# Verify JWT configuration
+# 驗證 JWT 設定
 kubectl get configmap jwt-config -n production -o yaml
 
-# Check current token validity
+# 檢查目前 token 有效性
 curl -H "Authorization: Bearer ${TOKEN}" \
   http://localhost:8080/api/v1/auth/validate
 ```
 
-**Common Causes**:
+**常見原因**：
 
-1. Token TTL too short (< 1 hour)
-2. Clock skew between services
-3. Token refresh mechanism not working
-4. Session timeout configuration mismatch
+1. Token TTL 太短 (< 1 小時)
+2. Services 之間的時鐘偏移
+3. Token refresh 機制無法運作
+4. Session timeout 設定不匹配
 
-**Quick Fix**:
+**快速修復**：
 
 ```bash
-# Increase token TTL (temporary)
+# 增加 token TTL (暫時)
 kubectl set env deployment/ecommerce-backend \
   JWT_EXPIRATION_TIME=3600 -n production
 
-# Restart pods to apply changes
+# 重啟 pods 以套用變更
 kubectl rollout restart deployment/ecommerce-backend -n production
 ```
 
-**Permanent Solution**:
+**永久解決方案**：
 
-1. Review and adjust token TTL in configuration
-2. Implement proper token refresh mechanism
-3. Add sliding session expiration
-4. Configure refresh token rotation
+1. 檢視並調整設定中的 token TTL
+2. 實作適當的 token refresh 機制
+3. 新增 sliding session expiration
+4. 設定 refresh token rotation
 
-**Related Runbook**: [Authentication Failure Runbook](../runbooks/authentication-failure.md)
+**Related Runbook**：[Authentication Failure Runbook](../runbooks/authentication-failure.md)
 
 ---
 
-### Issue: Invalid Token Signature
+### 問題：Invalid Token Signature
 
-**Symptoms**:
+**症狀**：
 
-- "Invalid signature" errors
-- Authentication failures after deployment
-- Intermittent 401 errors
+- 「Invalid signature」錯誤
+- Deployment 後 authentication 失敗
+- 間歇性 401 錯誤
 
-**Quick Diagnosis**:
+**快速診斷**：
 
 ```bash
-# Check JWT secret configuration
+# 檢查 JWT secret 設定
 kubectl get secret jwt-secret -n production -o jsonpath='{.data.secret}' | base64 -d
 
-# Verify token signing algorithm
+# 驗證 token signing algorithm
 kubectl logs -l app=ecommerce-backend -n production | grep "JWT.*algorithm"
 
-# Check for multiple JWT secrets (rolling update issue)
+# 檢查多個 JWT secrets (rolling update 問題)
 kubectl get pods -n production -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.containers[0].env[?(@.name=="JWT_SECRET")].valueFrom.secretKeyRef.name}{"\n"}{end}'
 ```
 
-**Common Causes**:
+**常見原因**：
 
-1. JWT secret changed without invalidating old tokens
-2. Multiple services using different secrets
-3. Secret rotation not synchronized
-4. Incorrect signing algorithm configuration
+1. JWT secret 變更但未使舊 tokens 失效
+2. 多個 services 使用不同 secrets
+3. Secret rotation 未同步
+4. Signing algorithm 設定錯誤
 
-**Quick Fix**:
+**快速修復**：
 
 ```bash
-# Force all users to re-authenticate
+# 強制所有使用者重新驗證
 kubectl delete secret jwt-secret -n production
 kubectl create secret generic jwt-secret \
   --from-literal=secret=$(openssl rand -base64 32) \
   -n production
 
-# Restart all services
+# 重啟所有 services
 kubectl rollout restart deployment/ecommerce-backend -n production
 ```
 
-**Permanent Solution**:
+**永久解決方案**：
 
-1. Implement proper secret rotation strategy
-2. Use centralized secret management (AWS Secrets Manager)
-3. Coordinate secret updates across all services
-4. Add grace period for old secrets during rotation
+1. 實作適當的 secret rotation 策略
+2. 使用集中式 secret 管理 (AWS Secrets Manager)
+3. 協調所有 services 間的 secret 更新
+4. 為 rotation 期間的舊 secrets 新增寬限期
 
 ---
 
-### Issue: Authentication Service Unavailable
+### 問題：Authentication Service 無法使用
 
-**Symptoms**:
+**症狀**：
 
-- All login attempts failing
-- "Service unavailable" errors
-- Authentication endpoint timing out
+- 所有登入嘗試失敗
+- 「Service unavailable」錯誤
+- Authentication endpoint timeout
 
-**Quick Diagnosis**:
+**快速診斷**：
 
 ```bash
-# Check authentication service health
+# 檢查 authentication service health
 kubectl get pods -n production -l app=auth-service
 
-# Test authentication endpoint
+# 測試 authentication endpoint
 curl -X POST http://auth-service:8080/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"test","password":"test"}'
 
-# Check service logs
+# 檢查 service logs
 kubectl logs -l app=auth-service -n production --tail=100
 ```
 
-**Quick Fix**:
+**快速修復**：
 
 ```bash
-# Restart authentication service
+# 重啟 authentication service
 kubectl rollout restart deployment/auth-service -n production
 
-# Scale up if needed
+# 必要時 scale up
 kubectl scale deployment/auth-service --replicas=3 -n production
 ```
 
-**Related Runbook**: [Service Outage Runbook](../runbooks/service-outage.md)
+**Related Runbook**：[Service Outage Runbook](../runbooks/service-outage.md)
 
 ---
 
-## Authorization Issues
+## Authorization 問題
 
-### Issue: Permission Denied (RBAC)
+### 問題：Permission Denied (RBAC)
 
-**Symptoms**:
+**症狀**：
 
-- 403 Forbidden errors
-- "Access denied" messages
-- Users unable to access resources they should have access to
+- 403 Forbidden 錯誤
+- 「Access denied」訊息
+- 使用者無法存取應有權限的資源
 
-**Quick Diagnosis**:
+**快速診斷**：
 
 ```bash
-# Check user roles and permissions
+# 檢查使用者 roles 和 permissions
 kubectl logs -l app=ecommerce-backend -n production | grep "Access denied.*user=${USER_ID}"
 
-# Verify RBAC configuration
+# 驗證 RBAC 設定
 kubectl get configmap rbac-config -n production -o yaml
 
-# Check user's assigned roles
+# 檢查使用者被指派的 roles
 curl -H "Authorization: Bearer ${TOKEN}" \
   http://localhost:8080/api/v1/users/${USER_ID}/roles
 ```
 
-**Common Causes**:
+**常見原因**：
 
-1. Role not assigned to user
-2. Permission not granted to role
-3. Resource ownership mismatch
-4. RBAC policy cache not updated
+1. Role 未指派給使用者
+2. Permission 未授予 role
+3. Resource ownership 不匹配
+4. RBAC policy cache 未更新
 
-**Quick Fix**:
+**快速修復**：
 
 ```bash
-# Clear RBAC cache
+# 清除 RBAC cache
 kubectl exec -it ${POD_NAME} -n production -- \
   redis-cli DEL "rbac:cache:*"
 
-# Restart authorization service
+# 重啟 authorization service
 kubectl rollout restart deployment/ecommerce-backend -n production
 ```
 
-**Investigation Steps**:
+**調查步驟**：
 
-1. Verify user's roles in database:
+1. 驗證 database 中的使用者 roles：
 
 ```sql
 SELECT u.id, u.email, r.name as role
@@ -198,7 +198,7 @@ JOIN roles r ON ur.role_id = r.id
 WHERE u.id = '${USER_ID}';
 ```
 
-1. Check role permissions:
+1. 檢查 role permissions：
 
 ```sql
 SELECT r.name as role, p.resource, p.action
@@ -208,96 +208,96 @@ JOIN permissions p ON rp.permission_id = p.id
 WHERE r.name = '${ROLE_NAME}';
 ```
 
-1. Review audit logs:
+1. 檢視 audit logs：
 
 ```bash
 kubectl logs -l app=ecommerce-backend -n production | \
   grep "Authorization.*${USER_ID}" | tail -50
 ```
 
-**Permanent Solution**:
+**永久解決方案**：
 
-1. Review and update RBAC policies
-2. Implement proper role hierarchy
-3. Add permission inheritance
-4. Document role-permission mappings
+1. 檢視並更新 RBAC policies
+2. 實作適當的 role hierarchy
+3. 新增 permission inheritance
+4. 記錄 role-permission mappings
 
 ---
 
-### Issue: Resource Ownership Validation Failure
+### 問題：Resource Ownership Validation 失敗
 
-**Symptoms**:
+**症狀**：
 
-- Users can't access their own resources
-- "Not authorized to access this resource" errors
-- Ownership checks failing incorrectly
+- 使用者無法存取自己的資源
+- 「Not authorized to access this resource」錯誤
+- Ownership 檢查錯誤失敗
 
-**Quick Diagnosis**:
+**快速診斷**：
 
 ```bash
-# Check resource ownership in database
+# 檢查 database 中的 resource ownership
 psql -c "SELECT id, owner_id, created_by FROM orders WHERE id = '${ORDER_ID}';"
 
-# Verify ownership validation logic in logs
+# 驗證 logs 中的 ownership validation logic
 kubectl logs -l app=ecommerce-backend -n production | \
   grep "Ownership validation.*${ORDER_ID}"
 ```
 
-**Common Causes**:
+**常見原因**：
 
-1. User ID mismatch (string vs UUID)
-2. Ownership field not populated
-3. Delegation/sharing not working
-4. Cache inconsistency
+1. User ID 不匹配 (string vs UUID)
+2. Ownership 欄位未填入
+3. Delegation/sharing 無法運作
+4. Cache 不一致
 
-**Quick Fix**:
+**快速修復**：
 
 ```bash
-# Clear ownership cache
+# 清除 ownership cache
 kubectl exec -it ${POD_NAME} -n production -- \
   redis-cli DEL "ownership:*"
 ```
 
 ---
 
-## Network Security Issues
+## Network Security 問題
 
-### Issue: Security Group Blocking Traffic
+### 問題：Security Group 阻擋流量
 
-**Symptoms**:
+**症狀**：
 
-- Connection timeouts to specific services
-- Intermittent connectivity issues
-- "Connection refused" errors
+- 特定 services 的連線 timeout
+- 間歇性連線問題
+- 「Connection refused」錯誤
 
-**Quick Diagnosis**:
+**快速診斷**：
 
 ```bash
-# Check security group rules
+# 檢查 security group 規則
 aws ec2 describe-security-groups \
   --group-ids ${SECURITY_GROUP_ID} \
   --query 'SecurityGroups[0].IpPermissions'
 
-# Test connectivity from pod
+# 從 pod 測試連線
 kubectl exec -it ${POD_NAME} -n production -- \
   nc -zv ${TARGET_HOST} ${TARGET_PORT}
 
-# Check VPC flow logs
+# 檢查 VPC flow logs
 aws ec2 describe-flow-logs \
   --filter "Name=resource-id,Values=${VPC_ID}"
 ```
 
-**Common Causes**:
+**常見原因**：
 
-1. Missing ingress/egress rules
-2. Wrong CIDR blocks
-3. Port mismatch
-4. Security group not attached to resource
+1. 缺少 ingress/egress 規則
+2. 錯誤的 CIDR blocks
+3. Port 不匹配
+4. Security group 未附加至資源
 
-**Quick Fix**:
+**快速修復**：
 
 ```bash
-# Add temporary rule (be specific!)
+# 新增暫時規則 (請具體指定！)
 aws ec2 authorize-security-group-ingress \
   --group-id ${SECURITY_GROUP_ID} \
   --protocol tcp \
@@ -305,9 +305,9 @@ aws ec2 authorize-security-group-ingress \
   --cidr ${SOURCE_CIDR}
 ```
 
-**Investigation Steps**:
+**調查步驟**：
 
-1. Review VPC flow logs for rejected connections:
+1. 檢視 VPC flow logs 中被拒絕的連線：
 
 ```bash
 aws logs filter-log-events \
@@ -316,55 +316,55 @@ aws logs filter-log-events \
   --start-time $(date -u -d '1 hour ago' +%s)000
 ```
 
-1. Verify network ACLs:
+1. 驗證 network ACLs：
 
 ```bash
 aws ec2 describe-network-acls \
   --filters "Name=vpc-id,Values=${VPC_ID}"
 ```
 
-**Permanent Solution**:
+**永久解決方案**：
 
-1. Document required security group rules
-2. Use Infrastructure as Code (CDK) for security groups
-3. Implement least privilege access
-4. Regular security group audits
+1. 記錄所需的 security group 規則
+2. 使用 Infrastructure as Code (CDK) 管理 security groups
+3. 實作最小權限存取
+4. 定期 security group 稽核
 
 ---
 
-### Issue: Network ACL Blocking Traffic
+### 問題：Network ACL 阻擋流量
 
-**Symptoms**:
+**症狀**：
 
-- Entire subnet connectivity issues
-- Both inbound and outbound traffic affected
-- Security groups correct but traffic still blocked
+- 整個 subnet 連線問題
+- Inbound 和 outbound 流量都受影響
+- Security groups 正確但流量仍被阻擋
 
-**Quick Diagnosis**:
+**快速診斷**：
 
 ```bash
-# Check Network ACL rules
+# 檢查 Network ACL 規則
 aws ec2 describe-network-acls \
   --filters "Name=association.subnet-id,Values=${SUBNET_ID}"
 
-# Check rule evaluation order
+# 檢查規則評估順序
 aws ec2 describe-network-acls \
   --network-acl-ids ${NACL_ID} \
   --query 'NetworkAcls[0].Entries' \
   --output table
 ```
 
-**Common Causes**:
+**常見原因**：
 
-1. Deny rule with lower number (higher priority)
-2. Missing allow rules for ephemeral ports
-3. Stateless nature of NACLs not considered
-4. Rule number conflicts
+1. 較低編號的 deny 規則 (較高優先級)
+2. 缺少 ephemeral ports 的 allow 規則
+3. 未考慮 NACLs 的 stateless 特性
+4. 規則編號衝突
 
-**Quick Fix**:
+**快速修復**：
 
 ```bash
-# Add allow rule (use appropriate rule number)
+# 新增 allow 規則 (使用適當的規則編號)
 aws ec2 create-network-acl-entry \
   --network-acl-id ${NACL_ID} \
   --rule-number 100 \
@@ -377,18 +377,18 @@ aws ec2 create-network-acl-entry \
 
 ---
 
-### Issue: WAF Blocking Legitimate Traffic
+### 問題：WAF 阻擋合法流量
 
-**Symptoms**:
+**症狀**：
 
-- 403 Forbidden from CloudFront/ALB
-- Legitimate requests being blocked
-- "Request blocked by WAF" in logs
+- CloudFront/ALB 回應 403 Forbidden
+- 合法請求被阻擋
+- Logs 顯示「Request blocked by WAF」
 
-**Quick Diagnosis**:
+**快速診斷**：
 
 ```bash
-# Check WAF logs
+# 檢查 WAF logs
 aws wafv2 get-sampled-requests \
   --web-acl-arn ${WEB_ACL_ARN} \
   --rule-metric-name ${RULE_NAME} \
@@ -396,31 +396,31 @@ aws wafv2 get-sampled-requests \
   --time-window StartTime=$(date -u -d '1 hour ago' +%s),EndTime=$(date -u +%s) \
   --max-items 100
 
-# Check which rule is blocking
+# 檢查哪個規則正在阻擋
 aws logs filter-log-events \
   --log-group-name aws-waf-logs-${WEB_ACL_NAME} \
   --filter-pattern '{ $.action = "BLOCK" }' \
   --start-time $(date -u -d '1 hour ago' +%s)000
 ```
 
-**Common Causes**:
+**常見原因**：
 
-1. Rate limiting too aggressive
-2. Geo-blocking legitimate users
-3. SQL injection rule false positive
-4. XSS protection blocking valid input
+1. Rate limiting 太激進
+2. Geo-blocking 合法使用者
+3. SQL injection 規則誤判
+4. XSS protection 阻擋有效輸入
 
-**Quick Fix**:
+**快速修復**：
 
 ```bash
-# Temporarily disable problematic rule
+# 暫時停用有問題的規則
 aws wafv2 update-web-acl \
   --id ${WEB_ACL_ID} \
   --scope REGIONAL \
   --lock-token ${LOCK_TOKEN} \
   --rules file://updated-rules.json
 
-# Add IP to allowlist
+# 將 IP 新增至 allowlist
 aws wafv2 update-ip-set \
   --id ${IP_SET_ID} \
   --scope REGIONAL \
@@ -428,12 +428,12 @@ aws wafv2 update-ip-set \
   --lock-token ${LOCK_TOKEN}
 ```
 
-**Investigation Steps**:
+**調查步驟**：
 
-1. Analyze blocked requests:
+1. 分析被阻擋的請求：
 
 ```bash
-# Get detailed WAF logs
+# 取得詳細 WAF logs
 aws logs get-log-events \
   --log-group-name aws-waf-logs-${WEB_ACL_NAME} \
   --log-stream-name ${LOG_STREAM} \
@@ -441,10 +441,10 @@ aws logs get-log-events \
   jq '.events[] | select(.message | contains("BLOCK"))'
 ```
 
-1. Review rule match details:
+1. 檢視規則匹配詳情：
 
 ```bash
-# Check which rule matched
+# 檢查哪個規則匹配
 aws wafv2 get-sampled-requests \
   --web-acl-arn ${WEB_ACL_ARN} \
   --rule-metric-name ${RULE_NAME} \
@@ -454,34 +454,34 @@ aws wafv2 get-sampled-requests \
   jq '.SampledRequests[] | {uri: .Request.URI, action: .Action, ruleWithinRuleGroup: .RuleNameWithinRuleGroup}'
 ```
 
-**Permanent Solution**:
+**永久解決方案**：
 
-1. Fine-tune WAF rules based on traffic patterns
-2. Implement custom rules for known false positives
-3. Use count mode before blocking
-4. Regular review of blocked requests
+1. 根據流量模式微調 WAF 規則
+2. 為已知誤判實作自訂規則
+3. 在阻擋前使用 count mode
+4. 定期檢視被阻擋的請求
 
 ---
 
-## DDoS Attack Detection and Mitigation
+## DDoS Attack 偵測與緩解
 
-### Issue: Suspected DDoS Attack
+### 問題：疑似 DDoS Attack
 
-**Symptoms**:
+**症狀**：
 
-- Sudden spike in traffic
-- High number of requests from specific IPs/regions
-- Service degradation or unavailability
-- Unusual traffic patterns
+- 流量突然激增
+- 來自特定 IPs/regions 的大量請求
+- Service 降級或無法使用
+- 異常流量模式
 
-**Quick Diagnosis**:
+**快速診斷**：
 
 ```bash
-# Check request rate
+# 檢查請求率
 kubectl logs -l app=ecommerce-backend -n production | \
   grep "HTTP" | awk '{print $1}' | sort | uniq -c | sort -rn | head -20
 
-# Check CloudWatch metrics
+# 檢查 CloudWatch metrics
 aws cloudwatch get-metric-statistics \
   --namespace AWS/ApplicationELB \
   --metric-name RequestCount \
@@ -491,27 +491,27 @@ aws cloudwatch get-metric-statistics \
   --period 60 \
   --statistics Sum
 
-# Check AWS Shield events
+# 檢查 AWS Shield events
 aws shield describe-attack \
   --attack-id ${ATTACK_ID}
 ```
 
-**Immediate Actions**:
+**立即行動**：
 
-1. **Enable AWS Shield Advanced (if not already)**:
+1. **啟用 AWS Shield Advanced (如果尚未啟用)**：
 
 ```bash
-# Check Shield status
+# 檢查 Shield 狀態
 aws shield describe-subscription
 
-# Enable DDoS Response Team (DRT) access if needed
+# 必要時啟用 DDoS Response Team (DRT) 存取
 aws shield associate-drt-role --role-arn ${DRT_ROLE_ARN}
 ```
 
-1. **Activate rate limiting**:
+1. **啟用 rate limiting**：
 
 ```bash
-# Update WAF rate limit rule
+# 更新 WAF rate limit 規則
 aws wafv2 update-web-acl \
   --id ${WEB_ACL_ID} \
   --scope REGIONAL \
@@ -519,10 +519,10 @@ aws wafv2 update-web-acl \
   --rules file://rate-limit-rules.json
 ```
 
-1. **Block malicious IPs**:
+1. **阻擋惡意 IPs**：
 
 ```bash
-# Add IPs to block list
+# 將 IPs 新增至 block list
 aws wafv2 update-ip-set \
   --id ${BLOCK_IP_SET_ID} \
   --scope REGIONAL \
@@ -530,7 +530,7 @@ aws wafv2 update-ip-set \
   --lock-token ${LOCK_TOKEN}
 ```
 
-1. **Enable CloudFront geo-blocking** (if applicable):
+1. **啟用 CloudFront geo-blocking** (如適用)：
 
 ```bash
 aws cloudfront update-distribution \
@@ -538,98 +538,98 @@ aws cloudfront update-distribution \
   --distribution-config file://geo-restriction-config.json
 ```
 
-**Investigation Steps**:
+**調查步驟**：
 
-1. Analyze traffic patterns:
+1. 分析流量模式：
 
 ```bash
-# Top source IPs
+# 最多來源 IPs
 aws logs filter-log-events \
   --log-group-name /aws/elasticloadbalancing/${ALB_NAME} \
   --start-time $(date -u -d '1 hour ago' +%s)000 | \
   jq -r '.events[].message' | \
   awk '{print $3}' | sort | uniq -c | sort -rn | head -20
 
-# Request distribution by endpoint
+# 依 endpoint 的請求分布
 kubectl logs -l app=ecommerce-backend -n production | \
   grep "HTTP" | awk '{print $7}' | sort | uniq -c | sort -rn
 ```
 
-1. Check for attack signatures:
+1. 檢查 attack signatures：
 
 ```bash
-# Look for common DDoS patterns
+# 尋找常見 DDoS 模式
 kubectl logs -l app=ecommerce-backend -n production | \
   grep -E "(slowloris|RUDY|HTTP flood)" | wc -l
 
-# Check for SYN flood
+# 檢查 SYN flood
 aws ec2 describe-flow-logs \
   --filter "Name=resource-id,Values=${VPC_ID}" | \
   grep "SYN"
 ```
 
-**Mitigation Strategy**:
+**緩解策略**：
 
-1. **Layer 7 (Application Layer)**:
-   - Enable WAF rate limiting
-   - Implement CAPTCHA challenges
-   - Use CloudFront with AWS Shield
-   - Enable request throttling
+1. **Layer 7 (Application Layer)**：
+   - 啟用 WAF rate limiting
+   - 實作 CAPTCHA challenges
+   - 使用 CloudFront 搭配 AWS Shield
+   - 啟用 request throttling
 
-2. **Layer 4 (Transport Layer)**:
-   - Enable AWS Shield Advanced
-   - Use Network Load Balancer with Shield
-   - Implement connection limits
+2. **Layer 4 (Transport Layer)**：
+   - 啟用 AWS Shield Advanced
+   - 使用 Network Load Balancer 搭配 Shield
+   - 實作 connection limits
 
-3. **Layer 3 (Network Layer)**:
-   - AWS Shield Standard (automatic)
-   - VPC flow logs analysis
-   - Network ACL rules
+3. **Layer 3 (Network Layer)**：
+   - AWS Shield Standard (自動)
+   - VPC flow logs 分析
+   - Network ACL 規則
 
-**Post-Incident**:
+**Post-Incident**：
 
-1. Review attack patterns and update defenses
-2. Document attack characteristics
-3. Update incident response procedures
-4. Conduct post-mortem analysis
+1. 檢視 attack 模式並更新防禦
+2. 記錄 attack 特徵
+3. 更新 incident response 程序
+4. 進行 post-mortem 分析
 
 ---
 
-## Suspicious Activity Investigation
+## 可疑活動調查
 
-### Issue: Unusual User Behavior
+### 問題：異常使用者行為
 
-**Symptoms**:
+**症狀**：
 
-- Multiple failed login attempts
-- Access from unusual locations
-- Unusual API usage patterns
-- Privilege escalation attempts
+- 多次登入失敗嘗試
+- 從異常位置存取
+- 異常 API 使用模式
+- 權限提升嘗試
 
-**Investigation Procedure**:
+**調查程序**：
 
-1. **Gather user activity data**:
+1. **收集使用者活動資料**：
 
 ```bash
-# Check authentication logs
+# 檢查 authentication logs
 kubectl logs -l app=ecommerce-backend -n production | \
   grep "Authentication.*${USER_ID}" | tail -100
 
-# Check authorization failures
+# 檢查 authorization 失敗
 kubectl logs -l app=ecommerce-backend -n production | \
   grep "Authorization failed.*${USER_ID}" | tail -100
 
-# Check API access patterns
+# 檢查 API 存取模式
 kubectl logs -l app=ecommerce-backend -n production | \
   grep "user=${USER_ID}" | \
   awk '{print $7}' | sort | uniq -c | sort -rn
 ```
 
-1. **Analyze login patterns**:
+1. **分析登入模式**：
 
 ```sql
--- Check recent login attempts
-SELECT 
+-- 檢查最近的登入嘗試
+SELECT
   user_id,
   ip_address,
   user_agent,
@@ -640,8 +640,8 @@ WHERE user_id = '${USER_ID}'
   AND created_at > NOW() - INTERVAL '24 hours'
 ORDER BY created_at DESC;
 
--- Check failed login attempts
-SELECT 
+-- 檢查失敗的登入嘗試
+SELECT
   ip_address,
   COUNT(*) as attempts,
   MAX(created_at) as last_attempt
@@ -653,11 +653,11 @@ GROUP BY ip_address
 HAVING COUNT(*) > 5;
 ```
 
-1. **Check for privilege escalation**:
+1. **檢查權限提升**：
 
 ```sql
--- Check role changes
-SELECT 
+-- 檢查 role 變更
+SELECT
   user_id,
   old_role,
   new_role,
@@ -668,8 +668,8 @@ WHERE user_id = '${USER_ID}'
   AND changed_at > NOW() - INTERVAL '7 days'
 ORDER BY changed_at DESC;
 
--- Check permission grants
-SELECT 
+-- 檢查 permission 授予
+SELECT
   user_id,
   permission,
   granted_by,
@@ -680,11 +680,11 @@ WHERE user_id = '${USER_ID}'
 ORDER BY granted_at DESC;
 ```
 
-1. **Analyze data access patterns**:
+1. **分析資料存取模式**：
 
 ```sql
--- Check sensitive data access
-SELECT 
+-- 檢查敏感資料存取
+SELECT
   user_id,
   resource_type,
   resource_id,
@@ -697,67 +697,67 @@ WHERE user_id = '${USER_ID}'
 ORDER BY accessed_at DESC;
 ```
 
-**Response Actions**:
+**回應行動**：
 
-1. **If account compromised**:
+1. **如果帳號被入侵**：
 
 ```bash
-# Immediately disable account
+# 立即停用帳號
 curl -X POST http://localhost:8080/api/v1/admin/users/${USER_ID}/disable \
   -H "Authorization: Bearer ${ADMIN_TOKEN}"
 
-# Invalidate all sessions
+# 使所有 sessions 失效
 kubectl exec -it ${POD_NAME} -n production -- \
   redis-cli DEL "session:${USER_ID}:*"
 
-# Force password reset
+# 強制密碼重設
 curl -X POST http://localhost:8080/api/v1/admin/users/${USER_ID}/force-password-reset \
   -H "Authorization: Bearer ${ADMIN_TOKEN}"
 ```
 
-1. **If suspicious but not confirmed**:
+1. **如果可疑但未確認**：
 
 ```bash
-# Enable enhanced monitoring
+# 啟用增強監控
 curl -X POST http://localhost:8080/api/v1/admin/users/${USER_ID}/enable-monitoring \
   -H "Authorization: Bearer ${ADMIN_TOKEN}"
 
-# Require MFA for next login
+# 要求下次登入使用 MFA
 curl -X POST http://localhost:8080/api/v1/admin/users/${USER_ID}/require-mfa \
   -H "Authorization: Bearer ${ADMIN_TOKEN}"
 ```
 
 ---
 
-### Issue: Data Exfiltration Attempt
+### 問題：資料外洩嘗試
 
-**Symptoms**:
+**症狀**：
 
-- Large number of API requests
-- Bulk data downloads
-- Unusual database queries
-- High data transfer volumes
+- 大量 API 請求
+- 大量資料下載
+- 異常 database 查詢
+- 高資料傳輸量
 
-**Investigation Procedure**:
+**調查程序**：
 
-1. **Check API usage**:
+1. **檢查 API 使用**：
 
 ```bash
-# Count API requests by user
+# 依使用者計算 API 請求
 kubectl logs -l app=ecommerce-backend -n production | \
   grep "user=${USER_ID}" | wc -l
 
-# Check data volume transferred
+# 檢查傳輸的資料量
 kubectl logs -l app=ecommerce-backend -n production | \
   grep "user=${USER_ID}" | \
   awk '{sum+=$10} END {print "Total bytes:", sum}'
 ```
 
-1. **Analyze database queries**:
+1. **分析 database 查詢**：
 
 ```sql
--- Check for bulk queries
-SELECT 
+-- 檢查大量查詢
+SELECT
   user_id,
   query,
   rows_returned,
@@ -770,11 +770,11 @@ WHERE user_id = '${USER_ID}'
 ORDER BY rows_returned DESC;
 ```
 
-1. **Check export operations**:
+1. **檢查匯出操作**：
 
 ```sql
--- Check data exports
-SELECT 
+-- 檢查資料匯出
+SELECT
   user_id,
   export_type,
   record_count,
@@ -786,33 +786,33 @@ WHERE user_id = '${USER_ID}'
 ORDER BY created_at DESC;
 ```
 
-**Response Actions**:
+**回應行動**：
 
 ```bash
-# Block user immediately
+# 立即阻擋使用者
 curl -X POST http://localhost:8080/api/v1/admin/users/${USER_ID}/block \
   -H "Authorization: Bearer ${ADMIN_TOKEN}"
 
-# Revoke API keys
+# 撤銷 API keys
 curl -X DELETE http://localhost:8080/api/v1/admin/users/${USER_ID}/api-keys \
   -H "Authorization: Bearer ${ADMIN_TOKEN}"
 
-# Alert security team
-# Send notification with evidence
+# 警示 security team
+# 傳送包含證據的通知
 ```
 
 ---
 
-## Audit Log Analysis
+## Audit Log 分析
 
-### Analyzing Security Events
+### 分析 Security Events
 
-**Common Queries**:
+**常見查詢**：
 
-1. **Failed authentication attempts**:
+1. **失敗的 authentication 嘗試**：
 
 ```sql
-SELECT 
+SELECT
   ip_address,
   user_agent,
   COUNT(*) as attempts,
@@ -826,10 +826,10 @@ HAVING COUNT(*) > 10
 ORDER BY attempts DESC;
 ```
 
-1. **Privilege escalation events**:
+1. **權限提升事件**：
 
 ```sql
-SELECT 
+SELECT
   user_id,
   action,
   resource,
@@ -843,10 +843,10 @@ WHERE action IN ('ROLE_CHANGE', 'PERMISSION_GRANT', 'ADMIN_ACCESS')
 ORDER BY created_at DESC;
 ```
 
-1. **Sensitive data access**:
+1. **敏感資料存取**：
 
 ```sql
-SELECT 
+SELECT
   user_id,
   resource_type,
   COUNT(*) as access_count,
@@ -860,10 +860,10 @@ HAVING COUNT(*) > 100
 ORDER BY access_count DESC;
 ```
 
-1. **Configuration changes**:
+1. **設定變更**：
 
 ```sql
-SELECT 
+SELECT
   user_id,
   config_key,
   old_value,
@@ -877,9 +877,9 @@ ORDER BY changed_at DESC
 LIMIT 50;
 ```
 
-**CloudWatch Insights Queries**:
+**CloudWatch Insights 查詢**：
 
-1. **Authentication failures by IP**:
+1. **依 IP 的 authentication 失敗**：
 
 ```text
 fields @timestamp, ip_address, user_id, error_message
@@ -889,7 +889,7 @@ fields @timestamp, ip_address, user_id, error_message
 | limit 20
 ```
 
-1. **Authorization failures**:
+1. **Authorization 失敗**：
 
 ```text
 fields @timestamp, user_id, resource, action, reason
@@ -898,7 +898,7 @@ fields @timestamp, user_id, resource, action, reason
 | sort denial_count desc
 ```
 
-1. **Suspicious API patterns**:
+1. **可疑 API 模式**：
 
 ```text
 fields @timestamp, user_id, endpoint, response_code
@@ -912,100 +912,100 @@ fields @timestamp, user_id, endpoint, response_code
 
 ## Security Incident Response Checklist
 
-### Immediate Response (0-15 minutes)
+### 立即回應 (0-15 分鐘)
 
-- [ ] Identify and confirm the security incident
-- [ ] Assess severity and impact
-- [ ] Notify security team and on-call engineer
-- [ ] Begin evidence collection
-- [ ] Implement immediate containment measures
+- [ ] 識別並確認 security incident
+- [ ] 評估嚴重性和影響
+- [ ] 通知 security team 和 on-call engineer
+- [ ] 開始收集證據
+- [ ] 實施立即的遏制措施
 
-### Investigation (15-60 minutes)
+### 調查 (15-60 分鐘)
 
-- [ ] Collect and preserve logs
-- [ ] Analyze attack vectors
-- [ ] Identify affected systems and data
-- [ ] Determine root cause
-- [ ] Document timeline of events
+- [ ] 收集並保存 logs
+- [ ] 分析 attack vectors
+- [ ] 識別受影響的系統和資料
+- [ ] 確定根本原因
+- [ ] 記錄事件時間軸
 
-### Containment (30-120 minutes)
+### 遏制 (30-120 分鐘)
 
-- [ ] Block malicious IPs/users
-- [ ] Revoke compromised credentials
-- [ ] Isolate affected systems
-- [ ] Apply emergency patches
-- [ ] Enable enhanced monitoring
+- [ ] 阻擋惡意 IPs/users
+- [ ] 撤銷被入侵的憑證
+- [ ] 隔離受影響的系統
+- [ ] 套用緊急修補
+- [ ] 啟用增強監控
 
-### Recovery (1-24 hours)
+### 恢復 (1-24 小時)
 
-- [ ] Restore affected services
-- [ ] Verify system integrity
-- [ ] Reset compromised credentials
-- [ ] Update security controls
-- [ ] Conduct security scan
+- [ ] 恢復受影響的 services
+- [ ] 驗證系統完整性
+- [ ] 重設被入侵的憑證
+- [ ] 更新 security 控制
+- [ ] 執行 security 掃描
 
-### Post-Incident (24-72 hours)
+### Post-Incident (24-72 小時)
 
-- [ ] Complete incident report
-- [ ] Conduct post-mortem analysis
-- [ ] Update security procedures
-- [ ] Implement preventive measures
-- [ ] Brief stakeholders
+- [ ] 完成 incident 報告
+- [ ] 進行 post-mortem 分析
+- [ ] 更新 security 程序
+- [ ] 實施預防措施
+- [ ] 向利害關係人簡報
 
 ---
 
-## Quick Reference Commands
+## 快速參考指令
 
-### Authentication Checks
+### Authentication 檢查
 
 ```bash
-# Validate JWT token
+# 驗證 JWT token
 curl -H "Authorization: Bearer ${TOKEN}" \
   http://localhost:8080/api/v1/auth/validate
 
-# Check user sessions
+# 檢查使用者 sessions
 kubectl exec -it ${POD_NAME} -n production -- \
   redis-cli KEYS "session:${USER_ID}:*"
 
-# View authentication logs
+# 檢視 authentication logs
 kubectl logs -l app=ecommerce-backend -n production | \
   grep "Authentication"
 ```
 
-### Authorization Checks
+### Authorization 檢查
 
 ```bash
-# Check user roles
+# 檢查使用者 roles
 curl -H "Authorization: Bearer ${ADMIN_TOKEN}" \
   http://localhost:8080/api/v1/users/${USER_ID}/roles
 
-# Verify permissions
+# 驗證 permissions
 curl -H "Authorization: Bearer ${ADMIN_TOKEN}" \
   http://localhost:8080/api/v1/users/${USER_ID}/permissions
 
-# Clear RBAC cache
+# 清除 RBAC cache
 kubectl exec -it ${POD_NAME} -n production -- \
   redis-cli DEL "rbac:cache:*"
 ```
 
-### Network Security Checks
+### Network Security 檢查
 
 ```bash
-# Check security groups
+# 檢查 security groups
 aws ec2 describe-security-groups --group-ids ${SG_ID}
 
-# Check Network ACLs
+# 檢查 Network ACLs
 aws ec2 describe-network-acls --network-acl-ids ${NACL_ID}
 
-# Check WAF rules
+# 檢查 WAF 規則
 aws wafv2 get-web-acl --id ${WEB_ACL_ID} --scope REGIONAL
 
-# Test connectivity
+# 測試連線
 kubectl exec -it ${POD_NAME} -n production -- \
   nc -zv ${HOST} ${PORT}
 ```
 
-### Audit Log Queries
+### Audit Log 查詢
 
 ```bash
 # CloudWatch Logs
@@ -1021,63 +1021,63 @@ kubectl logs -l app=ecommerce-backend -n production | \
 
 ---
 
-## Escalation Procedures
+## 升級處理程序
 
-### Severity Levels
+### 嚴重性等級
 
-**P0 - Critical**:
+**P0 - Critical**：
 
-- Active security breach
-- Data exfiltration in progress
-- System-wide compromise
-- **Response Time**: Immediate
-- **Escalation**: Security team + CTO
+- 進行中的 security breach
+- 資料外洩進行中
+- 系統級入侵
+- **回應時間**：立即
+- **升級**：Security team + CTO
 
-**P1 - High**:
+**P1 - High**：
 
-- Suspected account compromise
+- 疑似帳號入侵
 - DDoS attack
-- Multiple authentication failures
-- **Response Time**: 15 minutes
-- **Escalation**: Security team + Engineering manager
+- 多次 authentication 失敗
+- **回應時間**：15 分鐘
+- **升級**：Security team + Engineering manager
 
-**P2 - Medium**:
+**P2 - Medium**：
 
-- Authorization issues
-- WAF blocking legitimate traffic
-- Security configuration issues
-- **Response Time**: 1 hour
-- **Escalation**: On-call engineer
+- Authorization 問題
+- WAF 阻擋合法流量
+- Security 設定問題
+- **回應時間**：1 小時
+- **升級**：On-call engineer
 
-**P3 - Low**:
+**P3 - Low**：
 
-- Minor security warnings
-- Audit log anomalies
-- Non-critical security updates
-- **Response Time**: 4 hours
-- **Escalation**: Security team (next business day)
+- 輕微 security 警告
+- Audit log 異常
+- 非關鍵 security 更新
+- **回應時間**：4 小時
+- **升級**：Security team (下個工作日)
 
-### Contact Information
+### 聯絡資訊
 
-- **Security Team**: <security@company.com>
-- **On-Call Engineer**: PagerDuty
-- **AWS Support**: Premium support portal
-- **Incident Commander**: See on-call schedule
-
----
-
-## Related Documentation
-
-- [Security Perspective](../../perspectives/security/README.md) - Security architecture and design
-- [Authentication Guide](../../perspectives/security/authentication.md) - Authentication mechanisms
-- [Authorization Guide](../../perspectives/security/authorization.md) - RBAC and permissions
-- [Monitoring Strategy](../monitoring/monitoring-strategy.md) - Security monitoring setup
-- [Incident Response Plan](../runbooks/security-incident-response.md) - Detailed incident response procedures
-- [Audit Logging](../../perspectives/security/audit-logging.md) - Audit log configuration
+- **Security Team**：<security@company.com>
+- **On-Call Engineer**：PagerDuty
+- **AWS Support**：Premium support portal
+- **Incident Commander**：查看 on-call schedule
 
 ---
 
-**Last Updated**: 2025-10-25  
-**Owner**: Security Team  
-**Review Cycle**: Quarterly  
-**Emergency Contact**: <security@company.com>
+## 相關文件
+
+- [Security Perspective](../../perspectives/security/README.md) - Security 架構與設計
+- [Authentication Guide](../../perspectives/security/authentication.md) - Authentication 機制
+- [Authorization Guide](../../perspectives/security/authorization.md) - RBAC 和 permissions
+- [Monitoring Strategy](../monitoring/monitoring-strategy.md) - Security monitoring 設定
+- [Incident Response Plan](../runbooks/security-incident-response.md) - 詳細 incident response 程序
+- [Audit Logging](../../perspectives/security/audit-logging.md) - Audit log 設定
+
+---
+
+**Last Updated**：2025-10-25
+**Owner**：Security Team
+**Review Cycle**：Quarterly
+**Emergency Contact**：<security@company.com>

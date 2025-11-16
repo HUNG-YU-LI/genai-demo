@@ -1,130 +1,130 @@
-# API Documentation
+# API 文件
 
-> **Last Updated**: 2025-01-17
+> **最後更新**: 2025-01-17
 
-## Overview
+## 概述
 
-This section contains comprehensive API documentation for the GenAI Demo e-commerce platform, including REST API endpoints, domain events, authentication, and integration guides.
+本節包含 GenAI Demo 電子商務平台的完整 API 文件,包括 REST API endpoint、domain event、身份驗證和整合指南。
 
-## Quick Navigation
+## 快速導覽
 
 ### 🌐 REST API
 
-- [REST API Overview](rest/README.md) - API design principles and conventions
-- [Authentication](rest/authentication.md) - JWT authentication and authorization
-- [Error Handling](rest/error-handling.md) - Error response formats and codes
-- [Versioning](rest/versioning.md) - API versioning strategy
+- [REST API 概述](rest/README.md) - API 設計原則和慣例
+- [身份驗證](rest/authentication.md) - JWT 身份驗證和授權
+- [錯誤處理](rest/error-handling.md) - 錯誤回應格式和代碼
+- [版本控制](rest/versioning.md) - API 版本策略
 
 ### 📡 Domain Events
 
-- [Events Overview](events/README.md) - Event-driven architecture
-- [Event Catalog](events/event-catalog.md) - Complete list of domain events
-- [Event Patterns](events/event-patterns.md) - Event design patterns
-- [Event Contexts](events/contexts/) - Events by bounded context
+- [Event 概述](events/README.md) - Event-driven 架構
+- [Event 目錄](events/event-catalog.md) - 完整的 domain event 清單
+- [Event 模式](events/event-patterns.md) - Event 設計模式
+- [Event Context](events/contexts/) - 依限界上下文分類的 event
 
-### 🔌 Integration
+### 🔌 整合
 
-- [Integration Guide](integration/README.md) - Integration patterns and best practices
-- [Webhooks](integration/webhooks.md) - Webhook configuration
-- [Rate Limiting](integration/rate-limiting.md) - API rate limits and quotas
+- [整合指南](integration/README.md) - 整合模式和最佳實踐
+- [Webhook](integration/webhooks.md) - Webhook 配置
+- [流量限制](integration/rate-limiting.md) - API 流量限制和配額
 
-## API Endpoints by Context
+## 依 Context 分類的 API Endpoint
 
 ### Customer Context
 
 **Base Path**: `/api/v1/customers`
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/customers` | Create new customer |
-| GET | `/customers/{id}` | Get customer by ID |
-| PUT | `/customers/{id}` | Update customer |
-| DELETE | `/customers/{id}` | Delete customer |
-| GET | `/customers/{id}/orders` | Get customer orders |
-| GET | `/customers/{id}/profile` | Get customer profile |
-| PUT | `/customers/{id}/profile` | Update customer profile |
-| POST | `/customers/{id}/addresses` | Add customer address |
+| Method | Endpoint | 描述 |
+|--------|----------|------|
+| POST | `/customers` | 建立新客戶 |
+| GET | `/customers/{id}` | 依 ID 取得客戶 |
+| PUT | `/customers/{id}` | 更新客戶 |
+| DELETE | `/customers/{id}` | 刪除客戶 |
+| GET | `/customers/{id}/orders` | 取得客戶訂單 |
+| GET | `/customers/{id}/profile` | 取得客戶資料 |
+| PUT | `/customers/{id}/profile` | 更新客戶資料 |
+| POST | `/customers/{id}/addresses` | 新增客戶地址 |
 
-[Full Customer API Documentation](rest/endpoints/customers.md)
+[完整 Customer API 文件](rest/endpoints/customers.md)
 
 ### Order Context
 
 **Base Path**: `/api/v1/orders`
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/orders` | Create new order |
-| GET | `/orders/{id}` | Get order by ID |
-| PUT | `/orders/{id}` | Update order |
-| POST | `/orders/{id}/submit` | Submit order |
-| POST | `/orders/{id}/confirm` | Confirm order |
-| POST | `/orders/{id}/ship` | Ship order |
-| POST | `/orders/{id}/deliver` | Deliver order |
-| POST | `/orders/{id}/cancel` | Cancel order |
-| GET | `/orders/{id}/items` | Get order items |
-| POST | `/orders/{id}/items` | Add order item |
+| Method | Endpoint | 描述 |
+|--------|----------|------|
+| POST | `/orders` | 建立新訂單 |
+| GET | `/orders/{id}` | 依 ID 取得訂單 |
+| PUT | `/orders/{id}` | 更新訂單 |
+| POST | `/orders/{id}/submit` | 提交訂單 |
+| POST | `/orders/{id}/confirm` | 確認訂單 |
+| POST | `/orders/{id}/ship` | 出貨訂單 |
+| POST | `/orders/{id}/deliver` | 配送訂單 |
+| POST | `/orders/{id}/cancel` | 取消訂單 |
+| GET | `/orders/{id}/items` | 取得訂單項目 |
+| POST | `/orders/{id}/items` | 新增訂單項目 |
 
-[Full Order API Documentation](rest/endpoints/orders.md)
+[完整 Order API 文件](rest/endpoints/orders.md)
 
 ### Product Context
 
 **Base Path**: `/api/v1/products`
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/products` | Create new product |
-| GET | `/products/{id}` | Get product by ID |
-| PUT | `/products/{id}` | Update product |
-| DELETE | `/products/{id}` | Delete product |
-| GET | `/products` | List products |
-| GET | `/products/search` | Search products |
-| GET | `/products/{id}/inventory` | Get product inventory |
+| Method | Endpoint | 描述 |
+|--------|----------|------|
+| POST | `/products` | 建立新產品 |
+| GET | `/products/{id}` | 依 ID 取得產品 |
+| PUT | `/products/{id}` | 更新產品 |
+| DELETE | `/products/{id}` | 刪除產品 |
+| GET | `/products` | 列出產品 |
+| GET | `/products/search` | 搜尋產品 |
+| GET | `/products/{id}/inventory` | 取得產品庫存 |
 
-[Full Product API Documentation](rest/endpoints/products.md)
+[完整 Product API 文件](rest/endpoints/products.md)
 
 ### Inventory Context
 
 **Base Path**: `/api/v1/inventory`
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/inventory/{productId}` | Get inventory level |
-| POST | `/inventory/{productId}/reserve` | Reserve inventory |
-| POST | `/inventory/{productId}/release` | Release inventory |
-| POST | `/inventory/{productId}/adjust` | Adjust inventory |
-| GET | `/inventory/low-stock` | Get low stock items |
-| POST | `/inventory/{productId}/restock` | Restock product |
+| Method | Endpoint | 描述 |
+|--------|----------|------|
+| GET | `/inventory/{productId}` | 取得庫存數量 |
+| POST | `/inventory/{productId}/reserve` | 保留庫存 |
+| POST | `/inventory/{productId}/release` | 釋放庫存 |
+| POST | `/inventory/{productId}/adjust` | 調整庫存 |
+| GET | `/inventory/low-stock` | 取得低庫存項目 |
+| POST | `/inventory/{productId}/restock` | 補貨 |
 
-[Full Inventory API Documentation](rest/endpoints/inventory.md)
+[完整 Inventory API 文件](rest/endpoints/inventory.md)
 
 ### Payment Context
 
 **Base Path**: `/api/v1/payments`
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/payments` | Process payment |
-| GET | `/payments/{id}` | Get payment by ID |
-| POST | `/payments/{id}/refund` | Refund payment |
-| GET | `/payments/order/{orderId}` | Get payments for order |
-| POST | `/payments/{id}/verify` | Verify payment |
+| Method | Endpoint | 描述 |
+|--------|----------|------|
+| POST | `/payments` | 處理付款 |
+| GET | `/payments/{id}` | 依 ID 取得付款 |
+| POST | `/payments/{id}/refund` | 退款 |
+| GET | `/payments/order/{orderId}` | 取得訂單的付款記錄 |
+| POST | `/payments/{id}/verify` | 驗證付款 |
 
-[Full Payment API Documentation](rest/endpoints/payments.md)
+[完整 Payment API 文件](rest/endpoints/payments.md)
 
 ### Shipping Context
 
 **Base Path**: `/api/v1/shipping`
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/shipping/shipments` | Create shipment |
-| GET | `/shipping/shipments/{id}` | Get shipment by ID |
-| PUT | `/shipping/shipments/{id}/track` | Update tracking |
-| GET | `/shipping/rates` | Calculate shipping rates |
+| Method | Endpoint | 描述 |
+|--------|----------|------|
+| POST | `/shipping/shipments` | 建立出貨 |
+| GET | `/shipping/shipments/{id}` | 依 ID 取得出貨 |
+| PUT | `/shipping/shipments/{id}/track` | 更新追蹤 |
+| GET | `/shipping/rates` | 計算運費 |
 
-[Full Shipping API Documentation](rest/endpoints/shipping.md)
+[完整 Shipping API 文件](rest/endpoints/shipping.md)
 
-## Domain Events by Context
+## 依 Context 分類的 Domain Event
 
 ### Customer Events
 
@@ -134,7 +134,7 @@ This section contains comprehensive API documentation for the GenAI Demo e-comme
 - `CustomerProfileUpdatedEvent`
 - `CustomerAddressAddedEvent`
 
-[Full Customer Events](events/contexts/customer-events.md)
+[完整 Customer Event](events/contexts/customer-events.md)
 
 ### Order Events
 
@@ -147,7 +147,7 @@ This section contains comprehensive API documentation for the GenAI Demo e-comme
 - `OrderItemAddedEvent`
 - `OrderItemRemovedEvent`
 
-[Full Order Events](events/contexts/order-events.md)
+[完整 Order Event](events/contexts/order-events.md)
 
 ### Product Events
 
@@ -156,7 +156,7 @@ This section contains comprehensive API documentation for the GenAI Demo e-comme
 - `ProductDeletedEvent`
 - `ProductPriceChangedEvent`
 
-[Full Product Events](events/contexts/product-events.md)
+[完整 Product Event](events/contexts/product-events.md)
 
 ### Inventory Events
 
@@ -165,7 +165,7 @@ This section contains comprehensive API documentation for the GenAI Demo e-comme
 - `InventoryAdjustedEvent`
 - `LowStockAlertEvent`
 
-[Full Inventory Events](events/contexts/inventory-events.md)
+[完整 Inventory Event](events/contexts/inventory-events.md)
 
 ### Payment Events
 
@@ -174,7 +174,7 @@ This section contains comprehensive API documentation for the GenAI Demo e-comme
 - `PaymentRefundedEvent`
 - `PaymentVerifiedEvent`
 
-[Full Payment Events](events/contexts/payment-events.md)
+[完整 Payment Event](events/contexts/payment-events.md)
 
 ### Shipping Events
 
@@ -183,32 +183,32 @@ This section contains comprehensive API documentation for the GenAI Demo e-comme
 - `ShipmentDeliveredEvent`
 - `TrackingUpdatedEvent`
 
-[Full Shipping Events](events/contexts/shipping-events.md)
+[完整 Shipping Event](events/contexts/shipping-events.md)
 
-## Authentication & Authorization
+## 身份驗證與授權
 
-### JWT Authentication
+### JWT 身份驗證
 
-All API requests require JWT authentication:
+所有 API request 都需要 JWT 身份驗證:
 
 ```http
 Authorization: Bearer <jwt_token>
 ```
 
-[Authentication Guide](rest/authentication.md)
+[身份驗證指南](rest/authentication.md)
 
-### Role-Based Access Control
+### 角色型存取控制
 
-- **Admin**: Full access to all endpoints
-- **Customer**: Access to own data only
-- **Seller**: Access to own products and orders
-- **Guest**: Read-only access to public data
+- **Admin**: 完整存取所有 endpoint
+- **Customer**: 僅存取自己的資料
+- **Seller**: 存取自己的產品和訂單
+- **Guest**: 僅讀取公開資料
 
-[Authorization Guide](rest/authentication.md#authorization)
+[授權指南](rest/authentication.md#authorization)
 
-## Error Handling
+## 錯誤處理
 
-### Standard Error Response
+### 標準錯誤回應
 
 ```json
 {
@@ -220,130 +220,130 @@ Authorization: Bearer <jwt_token>
 }
 ```
 
-[Error Handling Guide](rest/error-handling.md)
+[錯誤處理指南](rest/error-handling.md)
 
-### HTTP Status Codes
+### HTTP 狀態碼
 
-- `200 OK`: Successful GET, PUT, PATCH
-- `201 Created`: Successful POST
-- `204 No Content`: Successful DELETE
-- `400 Bad Request`: Validation errors
-- `401 Unauthorized`: Authentication required
-- `403 Forbidden`: Authorization failed
-- `404 Not Found`: Resource not found
-- `409 Conflict`: Business rule violation
-- `500 Internal Server Error`: System error
+- `200 OK`: 成功的 GET、PUT、PATCH
+- `201 Created`: 成功的 POST
+- `204 No Content`: 成功的 DELETE
+- `400 Bad Request`: 驗證錯誤
+- `401 Unauthorized`: 需要身份驗證
+- `403 Forbidden`: 授權失敗
+- `404 Not Found`: 找不到資源
+- `409 Conflict`: 違反業務規則
+- `500 Internal Server Error`: 系統錯誤
 
-## API Versioning
+## API 版本控制
 
-Current API version: **v1**
+目前 API 版本: **v1**
 
-- **URL Versioning**: `/api/v1/`
-- **Backward Compatibility**: Maintained for 2 versions
-- **Deprecation Notice**: 6 months before removal
+- **URL 版本控制**: `/api/v1/`
+- **向後相容**: 維持 2 個版本
+- **廢棄通知**: 移除前 6 個月
 
-[Versioning Strategy](rest/versioning.md)
+[版本控制策略](rest/versioning.md)
 
-## Rate Limiting
+## 流量限制
 
-- **Default**: 1000 requests per hour per API key
-- **Burst**: 100 requests per minute
-- **Headers**: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`
+- **預設**: 每個 API key 每小時 1000 次 request
+- **突發**: 每分鐘 100 次 request
+- **標頭**: `X-RateLimit-Limit`、`X-RateLimit-Remaining`、`X-RateLimit-Reset`
 
-[Rate Limiting Guide](integration/rate-limiting.md)
+[流量限制指南](integration/rate-limiting.md)
 
-## Getting Started
+## 開始使用
 
-### For API Consumers
+### API 使用者
 
-1. **Get API Key**: Register for API access
-2. **Read Authentication Guide**: Understand JWT authentication
-3. **Explore Endpoints**: Review endpoint documentation
-4. **Test with Postman**: Use provided Postman collection
-5. **Handle Errors**: Implement proper error handling
+1. **取得 API Key**: 註冊 API 存取
+2. **閱讀身份驗證指南**: 了解 JWT 身份驗證
+3. **探索 Endpoint**: 查看 endpoint 文件
+4. **使用 Postman 測試**: 使用提供的 Postman collection
+5. **處理錯誤**: 實作適當的錯誤處理
 
-### For Developers
+### 開發人員
 
-1. **Understand Architecture**: Review [Functional Viewpoint](../viewpoints/functional/README.md)
-2. **Learn Event Patterns**: Study [Domain Events](events/README.md)
-3. **Follow Standards**: Use [API Design Standards](rest/README.md)
-4. **Implement Endpoints**: Follow [Development Guide](../development/README.md)
+1. **了解架構**: 查看[功能視角](../viewpoints/functional/README.md)
+2. **學習 Event 模式**: 研讀 [Domain Event](events/README.md)
+3. **遵循標準**: 使用 [API 設計標準](rest/README.md)
+4. **實作 Endpoint**: 遵循[開發指南](../development/README.md)
 
-## Tools and Resources
+## 工具和資源
 
 ### Postman Collection
 
-Download the complete Postman collection:
+下載完整的 Postman collection:
 - [Postman Collection](postman/genai-demo-api.postman_collection.json)
-- [Environment Variables](postman/genai-demo-environment.postman_environment.json)
+- [環境變數](postman/genai-demo-environment.postman_environment.json)
 
 ### OpenAPI Specification
 
-- [OpenAPI 3.0 Spec](openapi/genai-demo-api-v1.yaml)
-- [Swagger UI](http://localhost:8080/swagger-ui.html) (when running locally)
+- [OpenAPI 3.0 規格](openapi/genai-demo-api-v1.yaml)
+- [Swagger UI](http://localhost:8080/swagger-ui.html) (本地執行時)
 
-### Code Examples
+### 程式碼範例
 
-- [Java Client Examples](examples/java/)
-- [JavaScript Client Examples](examples/javascript/)
-- [Python Client Examples](examples/python/)
+- [Java Client 範例](examples/java/)
+- [JavaScript Client 範例](examples/javascript/)
+- [Python Client 範例](examples/python/)
 
-## Related Documentation
+## 相關文件
 
-### Architecture Documentation
+### 架構文件
 
-- [Functional Viewpoint](../viewpoints/functional/README.md) - Business capabilities
-- [Context Viewpoint](../viewpoints/context/README.md) - System context
-- [Information Viewpoint](../viewpoints/information/README.md) - Data models
+- [功能視角](../viewpoints/functional/README.md) - 業務能力
+- [Context 視角](../viewpoints/context/README.md) - 系統 context
+- [資訊視角](../viewpoints/information/README.md) - 資料模型
 
-### Development Documentation
+### 開發文件
 
-- [API Development Guide](../development/api-development.md)
-- [Testing API Endpoints](../development/testing/api-testing.md)
-- [API Security](../perspectives/security/api-security.md)
+- [API 開發指南](../development/api-development.md)
+- [測試 API Endpoint](../development/testing/api-testing.md)
+- [API 安全性](../perspectives/security/api-security.md)
 
-### Architecture Decisions
+### 架構決策
 
-- [ADR-014: JWT Authentication Strategy](../architecture/adrs/014-jwt-authentication-strategy.md)
-- [ADR-015: RBAC Implementation](../architecture/adrs/015-rbac-implementation.md)
-- [ADR-050: API Security & Rate Limiting](../architecture/adrs/050-api-security-rate-limiting.md)
+- [ADR-014: JWT 身份驗證策略](../architecture/adrs/014-jwt-authentication-strategy.md)
+- [ADR-015: RBAC 實作](../architecture/adrs/015-rbac-implementation.md)
+- [ADR-050: API 安全性與流量限制](../architecture/adrs/050-api-security-rate-limiting.md)
 
-## Support
+## 支援
 
-### API Support
+### API 支援
 
 - **Email**: api-support@company.com
 - **Slack**: #api-support
-- **Documentation**: This site
-- **Status Page**: https://status.company.com
+- **文件**: 本站
+- **狀態頁**: https://status.company.com
 
-### Reporting Issues
+### 回報問題
 
-1. Check [troubleshooting guide](../operations/troubleshooting/README.md)
-2. Search existing issues
-3. Create new issue with details
-4. Include API request/response examples
+1. 查看[疑難排解指南](../operations/troubleshooting/README.md)
+2. 搜尋現有問題
+3. 建立新問題並提供詳細資訊
+4. 包含 API request/response 範例
 
-## Contributing
+## 貢獻
 
-### Updating API Documentation
+### 更新 API 文件
 
-1. Follow [API documentation standards](../STYLE-GUIDE.md#api-documentation)
-2. Update OpenAPI specification
-3. Add code examples
-4. Submit PR for review
+1. 遵循 [API 文件標準](../STYLE-GUIDE.md#api-documentation)
+2. 更新 OpenAPI specification
+3. 新增程式碼範例
+4. 提交 PR 進行審查
 
-### Adding New Endpoints
+### 新增 Endpoint
 
-1. Design endpoint following REST principles
-2. Document in OpenAPI spec
-3. Add to relevant context documentation
-4. Include authentication/authorization requirements
-5. Add code examples
+1. 依照 REST 原則設計 endpoint
+2. 在 OpenAPI spec 中記錄
+3. 新增到相關 context 文件
+4. 包含身份驗證/授權需求
+5. 新增程式碼範例
 
 ---
 
-**Document Owner**: API Team
-**Last Review**: 2025-01-17
-**Next Review**: 2025-04-17
-**Status**: Active
+**文件負責人**: API Team
+**最後審查**: 2025-01-17
+**下次審查**: 2025-04-17
+**狀態**: Active

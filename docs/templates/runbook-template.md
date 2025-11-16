@@ -1,559 +1,559 @@
-# Runbook: {Issue Title}
+# 操作手冊：{議題標題}
 
-> **Last Updated**: YYYY-MM-DD  
-> **Owner**: Team/Person Name  
-> **Severity**: Critical | High | Medium | Low
+> **最後更新**: YYYY-MM-DD
+> **所有者**: 團隊/人員名稱
+> **嚴重性**: 致命 | 高 | 中 | 低
 
-## Quick Reference
+## 快速參考
 
-| Property | Value |
+| 屬性 | 值 |
 |----------|-------|
-| **Issue Type** | Performance | Availability | Security | Data | Other |
-| **Affected Service** | Service name |
-| **Typical Duration** | X minutes/hours |
-| **Frequency** | Rare | Occasional | Frequent |
-| **Last Occurrence** | YYYY-MM-DD |
+| **議題類型** | 效能 | 可用性 | 安全性 | 資料 | 其他 |
+| **受影響的服務** | 服務名稱 |
+| **典型耗時** | X 分鐘/小時 |
+| **頻率** | 少見 | 偶爾 | 頻繁 |
+| **最後發生** | YYYY-MM-DD |
 
-## Symptoms
+## 症狀
 
-### User-Visible Symptoms
+### 使用者可見的症狀
 
-- Symptom 1: Description
-- Symptom 2: Description
-- Symptom 3: Description
+- 症狀 1: 描述
+- 症狀 2: 描述
+- 症狀 3: 描述
 
-### System Symptoms
+### 系統症狀
 
-- Symptom 1: Description (e.g., High CPU usage > 90%)
-- Symptom 2: Description (e.g., Error rate > 5%)
-- Symptom 3: Description (e.g., Response time > 5s)
+- 症狀 1: 描述（例如，CPU 使用率 > 90%）
+- 症狀 2: 描述（例如，錯誤率 > 5%）
+- 症狀 3: 描述（例如，回應時間 > 5 秒）
 
-### Log Patterns
+### 日誌模式
 
 ```text
-Example log pattern to look for:
-ERROR [timestamp] ServiceName: Error message pattern
+要尋找的日誌模式範例：
+ERROR [時間戳] ServiceName: 錯誤訊息模式
 ```
 
-## Impact
+## 影響
 
-### Severity Level
+### 嚴重級別
 
-**Severity**: Critical | High | Medium | Low
+**嚴重性**: 致命 | 高 | 中 | 低
 
-**Severity Criteria**:
+**嚴重性標準**:
 
-- **Critical**: Complete service outage, data loss, security breach
-- **High**: Major functionality unavailable, significant performance degradation
-- **Medium**: Minor functionality affected, some users impacted
-- **Low**: Minimal impact, workaround available
+- **致命**: 完整服務中斷、資料遺失、安全漏洞
+- **高**: 主要功能不可用、明顯效能下降
+- **中**: 次要功能受影響、部分使用者受影響
+- **低**: 影響最小、有替代方案
 
-### Affected Users
+### 受影響的使用者
 
-- **User Group 1**: Impact description
-- **User Group 2**: Impact description
-- **Estimated Affected Users**: Number or percentage
+- **使用者群組 1**: 影響描述
+- **使用者群組 2**: 影響描述
+- **估計受影響的使用者**: 數字或百分比
 
-### Business Impact
+### 業務影響
 
-- **Revenue Impact**: Description and estimated amount
-- **SLA Impact**: Which SLAs are at risk
-- **Reputation Impact**: Description
-- **Compliance Impact**: Any regulatory concerns
+- **收入影響**: 描述和估計金額
+- **SLA 影響**: 哪些 SLA 處於風險
+- **聲譽影響**: 描述
+- **合規性影響**: 任何監管關注
 
-### Affected Components
+### 受影響的組件
 
-- Component 1: Description of impact
-- Component 2: Description of impact
-- Component 3: Description of impact
+- 組件 1: 影響描述
+- 組件 2: 影響描述
+- 組件 3: 影響描述
 
-## Detection
+## 偵測
 
-### Automated Detection
+### 自動化偵測
 
-**Primary Alert**:
+**主要警報**:
 
-- **Alert Name**: Alert name from monitoring system
-- **Alert Condition**: Condition that triggers the alert
-- **Alert Channel**: Slack/PagerDuty/Email
-- **Alert Link**: [Link to alert configuration]
+- **警報名稱**: 監控系統中的警報名稱
+- **警報條件**: 觸發警報的條件
+- **警報渠道**: Slack/PagerDuty/電子郵件
+- **警報連結**: [連結到警報配置]
 
-**Secondary Alerts**:
+**次要警報**:
 
-- Alert 1: Description
-- Alert 2: Description
+- 警報 1: 描述
+- 警報 2: 描述
 
-### Monitoring Dashboards
+### 監控儀表板
 
-- **Primary Dashboard**: [Dashboard Name](dashboard-link)
-  - Key metrics to check: Metric 1, Metric 2, Metric 3
-- **Secondary Dashboard**: [Dashboard Name](dashboard-link)
-  - Key metrics to check: Metric 1, Metric 2
+- **主要儀表板**: [儀表板名稱](儀表板連結)
+  - 要檢查的關鍵指標: 指標 1、指標 2、指標 3
+- **次要儀表板**: [儀表板名稱](儀表板連結)
+  - 要檢查的關鍵指標: 指標 1、指標 2
 
-### Manual Detection
+### 手動偵測
 
-**How to manually verify the issue**:
+**如何手動驗證議題**:
 
-1. Step 1: Description
-2. Step 2: Description
-3. Step 3: Description
+1. 步驟 1: 描述
+2. 步驟 2: 描述
+3. 步驟 3: 描述
 
-**Commands to check**:
+**要檢查的指令**:
 
 ```bash
-# Check service health
+# 檢查服務健康狀態
 kubectl get pods -n production | grep service-name
 
-# Check logs
+# 檢查日誌
 kubectl logs -f deployment/service-name -n production --tail=100
 
-# Check metrics
+# 檢查指標
 curl http://service-name:8080/actuator/metrics/http.server.requests
 ```
 
-## Diagnosis
+## 診斷
 
-### Step 1: Verify the Issue
+### 步驟 1: 驗證議題
 
-**Objective**: Confirm the issue is occurring
+**目標**: 確認議題正在發生
 
-**Actions**:
+**操作**:
 
 ```bash
-# Command 1: Check service status
+# 指令 1: 檢查服務狀態
 kubectl get pods -n production
 
-# Command 2: Check recent logs
+# 指令 2: 檢查最近的日誌
 kubectl logs deployment/service-name -n production --since=10m
 
-# Command 3: Check metrics
-# Access monitoring dashboard and verify metrics
+# 指令 3: 檢查指標
+# 存取監控儀表板並驗證指標
 ```
 
-**Expected Results**:
+**預期結果**:
 
-- Result 1: Description
-- Result 2: Description
+- 結果 1: 描述
+- 結果 2: 描述
 
-**If issue confirmed**: Proceed to Step 2
-**If issue not confirmed**: Check for false positive
+**如果議題已確認**: 進行步驟 2
+**如果議題未確認**: 檢查誤報
 
-### Step 2: Identify Root Cause
+### 步驟 2: 識別根本原因
 
-**Objective**: Determine what's causing the issue
+**目標**: 確定什麼原因導致議題
 
-**Common Causes**:
+**常見原因**:
 
-1. **Cause 1**: Description
-   - How to verify: Commands or checks
-   - Indicators: What to look for
+1. **原因 1**: 描述
+   - 如何驗證: 指令或檢查
+   - 指標: 要尋找的內容
 
-2. **Cause 2**: Description
-   - How to verify: Commands or checks
-   - Indicators: What to look for
+2. **原因 2**: 描述
+   - 如何驗證: 指令或檢查
+   - 指標: 要尋找的內容
 
-3. **Cause 3**: Description
-   - How to verify: Commands or checks
-   - Indicators: What to look for
+3. **原因 3**: 描述
+   - 如何驗證: 指令或檢查
+   - 指標: 要尋找的內容
 
-**Diagnostic Commands**:
+**診斷指令**:
 
 ```bash
-# Check resource usage
+# 檢查資源使用量
 kubectl top pods -n production
 
-# Check database connections
-# Command to check DB connections
+# 檢查資料庫連接
+# 檢查 DB 連接的指令
 
-# Check external dependencies
-# Command to check external services
+# 檢查外部依賴項
+# 檢查外部服務的指令
 ```
 
-**Decision Tree**:
+**決策樹**:
 
 ```mermaid
 graph LR
-    N2["├ Yes"]
-    N3["Check for memory leak (Go to Step 3A)"]
+    N2["├ 是"]
+    N3["檢查記憶體洩漏（進行步驟 3A）"]
     N2 --> N3
-    N4["No"]
-    N5["Is error rate > 5%?"]
+    N4["否"]
+    N5["錯誤率 > 5%？"]
     N4 --> N5
-    N6["Check application logs (Go to Step 3B)"]
+    N6["檢查應用日誌（進行步驟 3B）"]
     N2 --> N6
-    N7["Check network latency (Go to Step 3C)"]
+    N7["檢查網路延遲（進行步驟 3C）"]
     N4 --> N7
 ```
 
-### Step 3: Gather Additional Information
+### 步驟 3: 收集其他資訊
 
-**Information to Collect**:
+**要收集的資訊**:
 
-- [ ] Recent deployments (last 24 hours)
-- [ ] Recent configuration changes
-- [ ] Traffic patterns (current vs normal)
-- [ ] Error logs (last 1 hour)
-- [ ] Resource utilization trends
-- [ ] External dependency status
+- [ ] 最近的部署（過去 24 小時）
+- [ ] 最近的配置變更
+- [ ] 流量模式（目前 vs 正常）
+- [ ] 錯誤日誌（過去 1 小時）
+- [ ] 資源使用率趨勢
+- [ ] 外部依賴項狀態
 
-**Commands**:
+**指令**:
 
 ```bash
-# Get recent deployments
+# 取得最近的部署
 kubectl rollout history deployment/service-name -n production
 
-# Get configuration
+# 取得配置
 kubectl get configmap service-config -n production -o yaml
 
-# Get resource usage history
-# Query from monitoring system
+# 取得資源使用歷史
+# 從監控系統查詢
 ```
 
-## Resolution
+## 解決方案
 
-### Immediate Actions (First 5 Minutes)
+### 立即行動（前 5 分鐘）
 
-**Priority**: Stop the bleeding
+**優先級**: 制止出血
 
-1. **Action 1**: Description
-
-   ```bash
-   # Command to execute
-   ```
-
-   **Expected Result**: Description
-   **Verification**: How to verify it worked
-
-2. **Action 2**: Description
+1. **操作 1**: 描述
 
    ```bash
-   # Command to execute
+   # 要執行的指令
    ```
 
-   **Expected Result**: Description
-   **Verification**: How to verify it worked
+   **預期結果**: 描述
+   **驗證**: 如何驗證它有效
 
-3. **Action 3**: Description
+2. **操作 2**: 描述
 
    ```bash
-   # Command to execute
+   # 要執行的指令
    ```
 
-   **Expected Result**: Description
-   **Verification**: How to verify it worked
+   **預期結果**: 描述
+   **驗證**: 如何驗證它有效
 
-### Short-term Fix (Next 30 Minutes)
-
-**Priority**: Restore service to acceptable level
-
-1. **Fix 1**: Description
+3. **操作 3**: 描述
 
    ```bash
-   # Commands to execute
+   # 要執行的指令
    ```
 
-   **Expected Result**: Description
-   **Rollback**: How to rollback if this doesn't work
+   **預期結果**: 描述
+   **驗證**: 如何驗證它有效
 
-2. **Fix 2**: Description
+### 短期修復（接下來 30 分鐘）
+
+**優先級**: 將服務恢復至可接受的水平
+
+1. **修復 1**: 描述
 
    ```bash
-   # Commands to execute
+   # 要執行的指令
    ```
 
-   **Expected Result**: Description
-   **Rollback**: How to rollback if this doesn't work
+   **預期結果**: 描述
+   **回滾**: 如果這不起作用，如何回滾
 
-### Root Cause Fix (Next 1-2 Hours)
+2. **修復 2**: 描述
 
-**Priority**: Permanently resolve the issue
+   ```bash
+   # 要執行的指令
+   ```
 
-1. **Permanent Fix 1**: Description
-   - Implementation steps
-   - Testing requirements
-   - Deployment plan
+   **預期結果**: 描述
+   **回滾**: 如果這不起作用，如何回滾
 
-2. **Permanent Fix 2**: Description
-   - Implementation steps
-   - Testing requirements
-   - Deployment plan
+### 根本原因修復（接下來 1-2 小時）
 
-### Resolution by Root Cause
+**優先級**: 永久解決議題
 
-#### If Root Cause is: High CPU Usage
+1. **永久修復 1**: 描述
+   - 實施步驟
+   - 測試需求
+   - 部署計畫
 
-**Resolution Steps**:
+2. **永久修復 2**: 描述
+   - 實施步驟
+   - 測試需求
+   - 部署計畫
 
-1. Step 1: Description
-2. Step 2: Description
-3. Step 3: Description
+### 按根本原因進行解決方案
 
-#### If Root Cause is: Database Connection Issues
+#### 如果根本原因是：高 CPU 使用率
 
-**Resolution Steps**:
+**解決步驟**:
 
-1. Step 1: Description
-2. Step 2: Description
-3. Step 3: Description
+1. 步驟 1: 描述
+2. 步驟 2: 描述
+3. 步驟 3: 描述
 
-#### If Root Cause is: External Service Failure
+#### 如果根本原因是：資料庫連接問題
 
-**Resolution Steps**:
+**解決步驟**:
 
-1. Step 1: Description
-2. Step 2: Description
-3. Step 3: Description
+1. 步驟 1: 描述
+2. 步驟 2: 描述
+3. 步驟 3: 描述
 
-## Verification
+#### 如果根本原因是：外部服務失敗
 
-### Verification Checklist
+**解決步驟**:
 
-After implementing the fix, verify:
+1. 步驟 1: 描述
+2. 步驟 2: 描述
+3. 步驟 3: 描述
 
-- [ ] **Metric 1**: Returns to normal range (< X)
-- [ ] **Metric 2**: Returns to normal range (< Y)
-- [ ] **Error Rate**: Below threshold (< Z%)
-- [ ] **Response Time**: Below threshold (< N ms)
-- [ ] **User Reports**: No new complaints
-- [ ] **Alerts**: Cleared or acknowledged
-- [ ] **Logs**: No error patterns
+## 驗證
 
-### Verification Commands
+### 驗證檢查清單
+
+實施修復後，驗證：
+
+- [ ] **指標 1**: 回到正常範圍（< X）
+- [ ] **指標 2**: 回到正常範圍（< Y）
+- [ ] **錯誤率**: 低於閾值（< Z%）
+- [ ] **回應時間**: 低於閾值（< N 毫秒）
+- [ ] **使用者報告**: 無新投訴
+- [ ] **警報**: 已清除或已確認
+- [ ] **日誌**: 無錯誤模式
+
+### 驗證指令
 
 ```bash
-# Check service health
+# 檢查服務健康狀態
 kubectl get pods -n production | grep service-name
 
-# Check metrics
+# 檢查指標
 curl http://service-name:8080/actuator/health
 
-# Check logs for errors
+# 檢查日誌中的錯誤
 kubectl logs deployment/service-name -n production --since=5m | grep ERROR
 
-# Run smoke tests
+# 執行煙霧測試
 ./scripts/smoke-test.sh production
 ```
 
-### Verification Timeline
+### 驗證時間線
 
-- **Immediate** (0-5 min): Service responding
-- **Short-term** (5-15 min): Metrics returning to normal
-- **Medium-term** (15-60 min): No recurrence of symptoms
-- **Long-term** (1-24 hours): Sustained normal operation
+- **立即**（0-5 分鐘）: 服務回應
+- **短期**（5-15 分鐘）: 指標回到正常
+- **中期**（15-60 分鐘）: 無症狀重複發生
+- **長期**（1-24 小時）: 持續正常運作
 
-## Prevention
+## 預防
 
-### Immediate Prevention Measures
+### 立即預防措施
 
-1. **Measure 1**: Description
-   - Implementation: How to implement
-   - Timeline: When to implement
+1. **措施 1**: 描述
+   - 實施: 如何實施
+   - 時間線: 何時實施
 
-2. **Measure 2**: Description
-   - Implementation: How to implement
-   - Timeline: When to implement
+2. **措施 2**: 描述
+   - 實施: 如何實施
+   - 時間線: 何時實施
 
-### Long-term Prevention Strategy
+### 長期預防策略
 
-1. **Strategy 1**: Description
-   - Owner: Team/Person
-   - Timeline: Timeline
-   - Success Criteria: How to measure success
+1. **策略 1**: 描述
+   - 所有者: 團隊/人員
+   - 時間線: 時間線
+   - 成功標準: 如何測量成功
 
-2. **Strategy 2**: Description
-   - Owner: Team/Person
-   - Timeline: Timeline
-   - Success Criteria: How to measure success
+2. **策略 2**: 描述
+   - 所有者: 團隊/人員
+   - 時間線: 時間線
+   - 成功標準: 如何測量成功
 
-### Monitoring Improvements
+### 監控改進
 
-- **Improvement 1**: Add alert for X
-- **Improvement 2**: Add dashboard for Y
-- **Improvement 3**: Add automated check for Z
+- **改進 1**: 為 X 新增警報
+- **改進 2**: 為 Y 新增儀表板
+- **改進 3**: 為 Z 新增自動化檢查
 
-### Process Improvements
+### 流程改進
 
-- **Improvement 1**: Description
-- **Improvement 2**: Description
-- **Improvement 3**: Description
+- **改進 1**: 描述
+- **改進 2**: 描述
+- **改進 3**: 描述
 
-## Escalation
+## 升級
 
-### Escalation Path
+### 升級路徑
 
-| Level | Contact | When to Escalate | Response Time SLA |
+| 級別 | 聯絡 | 何時升級 | 回應時間 SLA |
 |-------|---------|------------------|-------------------|
-| L1 | On-call engineer | Immediate | 5 minutes |
-| L2 | Team lead | If L1 can't resolve in 15 min | 10 minutes |
-| L3 | Engineering manager | If L2 can't resolve in 30 min | 15 minutes |
-| L4 | CTO | Critical impact > 1 hour | 30 minutes |
+| L1 | 待命工程師 | 立即 | 5 分鐘 |
+| L2 | 團隊主管 | 如果 L1 無法在 15 分鐘內解決 | 10 分鐘 |
+| L3 | 工程經理 | 如果 L2 無法在 30 分鐘內解決 | 15 分鐘 |
+| L4 | CTO | 嚴重影響 > 1 小時 | 30 分鐘 |
 
-### Contact Information
+### 聯絡資訊
 
-**On-Call Engineer**:
+**待命工程師**:
 
-- PagerDuty: [Link to schedule]
+- PagerDuty: [連結到排程]
 - Slack: #oncall-channel
 
-**Team Lead**:
+**團隊主管**:
 
-- Name: Person Name
-- Phone: +X-XXX-XXX-XXXX
+- 名稱: 人員名稱
+- 電話: +X-XXX-XXX-XXXX
 - Slack: @username
 
-**Subject Matter Experts**:
+**主題專家**:
 
-- **Expert 1** (Area): @username
-- **Expert 2** (Area): @username
+- **專家 1**（領域）: @username
+- **專家 2**（領域）: @username
 
-### Escalation Triggers
+### 升級觸發器
 
-Escalate immediately if:
+立即升級，如果：
 
-- Issue affects > X% of users
-- Revenue impact > $Y
-- Data loss or security breach
-- Unable to diagnose within 15 minutes
-- Unable to resolve within 30 minutes
-- SLA breach imminent
+- 議題影響 > X% 的使用者
+- 收入影響 > $Y
+- 資料遺失或安全漏洞
+- 無法在 15 分鐘內診斷
+- 無法在 30 分鐘內解決
+- SLA 違反迫在眼前
 
-## Communication
+## 溝通
 
-### Internal Communication
+### 內部溝通
 
-**Slack Channels**:
+**Slack 頻道**:
 
-- **#incidents**: For incident updates
-- **#engineering**: For technical discussion
-- **#leadership**: For executive updates
+- **#incidents**: 用於事件更新
+- **#engineering**: 用於技術討論
+- **#leadership**: 用於執行更新
 
-**Update Frequency**:
+**更新頻率**:
 
-- **Critical**: Every 15 minutes
-- **High**: Every 30 minutes
-- **Medium**: Every hour
+- **致命**: 每 15 分鐘
+- **高**: 每 30 分鐘
+- **中**: 每小時
 
-**Update Template**:
+**更新模板**:
 
 ```text
-🚨 Incident Update - [Timestamp]
-Status: Investigating | Identified | Monitoring | Resolved
-Impact: [Description]
-Current Actions: [What we're doing]
-ETA: [Expected resolution time]
-Next Update: [Time]
+🚨 事件更新 - [時間戳]
+狀態: 調查中 | 已識別 | 監控中 | 已解決
+影響: [描述]
+目前行動: [我們正在做什麼]
+ETA: [預期解決時間]
+下次更新: [時間]
 ```
 
-### External Communication
+### 外部溝通
 
-**Status Page**: [Link to status page]
+**狀態頁面**: [連結到狀態頁面]
 
-**Customer Communication**:
+**客戶溝通**:
 
-- **When to communicate**: Criteria for customer notification
-- **Communication channels**: Email, status page, social media
-- **Message template**: [Link to template]
+- **何時溝通**: 客戶通知的標準
+- **溝通渠道**: 電子郵件、狀態頁面、社交媒體
+- **訊息模板**: [連結到模板]
 
-**Stakeholder Communication**:
+**利益相關者溝通**:
 
-- **Who to notify**: List of stakeholders
-- **When to notify**: Criteria
-- **Communication method**: Email, phone, Slack
+- **要通知誰**: 利益相關者清單
+- **何時通知**: 標準
+- **溝通方式**: 電子郵件、電話、Slack
 
-## Post-Incident
+## 事件後
 
-### Post-Incident Review (PIR)
+### 事件後評估（PIR）
 
-**Schedule PIR**: Within 48 hours of resolution
+**排程 PIR**: 解決後 48 小時內
 
-**PIR Attendees**:
+**PIR 參與者**:
 
-- Incident responders
-- Team lead
-- Product manager
-- Relevant stakeholders
+- 事件回應者
+- 團隊主管
+- 產品經理
+- 相關利益相關者
 
-**PIR Agenda**:
+**PIR 議程**:
 
-1. Timeline of events
-2. Root cause analysis
-3. What went well
-4. What could be improved
-5. Action items
+1. 事件時間線
+2. 根本原因分析
+3. 什麼進展順利
+4. 什麼可以改進
+5. 行動項目
 
-### Documentation Updates
+### 文件更新
 
-After resolution, update:
+解決後，更新：
 
-- [ ] This runbook with lessons learned
-- [ ] Monitoring alerts if needed
-- [ ] Architecture documentation if relevant
-- [ ] Training materials if needed
+- [ ] 此操作手冊，含取得的經驗
+- [ ] 監控警報（如需要）
+- [ ] 架構文件（如相關）
+- [ ] 訓練材料（如需要）
 
-### Follow-up Actions
+### 後續行動
 
-- [ ] **Action 1**: Description - Owner - Due date
-- [ ] **Action 2**: Description - Owner - Due date
-- [ ] **Action 3**: Description - Owner - Due date
+- [ ] **行動 1**: 描述 - 所有者 - 截止日期
+- [ ] **行動 2**: 描述 - 所有者 - 截止日期
+- [ ] **行動 3**: 描述 - 所有者 - 截止日期
 
-### Lessons Learned
+### 取得的經驗
 
-**What Worked Well**:
+**進展順利的事項**:
 
-- Item 1
-- Item 2
+- 項目 1
+- 項目 2
 
-**What Could Be Improved**:
+**可以改進的事項**:
 
-- Item 1
-- Item 2
+- 項目 1
+- 項目 2
 
-**Action Items**:
+**行動項目**:
 
-- [ ] Action 1: Description
-- [ ] Action 2: Description
+- [ ] 行動 1: 描述
+- [ ] 行動 2: 描述
 
-## Related Documentation
+## 相關文件
 
-- [Architecture Documentation](../../viewpoints/README.md)
-- [Monitoring Guide](../monitoring/monitoring-strategy.md)
-- [Deployment Guide](../deployment/deployment-process.md)
-- [Related Runbook 1](./related-runbook-1.md)
-- [Related Runbook 2](./related-runbook-2.md)
+- [架構文件](../../viewpoints/README.md)
+- [監控指南](../monitoring/monitoring-strategy.md)
+- [部署指南](../deployment/deployment-process.md)
+- [相關操作手冊 1](./related-runbook-1.md)
+- [相關操作手冊 2](./related-runbook-2.md)
 
-## Appendix
+## 附錄
 
-### Useful Commands Reference
+### 有用的指令參考
 
 ```bash
-# Kubernetes commands
+# Kubernetes 指令
 kubectl get pods -n production
 kubectl logs -f deployment/service-name -n production
 kubectl describe pod pod-name -n production
 kubectl top pods -n production
 
-# Database commands
-# Add relevant database commands
+# 資料庫指令
+# 新增相關的資料庫指令
 
-# Monitoring commands
-# Add relevant monitoring commands
+# 監控指令
+# 新增相關的監控指令
 ```
 
-### Useful Links
+### 有用的連結
 
-- [Monitoring Dashboard](link)
-- [Log Aggregation](link)
-- [Deployment Pipeline](link)
-- [Configuration Management](link)
+- [監控儀表板](連結)
+- [日誌彙總](連結)
+- [部署管道](連結)
+- [配置管理](連結)
 
-### Change History
+### 變更歷史
 
-| Date | Version | Author | Changes |
+| 日期 | 版本 | 作者 | 變更 |
 |------|---------|--------|---------|
-| YYYY-MM-DD | 1.0 | Name | Initial version |
-| YYYY-MM-DD | 1.1 | Name | Updates based on incident |
+| YYYY-MM-DD | 1.0 | 名稱 | 初始版本 |
+| YYYY-MM-DD | 1.1 | 名稱 | 根據事件更新 |
 
 ---
 
-**Runbook Template Version**: 1.0  
-**Last Template Update**: 2025-01-17
+**操作手冊模板版本**: 1.0
+**最後模板更新**: 2025-01-17

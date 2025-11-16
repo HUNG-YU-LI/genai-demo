@@ -1,17 +1,17 @@
-# Architecture Constraints
+# 架構約束
 
-## Overview
+## 概述
 
-This document defines the mandatory architecture constraints for this project based on Hexagonal Architecture (Ports and Adapters) and Domain-Driven Design.
+本文件根據 Hexagonal Architecture (Ports and Adapters) 和 Domain-Driven Design 定義了本專案的強制性架構約束。
 
-**Purpose**: Provide clear rules for layer dependencies and package organization.
-**Detailed Guide**: See `.kiro/examples/architecture/` for comprehensive architecture guides.
+**目的**: 為層級依賴和套件組織提供明確的規則。
+**詳細指南**: 請參閱 `.kiro/examples/architecture/` 以獲得全面的架構指南。
 
 ---
 
-## Layer Dependencies
+## 層級依賴
 
-### Dependency Rule
+### 依賴規則
 
 ```mermaid
 graph LR
@@ -22,27 +22,27 @@ graph LR
     N2 --> N3
 ```
 
-### Must Follow
+### 必須遵循
 
-- [ ] **Domain layer**: No dependencies on any other layer
-- [ ] **Application layer**: Depends only on domain layer
-- [ ] **Infrastructure layer**: Depends on domain layer (implements interfaces)
-- [ ] **Interfaces layer**: Depends on application and domain layers
+- [ ] **Domain 層**: 不依賴任何其他層
+- [ ] **Application 層**: 僅依賴 domain 層
+- [ ] **Infrastructure 層**: 依賴 domain 層（實作介面）
+- [ ] **Interfaces 層**: 依賴 application 和 domain 層
 
-### Must Avoid
+### 必須避免
 
-- [ ] ❌ Domain depending on infrastructure
-- [ ] ❌ Domain depending on application
-- [ ] ❌ Circular dependencies between layers
-- [ ] ❌ Infrastructure depending on interfaces
+- [ ] ❌ Domain 依賴 infrastructure
+- [ ] ❌ Domain 依賴 application
+- [ ] ❌ 層級間圓形依賴
+- [ ] ❌ Infrastructure 依賴 interfaces
 
-**Detailed Architecture**: #[[file:../examples/architecture/hexagonal-architecture.md]]
+**詳細架構**: #[[file:../examples/architecture/hexagonal-architecture.md]]
 
 ---
 
-## Package Structure Standards
+## 套件結構標準
 
-### Domain Layer
+### Domain 層
 
 ```text
 domain/
@@ -60,7 +60,7 @@ domain/
     └── valueobject/        # Shared value objects
 ```
 
-### Application Layer
+### Application 層
 
 ```text
 application/
@@ -71,7 +71,7 @@ application/
     └── dto/                # Data transfer objects
 ```
 
-### Infrastructure Layer
+### Infrastructure 層
 
 ```text
 infrastructure/
@@ -85,7 +85,7 @@ infrastructure/
     └── config/             # Infrastructure configuration
 ```
 
-### Interfaces Layer
+### Interfaces 層
 
 ```text
 interfaces/
@@ -99,37 +99,37 @@ interfaces/
 
 ---
 
-## Bounded Context Rules
+## Bounded Context 規則
 
-### Must Follow
+### 必須遵循
 
-- [ ] Each context is independent and self-contained
-- [ ] Communication between contexts via domain events only
-- [ ] No direct dependencies between bounded contexts
-- [ ] Shared kernel in `domain/shared/` for common concepts
-- [ ] Context map documented
+- [ ] 每個 context 都是獨立且自成一體的
+- [ ] Context 間通訊僅透過 domain events
+- [ ] 沒有 bounded contexts 之間的直接依賴
+- [ ] `domain/shared/` 中的 shared kernel 用於常見概念
+- [ ] Context map 已記錄
 
-### Context Isolation
+### Context 隔離
 
 ```java
-// ✅ GOOD: Communication via events
+// ✅ 好：透過事件通訊
 @Component
 public class OrderSubmittedEventHandler {
     private final InventoryService inventoryService;
-    
+
     @EventListener
     public void handle(OrderSubmittedEvent event) {
         inventoryService.reserveItems(event.orderId());
     }
 }
 
-// ❌ BAD: Direct dependency between contexts
+// ❌ 壞：Contexts 間直接依賴
 public class OrderService {
-    private final InventoryRepository inventoryRepository; // Wrong!
+    private final InventoryRepository inventoryRepository; // 錯誤!
 }
 ```
 
-### Bounded Contexts in This Project
+### 本專案中的 Bounded Contexts
 
 - Customer Context
 - Order Context
@@ -147,17 +147,17 @@ public class OrderService {
 
 ---
 
-## Cross-Cutting Concerns
+## 跨領域關切
 
-### Must Follow
+### 必須遵循
 
-- [ ] **Logging**: Infrastructure layer only
-- [ ] **Metrics**: Infrastructure layer only
-- [ ] **Security**: Infrastructure layer only
-- [ ] **Tracing**: Infrastructure layer only
-- [ ] **Caching**: Infrastructure layer only
+- [ ] **Logging**: Infrastructure 層僅有
+- [ ] **Metrics**: Infrastructure 層僅有
+- [ ] **Security**: Infrastructure 層僅有
+- [ ] **Tracing**: Infrastructure 層僅有
+- [ ] **Caching**: Infrastructure 層僅有
 
-### Implementation Location
+### 實作位置
 
 ```text
 infrastructure/
@@ -170,24 +170,24 @@ infrastructure/
 
 ---
 
-## Dependency Injection Rules
+## 依賴注入規則
 
-### Must Follow
+### 必須遵循
 
-- [ ] Use constructor injection
-- [ ] Inject interfaces, not implementations
-- [ ] No `@Autowired` on fields
-- [ ] Use `final` for injected dependencies
+- [ ] 使用 constructor injection
+- [ ] 注入介面，不是實作
+- [ ] 不在欄位上使用 `@Autowired`
+- [ ] 為注入的依賴使用 `final`
 
-### Example
+### 範例
 
 ```java
-// ✅ GOOD: Constructor injection with interface
+// ✅ 好：使用介面進行 constructor injection
 @Service
 public class OrderApplicationService {
     private final OrderRepository orderRepository;
     private final DomainEventApplicationService eventService;
-    
+
     public OrderApplicationService(
         OrderRepository orderRepository,
         DomainEventApplicationService eventService
@@ -197,7 +197,7 @@ public class OrderApplicationService {
     }
 }
 
-// ❌ BAD: Field injection
+// ❌ 壞：欄位注入
 @Service
 public class OrderApplicationService {
     @Autowired
@@ -207,16 +207,16 @@ public class OrderApplicationService {
 
 ---
 
-## Configuration Management
+## 組態管理
 
-### Must Follow
+### 必須遵循
 
-- [ ] Configuration in `config/` package
-- [ ] Use `@Configuration` classes
-- [ ] Profile-specific configuration
-- [ ] Externalize sensitive data
+- [ ] `config/` 套件中的組態
+- [ ] 使用 `@Configuration` classes
+- [ ] 針對特定設定檔的組態
+- [ ] 外部化敏感資料
 
-### Configuration Structure
+### 組態結構
 
 ```text
 config/
@@ -229,9 +229,9 @@ config/
 
 ---
 
-## API Design Constraints
+## API 設計約束
 
-### REST API Structure
+### REST API 結構
 
 ```text
 interfaces/rest/{context}/
@@ -244,18 +244,18 @@ interfaces/rest/{context}/
     └── {Entity}DtoMapper.java
 ```
 
-### Must Follow
+### 必須遵循
 
-- [ ] RESTful URL conventions
-- [ ] Proper HTTP methods (GET, POST, PUT, DELETE)
-- [ ] Consistent response format
-- [ ] API versioning (`/api/v1/`)
+- [ ] RESTful URL 慣例
+- [ ] 適當的 HTTP 方法 (GET, POST, PUT, DELETE)
+- [ ] 一致的回應格式
+- [ ] API 版本化 (`/api/v1/`)
 
 ---
 
-## Event-Driven Architecture
+## Event-Driven 架構
 
-### Event Flow
+### 事件流
 
 ```mermaid
 graph TD
@@ -272,18 +272,18 @@ graph TD
     N5 --> N6
 ```
 
-### Must Follow
+### 必須遵循
 
-- [ ] Aggregates collect events, don't publish
-- [ ] Application services publish after successful transaction
-- [ ] Event handlers in infrastructure layer
-- [ ] Use `@TransactionalEventListener(phase = AFTER_COMMIT)`
+- [ ] Aggregates 蒐集事件，不發布
+- [ ] Application services 在成功的交易後發布
+- [ ] 事件處理程式在 infrastructure 層
+- [ ] 使用 `@TransactionalEventListener(phase = AFTER_COMMIT)`
 
 ---
 
-## Testing Architecture
+## 測試架構
 
-### Test Package Structure
+### 測試套件結構
 
 ```text
 test/
@@ -293,24 +293,24 @@ test/
 └── bdd/                    # BDD/Cucumber tests
 ```
 
-### Must Follow
+### 必須遵循
 
-- [ ] Unit tests for domain logic
-- [ ] Integration tests for infrastructure
-- [ ] E2E tests for complete flows
-- [ ] BDD tests for business scenarios
+- [ ] Domain 邏輯的 Unit tests
+- [ ] Infrastructure 的 Integration tests
+- [ ] 完整流程的 E2E tests
+- [ ] 商務場景的 BDD tests
 
 ---
 
-## Validation Commands
+## 驗證命令
 
-### Architecture Compliance
+### 架構合規性
 
 ```bash
-./gradlew archUnit  # Verify all architecture rules
+./gradlew archUnit  # 驗證所有架構規則
 ```
 
-### ArchUnit Rules
+### ArchUnit 規則
 
 ```java
 // Layer dependency rules
@@ -336,26 +336,26 @@ static final ArchRule repositoryRules = classes()
 
 ---
 
-## Quick Reference
+## 快速參考
 
-| Layer | Dependencies | Location | Purpose |
+| 層 | 依賴 | 位置 | 目的 |
 |-------|--------------|----------|---------|
-| Domain | None | `domain/` | Business logic and rules |
-| Application | Domain | `application/` | Use case orchestration |
-| Infrastructure | Domain | `infrastructure/` | Technical implementations |
-| Interfaces | Application, Domain | `interfaces/` | External communication |
+| Domain | 無 | `domain/` | 商務邏輯和規則 |
+| Application | Domain | `application/` | Use case 協調 |
+| Infrastructure | Domain | `infrastructure/` | 技術實作 |
+| Interfaces | Application, Domain | `interfaces/` | 外部通訊 |
 
 ---
 
-## Related Documentation
+## 相關文件
 
-- **Core Principles**: #[[file:core-principles.md]]
-- **DDD Patterns**: #[[file:ddd-tactical-patterns.md]]
-- **Design Principles**: #[[file:design-principles.md]]
-- **Architecture Examples**: #[[file:../examples/architecture/]]
+- **核心原則**: #[[file:core-principles.md]]
+- **DDD 模式**: #[[file:ddd-tactical-patterns.md]]
+- **設計原則**: #[[file:design-principles.md]]
+- **架構範例**: #[[file:../examples/architecture/]]
 
 ---
 
-**Document Version**: 1.0
-**Last Updated**: 2025-01-17
-**Owner**: Architecture Team
+**文件版本**: 1.0
+**最後更新**: 2025-01-17
+**所有者**: 架構團隊
