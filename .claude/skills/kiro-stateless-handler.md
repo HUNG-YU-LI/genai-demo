@@ -1,68 +1,75 @@
-# Kiro Stateless Handler Skill
+# Kiro 無狀態處理器技巧 (Kiro Stateless Handler Skill)
 
-## Description
-Ensures all handlers and services are stateless, with state externalized to databases or caches. Based on AWS Lambda's stateless execution model.
+## 描述
 
-## When to Use
-- Creating API handlers
-- Implementing event processors
-- Designing service classes
-- Building scalable microservices
+確保所有處理器和服務都是無狀態的，狀態外部化到資料庫或快取。基於 AWS Lambda 的無狀態執行模型。
 
-## Core Principles
+## 何時使用
 
-### 1. No Instance State
-Never store state in class fields (except for injected dependencies).
+- 建立 API 處理器
+- 實作事件處理器
+- 設計服務類別
+- 建構可擴展的微服務
 
-### 2. Pure Functions
-Given the same input, always produce the same output.
+## 核心原則
 
-### 3. External State Storage
-All state must be stored in external systems (DB, cache, message queue).
+### 1. 無實例狀態
 
-## Stateless Handler Pattern
+絕不在類別欄位中儲存狀態（注入的依賴項除外）。
 
-### ❌ Anti-Pattern: Stateful Handler
+### 2. 純函數
+
+給定相同的輸入，始終產生相同的輸出。
+
+### 3. 外部狀態儲存
+
+所有狀態都必須儲存在外部系統（資料庫、快取、訊息佇列）中。
+
+## 無狀態處理器模式
+
+### ❌ 反模式：有狀態處理器
+
 ```java
 @RestController
 public class OrderController {
 
-    // BAD: Instance state
+    // 錯誤：實例狀態
     private Map<String, Order> orderCache = new HashMap<>();
     private int requestCount = 0;
 
     @PostMapping("/orders")
     public Order createOrder(@RequestBody OrderRequest request) {
-        requestCount++; // BAD: Stateful counter
+        requestCount++; // 錯誤：有狀態計數器
 
         Order order = new Order(request);
-        orderCache.put(order.getId(), order); // BAD: In-memory cache
+        orderCache.put(order.getId(), order); // 錯誤：記憶體內快取
 
         return order;
     }
 }
 ```
 
-### ✅ Best Practice: Stateless Handler
+### ✅ 最佳實踐：無狀態處理器
+
 ```java
 @RestController
 @RequiredArgsConstructor
 public class OrderController {
 
-    // GOOD: Only injected dependencies (stateless services)
+    // 正確：只有注入的依賴項（無狀態服務）
     private final OrderService orderService;
     private final OrderRepository orderRepository;
     private final CacheManager cacheManager;
 
     @PostMapping("/orders")
     public ResponseEntity<Order> createOrder(@RequestBody OrderRequest request) {
-        // All state is passed as parameters or stored externally
+        // 所有狀態都作為參數傳遞或儲存在外部
         Order order = orderService.createOrder(request);
 
-        // Store in external database
+        // 儲存到外部資料庫
         orderRepository.save(order);
 
-        // Store in external cache
+        // 儲存到外部快取
         cacheManager.put("order:" + order.getId(), order);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
@@ -70,7 +77,7 @@ public class OrderController {
 
     @GetMapping("/orders/{id}")
     public ResponseEntity<Order> getOrder(@PathVariable String id) {
-        // Retrieve from external storage
+        // 從外部儲存檢索
         return orderRepository.findById(id)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
@@ -78,57 +85,57 @@ public class OrderController {
 }
 ```
 
-## Service Layer Stateless Pattern
+## 服務層無狀態模式
 
 ```java
 @Service
 @RequiredArgsConstructor
 public class OrderProcessingService {
 
-    // GOOD: Only dependencies, no mutable state
+    // 正確：只有依賴項，沒有可變狀態
     private final OrderRepository orderRepository;
     private final InventoryService inventoryService;
     private final PaymentGateway paymentGateway;
     private final EventPublisher eventPublisher;
 
     /**
-     * Stateless method: All inputs as parameters, all outputs as return values
+     * 無狀態方法：所有輸入作為參數，所有輸出作為返回值
      */
     public ProcessingResult processOrder(OrderId orderId, ProcessingContext context) {
-        // 1. Load state from external storage
+        // 1. 從外部儲存載入狀態
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new OrderNotFoundException(orderId));
 
-        // 2. Perform stateless processing
+        // 2. 執行無狀態處理
         InventoryCheckResult inventoryCheck = inventoryService.checkAvailability(order.getItems());
 
         if (!inventoryCheck.isAvailable()) {
             return ProcessingResult.failure("Insufficient inventory");
         }
 
-        // 3. Execute side effects via external systems
+        // 3. 透過外部系統執行副作用
         PaymentResult payment = paymentGateway.charge(order.getTotalAmount(), context.getPaymentMethod());
 
         if (!payment.isSuccessful()) {
             return ProcessingResult.failure("Payment failed");
         }
 
-        // 4. Update state in external storage
+        // 4. 更新外部儲存中的狀態
         Order updatedOrder = order.markAsPaid(payment.getTransactionId());
         orderRepository.save(updatedOrder);
 
-        // 5. Publish events to external message queue
+        // 5. 發布事件到外部訊息佇列
         eventPublisher.publish(new OrderPaidEvent(orderId, payment.getTransactionId()));
 
-        // 6. Return result (not stored in instance)
+        // 6. 返回結果（不儲存在實例中）
         return ProcessingResult.success(updatedOrder);
     }
 }
 ```
 
-## Request-Scoped State Pattern
+## 請求範圍狀態模式
 
-For state that needs to live during a request, use context objects:
+對於需要在請求期間存活的狀態，使用上下文物件：
 
 ```java
 public record RequestContext(
@@ -137,7 +144,7 @@ public record RequestContext(
     LocalDateTime requestTime,
     Map<String, String> metadata
 ) {
-    // Immutable context passed through the call chain
+    // 不可變上下文在呼叫鏈中傳遞
 
     public static RequestContext fromHttpRequest(HttpServletRequest request) {
         return new RequestContext(
@@ -157,10 +164,10 @@ public class OrderController {
         @RequestBody OrderRequest request,
         HttpServletRequest httpRequest
     ) {
-        // Create request-scoped context
+        // 建立請求範圍上下文
         RequestContext context = RequestContext.fromHttpRequest(httpRequest);
 
-        // Pass context through the call chain
+        // 在呼叫鏈中傳遞上下文
         Order order = orderService.createOrder(request, context);
 
         return ResponseEntity.ok(order);
@@ -168,9 +175,10 @@ public class OrderController {
 }
 ```
 
-## External State Storage Patterns
+## 外部狀態儲存模式
 
-### 1. Database State
+### 1. 資料庫狀態
+
 ```java
 @Service
 public class CustomerService {
@@ -178,20 +186,21 @@ public class CustomerService {
     private final CustomerRepository repository;
 
     public Customer updateCustomer(CustomerId id, CustomerUpdate update) {
-        // Load from DB
+        // 從資料庫載入
         Customer customer = repository.findById(id)
             .orElseThrow(() -> new CustomerNotFoundException(id));
 
-        // Transform (stateless)
+        // 轉換（無狀態）
         Customer updated = customer.applyUpdate(update);
 
-        // Save to DB
+        // 儲存到資料庫
         return repository.save(updated);
     }
 }
 ```
 
-### 2. Cache State
+### 2. 快取狀態
+
 ```java
 @Service
 public class ProductService {
@@ -200,7 +209,7 @@ public class ProductService {
     private final CacheManager cache;
 
     public Product getProduct(ProductId id) {
-        // Try cache first
+        // 先嘗試快取
         String cacheKey = "product:" + id.getValue();
         Product cached = cache.get(cacheKey, Product.class);
 
@@ -208,11 +217,11 @@ public class ProductService {
             return cached;
         }
 
-        // Load from DB
+        // 從資料庫載入
         Product product = repository.findById(id)
             .orElseThrow(() -> new ProductNotFoundException(id));
 
-        // Store in cache
+        // 儲存到快取
         cache.put(cacheKey, product, Duration.ofMinutes(10));
 
         return product;
@@ -220,7 +229,8 @@ public class ProductService {
 }
 ```
 
-### 3. Session State (External Session Store)
+### 3. 會話狀態（外部會話儲存）
+
 ```java
 @Service
 public class SessionService {
@@ -228,12 +238,12 @@ public class SessionService {
     private final RedisTemplate<String, UserSession> sessionStore;
 
     public UserSession getSession(String sessionId) {
-        // Retrieve from Redis
+        // 從 Redis 檢索
         return sessionStore.opsForValue().get("session:" + sessionId);
     }
 
     public void updateSession(String sessionId, UserSession session) {
-        // Store in Redis with TTL
+        // 儲存到 Redis 並設定 TTL
         sessionStore.opsForValue().set(
             "session:" + sessionId,
             session,
@@ -243,55 +253,55 @@ public class SessionService {
 }
 ```
 
-## Concurrency Safety
+## 並行安全
 
-Stateless handlers are inherently thread-safe:
+無狀態處理器本質上是執行緒安全的：
 
 ```java
 @Service
 public class ConcurrentOrderService {
 
-    // Thread-safe: No mutable state
+    // 執行緒安全：沒有可變狀態
     private final OrderRepository repository;
 
-    // This method can be called concurrently from multiple threads
+    // 此方法可以從多個執行緒同時呼叫
     public Order processOrder(OrderRequest request) {
-        // Each invocation is independent
+        // 每次呼叫都是獨立的
         Order order = Order.from(request);
 
-        // External storage handles concurrency
+        // 外部儲存處理並行性
         return repository.save(order);
     }
 }
 ```
 
-## Benefits for Claude Code
+## 對 Claude Code 的好處
 
-1. **Scalability**: Handlers can be replicated without coordination
-2. **Simplicity**: No need to manage instance lifecycle
-3. **Testability**: Easy to test with mock dependencies
-4. **Reliability**: No state corruption across requests
-5. **Cloud-Native**: Fits perfectly with container/serverless models
+1. **可擴展性**：處理器可以無需協調地複製
+2. **簡單性**：不需要管理實例生命週期
+3. **可測試性**：易於使用模擬依賴項進行測試
+4. **可靠性**：請求之間沒有狀態損壞
+5. **雲原生**：完美適配容器/無伺服器模型
 
-## Prompts for Claude
-
-```
-Generate a stateless REST API handler for user registration.
-All state must be stored in external database and cache.
-No instance variables except injected dependencies.
-```
+## Claude 提示詞範例
 
 ```
-Create a stateless event processor that handles order creation events.
-Use external Redis for idempotency tracking and PostgreSQL for persistence.
+生成一個用於使用者註冊的無狀態 REST API 處理器。
+所有狀態必須儲存在外部資料庫和快取中。
+除了注入的依賴項外，不得有實例變數。
 ```
 
-## Validation Checklist
+```
+建立一個處理訂單建立事件的無狀態事件處理器。
+使用外部 Redis 進行冪等性追蹤，使用 PostgreSQL 進行持久化。
+```
 
-- [ ] No mutable instance fields (except injected dependencies)
-- [ ] All state is passed as parameters or stored externally
-- [ ] Methods are pure or have explicit side effects via external systems
-- [ ] No static mutable state
-- [ ] Thread-safe by design
-- [ ] Request-scoped state uses context objects
-- [ ] External storage is used for persistence
+## 驗證檢查清單
+
+- [ ] 沒有可變實例欄位（注入的依賴項除外）
+- [ ] 所有狀態都作為參數傳遞或儲存在外部
+- [ ] 方法是純粹的，或透過外部系統具有明確的副作用
+- [ ] 沒有靜態可變狀態
+- [ ] 設計上是執行緒安全的
+- [ ] 請求範圍狀態使用上下文物件
+- [ ] 外部儲存用於持久化

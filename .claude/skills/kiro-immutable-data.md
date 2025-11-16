@@ -1,28 +1,28 @@
-# Kiro Immutable Data Skill
+# Kiro 不可變資料技能
 
-## Description
-Enforces immutability for all data structures to ensure predictable, thread-safe, and traceable code. Based on functional programming principles and AWS Lambda best practices.
+## 描述
+為所有資料結構強制實施不可變性，以確保可預測、執行緒安全且可追蹤的程式碼。基於函數式程式設計原則和 AWS Lambda 最佳實踐。
 
-## When to Use
-- Defining domain models and DTOs
-- Creating value objects
-- Designing API request/response objects
-- Implementing event schemas
+## 何時使用
+- 定義領域模型（Domain Models）和資料傳輸物件（DTOs）
+- 建立值物件（Value Objects）
+- 設計 API 請求/回應物件
+- 實作事件架構（Event Schemas）
 
-## Core Principles
+## 核心原則
 
-### 1. Immutability by Default
-All data structures should be immutable unless there's a compelling reason otherwise.
+### 1. 預設不可變
+除非有充分理由，否則所有資料結構應該是不可變的。
 
-### 2. Copy-on-Write
-To "modify" data, create a new instance with the changed values.
+### 2. 寫時複製（Copy-on-Write）
+要「修改」資料，應建立帶有已更改值的新實例。
 
-### 3. Defensive Copying
-Protect against external mutations.
+### 3. 防守性複製（Defensive Copying）
+防止外部修改。
 
-## Java Record Pattern (Preferred)
+## Java 記錄模式（Record Pattern）（推薦）
 
-### ✅ Best Practice: Use Records
+### ✅ 最佳實踐：使用記錄
 ```java
 /**
  * Immutable order representation using Java Record
@@ -99,7 +99,7 @@ public record Order(
 }
 ```
 
-## Value Object Pattern
+## 值物件模式（Value Object Pattern）
 
 ```java
 /**
@@ -160,7 +160,7 @@ public record Money(BigDecimal amount, Currency currency) {
 }
 ```
 
-## Event Pattern (Immutable by Nature)
+## 事件模式（Event Pattern）（本質上不可變）
 
 ```java
 /**
@@ -207,9 +207,9 @@ public record OrderCreatedEvent(
 }
 ```
 
-## Builder Pattern for Complex Objects
+## 建造者模式（Builder Pattern）用於複雜物件
 
-When records become too complex, use builders with immutability:
+當記錄變得太複雜時，使用具有不可變性的建造者：
 
 ```java
 /**
@@ -295,7 +295,7 @@ public final class Customer {
 }
 ```
 
-## Collection Immutability
+## 集合不可變性（Collection Immutability）
 
 ```java
 public class ImmutableCollectionExamples {
@@ -340,9 +340,9 @@ public class ImmutableCollectionExamples {
 }
 ```
 
-## Anti-Patterns to Avoid
+## 應避免的反模式（Anti-Patterns）
 
-### ❌ Mutable Fields
+### ❌ 可變欄位
 ```java
 // BAD: Mutable class
 public class Order {
@@ -360,7 +360,7 @@ public class Order {
 }
 ```
 
-### ❌ Exposing Mutable Collections
+### ❌ 暴露可變集合
 ```java
 // BAD: Exposing internal mutable state
 public record Order(
@@ -374,9 +374,9 @@ public record Order(
 }
 ```
 
-## Immutability with JPA Entities
+## JPA 實體的不可變性
 
-Special case: JPA requires mutability, but we can minimize it:
+特殊情況：JPA 需要可變性，但我們可以最小化它：
 
 ```java
 @Entity
@@ -430,15 +430,15 @@ public class JpaOrderEntity {
 }
 ```
 
-## Benefits for Claude Code
+## Claude Code 的好處
 
-1. **Predictability**: Immutable objects behave consistently
-2. **Thread Safety**: No synchronization needed
-3. **Debugging**: Easier to track state changes
-4. **Testing**: Simpler to create test fixtures
-5. **AI-Friendly**: Clearer data flow for AI to reason about
+1. **可預測性（Predictability）**：不可變物件的行為始終一致
+2. **執行緒安全性（Thread Safety）**：無需同步化
+3. **偵錯（Debugging）**：更容易追蹤狀態變化
+4. **測試（Testing）**：更簡單地建立測試夾具
+5. **AI 友善（AI-Friendly）**：更清晰的資料流供 AI 推理
 
-## Prompts for Claude
+## Claude 的提示詞
 
 ```
 Create an immutable Customer domain model using Java records.
@@ -449,12 +449,12 @@ Include validation in compact constructor and immutable update methods.
 Generate an immutable event class for OrderShipped with defensive copying of collections.
 ```
 
-## Validation Checklist
+## 驗證檢查清單
 
-- [ ] All domain models use records or final classes
-- [ ] No public setters
-- [ ] Collections are defensively copied
-- [ ] Update methods return new instances
-- [ ] Value objects validate in constructor
-- [ ] Events are immutable by design
-- [ ] JPA entities have minimal mutability
+- [ ] 所有領域模型使用記錄或最終類別
+- [ ] 無公開 setter
+- [ ] 集合進行防守性複製
+- [ ] 更新方法返回新實例
+- [ ] 值物件在建構子中驗證
+- [ ] 事件在設計上不可變
+- [ ] JPA 實體具有最小可變性

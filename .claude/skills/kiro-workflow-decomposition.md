@@ -1,32 +1,37 @@
-# Kiro Workflow Decomposition Skill
+# Kiro 工作流程分解技巧 (Kiro Workflow Decomposition Skill)
 
-## Description
-Breaks down complex workflows into small, single-responsibility, composable units. Based on Amazon Kiro's Step Functions orchestration patterns.
+## 描述
 
-## When to Use
-- Designing complex business workflows
-- Breaking down large classes or functions
-- Creating microservices boundaries
-- Implementing saga patterns
+將複雜的工作流程分解為小型、單一職責、可組合的單元。基於 Amazon Kiro 的 Step Functions 編排模式。
 
-## Core Principles
+## 何時使用
 
-### 1. Single Responsibility
-Each workflow step does exactly one thing.
+- 設計複雜的業務工作流程
+- 分解大型類別或函數
+- 建立微服務邊界
+- 實作 Saga 模式
 
-### 2. Composability
-Steps can be combined in different orders to create different workflows.
+## 核心原則
 
-### 3. Testability
-Each step can be tested independently.
+### 1. 單一職責
 
-## Workflow Pattern
+每個工作流程步驟只做一件事。
+
+### 2. 可組合性
+
+步驟可以以不同的順序組合，創建不同的工作流程。
+
+### 3. 可測試性
+
+每個步驟都可以獨立測試。
+
+## 工作流程模式
 
 ```java
-// Bad: Monolithic workflow
+// 錯誤：單體式工作流程
 public class OrderProcessor {
     public void processOrder(Order order) {
-        // 300 lines of mixed responsibilities
+        // 300 行混合職責的程式碼
         validateOrder(order);
         checkInventory(order);
         reserveInventory(order);
@@ -35,21 +40,21 @@ public class OrderProcessor {
         processPayment(order);
         updateInventory(order);
         sendNotification(order);
-        // ... more logic
+        // ... 更多邏輯
     }
 }
 
-// Good: Decomposed workflow
+// 正確：分解的工作流程
 public interface WorkflowStep<I, O> {
     O execute(I input);
-    void compensate(I input); // For saga pattern
+    void compensate(I input); // 用於 Saga 模式
 }
 
 @Component
 public class ValidateOrderStep implements WorkflowStep<Order, ValidatedOrder> {
     @Override
     public ValidatedOrder execute(Order order) {
-        // Only validation logic
+        // 只有驗證邏輯
         return validator.validate(order);
     }
 }
@@ -78,7 +83,7 @@ public class OrderWorkflow {
             PaymentResult payment = paymentStep.execute(reservation);
             return completeStep.execute(payment);
         } catch (Exception e) {
-            // Compensate in reverse order
+            // 反向補償
             compensateWorkflow();
             throw e;
         }
@@ -86,29 +91,29 @@ public class OrderWorkflow {
 }
 ```
 
-## Step Decomposition Template
+## 步驟分解範本
 
-Each workflow step should follow this structure:
+每個工作流程步驟應遵循此結構：
 
 ```java
 @Component
 @Slf4j
 public class {StepName}Step implements WorkflowStep<{InputType}, {OutputType}> {
 
-    // Dependencies
+    // 依賴項
     private final {Service} service;
 
     @Override
     public {OutputType} execute({InputType} input) {
         log.info("Executing {StepName} with input: {}", input);
 
-        // 1. Validate input
+        // 1. 驗證輸入
         validateInput(input);
 
-        // 2. Execute single responsibility
+        // 2. 執行單一職責
         {OutputType} result = performOperation(input);
 
-        // 3. Validate output
+        // 3. 驗證輸出
         validateOutput(result);
 
         log.info("Completed {StepName} with result: {}", result);
@@ -118,26 +123,26 @@ public class {StepName}Step implements WorkflowStep<{InputType}, {OutputType}> {
     @Override
     public void compensate({InputType} input) {
         log.warn("Compensating {StepName} for input: {}", input);
-        // Undo operation if possible
+        // 如果可能，撤銷操作
     }
 
     private void validateInput({InputType} input) {
-        // Input validation logic
+        // 輸入驗證邏輯
     }
 
     private {OutputType} performOperation({InputType} input) {
-        // Core operation logic (10-20 lines max)
+        // 核心操作邏輯（最多 10-20 行）
     }
 
     private void validateOutput({OutputType} output) {
-        // Output validation logic
+        // 輸出驗證邏輯
     }
 }
 ```
 
-## State Machine Pattern
+## 狀態機模式
 
-For complex workflows, use explicit state machines:
+對於複雜的工作流程，使用明確的狀態機：
 
 ```java
 public enum OrderState {
@@ -175,15 +180,16 @@ public record OrderWorkflowContext(
 }
 ```
 
-## Orchestration vs Choreography
+## 編排 vs 編舞
 
-### Orchestration (Centralized Control)
+### 編排（集中式控制）
+
 ```java
 @Service
 public class OrderOrchestrator {
 
     public OrderResult orchestrateOrderCreation(Order order) {
-        // Orchestrator controls the flow
+        // 編排器控制流程
         var validated = validationStep.execute(order);
         var reserved = inventoryStep.execute(validated);
         var payment = paymentStep.execute(reserved);
@@ -192,9 +198,10 @@ public class OrderOrchestrator {
 }
 ```
 
-### Choreography (Event-Driven)
+### 編舞（事件驅動）
+
 ```java
-// Each step listens to events and publishes new events
+// 每個步驟監聽事件並發布新事件
 @Component
 public class InventoryReservationHandler {
 
@@ -216,32 +223,32 @@ public class PaymentProcessingHandler {
 }
 ```
 
-## Benefits for Claude Code
+## 對 Claude Code 的好處
 
-1. **Modularity**: Easy to generate, test, and modify individual steps
-2. **Reusability**: Steps can be reused across different workflows
-3. **Clarity**: Each step has a clear purpose and interface
-4. **Error Handling**: Compensation logic is explicit and localized
-5. **AI-Friendly**: Smaller units are easier for AI to reason about
+1. **模組化**：易於生成、測試和修改個別步驟
+2. **可重用性**：步驟可以在不同的工作流程中重用
+3. **清晰性**：每個步驟都有明確的目的和介面
+4. **錯誤處理**：補償邏輯是明確且局部化的
+5. **AI 友善**：較小的單元更容易讓 AI 推理
 
-## Prompts for Claude
-
-```
-Decompose the order fulfillment process into workflow steps using the Kiro pattern.
-Each step should implement WorkflowStep<I,O> with execute and compensate methods.
-```
+## Claude 提示詞範例
 
 ```
-Create a state machine for user registration workflow with the following states:
-EMAIL_SENT, EMAIL_VERIFIED, PROFILE_CREATED, COMPLETED. Include compensation logic.
+使用 Kiro 模式將訂單履行流程分解為工作流程步驟。
+每個步驟應實作 WorkflowStep<I,O>，並包含 execute 和 compensate 方法。
 ```
 
-## Validation Checklist
+```
+為使用者註冊工作流程建立狀態機，包含以下狀態：
+EMAIL_SENT、EMAIL_VERIFIED、PROFILE_CREATED、COMPLETED。包含補償邏輯。
+```
 
-- [ ] Each step has single responsibility (< 50 lines of logic)
-- [ ] Steps are composable and reusable
-- [ ] Input/output types are clearly defined
-- [ ] Compensation logic is implemented for reversible operations
-- [ ] State transitions are explicit
-- [ ] Error boundaries are defined
-- [ ] Each step is independently testable
+## 驗證檢查清單
+
+- [ ] 每個步驟都有單一職責（< 50 行邏輯）
+- [ ] 步驟是可組合和可重用的
+- [ ] 輸入/輸出類型已明確定義
+- [ ] 已為可逆操作實作補償邏輯
+- [ ] 狀態轉換是明確的
+- [ ] 已定義錯誤邊界
+- [ ] 每個步驟都可獨立測試

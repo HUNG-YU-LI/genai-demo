@@ -1,201 +1,201 @@
-# Kiro Code Reviewer Agent
+# Kiro 代碼審查員代理
 
-## Agent Type
+## 代理類型
 `code-reviewer`
 
-## Purpose
-Specialized sub-agent that reviews generated code for compliance with Kiro principles (idempotency, stateless, immutability, boundary control, workflow decomposition).
+## 目的
+專門的子代理，用於審查生成的代碼，確保其符合 Kiro 原則（冪等性、無狀態、不可變性、邊界控制、工作流分解）。
 
-## When to Invoke
-- After generating any new code
-- After refactoring existing code
-- Before committing code changes
-- When explicitly requested by user
+## 何時調用
+- 在生成任何新代碼後
+- 在重構現有代碼後
+- 在提交代碼變更前
+- 當用戶明確要求時
 
-## Agent Capabilities
+## 代理功能
 
-### 1. Idempotency Review
-- Check for idempotency key handling in API endpoints
-- Verify duplicate detection logic
-- Validate idempotency tracking mechanisms
-- Ensure retry-safe operations
+### 1. 冪等性審查 (Idempotency Review)
+- 檢查 API 端點中的冪等性金鑰 (idempotency key) 處理
+- 驗證重複偵測邏輯
+- 驗證冪等性追蹤機制
+- 確保重試安全的操作
 
-### 2. Stateless Handler Review
-- Detect mutable instance fields
-- Verify external state storage usage
-- Check for proper dependency injection
-- Validate thread-safety
+### 2. 無狀態處理器審查 (Stateless Handler Review)
+- 檢測可變實例字段
+- 驗證外部狀態存儲使用
+- 檢查適當的依賴注入 (dependency injection)
+- 驗證線程安全性 (thread-safety)
 
-### 3. Immutability Review
-- Check for use of records and final classes
-- Detect public setters (anti-pattern)
-- Verify defensive copying of collections
-- Validate immutable update methods
+### 3. 不可變性審查 (Immutability Review)
+- 檢查記錄類 (records) 和最終類 (final classes) 的使用
+- 檢測公開設置器（反模式）
+- 驗證集合的防禦性複製 (defensive copying)
+- 驗證不可變更新方法
 
-### 4. Boundary Control Review
-- Check input validation at boundaries
-- Verify error handling and sanitization
-- Validate standardized response formats
-- Check for leaked internal details
+### 4. 邊界控制審查 (Boundary Control Review)
+- 檢查邊界處的輸入驗證
+- 驗證錯誤處理和清理 (sanitization)
+- 驗證標準化的回應格式
+- 檢查是否洩露內部細節
 
-### 5. Workflow Decomposition Review
-- Measure method and class lengths
-- Check single responsibility principle
-- Verify composability of workflow steps
-- Validate compensation logic (saga pattern)
+### 5. 工作流分解審查 (Workflow Decomposition Review)
+- 測量方法和類的長度
+- 檢查單一職責原則 (single responsibility principle)
+- 驗證工作流步驟的可組合性 (composability)
+- 驗證補償邏輯（Saga 模式）
 
-## Review Checklist
+## 審查檢查清單
 
-The agent follows this systematic checklist:
+代理遵循此系統化檢查清單：
 
 ```markdown
-## Kiro Code Review Checklist
+## Kiro 代碼審查檢查清單
 
-### Idempotency (⭐⭐⭐⭐⭐)
-- [ ] POST/PUT/PATCH endpoints accept idempotency keys
-- [ ] Duplicate requests are detected and handled
-- [ ] Idempotency records are stored persistently
-- [ ] Operations are safe to retry
+### 冪等性 (⭐⭐⭐⭐⭐)
+- [ ] POST/PUT/PATCH 端點接受冪等性金鑰
+- [ ] 檢測並處理重複請求
+- [ ] 冪等性記錄持久存儲
+- [ ] 操作安全可重試
 
-### Stateless (⭐⭐⭐⭐⭐)
-- [ ] No mutable instance fields (except dependencies)
-- [ ] State is stored in external systems (DB, cache)
-- [ ] Methods are pure or have explicit side effects
-- [ ] Thread-safe by design
+### 無狀態 (⭐⭐⭐⭐⭐)
+- [ ] 無可變實例字段（依賴除外）
+- [ ] 狀態存儲在外部系統（數據庫、緩存）
+- [ ] 方法是純的或具有明確的副作用
+- [ ] 按設計線程安全
 
-### Immutability (⭐⭐⭐⭐)
-- [ ] Domain models use records or final classes
-- [ ] No public setters
-- [ ] Collections are defensively copied
-- [ ] Update methods return new instances
+### 不可變性 (⭐⭐⭐⭐)
+- [ ] 域模型使用記錄類或最終類
+- [ ] 沒有公開設置器
+- [ ] 集合被防禦性複製
+- [ ] 更新方法返回新實例
 
-### Boundary Control (⭐⭐⭐⭐⭐)
-- [ ] All inputs validated at entry points
-- [ ] Validation annotations present (@Valid, @NotNull, etc.)
-- [ ] Standardized error responses
-- [ ] No internal errors leaked to clients
+### 邊界控制 (⭐⭐⭐⭐⭐)
+- [ ] 所有輸入在入口點驗證
+- [ ] 存在驗證註解（@Valid, @NotNull 等）
+- [ ] 標準化的錯誤回應
+- [ ] 內部錯誤不洩露給客戶端
 
-### Workflow Decomposition (⭐⭐⭐⭐)
-- [ ] Methods < 50 lines
-- [ ] Classes < 300 lines
-- [ ] Single responsibility per method/class
-- [ ] Complex workflows decomposed into steps
-- [ ] Compensation logic for reversible operations
+### 工作流分解 (⭐⭐⭐⭐)
+- [ ] 方法 < 50 行
+- [ ] 類 < 300 行
+- [ ] 每個方法/類的單一職責
+- [ ] 複雜工作流分解為步驟
+- [ ] 可逆操作的補償邏輯
 
-### Additional Checks
-- [ ] Comprehensive JavaDoc
-- [ ] Unit tests present
-- [ ] Integration tests for boundaries
-- [ ] Logging at appropriate levels
-- [ ] Monitoring/metrics instrumentation
+### 其他檢查
+- [ ] 全面的 JavaDoc
+- [ ] 存在單元測試
+- [ ] 邊界集成測試
+- [ ] 適當級別的日誌記錄
+- [ ] 監測/指標儀表
 ```
 
-## Review Report Format
+## 審查報告格式
 
-The agent generates a structured review report:
+代理生成結構化審查報告：
 
 ```markdown
-# Kiro Code Review Report
+# Kiro 代碼審查報告
 
-**Reviewed by**: Kiro Code Reviewer Agent
-**Date**: 2025-11-16
-**Files Reviewed**: 5
+**審查者**: Kiro 代碼審查員代理
+**日期**: 2025-11-16
+**已審查文件**: 5
 
-## Summary
-- ✅ Passed: 12 checks
-- ⚠️  Warnings: 3
-- ❌ Violations: 1
+## 摘要
+- ✅ 通過: 12 項檢查
+- ⚠️  警告: 3 項
+- ❌ 違規: 1 項
 
-## Compliance Score: 85/100 (B+)
-
----
-
-## Detailed Findings
-
-### File: OrderController.java
-
-#### ✅ Strengths
-1. **Idempotency**: Correctly implements idempotency key validation
-2. **Boundary Control**: Comprehensive input validation with @Valid
-3. **Error Handling**: Uses global exception handler
-
-#### ⚠️  Warnings
-1. **Method Length**: `createOrder()` method is 67 lines (exceeds 50 line limit)
-   - Location: OrderController.java:45-112
-   - Suggestion: Extract order creation logic to service layer
-
-#### ❌ Violations
-1. **Missing Validation**: `updateOrderStatus()` endpoint missing @Valid annotation
-   - Location: OrderController.java:150
-   - Fix: Add @Valid to UpdateOrderStatusRequest parameter
+## 合規性得分: 85/100 (B+)
 
 ---
 
-### File: OrderService.java
+## 詳細發現
 
-#### ✅ Strengths
-1. **Stateless**: No mutable instance fields
-2. **Decomposition**: Well-decomposed workflow steps
+### 文件: OrderController.java
 
-#### ⚠️  Suggestions
-1. **Immutability**: Consider using records for UpdateOrderCommand
-   - Current: traditional class with setters
-   - Suggested: record with validation in compact constructor
+#### ✅ 優點
+1. **冪等性**: 正確實現冪等性金鑰驗證
+2. **邊界控制**: 使用 @Valid 進行全面輸入驗證
+3. **錯誤處理**: 使用全局異常處理器
 
----
+#### ⚠️  警告
+1. **方法長度**: `createOrder()` 方法為 67 行（超過 50 行限制）
+   - 位置: OrderController.java:45-112
+   - 建議: 提取訂單建立邏輯到服務層
 
-## Recommendations
-
-### High Priority (Must Fix)
-1. Add @Valid annotation to OrderController.updateOrderStatus() parameter
-2. Ensure idempotency tracking for update operations
-
-### Medium Priority (Should Fix)
-1. Refactor long methods to comply with 50-line limit
-2. Convert DTOs to records for immutability
-
-### Low Priority (Nice to Have)
-1. Add more detailed JavaDoc
-2. Increase test coverage for edge cases
+#### ❌ 違規
+1. **遺漏驗證**: `updateOrderStatus()` 端點缺少 @Valid 註解
+   - 位置: OrderController.java:150
+   - 修正: 將 @Valid 添加到 UpdateOrderStatusRequest 參數
 
 ---
 
-## Kiro Compliance by Principle
+### 文件: OrderService.java
 
-| Principle | Score | Status |
+#### ✅ 優點
+1. **無狀態**: 沒有可變實例字段
+2. **分解**: 工作流步驟分解良好
+
+#### ⚠️  建議
+1. **不可變性**: 考慮為 UpdateOrderCommand 使用記錄類
+   - 當前: 具有設置器的傳統類
+   - 建議: 在緊湊構造函數中進行驗證的記錄
+
+---
+
+## 建議
+
+### 高優先級（必須修正）
+1. 將 @Valid 註解添加到 OrderController.updateOrderStatus() 參數
+2. 確保更新操作的冪等性追蹤
+
+### 中優先級（應該修正）
+1. 重構長方法以符合 50 行限制
+2. 將 DTO 轉換為記錄類以實現不可變性
+
+### 低優先級（美好品質）
+1. 添加更詳細的 JavaDoc
+2. 增加邊界情況的測試覆蓋
+
+---
+
+## Kiro 合規性（按原則）
+
+| 原則 | 得分 | 狀態 |
 |-----------|-------|--------|
-| Idempotency | 90% | ✅ Good |
-| Stateless | 100% | ✅ Excellent |
-| Immutability | 75% | ⚠️  Needs Improvement |
-| Boundary Control | 85% | ✅ Good |
-| Workflow Decomposition | 80% | ✅ Good |
+| 冪等性 | 90% | ✅ 良好 |
+| 無狀態 | 100% | ✅ 優秀 |
+| 不可變性 | 75% | ⚠️  需要改進 |
+| 邊界控制 | 85% | ✅ 良好 |
+| 工作流分解 | 80% | ✅ 良好 |
 
-**Overall Compliance**: 86% (B+)
+**整體合規性**: 86% (B+)
 
 ---
 
-## Next Steps
+## 後續步驟
 
-1. Fix the violations listed above
-2. Address high-priority recommendations
-3. Re-run Kiro code review
-4. Consider adding ArchUnit tests to enforce these principles
+1. 修正上面列出的違規項目
+2. 解決高優先級建議
+3. 重新運行 Kiro 代碼審查
+4. 考慮添加 ArchUnit 測試以強制執行這些原則
 ```
 
-## Usage Examples
+## 使用範例
 
-### Invoke via CLI
+### 透過 CLI 調用
 ```bash
 claude-code review --agent=kiro-code-reviewer --files="app/src/main/java/**/*.java"
 ```
 
-### Invoke via Prompt
+### 透過提示調用
 ```
 Review the following code for Kiro compliance:
 [paste code here]
 ```
 
-### Invoke Automatically
+### 自動調用
 ```yaml
 # .github/workflows/kiro-review.yml
 on: [pull_request]
@@ -224,9 +224,9 @@ jobs:
             });
 ```
 
-## Configuration
+## 配置
 
-The agent can be configured via `.claude/agents/kiro-code-reviewer.json`:
+代理可以通過 `.claude/agents/kiro-code-reviewer.json` 進行配置：
 
 ```json
 {
@@ -266,19 +266,19 @@ The agent can be configured via `.claude/agents/kiro-code-reviewer.json`:
 }
 ```
 
-## Benefits
+## 優點
 
-1. **Automated Quality Gates**: Catch Kiro violations before code review
-2. **Consistent Standards**: Enforce same principles across codebase
-3. **Learning Tool**: Helps developers understand Kiro principles
-4. **Time Savings**: Reduces manual code review time by 40-60%
-5. **Proactive**: Catches issues early in development cycle
+1. **自動化品質門檻**: 在代碼審查前捕獲 Kiro 違規
+2. **一致的標準**: 在整個代碼庫中強制執行相同原則
+3. **學習工具**: 幫助開發人員理解 Kiro 原則
+4. **時間節省**: 將手動代碼審查時間減少 40-60%
+5. **主動性**: 在開發週期早期捕獲問題
 
-## Integration with Other Agents
+## 與其他代理的集成
 
-The Kiro Code Reviewer can work alongside:
+Kiro 代碼審查員可與以下代理配合使用：
 
-- **Architecture Validator**: Ensures architectural patterns (DDD, Hexagonal)
-- **Test Generator**: Generates tests for Kiro-compliant code
-- **Documentation Generator**: Creates documentation highlighting Kiro patterns
-- **Refactoring Agent**: Suggests refactorings to improve Kiro compliance
+- **架構驗證器 (Architecture Validator)**: 確保架構模式（DDD、六邊形架構）
+- **測試生成器 (Test Generator)**: 為符合 Kiro 的代碼生成測試
+- **文檔生成器 (Documentation Generator)**: 建立突出 Kiro 模式的文檔
+- **重構代理 (Refactoring Agent)**: 建議重構以改進 Kiro 合規性

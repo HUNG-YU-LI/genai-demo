@@ -1,29 +1,29 @@
-# Kiro Boundary Control Skill
+# Kiro 邊界控制技能
 
-## Description
-Establishes clear input validation, output formatting, and error handling boundaries for all system interfaces. Based on defensive programming and fail-fast principles.
+## 描述
+為所有系統介面建立清晰的輸入驗證、輸出格式化和錯誤處理邊界。基於防守性程式設計和快速失敗原則。
 
-## When to Use
-- Creating API endpoints
-- Implementing event handlers
-- Designing service interfaces
-- Building system boundaries (controllers, adapters)
+## 何時使用
+- 建立 API 端點（API Endpoints）
+- 實作事件處理器（Event Handlers）
+- 設計服務介面（Service Interfaces）
+- 構建系統邊界（控制器、適配器）
 
-## Core Principles
+## 核心原則
 
-### 1. Validate Early
-Validate all inputs at the boundary before processing.
+### 1. 早期驗證（Validate Early）
+在處理之前在邊界進行驗證所有輸入。
 
-### 2. Fail Fast
-Reject invalid inputs immediately with clear error messages.
+### 2. 快速失敗（Fail Fast）
+立即拒絕無效輸入並提供清晰的錯誤訊息。
 
-### 3. Explicit Contracts
-Define clear input/output contracts using types and validation.
+### 3. 顯式合約（Explicit Contracts）
+使用類型和驗證定義清晰的輸入/輸出合約。
 
-### 4. Error Boundaries
-Handle errors at appropriate boundaries, don't leak implementation details.
+### 4. 錯誤邊界（Error Boundaries）
+在適當的邊界處理錯誤，不洩露實作細節。
 
-## API Boundary Pattern
+## API 邊界模式（API Boundary Pattern）
 
 ```java
 @RestController
@@ -88,7 +88,7 @@ public class OrderController {
 }
 ```
 
-## Input Validation Pattern
+## 輸入驗證模式（Input Validation Pattern）
 
 ```java
 /**
@@ -142,7 +142,7 @@ public record OrderItemRequest(
 ) {}
 ```
 
-## Output Formatting Pattern
+## 輸出格式化模式（Output Formatting Pattern）
 
 ```java
 /**
@@ -205,7 +205,7 @@ public record ErrorDetails(
 }
 ```
 
-## Error Boundary Pattern
+## 錯誤邊界模式（Error Boundary Pattern）
 
 ```java
 /**
@@ -285,7 +285,7 @@ public class GlobalExceptionHandler {
 }
 ```
 
-## Event Handler Boundary Pattern
+## 事件處理器邊界模式（Event Handler Boundary Pattern）
 
 ```java
 @Component
@@ -352,7 +352,7 @@ public class OrderEventHandler {
 }
 ```
 
-## Service Interface Boundary Pattern
+## 服務介面邊界模式（Service Interface Boundary Pattern）
 
 ```java
 /**
@@ -413,15 +413,15 @@ public class OrderServiceImpl implements OrderService {
 }
 ```
 
-## Benefits for Claude Code
+## Claude Code 的好處
 
-1. **Robustness**: Early validation prevents invalid states
-2. **Clarity**: Explicit boundaries make data flow clear
-3. **Debuggability**: Easy to identify where errors occur
-4. **Security**: Prevent injection and malformed data
-5. **AI-Friendly**: Clear contracts help AI generate correct code
+1. **穩定性（Robustness）**：早期驗證防止無效狀態
+2. **清晰性（Clarity）**：明確的邊界使資料流清晰
+3. **可除錯性（Debuggability）**：易於識別錯誤發生位置
+4. **安全性（Security）**：防止注入和格式錯誤的資料
+5. **AI 友善（AI-Friendly）**：清晰的合約幫助 AI 生成正確的程式碼
 
-## Prompts for Claude
+## Claude 的提示詞
 
 ```
 Generate a REST controller with complete boundary control including
@@ -433,13 +433,13 @@ Create a Kafka event handler with idempotency checking, validation,
 and dead letter queue for failed events.
 ```
 
-## Validation Checklist
+## 驗證檢查清單
 
-- [ ] All inputs validated at entry points
-- [ ] Validation annotations on request DTOs
-- [ ] Business rule validation separated from technical validation
-- [ ] Standardized error responses
-- [ ] Error boundaries (exception handlers) in place
-- [ ] No internal error details leaked to clients
-- [ ] Idempotency keys validated for APIs
-- [ ] Output DTOs hide internal implementation
+- [ ] 所有輸入在進入點驗證
+- [ ] 請求資料傳輸物件上的驗證註解
+- [ ] 業務規則驗證與技術驗證分離
+- [ ] 標準化錯誤回應
+- [ ] 錯誤邊界（例外處理器）已就位
+- [ ] 未洩露內部錯誤細節給客戶端
+- [ ] API 的冪等鍵已驗證
+- [ ] 輸出資料傳輸物件隱藏內部實作
