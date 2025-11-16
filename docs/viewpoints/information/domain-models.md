@@ -13,18 +13,18 @@ related_documents:
 
 # Domain Models
 
-## Overview
+## 概述
 
-This document describes the domain models for each bounded context in the system. Each model includes entities, value objects, and aggregates that represent the core business concepts and their relationships.
+本文件描述系統中每個 bounded context 的 domain models。每個 model 包含 entities、value objects 和 aggregates，代表核心業務概念及其關係。
 
 ## Model Organization
 
-Each bounded context maintains its own domain model with:
+每個 bounded context 維護自己的 domain model，包含：
 
-- **Aggregate Roots**: Top-level entities that define consistency boundaries
-- **Entities**: Objects with unique identity within an aggregate
-- **Value Objects**: Immutable objects defined by their attributes
-- **Domain Events**: State change notifications
+- **Aggregate Roots**: 定義一致性邊界的頂層 entities
+- **Entities**: Aggregate 內具有唯一身分的物件
+- **Value Objects**: 由其屬性定義的不可變物件
+- **Domain Events**: 狀態變更通知
 
 ---
 
@@ -32,7 +32,7 @@ Each bounded context maintains its own domain model with:
 
 ### Purpose
 
-Manages customer profiles, authentication, and preferences.
+管理 customer profiles、認證和偏好設定。
 
 ### Aggregate: Customer
 
@@ -40,35 +40,35 @@ Manages customer profiles, authentication, and preferences.
 
 #### Entities
 
-- **Customer** (Root)
-  - `CustomerId` (Identity)
-  - `CustomerName` (Value Object)
-  - `Email` (Value Object)
-  - `Phone` (Value Object)
-  - `MembershipLevel` (Enum: STANDARD, PREMIUM, VIP)
-  - `RegistrationDate` (LocalDate)
-  - `Status` (Enum: ACTIVE, SUSPENDED, DELETED)
+- **Customer**（Root）
+  - `CustomerId`（Identity）
+  - `CustomerName`（Value Object）
+  - `Email`（Value Object）
+  - `Phone`（Value Object）
+  - `MembershipLevel`（Enum: STANDARD、PREMIUM、VIP）
+  - `RegistrationDate`（LocalDate）
+  - `Status`（Enum: ACTIVE、SUSPENDED、DELETED）
 
 - **CustomerAddress**
-  - `AddressId` (Identity)
-  - `Address` (Value Object)
-  - `AddressType` (Enum: BILLING, SHIPPING)
-  - `IsDefault` (Boolean)
+  - `AddressId`（Identity）
+  - `Address`（Value Object）
+  - `AddressType`（Enum: BILLING、SHIPPING）
+  - `IsDefault`（Boolean）
 
 #### Value Objects
 
 - **CustomerName**
   - `firstName: String`
   - `lastName: String`
-  - Validation: Non-empty, max 100 characters
+  - Validation: 非空，最多 100 個字元
 
 - **Email**
   - `value: String`
-  - Validation: Valid email format, unique
+  - Validation: 有效的 email 格式，唯一
 
 - **Phone**
   - `value: String`
-  - Validation: Valid phone format
+  - Validation: 有效的電話格式
 
 - **Address**
   - `street: String`
@@ -97,7 +97,7 @@ Customer (1) ----< (0..*) CustomerAddress
 
 ### Purpose
 
-Manages order lifecycle from creation to fulfillment.
+管理訂單從建立到履行的生命週期。
 
 ### Aggregate: Order
 
@@ -105,30 +105,30 @@ Manages order lifecycle from creation to fulfillment.
 
 #### Entities
 
-- **Order** (Root)
-  - `OrderId` (Identity)
-  - `CustomerId` (Reference to Customer Context)
-  - `OrderDate` (LocalDateTime)
-  - `Status` (Enum: CREATED, PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED)
-  - `TotalAmount` (Money Value Object)
-  - `ShippingAddress` (Address Value Object)
-  - `BillingAddress` (Address Value Object)
+- **Order**（Root）
+  - `OrderId`（Identity）
+  - `CustomerId`（Reference to Customer Context）
+  - `OrderDate`（LocalDateTime）
+  - `Status`（Enum: CREATED、PENDING、CONFIRMED、SHIPPED、DELIVERED、CANCELLED）
+  - `TotalAmount`（Money Value Object）
+  - `ShippingAddress`（Address Value Object）
+  - `BillingAddress`（Address Value Object）
 
 - **OrderItem**
-  - `OrderItemId` (Identity)
-  - `ProductId` (Reference to Product Context)
-  - `ProductName` (String - snapshot)
-  - `Quantity` (Integer)
-  - `UnitPrice` (Money Value Object)
-  - `Subtotal` (Money Value Object)
+  - `OrderItemId`（Identity）
+  - `ProductId`（Reference to Product Context）
+  - `ProductName`（String - snapshot）
+  - `Quantity`（Integer）
+  - `UnitPrice`（Money Value Object）
+  - `Subtotal`（Money Value Object）
 
 #### Value Objects
 
 - **Money**
   - `amount: BigDecimal`
   - `currency: Currency`
-  - Operations: add, subtract, multiply
-  - Validation: Non-negative, max 2 decimal places
+  - Operations: add、subtract、multiply
+  - Validation: 非負數，最多 2 位小數
 
 - **OrderId**
   - `value: String`
@@ -155,10 +155,10 @@ Order (1) ---- (1) BillingAddress
 
 #### Business Rules
 
-- Order must have at least one item
-- Order total must equal sum of item subtotals
-- Order can only be cancelled if status is CREATED or PENDING
-- Order items cannot be modified after order is CONFIRMED
+- Order 必須至少有一個 item
+- Order 總額必須等於 item subtotals 的總和
+- 只有當狀態為 CREATED 或 PENDING 時，Order 才能取消
+- Order 確認後（CONFIRMED），order items 不能修改
 
 ---
 
@@ -166,7 +166,7 @@ Order (1) ---- (1) BillingAddress
 
 ### Purpose
 
-Manages product catalog, specifications, and inventory information.
+管理產品目錄、規格和庫存資訊。
 
 ### Aggregate: Product
 
@@ -174,32 +174,32 @@ Manages product catalog, specifications, and inventory information.
 
 #### Entities
 
-- **Product** (Root)
-  - `ProductId` (Identity)
-  - `ProductName` (String)
-  - `Description` (String)
-  - `Category` (Category Value Object)
-  - `Price` (Money Value Object)
-  - `Status` (Enum: ACTIVE, DISCONTINUED, OUT_OF_STOCK)
-  - `SellerId` (Reference to Seller Context)
+- **Product**（Root）
+  - `ProductId`（Identity）
+  - `ProductName`（String）
+  - `Description`（String）
+  - `Category`（Category Value Object）
+  - `Price`（Money Value Object）
+  - `Status`（Enum: ACTIVE、DISCONTINUED、OUT_OF_STOCK）
+  - `SellerId`（Reference to Seller Context）
 
 - **ProductSpecification**
-  - `SpecificationId` (Identity)
-  - `AttributeName` (String)
-  - `AttributeValue` (String)
+  - `SpecificationId`（Identity）
+  - `AttributeName`（String）
+  - `AttributeValue`（String）
 
 - **ProductImage**
-  - `ImageId` (Identity)
-  - `ImageUrl` (String)
-  - `IsPrimary` (Boolean)
-  - `DisplayOrder` (Integer)
+  - `ImageId`（Identity）
+  - `ImageUrl`（String）
+  - `IsPrimary`（Boolean）
+  - `DisplayOrder`（Integer）
 
 #### Value Objects
 
 - **Category**
   - `categoryId: String`
   - `categoryName: String`
-  - `parentCategoryId: String` (optional)
+  - `parentCategoryId: String`（optional）
 
 - **ProductId**
   - `value: String`
@@ -227,7 +227,7 @@ Product (1) ---- (1) Category
 
 ### Purpose
 
-Manages stock levels, reservations, and inventory movements.
+管理庫存水準、保留和庫存移動。
 
 ### Aggregate: InventoryItem
 
@@ -235,31 +235,31 @@ Manages stock levels, reservations, and inventory movements.
 
 #### Entities
 
-- **InventoryItem** (Root)
-  - `InventoryItemId` (Identity)
-  - `ProductId` (Reference to Product Context)
-  - `WarehouseId` (String)
-  - `QuantityOnHand` (Integer)
-  - `QuantityReserved` (Integer)
-  - `QuantityAvailable` (Integer - calculated)
-  - `ReorderPoint` (Integer)
-  - `ReorderQuantity` (Integer)
+- **InventoryItem**（Root）
+  - `InventoryItemId`（Identity）
+  - `ProductId`（Reference to Product Context）
+  - `WarehouseId`（String）
+  - `QuantityOnHand`（Integer）
+  - `QuantityReserved`（Integer）
+  - `QuantityAvailable`（Integer - calculated）
+  - `ReorderPoint`（Integer）
+  - `ReorderQuantity`（Integer）
 
 - **InventoryReservation**
-  - `ReservationId` (Identity)
-  - `OrderId` (Reference to Order Context)
-  - `Quantity` (Integer)
-  - `ReservedAt` (LocalDateTime)
-  - `ExpiresAt` (LocalDateTime)
-  - `Status` (Enum: ACTIVE, FULFILLED, EXPIRED, CANCELLED)
+  - `ReservationId`（Identity）
+  - `OrderId`（Reference to Order Context）
+  - `Quantity`（Integer）
+  - `ReservedAt`（LocalDateTime）
+  - `ExpiresAt`（LocalDateTime）
+  - `Status`（Enum: ACTIVE、FULFILLED、EXPIRED、CANCELLED）
 
 #### Value Objects
 
 - **StockLevel**
   - `onHand: Integer`
   - `reserved: Integer`
-  - `available: Integer` (calculated: onHand - reserved)
-  - Validation: onHand >= 0, reserved >= 0
+  - `available: Integer`（calculated: onHand - reserved）
+  - Validation: onHand >= 0、reserved >= 0
 
 #### Domain Events
 
@@ -278,10 +278,10 @@ InventoryItem (1) ----< (0..*) InventoryReservation
 
 #### Business Rules
 
-- Available quantity = On-hand quantity - Reserved quantity
-- Reservations expire after 15 minutes if not fulfilled
-- Cannot reserve more than available quantity
-- Low stock alert when available < reorder point
+- 可用數量 = 現有數量 - 保留數量
+- 如果未履行，保留在 15 分鐘後過期
+- 不能保留超過可用數量
+- 當可用 < 重新訂購點時發出低庫存警告
 
 ---
 
@@ -289,7 +289,7 @@ InventoryItem (1) ----< (0..*) InventoryReservation
 
 ### Purpose
 
-Manages payment processing, transactions, and payment methods.
+管理付款處理、交易和付款方式。
 
 ### Aggregate: Payment
 
@@ -297,32 +297,32 @@ Manages payment processing, transactions, and payment methods.
 
 #### Entities
 
-- **Payment** (Root)
-  - `PaymentId` (Identity)
-  - `OrderId` (Reference to Order Context)
-  - `CustomerId` (Reference to Customer Context)
-  - `Amount` (Money Value Object)
-  - `PaymentMethod` (PaymentMethod Value Object)
-  - `Status` (Enum: PENDING, AUTHORIZED, CAPTURED, FAILED, REFUNDED)
-  - `TransactionId` (String - from payment gateway)
-  - `CreatedAt` (LocalDateTime)
-  - `ProcessedAt` (LocalDateTime)
+- **Payment**（Root）
+  - `PaymentId`（Identity）
+  - `OrderId`（Reference to Order Context）
+  - `CustomerId`（Reference to Customer Context）
+  - `Amount`（Money Value Object）
+  - `PaymentMethod`（PaymentMethod Value Object）
+  - `Status`（Enum: PENDING、AUTHORIZED、CAPTURED、FAILED、REFUNDED）
+  - `TransactionId`（String - from payment gateway）
+  - `CreatedAt`（LocalDateTime）
+  - `ProcessedAt`（LocalDateTime）
 
 - **PaymentTransaction**
-  - `TransactionId` (Identity)
-  - `TransactionType` (Enum: AUTHORIZATION, CAPTURE, REFUND)
-  - `Amount` (Money Value Object)
-  - `Status` (Enum: SUCCESS, FAILED)
-  - `GatewayResponse` (String)
-  - `ProcessedAt` (LocalDateTime)
+  - `TransactionId`（Identity）
+  - `TransactionType`（Enum: AUTHORIZATION、CAPTURE、REFUND）
+  - `Amount`（Money Value Object）
+  - `Status`（Enum: SUCCESS、FAILED）
+  - `GatewayResponse`（String）
+  - `ProcessedAt`（LocalDateTime）
 
 #### Value Objects
 
 - **PaymentMethod**
-  - `type: PaymentMethodType` (Enum: CREDIT_CARD, DEBIT_CARD, PAYPAL, BANK_TRANSFER)
-  - `last4Digits: String` (for cards)
-  - `expiryDate: YearMonth` (for cards)
-  - `cardBrand: String` (for cards)
+  - `type: PaymentMethodType`（Enum: CREDIT_CARD、DEBIT_CARD、PAYPAL、BANK_TRANSFER）
+  - `last4Digits: String`（for cards）
+  - `expiryDate: YearMonth`（for cards）
+  - `cardBrand: String`（for cards）
 
 - **PaymentId**
   - `value: String`
@@ -345,10 +345,10 @@ Payment (1) ---- (1) PaymentMethod
 
 #### Business Rules
 
-- Payment must be authorized before capture
-- Refund amount cannot exceed captured amount
-- Failed payments can be retried up to 3 times
-- Payment expires after 24 hours if not captured
+- Payment 必須在 capture 前先授權
+- Refund 金額不能超過 captured 金額
+- 失敗的 payments 最多可重試 3 次
+- 如果未 captured，Payment 在 24 小時後過期
 
 ---
 
@@ -356,7 +356,7 @@ Payment (1) ---- (1) PaymentMethod
 
 ### Purpose
 
-Manages active shopping carts and cart items before order creation.
+在訂單建立前管理活躍的購物車和購物車項目。
 
 ### Aggregate: ShoppingCart
 
@@ -364,22 +364,22 @@ Manages active shopping carts and cart items before order creation.
 
 #### Entities
 
-- **ShoppingCart** (Root)
-  - `CartId` (Identity)
-  - `CustomerId` (Reference to Customer Context)
-  - `Status` (Enum: ACTIVE, ABANDONED, CONVERTED)
-  - `CreatedAt` (LocalDateTime)
-  - `UpdatedAt` (LocalDateTime)
-  - `ExpiresAt` (LocalDateTime)
+- **ShoppingCart**（Root）
+  - `CartId`（Identity）
+  - `CustomerId`（Reference to Customer Context）
+  - `Status`（Enum: ACTIVE、ABANDONED、CONVERTED）
+  - `CreatedAt`（LocalDateTime）
+  - `UpdatedAt`（LocalDateTime）
+  - `ExpiresAt`（LocalDateTime）
 
 - **CartItem**
-  - `CartItemId` (Identity)
-  - `ProductId` (Reference to Product Context)
-  - `ProductName` (String - snapshot)
-  - `Quantity` (Integer)
-  - `UnitPrice` (Money Value Object)
-  - `Subtotal` (Money Value Object)
-  - `AddedAt` (LocalDateTime)
+  - `CartItemId`（Identity）
+  - `ProductId`（Reference to Product Context）
+  - `ProductName`（String - snapshot）
+  - `Quantity`（Integer）
+  - `UnitPrice`（Money Value Object）
+  - `Subtotal`（Money Value Object）
+  - `AddedAt`（LocalDateTime）
 
 #### Value Objects
 
@@ -404,10 +404,10 @@ ShoppingCart (1) ----< (0..*) CartItem
 
 #### Business Rules
 
-- Cart expires after 7 days of inactivity
-- Cart item quantity must be > 0
-- Cart total = sum of all item subtotals
-- Cart can only be converted to order if it has items
+- Cart 在 7 天不活動後過期
+- Cart item 數量必須 > 0
+- Cart 總額 = 所有 item subtotals 的總和
+- 只有當 Cart 有 items 時才能轉換為訂單
 
 ---
 
@@ -415,7 +415,7 @@ ShoppingCart (1) ----< (0..*) CartItem
 
 ### Purpose
 
-Manages discount rules, promotional campaigns, and coupon codes.
+管理折扣規則、促銷活動和優惠券代碼。
 
 ### Aggregate: Promotion
 
@@ -423,23 +423,23 @@ Manages discount rules, promotional campaigns, and coupon codes.
 
 #### Entities
 
-- **Promotion** (Root)
-  - `PromotionId` (Identity)
-  - `PromotionName` (String)
-  - `Description` (String)
-  - `DiscountType` (Enum: PERCENTAGE, FIXED_AMOUNT, BUY_X_GET_Y)
-  - `DiscountValue` (BigDecimal)
-  - `MinimumPurchaseAmount` (Money Value Object)
-  - `StartDate` (LocalDateTime)
-  - `EndDate` (LocalDateTime)
-  - `Status` (Enum: DRAFT, ACTIVE, EXPIRED, CANCELLED)
-  - `UsageLimit` (Integer)
-  - `UsageCount` (Integer)
+- **Promotion**（Root）
+  - `PromotionId`（Identity）
+  - `PromotionName`（String）
+  - `Description`（String）
+  - `DiscountType`（Enum: PERCENTAGE、FIXED_AMOUNT、BUY_X_GET_Y）
+  - `DiscountValue`（BigDecimal）
+  - `MinimumPurchaseAmount`（Money Value Object）
+  - `StartDate`（LocalDateTime）
+  - `EndDate`（LocalDateTime）
+  - `Status`（Enum: DRAFT、ACTIVE、EXPIRED、CANCELLED）
+  - `UsageLimit`（Integer）
+  - `UsageCount`（Integer）
 
 - **PromotionRule**
-  - `RuleId` (Identity)
-  - `RuleType` (Enum: PRODUCT_CATEGORY, CUSTOMER_SEGMENT, ORDER_AMOUNT)
-  - `RuleCondition` (String - JSON)
+  - `RuleId`（Identity）
+  - `RuleType`（Enum: PRODUCT_CATEGORY、CUSTOMER_SEGMENT、ORDER_AMOUNT）
+  - `RuleCondition`（String - JSON）
 
 #### Value Objects
 
@@ -448,7 +448,7 @@ Manages discount rules, promotional campaigns, and coupon codes.
   - `promotionId: PromotionId`
   - `usageLimit: Integer`
   - `usageCount: Integer`
-  - Validation: Unique, alphanumeric
+  - Validation: 唯一、英數字元
 
 #### Domain Events
 
@@ -471,7 +471,7 @@ Promotion (1) ----< (0..*) CouponCode
 
 ### Purpose
 
-Manages product reviews and ratings from customers.
+管理來自 customers 的產品評論和評分。
 
 ### Aggregate: Review
 
@@ -479,28 +479,28 @@ Manages product reviews and ratings from customers.
 
 #### Entities
 
-- **Review** (Root)
-  - `ReviewId` (Identity)
-  - `ProductId` (Reference to Product Context)
-  - `CustomerId` (Reference to Customer Context)
-  - `OrderId` (Reference to Order Context)
-  - `Rating` (Integer: 1-5)
-  - `Title` (String)
-  - `Content` (String)
-  - `Status` (Enum: PENDING, APPROVED, REJECTED)
-  - `CreatedAt` (LocalDateTime)
-  - `UpdatedAt` (LocalDateTime)
+- **Review**（Root）
+  - `ReviewId`（Identity）
+  - `ProductId`（Reference to Product Context）
+  - `CustomerId`（Reference to Customer Context）
+  - `OrderId`（Reference to Order Context）
+  - `Rating`（Integer: 1-5）
+  - `Title`（String）
+  - `Content`（String）
+  - `Status`（Enum: PENDING、APPROVED、REJECTED）
+  - `CreatedAt`（LocalDateTime）
+  - `UpdatedAt`（LocalDateTime）
 
 - **ReviewImage**
-  - `ImageId` (Identity)
-  - `ImageUrl` (String)
-  - `DisplayOrder` (Integer)
+  - `ImageId`（Identity）
+  - `ImageUrl`（String）
+  - `DisplayOrder`（Integer）
 
 - **ReviewComment**
-  - `CommentId` (Identity)
-  - `UserId` (String)
-  - `Content` (String)
-  - `CreatedAt` (LocalDateTime)
+  - `CommentId`（Identity）
+  - `UserId`（String）
+  - `Content`（String）
+  - `CreatedAt`（LocalDateTime）
 
 #### Domain Events
 
@@ -519,16 +519,16 @@ Review (1) ----< (0..*) ReviewComment
 
 #### Business Rules
 
-- Customer can only review products they have purchased
-- One review per customer per product
-- Rating must be between 1 and 5
-- Review requires moderation before publication
+- Customer 只能評論他們已購買的產品
+- 每個 customer 每個產品只能一個評論
+- Rating 必須在 1 到 5 之間
+- Review 在發布前需要審核
 
 ---
 
 ## Shared Value Objects
 
-These value objects are used across multiple bounded contexts:
+這些 value objects 在多個 bounded contexts 中使用：
 
 ### Money
 
@@ -625,7 +625,7 @@ public record Email(String value) {
 
 ---
 
-**Document Status**: Active  
-**Last Review**: 2025-10-23  
-**Next Review**: 2026-01-23  
+**Document Status**: Active
+**Last Review**: 2025-10-23
+**Next Review**: 2026-01-23
 **Owner**: Architecture Team

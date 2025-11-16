@@ -1,44 +1,44 @@
-# Tell, Don't Ask - Detailed Examples
+# Tell, Don't Ask - 詳細範例
 
-## Principle Overview
+## 原則概述
 
-**Tell, Don't Ask** means that objects should tell other objects what to do, rather than asking for their state and making decisions based on that state. This principle helps maintain encapsulation and keeps behavior with the data it operates on.
+**Tell, Don't Ask** 意味著物件應該告訴其他物件做什麼，而不是詢問其狀態然後基於該狀態做決定。這個原則有助於維護封裝性，並將行為保持在它所操作的資料旁邊。
 
-## Core Concept
+## 核心概念
 
-- **Ask**: Getting data from an object and making decisions
-- **Tell**: Instructing an object to perform an operation
+- **Ask（詢問）**：從物件取得資料並做決定
+- **Tell（告訴）**：指示物件執行操作
 
 ---
 
-## Example 1: Order Status Management
+## 範例 1：訂單狀態管理
 
-### ❌ Bad: Asking for State
+### ❌ 錯誤：詢問狀態
 
 ```java
-// Controller asks for state and makes decisions
+// Controller 詢問狀態並做決定
 @RestController
 public class OrderController {
-    
+
     @PostMapping("/orders/{id}/submit")
     public ResponseEntity<OrderResponse> submitOrder(@PathVariable String id) {
         Order order = orderRepository.findById(id).orElseThrow();
-        
-        // Asking for state and making decisions
+
+        // 詢問狀態並做決定
         if (order.getStatus() == OrderStatus.CREATED) {
             if (order.getItems().isEmpty()) {
                 throw new BusinessRuleViolationException("Cannot submit empty order");
             }
-            
+
             order.setStatus(OrderStatus.PENDING);
             order.setSubmittedAt(LocalDateTime.now());
             order.setUpdatedAt(LocalDateTime.now());
-            
+
             orderRepository.save(order);
-            
-            // More external logic
+
+            // 更多外部邏輯
             emailService.sendOrderConfirmation(order.getCustomerId());
-            
+
             return ResponseEntity.ok(OrderResponse.from(order));
         } else {
             throw new InvalidOrderStateException("Order cannot be submitted");
@@ -47,36 +47,36 @@ public class OrderController {
 }
 ```
 
-**Problems:**
-- Controller knows too much about Order's internal state
-- Business logic is scattered outside the domain model
-- Hard to test business rules
-- Violates encapsulation
+**問題：**
+- Controller 知道太多 Order 的內部狀態
+- 業務邏輯散落在領域模型之外
+- 難以測試業務規則
+- 違反封裝性
 
-### ✅ Good: Telling What to Do
+### ✅ 正確：告訴做什麼
 
 ```java
-// Controller tells the order what to do
+// Controller 告訴 order 做什麼
 @RestController
 public class OrderController {
-    
+
     @PostMapping("/orders/{id}/submit")
     public ResponseEntity<OrderResponse> submitOrder(@PathVariable String id) {
         Order order = orderRepository.findById(id).orElseThrow();
-        
-        // Tell the order to submit itself
+
+        // 告訴 order 提交自己
         order.submit();
-        
+
         orderRepository.save(order);
-        
-        // Publish events collected by the order
+
+        // 發佈由 order 收集的事件
         domainEventService.publishEventsFromAggregate(order);
-        
+
         return ResponseEntity.ok(OrderResponse.from(order));
     }
 }
 
-// Order handles its own state transitions
+// Order 處理自己的狀態轉換
 @AggregateRoot
 public class Order {
     private OrderId id;
@@ -84,27 +84,27 @@ public class Order {
     private List<OrderItem> items;
     private LocalDateTime submittedAt;
     private LocalDateTime updatedAt;
-    
+
     public void submit() {
-        // Business rules are encapsulated
+        // 業務規則被封裝
         validateCanBeSubmitted();
-        
-        // State changes are internal
+
+        // 狀態變更是內部的
         this.status = OrderStatus.PENDING;
         this.submittedAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
-        
-        // Collect domain event
+
+        // 收集領域事件
         collectEvent(OrderSubmittedEvent.create(id, customerId, calculateTotal()));
     }
-    
+
     private void validateCanBeSubmitted() {
         if (status != OrderStatus.CREATED) {
             throw new InvalidOrderStateException(
                 "Order must be in CREATED status to be submitted. Current status: " + status
             );
         }
-        
+
         if (items.isEmpty()) {
             throw new BusinessRuleViolationException("Cannot submit empty order");
         }
@@ -112,33 +112,33 @@ public class Order {
 }
 ```
 
-**Benefits:**
-- Business logic is in the domain model
-- Order controls its own state transitions
-- Easy to test business rules
-- Maintains encapsulation
+**優點：**
+- 業務邏輯在領域模型中
+- Order 控制自己的狀態轉換
+- 易於測試業務規則
+- 維護封裝性
 
 ---
 
-## Example 2: Customer Discount Calculation
+## 範例 2：客戶折扣計算
 
-### ❌ Bad: Asking for State
+### ❌ 錯誤：詢問狀態
 
 ```java
 @Service
 public class OrderService {
-    
+
     public Money calculateOrderTotal(Order order, Customer customer) {
         Money subtotal = Money.ZERO;
-        
-        // Asking for items and calculating externally
+
+        // 詢問 items 並在外部計算
         for (OrderItem item : order.getItems()) {
             Money itemPrice = item.getProduct().getPrice();
             int quantity = item.getQuantity();
             subtotal = subtotal.add(itemPrice.multiply(quantity));
         }
-        
-        // Asking for customer type and calculating discount externally
+
+        // 詢問客戶類型並在外部計算折扣
         if (customer.getMembershipLevel() == MembershipLevel.PREMIUM) {
             Money discount = subtotal.multiply(0.10); // 10% discount
             return subtotal.subtract(discount);
@@ -146,38 +146,38 @@ public class OrderService {
             Money discount = subtotal.multiply(0.05); // 5% discount
             return subtotal.subtract(discount);
         }
-        
+
         return subtotal;
     }
 }
 ```
 
-**Problems:**
-- Service knows about discount calculation logic
-- Customer's behavior is implemented outside Customer
-- Hard to add new membership levels
-- Discount logic is duplicated
+**問題：**
+- Service 知道折扣計算邏輯
+- Customer 的行為在 Customer 外部實作
+- 難以新增新的會員等級
+- 折扣邏輯重複
 
-### ✅ Good: Telling What to Do
+### ✅ 正確：告訴做什麼
 
 ```java
 @Service
 public class OrderService {
-    
+
     public Money calculateOrderTotal(Order order, Customer customer) {
-        // Tell order to calculate its subtotal
+        // 告訴 order 計算其小計
         Money subtotal = order.calculateSubtotal();
-        
-        // Tell customer to apply its discount
+
+        // 告訴 customer 應用其折扣
         return customer.applyDiscount(subtotal);
     }
 }
 
-// Order knows how to calculate its own subtotal
+// Order 知道如何計算自己的小計
 @AggregateRoot
 public class Order {
     private List<OrderItem> items;
-    
+
     public Money calculateSubtotal() {
         return items.stream()
             .map(OrderItem::calculateSubtotal)
@@ -185,38 +185,38 @@ public class Order {
     }
 }
 
-// OrderItem knows how to calculate its own subtotal
+// OrderItem 知道如何計算自己的小計
 public class OrderItem {
     private Product product;
     private int quantity;
-    
+
     public Money calculateSubtotal() {
         return product.getPrice().multiply(quantity);
     }
 }
 
-// Customer knows how to apply its own discount
+// Customer 知道如何應用自己的折扣
 @AggregateRoot
 public class Customer {
     private MembershipLevel membershipLevel;
-    
+
     public Money applyDiscount(Money amount) {
         return membershipLevel.applyDiscount(amount);
     }
 }
 
-// MembershipLevel encapsulates discount logic
+// MembershipLevel 封裝折扣邏輯
 public enum MembershipLevel {
     STANDARD(0.0),
     PREMIUM(0.10),
     GOLD(0.05);
-    
+
     private final double discountRate;
-    
+
     MembershipLevel(double discountRate) {
         this.discountRate = discountRate;
     }
-    
+
     public Money applyDiscount(Money amount) {
         if (discountRate == 0.0) {
             return amount;
@@ -227,32 +227,32 @@ public enum MembershipLevel {
 }
 ```
 
-**Benefits:**
-- Each object handles its own calculations
-- Easy to add new membership levels
-- Discount logic is centralized
-- Follows Single Responsibility Principle
+**優點：**
+- 每個物件處理自己的計算
+- 易於新增新的會員等級
+- 折扣邏輯集中化
+- 遵循單一責任原則
 
 ---
 
-## Example 3: Inventory Management
+## 範例 3：庫存管理
 
-### ❌ Bad: Asking for State
+### ❌ 錯誤：詢問狀態
 
 ```java
 @Service
 public class OrderProcessingService {
-    
+
     public void processOrder(Order order) {
         for (OrderItem item : order.getItems()) {
             Product product = item.getProduct();
             int requestedQuantity = item.getQuantity();
-            
-            // Asking for inventory state
+
+            // 詢問庫存狀態
             Inventory inventory = inventoryRepository.findByProductId(product.getId());
             int availableQuantity = inventory.getAvailableQuantity();
-            
-            // Making decisions based on state
+
+            // 基於狀態做決定
             if (availableQuantity >= requestedQuantity) {
                 inventory.setAvailableQuantity(availableQuantity - requestedQuantity);
                 inventory.setReservedQuantity(inventory.getReservedQuantity() + requestedQuantity);
@@ -267,77 +267,77 @@ public class OrderProcessingService {
 }
 ```
 
-**Problems:**
-- Service manipulates inventory state directly
-- Inventory business rules are outside Inventory
-- No encapsulation of inventory logic
+**問題：**
+- Service 直接操作庫存狀態
+- 庫存業務規則在 Inventory 外部
+- 沒有庫存邏輯的封裝
 
-### ✅ Good: Telling What to Do
+### ✅ 正確：告訴做什麼
 
 ```java
 @Service
 public class OrderProcessingService {
-    
+
     public void processOrder(Order order) {
         for (OrderItem item : order.getItems()) {
             Product product = item.getProduct();
             int requestedQuantity = item.getQuantity();
-            
-            // Tell inventory to reserve items
+
+            // 告訴庫存預留項目
             Inventory inventory = inventoryRepository.findByProductId(product.getId());
             inventory.reserve(requestedQuantity);
-            
+
             inventoryRepository.save(inventory);
         }
     }
 }
 
-// Inventory handles its own state
+// Inventory 處理自己的狀態
 @AggregateRoot
 public class Inventory {
     private ProductId productId;
     private int availableQuantity;
     private int reservedQuantity;
-    
+
     public void reserve(int quantity) {
         validateCanReserve(quantity);
-        
+
         this.availableQuantity -= quantity;
         this.reservedQuantity += quantity;
-        
+
         collectEvent(InventoryReservedEvent.create(productId, quantity));
     }
-    
+
     private void validateCanReserve(int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
         }
-        
+
         if (availableQuantity < quantity) {
             throw new InsufficientInventoryException(
-                String.format("Cannot reserve %d items. Only %d available", 
+                String.format("Cannot reserve %d items. Only %d available",
                     quantity, availableQuantity)
             );
         }
     }
-    
+
     public void release(int quantity) {
         validateCanRelease(quantity);
-        
+
         this.reservedQuantity -= quantity;
         this.availableQuantity += quantity;
-        
+
         collectEvent(InventoryReleasedEvent.create(productId, quantity));
     }
-    
+
     private void validateCanRelease(int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
         }
-        
+
         if (reservedQuantity < quantity) {
             throw new IllegalStateException(
-                String.format("Cannot release %d items. Only %d reserved", 
+                String.format("Cannot release %d items. Only %d reserved",
                     quantity, reservedQuantity)
             );
         }
@@ -345,49 +345,49 @@ public class Inventory {
 }
 ```
 
-**Benefits:**
-- Inventory controls its own state
-- Business rules are encapsulated
-- Easy to add new inventory operations
-- Clear validation logic
+**優點：**
+- Inventory 控制自己的狀態
+- 業務規則被封裝
+- 易於新增新的庫存操作
+- 清楚的驗證邏輯
 
 ---
 
-## Example 4: Payment Processing
+## 範例 4：付款處理
 
-### ❌ Bad: Asking for State
+### ❌ 錯誤：詢問狀態
 
 ```java
 @Service
 public class PaymentService {
-    
+
     public void processPayment(Order order, PaymentMethod paymentMethod) {
         Money amount = order.getTotalAmount();
-        
-        // Asking for payment method details
+
+        // 詢問付款方式細節
         if (paymentMethod.getType() == PaymentMethodType.CREDIT_CARD) {
             CreditCard card = paymentMethod.getCreditCard();
-            
-            // External validation
+
+            // 外部驗證
             if (card.getExpiryDate().isBefore(LocalDate.now())) {
                 throw new ExpiredCardException("Credit card has expired");
             }
-            
+
             if (card.getAvailableCredit().isLessThan(amount)) {
                 throw new InsufficientFundsException("Insufficient credit");
             }
-            
-            // External processing
+
+            // 外部處理
             card.setAvailableCredit(card.getAvailableCredit().subtract(amount));
             paymentMethodRepository.save(paymentMethod);
-            
+
         } else if (paymentMethod.getType() == PaymentMethodType.BANK_ACCOUNT) {
             BankAccount account = paymentMethod.getBankAccount();
-            
+
             if (account.getBalance().isLessThan(amount)) {
                 throw new InsufficientFundsException("Insufficient balance");
             }
-            
+
             account.setBalance(account.getBalance().subtract(amount));
             paymentMethodRepository.save(paymentMethod);
         }
@@ -395,56 +395,56 @@ public class PaymentService {
 }
 ```
 
-**Problems:**
-- Service knows about payment method internals
-- Validation logic is external
-- Hard to add new payment methods
-- Violates Open/Closed Principle
+**問題：**
+- Service 知道付款方式內部
+- 驗證邏輯在外部
+- 難以新增新的付款方式
+- 違反開放封閉原則
 
-### ✅ Good: Telling What to Do
+### ✅ 正確：告訴做什麼
 
 ```java
 @Service
 public class PaymentService {
-    
+
     public void processPayment(Order order, PaymentMethod paymentMethod) {
         Money amount = order.getTotalAmount();
-        
-        // Tell payment method to process the payment
+
+        // 告訴付款方式處理付款
         paymentMethod.processPayment(amount);
-        
+
         paymentMethodRepository.save(paymentMethod);
-        
-        // Tell order that payment was processed
+
+        // 告訴 order 已付款
         order.markAsPaid();
         orderRepository.save(order);
     }
 }
 
-// PaymentMethod is an interface
+// PaymentMethod 是一個介面
 public interface PaymentMethod {
     void processPayment(Money amount);
     PaymentMethodType getType();
 }
 
-// CreditCard implements its own logic
+// CreditCard 實作自己的邏輯
 public class CreditCard implements PaymentMethod {
     private String cardNumber;
     private LocalDate expiryDate;
     private Money availableCredit;
-    
+
     @Override
     public void processPayment(Money amount) {
         validatePayment(amount);
-        
+
         this.availableCredit = availableCredit.subtract(amount);
     }
-    
+
     private void validatePayment(Money amount) {
         if (expiryDate.isBefore(LocalDate.now())) {
             throw new ExpiredCardException("Credit card has expired");
         }
-        
+
         if (availableCredit.isLessThan(amount)) {
             throw new InsufficientFundsException(
                 String.format("Insufficient credit. Available: %s, Required: %s",
@@ -452,25 +452,25 @@ public class CreditCard implements PaymentMethod {
             );
         }
     }
-    
+
     @Override
     public PaymentMethodType getType() {
         return PaymentMethodType.CREDIT_CARD;
     }
 }
 
-// BankAccount implements its own logic
+// BankAccount 實作自己的邏輯
 public class BankAccount implements PaymentMethod {
     private String accountNumber;
     private Money balance;
-    
+
     @Override
     public void processPayment(Money amount) {
         validatePayment(amount);
-        
+
         this.balance = balance.subtract(amount);
     }
-    
+
     private void validatePayment(Money amount) {
         if (balance.isLessThan(amount)) {
             throw new InsufficientFundsException(
@@ -479,7 +479,7 @@ public class BankAccount implements PaymentMethod {
             );
         }
     }
-    
+
     @Override
     public PaymentMethodType getType() {
         return PaymentMethodType.BANK_ACCOUNT;
@@ -487,52 +487,52 @@ public class BankAccount implements PaymentMethod {
 }
 ```
 
-**Benefits:**
-- Each payment method handles its own logic
-- Easy to add new payment methods
-- Follows Strategy Pattern
-- Polymorphic behavior
+**優點：**
+- 每個付款方式處理自己的邏輯
+- 易於新增新的付款方式
+- 遵循策略模式
+- 多型行為
 
 ---
 
-## Quick Reference
+## 快速參考
 
-### When to Use Tell, Don't Ask
+### 何時使用 Tell, Don't Ask
 
-✅ **Use when:**
-- An object has the data needed to make a decision
-- Behavior naturally belongs with the data
-- You want to maintain encapsulation
-- You need to follow Single Responsibility Principle
+✅ **使用時機：**
+- 物件擁有做決定所需的資料
+- 行為自然屬於該資料
+- 您想要維護封裝性
+- 您需要遵循單一責任原則
 
-❌ **Don't use when:**
-- You need to coordinate multiple objects
-- You're implementing a pure algorithm
-- You're in an application service orchestrating use cases
+❌ **不使用時機：**
+- 您需要協調多個物件
+- 您在實作純演算法
+- 您在 application service 中編排 use cases
 
-### Common Violations
+### 常見違反
 
-1. **Getter chains**: `order.getCustomer().getAddress().getCity()`
-2. **If-else on type**: `if (customer.getType() == CustomerType.PREMIUM)`
-3. **External calculations**: Calculating totals outside the aggregate
-4. **State manipulation**: Setting multiple fields from outside
+1. **Getter 鏈結**：`order.getCustomer().getAddress().getCity()`
+2. **基於類型的 If-else**：`if (customer.getType() == CustomerType.PREMIUM)`
+3. **外部計算**：在聚合外計算總計
+4. **狀態操作**：從外部設定多個欄位
 
-### Refactoring Steps
+### 重構步驟
 
-1. Identify where decisions are made based on object state
-2. Move the decision logic into the object that owns the data
-3. Replace getters with behavior methods
-4. Test that business rules are now encapsulated
+1. 識別基於物件狀態做決定的地方
+2. 將決定邏輯移到擁有資料的物件中
+3. 將 getters 替換為行為方法
+4. 測試業務規則現在被封裝
 
 ---
 
-## Related Principles
+## 相關原則
 
-- **Law of Demeter**: Only talk to immediate friends
-- **Single Responsibility**: Each class has one reason to change
-- **Encapsulation**: Hide internal state and expose behavior
+- **Law of Demeter**：只與直接朋友交流
+- **Single Responsibility**：每個類別只有一個變更的理由
+- **Encapsulation**：隱藏內部狀態並暴露行為
 
-## Further Reading
+## 延伸閱讀
 
 - [Law of Demeter Examples](law-of-demeter-examples.md)
 - [Design Principles](../../steering/design-principles.md)

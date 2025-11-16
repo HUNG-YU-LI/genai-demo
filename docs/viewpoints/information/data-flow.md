@@ -13,15 +13,15 @@ related_documents:
 
 # Data Flow
 
-## Overview
+## 概述
 
-This document describes how data flows through the system, including synchronous and asynchronous patterns, event-driven communication, and data synchronization strategies.
+本文件描述資料如何在系統中流動，包括 synchronous 和 asynchronous patterns、event-driven 通訊，以及資料同步策略。
 
 ## Data Flow Patterns
 
-### 1. Command-Event Pattern (Write Operations)
+### 1. Command-Event Pattern（Write Operations）
 
-The primary pattern for state changes in the system:
+系統中狀態變更的主要 pattern：
 
 ```mermaid
 graph LR
@@ -42,12 +42,12 @@ graph LR
 
 **Flow Steps**:
 
-1. **User Request**: Client sends HTTP request to REST API
-2. **Command Creation**: Controller creates command object from request
-3. **Application Service**: Orchestrates use case execution
-4. **Aggregate**: Executes business logic and collects events
-5. **Event Publishing**: Application service publishes collected events
-6. **Event Handlers**: Other contexts react to events asynchronously
+1. **User Request**: Client 傳送 HTTP request 到 REST API
+2. **Command Creation**: Controller 從 request 建立 command 物件
+3. **Application Service**: 編排 use case 執行
+4. **Aggregate**: 執行商業邏輯並收集 events
+5. **Event Publishing**: Application service 發布收集的 events
+6. **Event Handlers**: 其他 contexts 非同步地對 events 做出反應
 
 **Example: Order Submission**
 
@@ -72,9 +72,9 @@ graph TD
 
 ---
 
-### 2. Query Pattern (Read Operations)
+### 2. Query Pattern（Read Operations）
 
-Optimized read operations without side effects:
+最佳化的讀取操作，沒有副作用：
 
 ```mermaid
 graph LR
@@ -95,12 +95,12 @@ graph LR
 
 **Flow Steps**:
 
-1. **User Request**: Client sends HTTP GET request
-2. **Query Creation**: Controller creates query object
-3. **Application Service**: Executes query logic
-4. **Repository**: Fetches data from database
-5. **Read Model**: Optimized view of data
-6. **Response**: DTO returned to client
+1. **User Request**: Client 傳送 HTTP GET request
+2. **Query Creation**: Controller 建立 query 物件
+3. **Application Service**: 執行 query 邏輯
+4. **Repository**: 從 database 取得資料
+5. **Read Model**: 資料的最佳化視圖
+6. **Response**: DTO 回傳給 client
 
 **Example: Get Customer Orders**
 
@@ -123,7 +123,7 @@ graph TD
 
 ### 3. Event-Driven Integration Pattern
 
-Asynchronous communication between bounded contexts:
+Bounded contexts 之間的非同步通訊：
 
 ```mermaid
 graph LR
@@ -140,12 +140,12 @@ graph LR
 
 **Flow Steps**:
 
-1. **Event Publication**: Context A publishes domain event
-2. **Message Bus**: Event sent to Kafka topic
-3. **Event Consumption**: Context B consumes event
-4. **Event Handler**: Processes event and updates local state
-5. **Idempotency Check**: Prevents duplicate processing
-6. **Local Update**: Context B updates its own data
+1. **Event Publication**: Context A 發布 domain event
+2. **Message Bus**: Event 傳送到 Kafka topic
+3. **Event Consumption**: Context B 消費 event
+4. **Event Handler**: 處理 event 並更新本地狀態
+5. **Idempotency Check**: 防止重複處理
+6. **Local Update**: Context B 更新自己的資料
 
 **Example: Inventory Reservation**
 
@@ -178,7 +178,7 @@ graph TD
 
 ### Order Processing Flow
 
-Complete flow from cart to delivery:
+從購物車到配送的完整流程：
 
 ```mermaid
 sequenceDiagram
@@ -216,51 +216,51 @@ sequenceDiagram
 
 **Detailed Steps**:
 
-1. **Cart Management** (Shopping Cart Context)
-   - Customer adds items to cart
-   - Cart calculates totals with current prices
-   - Cart validates item availability
+1. **Cart Management**（Shopping Cart Context）
+   - Customer 將商品加入購物車
+   - Cart 使用當前價格計算總額
+   - Cart 驗證商品可用性
 
-2. **Order Creation** (Order Context)
-   - Cart is converted to order
-   - Order snapshots product details and prices
-   - `OrderCreatedEvent` published
+2. **Order Creation**（Order Context）
+   - Cart 轉換為訂單
+   - Order 快照產品詳細資訊和價格
+   - `OrderCreatedEvent` 發布
 
-3. **Inventory Check** (Inventory Context)
-   - Receives `OrderCreatedEvent`
-   - Checks product availability
-   - May publish `LowStockAlertEvent`
+3. **Inventory Check**（Inventory Context）
+   - 接收 `OrderCreatedEvent`
+   - 檢查產品可用性
+   - 可能發布 `LowStockAlertEvent`
 
-4. **Order Submission** (Order Context)
-   - Customer submits order
-   - Order validates business rules
-   - `OrderSubmittedEvent` published
+4. **Order Submission**（Order Context）
+   - Customer 提交訂單
+   - Order 驗證商業規則
+   - `OrderSubmittedEvent` 發布
 
-5. **Inventory Reservation** (Inventory Context)
-   - Receives `OrderSubmittedEvent`
-   - Reserves inventory for order
-   - `InventoryReservedEvent` published
-   - Reservation expires in 15 minutes if not fulfilled
+5. **Inventory Reservation**（Inventory Context）
+   - 接收 `OrderSubmittedEvent`
+   - 為訂單保留庫存
+   - `InventoryReservedEvent` 發布
+   - 如果未履行，保留在 15 分鐘後過期
 
-6. **Payment Processing** (Payment Context)
-   - Receives `OrderSubmittedEvent`
-   - Authorizes payment
-   - `PaymentAuthorizedEvent` published
+6. **Payment Processing**（Payment Context）
+   - 接收 `OrderSubmittedEvent`
+   - 授權付款
+   - `PaymentAuthorizedEvent` 發布
 
-7. **Order Confirmation** (Order Context)
-   - Receives `InventoryReservedEvent` and `PaymentAuthorizedEvent`
-   - Confirms order
-   - `OrderConfirmedEvent` published
+7. **Order Confirmation**（Order Context）
+   - 接收 `InventoryReservedEvent` 和 `PaymentAuthorizedEvent`
+   - 確認訂單
+   - `OrderConfirmedEvent` 發布
 
-8. **Shipment Creation** (Shipping Context)
-   - Receives `OrderConfirmedEvent`
-   - Creates shipment
-   - `ShipmentCreatedEvent` published
+8. **Shipment Creation**（Shipping Context）
+   - 接收 `OrderConfirmedEvent`
+   - 建立出貨單
+   - `ShipmentCreatedEvent` 發布
 
-9. **Notification** (Notification Context)
-   - Receives various events
-   - Sends order confirmation email
-   - Sends shipping notification
+9. **Notification**（Notification Context）
+   - 接收各種 events
+   - 傳送訂單確認 email
+   - 傳送出貨通知
 
 ---
 
@@ -289,24 +289,24 @@ sequenceDiagram
 **Detailed Steps**:
 
 1. **Registration Request**
-   - Customer submits registration form
-   - API validates input format
+   - Customer 提交註冊表單
+   - API 驗證輸入格式
 
-2. **Customer Creation** (Customer Context)
-   - Validates email uniqueness
-   - Creates customer aggregate
-   - Hashes password securely
-   - `CustomerRegisteredEvent` published
+2. **Customer Creation**（Customer Context）
+   - 驗證 email 唯一性
+   - 建立 customer aggregate
+   - 安全地雜湊密碼
+   - `CustomerRegisteredEvent` 發布
 
-3. **Welcome Email** (Notification Context)
-   - Receives `CustomerRegisteredEvent`
-   - Sends welcome email with account details
-   - Logs notification delivery
+3. **Welcome Email**（Notification Context）
+   - 接收 `CustomerRegisteredEvent`
+   - 傳送包含帳戶詳細資訊的歡迎 email
+   - 記錄通知傳送
 
-4. **Welcome Promotion** (Promotion Context)
-   - Receives `CustomerRegisteredEvent`
-   - Applies welcome discount
-   - Creates coupon code for first purchase
+4. **Welcome Promotion**（Promotion Context）
+   - 接收 `CustomerRegisteredEvent`
+   - 套用歡迎折扣
+   - 為首次購買建立優惠券代碼
 
 ---
 
@@ -339,31 +339,31 @@ sequenceDiagram
 **Detailed Steps**:
 
 1. **Review Submission**
-   - Customer submits review for purchased product
-   - API validates input
+   - Customer 為已購買的產品提交評論
+   - API 驗證輸入
 
-2. **Review Creation** (Review Context)
-   - Validates customer purchased product
-   - Creates review with PENDING status
-   - `ReviewSubmittedEvent` published
+2. **Review Creation**（Review Context）
+   - 驗證 customer 已購買產品
+   - 建立狀態為 PENDING 的評論
+   - `ReviewSubmittedEvent` 發布
 
-3. **Moderation Notification** (Notification Context)
-   - Receives `ReviewSubmittedEvent`
-   - Notifies moderators for review
+3. **Moderation Notification**（Notification Context）
+   - 接收 `ReviewSubmittedEvent`
+   - 通知審核人員進行審查
 
-4. **Review Approval** (Review Context)
-   - Moderator approves review
-   - Review status changed to APPROVED
-   - `ReviewApprovedEvent` published
+4. **Review Approval**（Review Context）
+   - 審核人員批准評論
+   - 評論狀態變更為 APPROVED
+   - `ReviewApprovedEvent` 發布
 
-5. **Rating Update** (Product Context)
-   - Receives `ReviewApprovedEvent`
-   - Recalculates average rating
-   - Updates product rating cache
+5. **Rating Update**（Product Context）
+   - 接收 `ReviewApprovedEvent`
+   - 重新計算平均評分
+   - 更新產品評分 cache
 
-6. **Customer Notification** (Notification Context)
-   - Receives `ReviewApprovedEvent`
-   - Notifies customer review is published
+6. **Customer Notification**（Notification Context）
+   - 接收 `ReviewApprovedEvent`
+   - 通知 customer 評論已發布
 
 ---
 
@@ -401,31 +401,31 @@ sequenceDiagram
 **Detailed Steps**:
 
 1. **Reservation Request**
-   - Order context publishes `OrderSubmittedEvent`
-   - Inventory context receives event
+   - Order context 發布 `OrderSubmittedEvent`
+   - Inventory context 接收 event
 
 2. **Inventory Reservation**
-   - Checks available quantity
-   - Creates reservation record
-   - Decrements available quantity
-   - `InventoryReservedEvent` published
+   - 檢查可用數量
+   - 建立保留記錄
+   - 減少可用數量
+   - `InventoryReservedEvent` 發布
 
 3. **Low Stock Check**
-   - If available < reorder point
-   - `LowStockAlertEvent` published
-   - Product context updates availability
-   - Seller context notifies seller
+   - 如果可用 < 重新訂購點
+   - `LowStockAlertEvent` 發布
+   - Product context 更新可用性
+   - Seller context 通知賣家
 
 4. **Reservation Fulfillment**
-   - Order confirmed → fulfill reservation
-   - Decrements on-hand quantity
-   - `InventoryFulfilledEvent` published
+   - 訂單已確認 → 履行保留
+   - 減少現有數量
+   - `InventoryFulfilledEvent` 發布
 
 5. **Reservation Expiration**
-   - If not fulfilled in 15 minutes
-   - Release reservation
-   - Increments available quantity
-   - `InventoryReservationExpiredEvent` published
+   - 如果在 15 分鐘內未履行
+   - 釋放保留
+   - 增加可用數量
+   - `InventoryReservationExpiredEvent` 發布
 
 ---
 
@@ -433,11 +433,11 @@ sequenceDiagram
 
 ### 1. Real-Time Synchronization
 
-**Use Case**: Critical data that must be immediately consistent
+**Use Case**: 必須立即一致的關鍵資料
 
-**Pattern**: Synchronous API calls
+**Pattern**: Synchronous API 呼叫
 
-**Example**: Payment authorization
+**Example**: Payment 授權
 
 ```java
 @Service
@@ -464,20 +464,20 @@ public class OrderApplicationService {
 
 **Characteristics**:
 
-- Immediate consistency
-- Higher latency
-- Tight coupling
-- Use sparingly
+- 立即一致性
+- 較高延遲
+- 緊密耦合
+- 謹慎使用
 
 ---
 
 ### 2. Eventual Consistency
 
-**Use Case**: Non-critical data that can be eventually consistent
+**Use Case**: 可以最終一致的非關鍵資料
 
-**Pattern**: Asynchronous event handling
+**Pattern**: Asynchronous event 處理
 
-**Example**: Customer profile updates
+**Example**: Customer profile 更新
 
 ```java
 @Component
@@ -499,20 +499,20 @@ public class CustomerProfileUpdatedEventHandler
 
 **Characteristics**:
 
-- Eventual consistency (seconds to minutes)
-- Lower latency
-- Loose coupling
-- Preferred pattern
+- 最終一致性（數秒到數分鐘）
+- 較低延遲
+- 鬆散耦合
+- 偏好的 pattern
 
 ---
 
 ### 3. Snapshot Pattern
 
-**Use Case**: Historical data that should not change
+**Use Case**: 不應變更的歷史資料
 
-**Pattern**: Copy data at point in time
+**Pattern**: 在時間點複製資料
 
-**Example**: Order items with product details
+**Example**: 帶有產品詳細資訊的訂單項目
 
 ```java
 @Entity
@@ -534,18 +534,18 @@ public class OrderItem {
 
 **Characteristics**:
 
-- Point-in-time consistency
-- No synchronization needed
-- Immune to source changes
-- Use for audit trail
+- 時間點一致性
+- 不需要同步
+- 不受來源變更影響
+- 用於稽核追蹤
 
 ---
 
 ### 4. Cache-Aside Pattern
 
-**Use Case**: Frequently read, rarely updated data
+**Use Case**: 頻繁讀取、很少更新的資料
 
-**Pattern**: Cache with lazy loading
+**Pattern**: Cache 搭配 lazy loading
 
 **Example**: Product catalog caching
 
@@ -569,10 +569,10 @@ public class ProductCacheService {
 
 **Characteristics**:
 
-- Fast reads from cache
-- Eventual consistency
-- Cache invalidation via events
-- Reduces cross-context calls
+- 從 cache 快速讀取
+- 最終一致性
+- 透過 events 進行 cache 失效
+- 減少跨 context 呼叫
 
 ---
 
@@ -616,15 +616,15 @@ graph LR
 
 ### Event Ordering
 
-Events are ordered by:
+Events 依下列方式排序：
 
-1. **Timestamp**: `occurredOn` field in event
-2. **Version**: Aggregate version number
-3. **Sequence**: Kafka partition ordering
+1. **Timestamp**: Event 中的 `occurredOn` 欄位
+2. **Version**: Aggregate version 號碼
+3. **Sequence**: Kafka partition 排序
 
 ### Event Idempotency
 
-All event handlers must be idempotent:
+所有 event handlers 必須是 idempotent：
 
 ```java
 @Component
@@ -654,7 +654,7 @@ public class OrderSubmittedEventHandler {
 
 ### 1. Batch Processing
 
-For high-volume events:
+用於大量 events：
 
 ```java
 @Component
@@ -674,12 +674,12 @@ public class BatchEventProcessor {
 
 ### 2. Parallel Processing
 
-For independent events:
+用於獨立 events：
 
 ```java
 @Component
 public class ParallelEventProcessor {
-    
+
     @Async("eventExecutor")
     public CompletableFuture<Void> processEvent(DomainEvent event) {
         eventHandler.handle(event);
@@ -690,7 +690,7 @@ public class ParallelEventProcessor {
 
 ### 3. Circuit Breaker
 
-For resilient event handling:
+用於具彈性的 event 處理：
 
 ```java
 @Component
@@ -715,18 +715,18 @@ public class ResilientEventHandler {
 
 ### Key Metrics
 
-- **Event Lag**: Time between event publication and consumption
-- **Processing Time**: Time to process each event
-- **Error Rate**: Percentage of failed event processing
-- **Throughput**: Events processed per second
-- **Queue Depth**: Number of pending events
+- **Event Lag**: Event 發布和消費之間的時間
+- **Processing Time**: 處理每個 event 的時間
+- **Error Rate**: 失敗的 event 處理百分比
+- **Throughput**: 每秒處理的 events
+- **Queue Depth**: 待處理 events 的數量
 
 ### Monitoring Tools
 
-- **Kafka Metrics**: Consumer lag, partition offset
-- **Application Metrics**: Processing time, error count
-- **Distributed Tracing**: X-Ray for end-to-end flow
-- **Dashboards**: CloudWatch, Grafana
+- **Kafka Metrics**: Consumer lag、partition offset
+- **Application Metrics**: 處理時間、錯誤計數
+- **Distributed Tracing**: X-Ray 用於端到端流程
+- **Dashboards**: CloudWatch、Grafana
 
 ---
 
@@ -746,7 +746,7 @@ public class ResilientEventHandler {
 
 ---
 
-**Document Status**: Active  
-**Last Review**: 2025-10-23  
-**Next Review**: 2026-01-23  
+**Document Status**: Active
+**Last Review**: 2025-10-23
+**Next Review**: 2026-01-23
 **Owner**: Architecture Team

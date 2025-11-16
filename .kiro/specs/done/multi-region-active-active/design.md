@@ -1,195 +1,195 @@
-# Multi-Region Active-Active Architecture Design
+# Multi-Region Active-Active 架構設計
 
-## Overview
+## 概述
 
-This document outlines the design for transforming the existing single-region/disaster recovery architecture into a true Active-Active multi-region architecture. The design ensures that each region can independently handle complete business logic while maintaining data consistency, providing seamless failover capabilities, and optimizing for performance and cost.
+本文件概述將現有單區域/災難恢復架構轉換為真正的 Active-Active 多區域架構的設計。該設計確保每個區域能夠獨立處理完整的業務邏輯,同時保持資料一致性、提供無縫故障轉移能力,並優化效能和成本。
 
-## Architecture
+## 架構
 
-### High-Level Architecture
+### 高層架構
 
-The multi-region active-active architecture consists of the following key components:
+多區域 active-active 架構包含以下關鍵組件:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                           Global DNS & CDN Layer                                │
+│                           全球 DNS 和 CDN 層                                    │
 ├─────────────────────────────────────────────────────────────────────────────────┤
-│  Route53 Global Routing  │  CloudFront Global CDN  │  Health Checks & Failover │
+│  Route53 全球路由  │  CloudFront 全球 CDN  │  健康檢查和故障轉移 │
 └─────────────────────────────────────────────────────────────────────────────────┘
                                         │
                     ┌───────────────────┼───────────────────┐
                     │                   │                   │
             ┌───────▼────────┐ ┌────────▼────────┐ ┌────────▼────────┐
-            │   Region A      │ │   Region B      │ │   Region C      │
-            │  (Primary)      │ │  (Secondary)    │ │  (Tertiary)     │
+            │   區域 A        │ │   區域 B        │ │   區域 C        │
+            │  (主要)        │ │  (次要)        │ │  (第三)        │
             └─────────────────┘ └─────────────────┘ └─────────────────┘
                     │                   │                   │
             ┌───────▼────────┐ ┌────────▼────────┐ ┌────────▼────────┐
-            │ Application     │ │ Application     │ │ Application     │
-            │ Layer (EKS)     │ │ Layer (EKS)     │ │ Layer (EKS)     │
+            │ 應用程式        │ │ 應用程式        │ │ 應用程式        │
+            │ 層 (EKS)       │ │ 層 (EKS)       │ │ 層 (EKS)       │
             └─────────────────┘ └─────────────────┘ └─────────────────┘
                     │                   │                   │
             ┌───────▼────────┐ ┌────────▼────────┐ ┌────────▼────────┐
-            │ Data Layer      │ │ Data Layer      │ │ Data Layer      │
+            │ 資料層          │ │ 資料層          │ │ 資料層          │
             │ (Aurora Global) │ │ (Aurora Global) │ │ (Aurora Global) │
             └─────────────────┘ └─────────────────┘ └─────────────────┘
                     │                   │                   │
             ┌───────▼────────┐ ┌────────▼────────┐ ┌────────▼────────┐
-            │ Cross-Region    │ │ Cross-Region    │ │ Cross-Region    │
-            │ Sync Layer      │ │ Sync Layer      │ │ Sync Layer      │
+            │ 跨區域          │ │ 跨區域          │ │ 跨區域          │
+            │ 同步層          │ │ 同步層          │ │ 同步層          │
             └─────────────────┘ └─────────────────┘ └─────────────────┘
 ```
 
-### Regional Architecture
+### 區域架構
 
-Each region contains a complete application stack:
+每個區域包含完整的應用程式堆疊:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              Regional Architecture                               │
+│                              區域架構                                           │
 ├─────────────────────────────────────────────────────────────────────────────────┤
-│                                Load Balancer                                    │
+│                                負載均衡器                                       │
 │                            (Application Load Balancer)                         │
 ├─────────────────────────────────────────────────────────────────────────────────┤
-│                              Application Layer                                 │
+│                              應用程式層                                         │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐                │
 │  │   EKS Cluster   │  │  Lambda Functions│  │   API Gateway   │                │
-│  │   (Microservices)│  │  (Event Handlers)│  │   (REST APIs)   │                │
+│  │   (微服務)      │  │  (事件處理器)   │  │   (REST APIs)   │                │
 │  └─────────────────┘  └─────────────────┘  └─────────────────┘                │
 ├─────────────────────────────────────────────────────────────────────────────────┤
-│                               Data Layer                                       │
+│                               資料層                                           │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐                │
 │  │ Aurora Global   │  │  DynamoDB       │  │  ElastiCache    │                │
-│  │ (Multi-Writer)  │  │  Global Tables  │  │  (Redis)        │                │
+│  │ (多寫入器)      │  │  Global Tables  │  │  (Redis)        │                │
 │  └─────────────────┘  └─────────────────┘  └─────────────────┘                │
 ├─────────────────────────────────────────────────────────────────────────────────┤
-│                            Messaging Layer                                     │
+│                            訊息層                                              │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐                │
 │  │      MSK        │  │   EventBridge   │  │      SQS        │                │
-│  │  (Kafka)        │  │  (Event Router) │  │  (Dead Letter)  │                │
+│  │  (Kafka)        │  │  (事件路由)     │  │  (死信佇列)     │                │
 │  └─────────────────┘  └─────────────────┘  └─────────────────┘                │
 ├─────────────────────────────────────────────────────────────────────────────────┤
-│                          Monitoring & Security                                 │
+│                          監控和安全                                            │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐                │
 │  │   CloudWatch    │  │      X-Ray      │  │      SSO        │                │
-│  │   (Metrics)     │  │   (Tracing)     │  │   (Identity)    │                │
+│  │   (指標)        │  │   (追蹤)        │  │   (身份)        │                │
 │  └─────────────────┘  └─────────────────┘  └─────────────────┘                │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Components and Interfaces
+## 組件和介面
 
-### 1. Global DNS and Traffic Routing
+### 1. 全球 DNS 和流量路由
 
-#### Route53 Global Routing Stack
-- **Purpose**: Intelligent DNS routing based on geography, health, and latency
-- **Key Features**:
-  - Geolocation-based routing for optimal user experience
-  - Health checks with 30-second intervals
-  - Weighted routing for A/B testing and gradual rollouts
-  - Automatic failover with 3-failure threshold
+#### Route53 全球路由堆疊
+- **目的**: 基於地理位置、健康狀況和延遲的智能 DNS 路由
+- **關鍵功能**:
+  - 基於地理位置的路由以獲得最佳用戶體驗
+  - 30 秒間隔的健康檢查
+  - 用於 A/B 測試和逐步推出的加權路由
+  - 3 次失敗閾值的自動故障轉移
 
-#### CloudFront Global CDN Stack
-- **Purpose**: Global content delivery with multi-origin support
-- **Key Features**:
-  - Multiple origin servers (one per region)
-  - Intelligent origin failover
-  - Cache optimization with >90% hit rate target
-  - SSL termination and security headers
+#### CloudFront 全球 CDN 堆疊
+- **目的**: 支援多源站的全球內容交付
+- **關鍵功能**:
+  - 多個源伺服器 (每個區域一個)
+  - 智能源站故障轉移
+  - 快取優化,目標命中率 > 90%
+  - SSL 終止和安全標頭
 
-### 2. Regional Application Infrastructure
+### 2. 區域應用程式基礎設施
 
-#### Enhanced EKS Stack
-- **Purpose**: Container orchestration with cross-region service mesh
-- **Key Features**:
-  - Istio service mesh for cross-region communication
-  - Cross-region service discovery
-  - Intelligent load balancing based on regional capacity
-  - Auto-scaling based on traffic patterns and resource utilization
+#### 增強的 EKS 堆疊
+- **目的**: 具有跨區域服務網格的容器編排
+- **關鍵功能**:
+  - 用於跨區域通信的 Istio 服務網格
+  - 跨區域服務發現
+  - 基於區域容量的智能負載均衡
+  - 基於流量模式和資源使用率的自動擴縮容
 
-#### Core Infrastructure Stack
-- **Purpose**: Regional load balancing and networking
-- **Key Features**:
-  - Application Load Balancer with health checks
-  - Cross-region network connectivity via Transit Gateway
-  - Security groups optimized for cross-region communication
-  - Network latency monitoring and optimization
+#### 核心基礎設施堆疊
+- **目的**: 區域負載均衡和網路
+- **關鍵功能**:
+  - 具有健康檢查的 Application Load Balancer
+  - 透過 Transit Gateway 的跨區域網路連接
+  - 針對跨區域通信優化的安全群組
+  - 網路延遲監控和優化
 
-### 3. Data Layer Architecture
+### 3. 資料層架構
 
 #### Aurora Global Database
-- **Purpose**: Multi-writer database with global replication
-- **Key Features**:
-  - Multiple writer endpoints across regions
-  - Cross-region replication with <100ms latency (P99)
-  - Conflict resolution using Last-Writer-Wins (LWW)
-  - Automated backup and point-in-time recovery
+- **目的**: 具有全球複製的多寫入器資料庫
+- **關鍵功能**:
+  - 跨區域的多個寫入器端點
+  - 跨區域複製延遲 < 100ms (P99)
+  - 使用最後寫入獲勝 (Last-Writer-Wins, LWW) 的衝突解決
+  - 自動化備份和時間點恢復
 
 #### DynamoDB Global Tables
-- **Purpose**: NoSQL database with eventual consistency
-- **Key Features**:
-  - Multi-region replication
-  - Eventual consistency model
-  - Conflict resolution strategies
-  - Auto-scaling based on demand
+- **目的**: 具有最終一致性的 NoSQL 資料庫
+- **關鍵功能**:
+  - 多區域複製
+  - 最終一致性模型
+  - 衝突解決策略
+  - 基於需求的自動擴縮容
 
-#### ElastiCache Cross-Region
-- **Purpose**: Distributed caching with cross-region coherence
-- **Key Features**:
-  - Redis clustering across regions
-  - Cache invalidation strategies
-  - Distributed locking mechanisms
-  - Performance monitoring and optimization
+#### ElastiCache 跨區域
+- **目的**: 具有跨區域一致性的分散式快取
+- **關鍵功能**:
+  - 跨區域的 Redis 叢集
+  - 快取失效策略
+  - 分散式鎖定機制
+  - 效能監控和優化
 
-### 4. Cross-Region Synchronization
+### 4. 跨區域同步
 
-#### Cross-Region Sync Stack
-- **Purpose**: Event-driven data synchronization
-- **Key Features**:
-  - EventBridge cross-region replication
-  - Event ordering guarantees
-  - Retry mechanisms for failed events
-  - Dead letter queues for error handling
+#### 跨區域同步堆疊
+- **目的**: 事件驅動的資料同步
+- **關鍵功能**:
+  - EventBridge 跨區域複製
+  - 事件順序保證
+  - 失敗事件的重試機制
+  - 錯誤處理的死信佇列
 
-#### MSK Cross-Region Mirroring
-- **Purpose**: Message queue replication
-- **Key Features**:
-  - MirrorMaker 2.0 for Kafka topic replication
-  - Message ordering preservation
-  - Replication lag monitoring (<1s P95)
-  - Automatic failover for message consumers
+#### MSK 跨區域鏡像
+- **目的**: 訊息佇列複製
+- **關鍵功能**:
+  - 用於 Kafka 主題複製的 MirrorMaker 2.0
+  - 訊息順序保留
+  - 複製延遲監控 (< 1 秒 P95)
+  - 訊息消費者的自動故障轉移
 
-### 5. Monitoring and Observability
+### 5. 監控和可觀測性
 
-#### Enhanced Observability Stack
-- **Purpose**: Unified monitoring across all regions
-- **Key Features**:
-  - Multi-region CloudWatch dashboards
-  - Cross-region metric aggregation
-  - Global health status overview
-  - Performance baseline monitoring
+#### 增強的可觀測性堆疊
+- **目的**: 跨所有區域的統一監控
+- **關鍵功能**:
+  - 多區域 CloudWatch 儀表板
+  - 跨區域指標聚合
+  - 全球健康狀態概覽
+  - 效能基準監控
 
-#### X-Ray Cross-Region Tracing
-- **Purpose**: End-to-end request tracing
-- **Key Features**:
-  - Cross-region trace correlation
-  - Performance bottleneck identification
-  - Service dependency mapping
-  - Error rate and latency analysis
+#### X-Ray 跨區域追蹤
+- **目的**: 端到端請求追蹤
+- **關鍵功能**:
+  - 跨區域追蹤關聯
+  - 效能瓶頸識別
+  - 服務依賴映射
+  - 錯誤率和延遲分析
 
-#### Enhanced Alerting Stack
-- **Purpose**: Intelligent alerting and escalation
-- **Key Features**:
-  - Alert deduplication across regions
-  - Intelligent escalation policies
-  - Regional failure detection
-  - Automated incident response
+#### 增強的告警堆疊
+- **目的**: 智能告警和升級
+- **關鍵功能**:
+  - 跨區域告警去重
+  - 智能升級策略
+  - 區域故障檢測
+  - 自動化事件響應
 
-## Data Models
+## 資料模型
 
-### Cross-Region Data Consistency
+### 跨區域資料一致性
 
-#### Event Sourcing Model
+#### 事件溯源模型
 ```json
 {
   "eventId": "uuid",
@@ -210,7 +210,7 @@ Each region contains a complete application stack:
 }
 ```
 
-#### Conflict Resolution Model
+#### 衝突解決模型
 ```json
 {
   "conflictId": "conflict-789",
@@ -224,7 +224,7 @@ Each region contains a complete application stack:
       "data": {"name": "John Doe"}
     },
     {
-      "eventId": "event-2", 
+      "eventId": "event-2",
       "region": "eu-west-1",
       "timestamp": "2025-01-01T00:00:02Z",
       "data": {"name": "John Smith"}
@@ -236,7 +236,7 @@ Each region contains a complete application stack:
 }
 ```
 
-### Health Check Model
+### 健康檢查模型
 ```json
 {
   "healthCheckId": "hc-123",
@@ -254,189 +254,189 @@ Each region contains a complete application stack:
 }
 ```
 
-## Error Handling
+## 錯誤處理
 
-### Regional Failure Scenarios
+### 區域故障情境
 
-#### Complete Regional Failure
-1. **Detection**: Health checks fail for all services in a region
-2. **Response**: Route53 automatically removes region from DNS rotation
-3. **Recovery**: Remaining regions handle 100% of traffic
-4. **Monitoring**: Alerts sent to operations team
-5. **Restoration**: Gradual traffic restoration after region recovery
+#### 完全區域故障
+1. **檢測**: 區域內所有服務的健康檢查失敗
+2. **響應**: Route53 自動從 DNS 輪換中移除該區域
+3. **恢復**: 剩餘區域處理 100% 流量
+4. **監控**: 向維運團隊發送告警
+5. **恢復**: 區域恢復後逐步恢復流量
 
-#### Partial Regional Failure
-1. **Detection**: Some services fail while others remain healthy
-2. **Response**: Intelligent routing around failed services
-3. **Recovery**: Service mesh routes traffic to healthy instances
-4. **Monitoring**: Service-level health monitoring and alerting
-5. **Restoration**: Automatic service recovery and traffic restoration
+#### 部分區域故障
+1. **檢測**: 某些服務失敗而其他服務保持健康
+2. **響應**: 智能路由繞過失敗的服務
+3. **恢復**: 服務網格將流量路由到健康實例
+4. **監控**: 服務級健康監控和告警
+5. **恢復**: 自動服務恢復和流量恢復
 
-#### Database Conflicts
-1. **Detection**: Conflict detection during cross-region replication
-2. **Response**: Apply Last-Writer-Wins resolution strategy
-3. **Recovery**: Update all regions with resolved data
-4. **Monitoring**: Conflict rate monitoring and alerting
-5. **Prevention**: Implement application-level conflict avoidance
+#### 資料庫衝突
+1. **檢測**: 跨區域複製期間的衝突檢測
+2. **響應**: 應用最後寫入獲勝解決策略
+3. **恢復**: 使用已解決的資料更新所有區域
+4. **監控**: 衝突率監控和告警
+5. **預防**: 實施應用程式級衝突避免
 
-### Error Recovery Strategies
+### 錯誤恢復策略
 
-#### Automatic Retry Mechanisms
-- Exponential backoff for transient failures
-- Circuit breaker pattern for cascading failures
-- Dead letter queues for persistent failures
-- Automatic service restart for application failures
+#### 自動重試機制
+- 暫時性故障的指數退避
+- 級聯故障的熔斷器模式
+- 持續性故障的死信佇列
+- 應用程式故障的自動服務重啟
 
-#### Data Consistency Recovery
-- Event replay for missed events
-- Snapshot-based recovery for large data sets
-- Incremental synchronization for partial failures
-- Manual intervention procedures for complex conflicts
+#### 資料一致性恢復
+- 遺漏事件的事件重放
+- 大型資料集的基於快照的恢復
+- 部分故障的增量同步
+- 複雜衝突的人工介入程序
 
-## Testing Strategy
+## 測試策略
 
-### Multi-Region Testing Approach
+### 多區域測試方法
 
-#### Functional Testing
-1. **Cross-Region Data Consistency Tests**
-   - Write data in one region, verify in all regions
-   - Test conflict resolution scenarios
-   - Validate event ordering across regions
+#### 功能測試
+1. **跨區域資料一致性測試**
+   - 在一個區域寫入資料,在所有區域驗證
+   - 測試衝突解決情境
+   - 驗證跨區域事件順序
 
-2. **Failover Testing**
-   - Simulate regional failures
-   - Test automatic traffic routing
-   - Verify RTO and RPO targets
+2. **故障轉移測試**
+   - 模擬區域故障
+   - 測試自動流量路由
+   - 驗證 RTO 和 RPO 目標
 
-3. **Performance Testing**
-   - Load testing with 10,000+ concurrent users
-   - Cross-region latency testing
-   - Database performance validation
+3. **效能測試**
+   - 10,000+ 併發用戶的負載測試
+   - 跨區域延遲測試
+   - 資料庫效能驗證
 
-#### Disaster Recovery Testing
-1. **Regional Failure Simulation**
-   - Complete region shutdown testing
-   - Partial service failure testing
-   - Network partition testing
+#### 災難恢復測試
+1. **區域故障模擬**
+   - 完全區域關閉測試
+   - 部分服務故障測試
+   - 網路分區測試
 
-2. **Data Recovery Testing**
-   - Backup and restore procedures
-   - Point-in-time recovery testing
-   - Cross-region data synchronization validation
+2. **資料恢復測試**
+   - 備份和恢復程序
+   - 時間點恢復測試
+   - 跨區域資料同步驗證
 
-3. **Business Continuity Testing**
-   - End-to-end business process testing
-   - User experience validation during failures
-   - Operations team response testing
+3. **業務連續性測試**
+   - 端到端業務流程測試
+   - 故障期間的用戶體驗驗證
+   - 維運團隊響應測試
 
-### Testing Infrastructure
+### 測試基礎設施
 
-#### Automated Testing Pipeline
-- Continuous integration with multi-region deployment
-- Automated functional and performance testing
-- Chaos engineering for failure simulation
-- Regular disaster recovery drills
+#### 自動化測試管道
+- 具有多區域部署的持續整合
+- 自動化功能和效能測試
+- 故障模擬的混沌工程
+- 定期災難恢復演練
 
-#### Testing Environments
-- Dedicated testing regions for safe failure simulation
-- Production-like data volumes for realistic testing
-- Isolated network environments for security testing
-- Cost-optimized testing infrastructure
+#### 測試環境
+- 安全故障模擬的專用測試區域
+- 現實測試的生產級資料量
+- 安全測試的隔離網路環境
+- 成本優化的測試基礎設施
 
-## Security Considerations
+## 安全考量
 
-### Cross-Region Security
+### 跨區域安全
 
-#### Data Encryption
-- Encryption in transit using TLS 1.3
-- Encryption at rest using AWS KMS
-- Cross-region key management
-- Certificate management across regions
+#### 資料加密
+- 使用 TLS 1.3 的傳輸中加密
+- 使用 AWS KMS 的靜態加密
+- 跨區域金鑰管理
+- 跨區域憑證管理
 
-#### Identity and Access Management
-- Unified SSO across all regions
-- Cross-region IAM role assumptions
-- Consistent RBAC policies
-- Audit logging aggregation
+#### 身份和存取管理
+- 跨所有區域的統一 SSO
+- 跨區域 IAM 角色假設
+- 一致的 RBAC 策略
+- 審計日誌聚合
 
-#### Network Security
-- VPC peering with encryption
-- Security group optimization
-- Network ACL configuration
-- DDoS protection and monitoring
+#### 網路安全
+- 具有加密的 VPC 對等
+- 安全群組優化
+- 網路 ACL 配置
+- DDoS 保護和監控
 
-### Compliance and Governance
+### 合規和治理
 
-#### Data Sovereignty
-- Region-specific data storage requirements
-- GDPR compliance for EU regions
-- Data residency validation
-- Cross-border data transfer controls
+#### 資料主權
+- 特定區域的資料儲存要求
+- 歐盟區域的 GDPR 合規
+- 資料駐留驗證
+- 跨境資料傳輸控制
 
-#### Audit and Monitoring
-- Centralized audit log collection
-- Security event correlation
-- Compliance reporting automation
-- Regular security assessments
+#### 審計和監控
+- 集中式審計日誌收集
+- 安全事件關聯
+- 合規報告自動化
+- 定期安全評估
 
-## Performance Optimization
+## 效能優化
 
-### Latency Optimization
+### 延遲優化
 
-#### Network Optimization
-- Transit Gateway for optimal routing
-- CloudFront edge locations
-- Regional data placement
-- Connection pooling and keep-alive
+#### 網路優化
+- 最佳路由的 Transit Gateway
+- CloudFront 邊緣位置
+- 區域資料放置
+- 連線池和保持連線
 
-#### Application Optimization
-- Service mesh intelligent routing
-- Database connection optimization
-- Cache-first strategies
-- Asynchronous processing
+#### 應用程式優化
+- 服務網格智能路由
+- 資料庫連線優化
+- 快取優先策略
+- 非同步處理
 
-### Scalability Design
+### 可擴展性設計
 
-#### Auto-Scaling Strategies
-- Predictive scaling based on traffic patterns
-- Cross-region load balancing
-- Resource optimization algorithms
-- Cost-aware scaling decisions
+#### 自動擴縮策略
+- 基於流量模式的預測性擴縮
+- 跨區域負載均衡
+- 資源優化演算法
+- 成本感知的擴縮決策
 
-#### Resource Management
-- Multi-region resource allocation
-- Capacity planning and forecasting
-- Performance monitoring and tuning
-- Cost optimization recommendations
+#### 資源管理
+- 多區域資源配置
+- 容量規劃和預測
+- 效能監控和調優
+- 成本優化建議
 
-## Cost Management
+## 成本管理
 
-### Cost Optimization Strategies
+### 成本優化策略
 
-#### Resource Optimization
-- Right-sizing based on utilization
-- Reserved instance optimization
-- Spot instance utilization
-- Automated resource cleanup
+#### 資源優化
+- 基於使用率的適當規模調整
+- 預留實例優化
+- Spot 實例利用
+- 自動化資源清理
 
-#### Multi-Region Cost Control
-- Regional cost allocation
-- Budget monitoring and alerts
-- Cost-benefit analysis
-- ROI tracking and reporting
+#### 多區域成本控制
+- 區域成本配置
+- 預算監控和告警
+- 成本效益分析
+- ROI 追蹤和報告
 
-### Cost Monitoring
+### 成本監控
 
-#### Cost Tracking
-- Real-time cost monitoring
-- Regional cost breakdown
-- Service-level cost attribution
-- Trend analysis and forecasting
+#### 成本追蹤
+- 即時成本監控
+- 區域成本細分
+- 服務級成本歸屬
+- 趨勢分析和預測
 
-#### Budget Management
-- Automated budget controls
-- Cost anomaly detection
-- Spending alerts and notifications
-- Cost optimization recommendations
+#### 預算管理
+- 自動化預算控制
+- 成本異常檢測
+- 支出告警和通知
+- 成本優化建議
 
-This design provides a comprehensive foundation for implementing a robust, scalable, and cost-effective multi-region active-active architecture that meets all the specified requirements while building upon the existing CDK infrastructure.
+這個設計為實施穩健、可擴展和具成本效益的多區域 active-active 架構提供了全面的基礎,在基於現有 CDK 基礎設施的同時滿足所有指定的需求。

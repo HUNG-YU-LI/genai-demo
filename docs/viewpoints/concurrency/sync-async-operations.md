@@ -8,63 +8,63 @@ stakeholders: ["Architects", "Developers", "Performance Engineers"]
 
 # Synchronous vs Asynchronous Operations
 
-> **Viewpoint**: Concurrency  
-> **Purpose**: Define which operations are synchronous vs asynchronous and the decision criteria  
-> **Audience**: Architects, Developers, Performance Engineers
+> **Viewpoint**: Concurrency
+> **Purpose**: 定義哪些操作是 synchronous 對比 asynchronous，以及決策標準
+> **Audience**: Architects、Developers、Performance Engineers
 
-## Overview
+## 概述
 
-This document classifies all major system operations as either synchronous or asynchronous, explains the rationale for each classification, and provides guidelines for making these decisions in future development.
+本文件將所有主要系統操作分類為 synchronous 或 asynchronous，解釋每種分類的理由，並提供未來開發中做出這些決策的指南。
 
-## Decision Criteria
+## 決策標準
 
-### When to Use Synchronous Operations
+### 何時使用 Synchronous Operations
 
-Use synchronous (blocking) operations when:
+在以下情況使用 synchronous（blocking）operations：
 
-1. **Immediate Response Required**
-   - User is waiting for the result
-   - Result affects next user action
-   - Real-time validation needed
+1. **需要立即回應**
+   - 使用者正在等待結果
+   - 結果影響下一個使用者動作
+   - 需要即時驗證
 
-2. **Strong Consistency Required**
-   - Operation must complete before proceeding
-   - Data must be immediately consistent
-   - Transaction boundaries must be maintained
+2. **需要強一致性**
+   - 操作必須在繼續前完成
+   - 資料必須立即一致
+   - 必須維持 transaction 邊界
 
-3. **Simple Error Handling**
-   - Errors can be immediately reported to user
-   - No complex retry logic needed
-   - Straightforward rollback possible
+3. **簡單的錯誤處理**
+   - 錯誤可以立即回報給使用者
+   - 不需要複雜的重試邏輯
+   - 可以直接回滾
 
-4. **Low Latency Operations**
-   - Operation completes in < 500ms
-   - No external service dependencies
-   - Database operations only
+4. **低延遲操作**
+   - 操作在 < 500ms 內完成
+   - 沒有外部 service 依賴
+   - 僅 database 操作
 
-### When to Use Asynchronous Operations
+### 何時使用 Asynchronous Operations
 
-Use asynchronous (non-blocking) operations when:
+在以下情況使用 asynchronous（non-blocking）operations：
 
-1. **No Immediate Response Needed**
-   - User doesn't need to wait
-   - Result can be delivered later
-   - Fire-and-forget acceptable
+1. **不需要立即回應**
+   - 使用者不需要等待
+   - 結果可以稍後傳遞
+   - Fire-and-forget 可接受
 
-2. **Long-Running Operations**
-   - Operation takes > 2 seconds
-   - External service calls involved
-   - Batch processing required
+2. **長時間執行的操作**
+   - 操作需要 > 2 秒
+   - 涉及外部 service 呼叫
+   - 需要批次處理
 
-3. **Eventual Consistency Acceptable**
-   - Data can be eventually consistent
-   - No immediate consistency required
-   - Compensating actions possible
+3. **最終一致性可接受**
+   - 資料可以最終一致
+   - 不需要立即一致性
+   - 可以進行補償動作
 
-4. **Scalability Benefits**
-   - Offload work from request thread
-   - Better resource utilization
-   - Improved system throughput
+4. **可擴展性優勢**
+   - 從 request thread 卸載工作
+   - 更好的資源利用
+   - 改善系統吞吐量
 
 ## Synchronous Operations
 
@@ -72,8 +72,8 @@ Use asynchronous (non-blocking) operations when:
 
 #### User Registration
 
-**Type**: Synchronous  
-**Rationale**: User needs immediate confirmation of account creation
+**Type**: Synchronous
+**Rationale**: 使用者需要立即確認帳戶建立
 
 **Flow**:
 
@@ -92,15 +92,15 @@ graph TD
     N5 --> N6
 ```
 
-**Response Time**: < 1 second  
-**Error Handling**: Immediate feedback to user
+**Response Time**: < 1 秒
+**Error Handling**: 立即回饋給使用者
 
 ---
 
 #### User Login
 
-**Type**: Synchronous  
-**Rationale**: User needs immediate authentication result
+**Type**: Synchronous
+**Rationale**: 使用者需要立即的認證結果
 
 **Flow**:
 
@@ -117,15 +117,15 @@ graph LR
     N4 --> N5
 ```
 
-**Response Time**: < 500ms  
-**Error Handling**: Immediate error message
+**Response Time**: < 500ms
+**Error Handling**: 立即錯誤訊息
 
 ---
 
 #### Profile Update
 
-**Type**: Synchronous  
-**Rationale**: User expects immediate confirmation of changes
+**Type**: Synchronous
+**Rationale**: 使用者期望立即確認變更
 
 **Flow**:
 
@@ -144,8 +144,8 @@ graph TD
     N5 --> N6
 ```
 
-**Response Time**: < 1 second  
-**Error Handling**: Immediate validation errors
+**Response Time**: < 1 秒
+**Error Handling**: 立即驗證錯誤
 
 ---
 
@@ -153,8 +153,8 @@ graph TD
 
 #### Product Search
 
-**Type**: Synchronous  
-**Rationale**: User needs immediate search results
+**Type**: Synchronous
+**Rationale**: 使用者需要立即的搜尋結果
 
 **Flow**:
 
@@ -169,15 +169,15 @@ graph LR
     N3 --> N4
 ```
 
-**Response Time**: < 500ms  
-**Error Handling**: Empty results or error message
+**Response Time**: < 500ms
+**Error Handling**: 空結果或錯誤訊息
 
 ---
 
 #### Product Details
 
-**Type**: Synchronous  
-**Rationale**: User needs immediate product information
+**Type**: Synchronous
+**Rationale**: 使用者需要立即的產品資訊
 
 **Flow**:
 
@@ -192,8 +192,8 @@ graph LR
     N3 --> N4
 ```
 
-**Response Time**: < 300ms  
-**Error Handling**: Product not found error
+**Response Time**: < 300ms
+**Error Handling**: 產品找不到錯誤
 
 ---
 
@@ -201,8 +201,8 @@ graph LR
 
 #### Add to Cart
 
-**Type**: Synchronous  
-**Rationale**: User needs immediate confirmation
+**Type**: Synchronous
+**Rationale**: 使用者需要立即確認
 
 **Flow**:
 
@@ -219,15 +219,15 @@ graph LR
     N4 --> N5
 ```
 
-**Response Time**: < 500ms  
-**Error Handling**: Out of stock error
+**Response Time**: < 500ms
+**Error Handling**: 缺貨錯誤
 
 ---
 
 #### Update Cart Quantity
 
-**Type**: Synchronous  
-**Rationale**: User needs immediate cart update
+**Type**: Synchronous
+**Rationale**: 使用者需要立即更新購物車
 
 **Flow**:
 
@@ -246,8 +246,8 @@ graph LR
     N5 --> N6
 ```
 
-**Response Time**: < 500ms  
-**Error Handling**: Invalid quantity error
+**Response Time**: < 500ms
+**Error Handling**: 無效數量錯誤
 
 ---
 
@@ -255,8 +255,8 @@ graph LR
 
 #### Order Submission
 
-**Type**: Synchronous (with async follow-up)  
-**Rationale**: User needs immediate order confirmation
+**Type**: Synchronous（with async follow-up）
+**Rationale**: 使用者需要立即的訂單確認
 
 **Flow**:
 
@@ -277,15 +277,15 @@ graph TD
     N6 --> N7
 ```
 
-**Response Time**: < 2 seconds  
-**Error Handling**: Validation errors, inventory errors
+**Response Time**: < 2 秒
+**Error Handling**: 驗證錯誤、庫存錯誤
 
 ---
 
 #### Order Status Query
 
-**Type**: Synchronous  
-**Rationale**: User needs current order status
+**Type**: Synchronous
+**Rationale**: 使用者需要目前的訂單狀態
 
 **Flow**:
 
@@ -300,8 +300,8 @@ graph LR
     N3 --> N4
 ```
 
-**Response Time**: < 500ms  
-**Error Handling**: Order not found
+**Response Time**: < 500ms
+**Error Handling**: 訂單找不到
 
 ---
 
@@ -309,8 +309,8 @@ graph LR
 
 #### Payment Authorization
 
-**Type**: Synchronous  
-**Rationale**: Must confirm payment before order completion
+**Type**: Synchronous
+**Rationale**: 必須在訂單完成前確認付款
 
 **Flow**:
 
@@ -327,17 +327,17 @@ graph LR
     N4 --> N5
 ```
 
-**Response Time**: < 3 seconds  
-**Error Handling**: Payment declined, timeout errors
+**Response Time**: < 3 秒
+**Error Handling**: 付款被拒、timeout 錯誤
 
-**Note**: This is synchronous from user perspective, but internally uses async callbacks from payment gateway.
+**Note**: 從使用者角度來看是 synchronous，但內部使用來自 payment gateway 的 async callbacks。
 
 ---
 
 #### Payment Status Check
 
-**Type**: Synchronous  
-**Rationale**: User needs current payment status
+**Type**: Synchronous
+**Rationale**: 使用者需要目前的付款狀態
 
 **Flow**:
 
@@ -352,8 +352,8 @@ graph LR
     N3 --> N4
 ```
 
-**Response Time**: < 500ms  
-**Error Handling**: Payment not found
+**Response Time**: < 500ms
+**Error Handling**: 付款找不到
 
 ---
 
@@ -361,8 +361,8 @@ graph LR
 
 #### Inventory Check
 
-**Type**: Synchronous  
-**Rationale**: User needs immediate availability information
+**Type**: Synchronous
+**Rationale**: 使用者需要立即的可用性資訊
 
 **Flow**:
 
@@ -377,15 +377,15 @@ graph LR
     N3 --> N4
 ```
 
-**Response Time**: < 300ms  
-**Error Handling**: Product not found
+**Response Time**: < 300ms
+**Error Handling**: 產品找不到
 
 ---
 
 #### Inventory Reservation
 
-**Type**: Synchronous  
-**Rationale**: Must confirm reservation before order creation
+**Type**: Synchronous
+**Rationale**: 必須在建立訂單前確認保留
 
 **Flow**:
 
@@ -402,8 +402,8 @@ graph LR
     N4 --> N5
 ```
 
-**Response Time**: < 1 second  
-**Error Handling**: Insufficient stock error
+**Response Time**: < 1 秒
+**Error Handling**: 庫存不足錯誤
 
 ---
 
@@ -413,8 +413,8 @@ graph LR
 
 #### Email Notifications
 
-**Type**: Asynchronous  
-**Rationale**: User doesn't need to wait for email delivery
+**Type**: Asynchronous
+**Rationale**: 使用者不需要等待 email 傳送
 
 **Flow**:
 
@@ -431,23 +431,23 @@ graph TD
     N4 --> N5
 ```
 
-**Processing Time**: 1-5 seconds  
-**Error Handling**: Retry with exponential backoff, dead letter queue
+**Processing Time**: 1-5 秒
+**Error Handling**: 使用 exponential backoff 重試、dead letter queue
 
 **Email Types**:
 
-- Order confirmation
-- Shipping notification
-- Password reset
-- Welcome email
-- Promotional emails
+- 訂單確認
+- 出貨通知
+- 密碼重設
+- 歡迎 email
+- 促銷 emails
 
 ---
 
 #### SMS Notifications
 
-**Type**: Asynchronous  
-**Rationale**: User doesn't need to wait for SMS delivery
+**Type**: Asynchronous
+**Rationale**: 使用者不需要等待 SMS 傳送
 
 **Flow**:
 
@@ -464,14 +464,14 @@ graph TD
     N4 --> N5
 ```
 
-**Processing Time**: 1-3 seconds  
-**Error Handling**: Retry 3 times, fallback to email
+**Processing Time**: 1-3 秒
+**Error Handling**: 重試 3 次，fallback 到 email
 
 **SMS Types**:
 
-- Order status updates
-- Delivery notifications
-- Verification codes (time-sensitive)
+- 訂單狀態更新
+- 配送通知
+- 驗證碼（時效性）
 
 ---
 
@@ -479,8 +479,8 @@ graph TD
 
 #### User Behavior Tracking
 
-**Type**: Asynchronous  
-**Rationale**: Analytics don't affect user experience
+**Type**: Asynchronous
+**Rationale**: Analytics 不影響使用者體驗
 
 **Flow**:
 
@@ -497,15 +497,15 @@ graph LR
     N4 --> N5
 ```
 
-**Processing Time**: Minutes to hours  
-**Error Handling**: Log and continue, no user impact
+**Processing Time**: 數分鐘到數小時
+**Error Handling**: 記錄並繼續，不影響使用者
 
 ---
 
 #### Sales Reports
 
-**Type**: Asynchronous  
-**Rationale**: Reports can be generated in background
+**Type**: Asynchronous
+**Rationale**: 報表可以在背景產生
 
 **Flow**:
 
@@ -522,15 +522,15 @@ graph LR
     N4 --> N5
 ```
 
-**Processing Time**: Minutes to hours  
-**Error Handling**: Retry, notify user of failure
+**Processing Time**: 數分鐘到數小時
+**Error Handling**: 重試，通知使用者失敗
 
 ---
 
 #### Business Intelligence
 
-**Type**: Asynchronous (Batch)  
-**Rationale**: BI processing is resource-intensive
+**Type**: Asynchronous（Batch）
+**Rationale**: BI 處理是資源密集型
 
 **Flow**:
 
@@ -547,8 +547,8 @@ graph LR
     N4 --> N5
 ```
 
-**Processing Time**: Hours  
-**Error Handling**: Alert operations team
+**Processing Time**: 數小時
+**Error Handling**: 警告 operations team
 
 ---
 
@@ -556,8 +556,8 @@ graph LR
 
 #### Warehouse Inventory Sync
 
-**Type**: Asynchronous  
-**Rationale**: External system sync doesn't need to be immediate
+**Type**: Asynchronous
+**Rationale**: 外部系統同步不需要立即
 
 **Flow**:
 
@@ -574,15 +574,15 @@ graph LR
     N4 --> N5
 ```
 
-**Processing Time**: Seconds to minutes  
-**Error Handling**: Retry with backoff, alert on repeated failures
+**Processing Time**: 數秒到數分鐘
+**Error Handling**: 使用 backoff 重試，重複失敗時警告
 
 ---
 
 #### Supplier Inventory Updates
 
-**Type**: Asynchronous (Batch)  
-**Rationale**: Supplier updates are periodic
+**Type**: Asynchronous（Batch）
+**Rationale**: 供應商更新是定期的
 
 **Flow**:
 
@@ -599,8 +599,8 @@ graph LR
     N4 --> N5
 ```
 
-**Processing Time**: Minutes  
-**Error Handling**: Log failures, retry next cycle
+**Processing Time**: 數分鐘
+**Error Handling**: 記錄失敗，下次循環重試
 
 ---
 
@@ -608,8 +608,8 @@ graph LR
 
 #### Order Fulfillment Workflow
 
-**Type**: Asynchronous (Event-Driven)  
-**Rationale**: Multi-step process with external dependencies
+**Type**: Asynchronous（Event-Driven）
+**Rationale**: 多步驟流程，有外部依賴
 
 **Flow**:
 
@@ -626,15 +626,15 @@ graph LR
     N4 --> N5
 ```
 
-**Processing Time**: Seconds to minutes  
-**Error Handling**: Saga pattern with compensation
+**Processing Time**: 數秒到數分鐘
+**Error Handling**: Saga pattern 搭配補償
 
 ---
 
 #### Shipping Label Generation
 
-**Type**: Asynchronous  
-**Rationale**: External shipping API call
+**Type**: Asynchronous
+**Rationale**: 外部 shipping API 呼叫
 
 **Flow**:
 
@@ -651,8 +651,8 @@ graph LR
     N4 --> N5
 ```
 
-**Processing Time**: 5-30 seconds  
-**Error Handling**: Retry 3 times, alert operations
+**Processing Time**: 5-30 秒
+**Error Handling**: 重試 3 次，警告 operations
 
 ---
 
@@ -660,8 +660,8 @@ graph LR
 
 #### Image Processing
 
-**Type**: Asynchronous  
-**Rationale**: CPU-intensive operation
+**Type**: Asynchronous
+**Rationale**: CPU 密集型操作
 
 **Flow**:
 
@@ -678,15 +678,15 @@ graph LR
     N4 --> N5
 ```
 
-**Processing Time**: Seconds to minutes  
-**Error Handling**: Retry, use original if processing fails
+**Processing Time**: 數秒到數分鐘
+**Error Handling**: 重試，處理失敗時使用原始檔案
 
 ---
 
 #### Data Export
 
-**Type**: Asynchronous  
-**Rationale**: Large data volumes
+**Type**: Asynchronous
+**Rationale**: 大量資料
 
 **Flow**:
 
@@ -703,15 +703,15 @@ graph LR
     N4 --> N5
 ```
 
-**Processing Time**: Minutes to hours  
-**Error Handling**: Notify user of failure
+**Processing Time**: 數分鐘到數小時
+**Error Handling**: 通知使用者失敗
 
 ---
 
 #### Data Import
 
-**Type**: Asynchronous (Batch)  
-**Rationale**: Large data volumes, validation required
+**Type**: Asynchronous（Batch）
+**Rationale**: 大量資料，需要驗證
 
 **Flow**:
 
@@ -730,8 +730,8 @@ graph LR
     N5 --> N6
 ```
 
-**Processing Time**: Minutes to hours  
-**Error Handling**: Partial success handling, error report
+**Processing Time**: 數分鐘到數小時
+**Error Handling**: 部分成功處理、錯誤報告
 
 ---
 
@@ -739,8 +739,8 @@ graph LR
 
 #### Cache Warming
 
-**Type**: Asynchronous  
-**Rationale**: Background optimization
+**Type**: Asynchronous
+**Rationale**: 背景優化
 
 **Flow**:
 
@@ -755,15 +755,15 @@ graph LR
     N3 --> N4
 ```
 
-**Processing Time**: Minutes  
-**Error Handling**: Log failures, retry next cycle
+**Processing Time**: 數分鐘
+**Error Handling**: 記錄失敗，下次循環重試
 
 ---
 
 #### Cache Invalidation
 
-**Type**: Asynchronous (Event-Driven)  
-**Rationale**: Eventual consistency acceptable
+**Type**: Asynchronous（Event-Driven）
+**Rationale**: 最終一致性可接受
 
 **Flow**:
 
@@ -778,72 +778,72 @@ graph LR
     N3 --> N4
 ```
 
-**Processing Time**: Milliseconds to seconds  
-**Error Handling**: TTL-based expiration as fallback
+**Processing Time**: 數毫秒到數秒
+**Error Handling**: 以 TTL 為基礎的過期作為 fallback
 
 ---
 
 ## Hybrid Operations
 
-Some operations use both synchronous and asynchronous patterns:
+某些操作同時使用 synchronous 和 asynchronous patterns：
 
-### Order Submission (Hybrid)
+### Order Submission（Hybrid）
 
 **Synchronous Part**:
 
-- Validate order data
-- Check inventory availability
-- Reserve inventory
-- Create order record
-- Return order ID to user
+- 驗證訂單資料
+- 檢查庫存可用性
+- 保留庫存
+- 建立訂單記錄
+- 回傳訂單 ID 給使用者
 
 **Asynchronous Part**:
 
-- Process payment
-- Send confirmation email
-- Notify warehouse
-- Update analytics
-- Sync to external systems
+- 處理付款
+- 傳送確認 email
+- 通知倉庫
+- 更新 analytics
+- 同步到外部系統
 
-**Rationale**: User needs immediate order confirmation, but follow-up actions can be asynchronous.
+**Rationale**: 使用者需要立即的訂單確認，但後續動作可以是 asynchronous。
 
 ---
 
-### Product Review Submission (Hybrid)
+### Product Review Submission（Hybrid）
 
 **Synchronous Part**:
 
-- Validate review data
-- Check user eligibility
-- Save review (pending approval)
-- Return success to user
+- 驗證評論資料
+- 檢查使用者資格
+- 儲存評論（待審核）
+- 回傳成功給使用者
 
 **Asynchronous Part**:
 
-- Content moderation
-- Spam detection
-- Sentiment analysis
-- Notification to seller
-- Update product rating
+- 內容審核
+- 垃圾訊息偵測
+- 情緒分析
+- 通知賣家
+- 更新產品評分
 
-**Rationale**: User needs immediate submission confirmation, but processing can be asynchronous.
+**Rationale**: 使用者需要立即的提交確認，但處理可以是 asynchronous。
 
 ---
 
-### Password Reset (Hybrid)
+### Password Reset（Hybrid）
 
 **Synchronous Part**:
 
-- Validate email
-- Generate reset token
-- Return success message
+- 驗證 email
+- 產生重設 token
+- 回傳成功訊息
 
 **Asynchronous Part**:
 
-- Send reset email
-- Log security event
+- 傳送重設 email
+- 記錄安全事件
 
-**Rationale**: User needs immediate confirmation, but email delivery can be asynchronous.
+**Rationale**: 使用者需要立即確認，但 email 傳送可以是 asynchronous。
 
 ---
 
@@ -857,7 +857,7 @@ Some operations use both synchronous and asynchronous patterns:
 @RestController
 @RequestMapping("/api/v1/products")
 public class ProductController {
-    
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProduct(@PathVariable String id) {
         // Synchronous - blocks until complete
@@ -869,10 +869,10 @@ public class ProductController {
 
 **Characteristics**:
 
-- Request thread blocks until completion
-- Direct return of result
-- Immediate error handling
-- Simple flow control
+- Request thread 會 block 直到完成
+- 直接回傳結果
+- 立即錯誤處理
+- 簡單的流程控制
 
 ---
 
@@ -883,7 +883,7 @@ public class ProductController {
 ```java
 @Service
 public class EmailService {
-    
+
     @Async("taskExecutor")
     public CompletableFuture<Void> sendOrderConfirmation(String orderId) {
         // Asynchronous - returns immediately
@@ -900,10 +900,10 @@ public class EmailService {
 
 **Characteristics**:
 
-- Returns immediately
-- Executes in separate thread
-- Result available via Future
-- Requires error handling strategy
+- 立即回傳
+- 在獨立 thread 中執行
+- 結果透過 Future 取得
+- 需要錯誤處理策略
 
 ---
 
@@ -915,12 +915,12 @@ public class EmailService {
 @Service
 @Transactional
 public class OrderApplicationService {
-    
+
     public void submitOrder(SubmitOrderCommand command) {
         // Synchronous part
         Order order = orderService.createOrder(command);
         orderRepository.save(order);
-        
+
         // Asynchronous part - publish event
         domainEventService.publishEventsFromAggregate(order);
     }
@@ -932,7 +932,7 @@ public class OrderApplicationService {
 ```java
 @Component
 public class OrderConfirmationEmailHandler extends AbstractDomainEventHandler<OrderCreatedEvent> {
-    
+
     @Override
     @Async
     public void handle(OrderCreatedEvent event) {
@@ -944,10 +944,10 @@ public class OrderConfirmationEmailHandler extends AbstractDomainEventHandler<Or
 
 **Characteristics**:
 
-- Decoupled components
-- Eventual consistency
-- Scalable processing
-- Resilient to failures
+- 解耦的元件
+- 最終一致性
+- 可擴展的處理
+- 對失敗具有彈性
 
 ---
 
@@ -957,23 +957,23 @@ public class OrderConfirmationEmailHandler extends AbstractDomainEventHandler<Or
 
 **Advantages**:
 
-- Simple to understand and debug
-- Immediate error feedback
-- Strong consistency
-- Predictable behavior
+- 容易理解和除錯
+- 立即的錯誤回饋
+- 強一致性
+- 可預測的行為
 
 **Disadvantages**:
 
-- Blocks request thread
-- Limited scalability
-- Timeout risks
-- Resource contention
+- 阻塞 request thread
+- 有限的可擴展性
+- Timeout 風險
+- 資源競爭
 
 **Best For**:
 
-- User-facing operations
-- Critical path operations
-- Operations requiring immediate feedback
+- 面向使用者的操作
+- 關鍵路徑操作
+- 需要立即回饋的操作
 
 ---
 
@@ -981,24 +981,24 @@ public class OrderConfirmationEmailHandler extends AbstractDomainEventHandler<Or
 
 **Advantages**:
 
-- Better resource utilization
-- Higher throughput
+- 更好的資源利用
+- 更高的吞吐量
 - Non-blocking
-- Improved scalability
+- 改善的可擴展性
 
 **Disadvantages**:
 
-- Complex error handling
-- Eventual consistency
-- Harder to debug
-- Requires monitoring
+- 複雜的錯誤處理
+- 最終一致性
+- 更難除錯
+- 需要監控
 
 **Best For**:
 
-- Background processing
-- External service calls
-- Batch operations
-- Non-critical operations
+- 背景處理
+- 外部 service 呼叫
+- 批次操作
+- 非關鍵操作
 
 ---
 
@@ -1006,18 +1006,18 @@ public class OrderConfirmationEmailHandler extends AbstractDomainEventHandler<Or
 
 ### Synchronous Operation Metrics
 
-- **Response Time**: p50, p95, p99 latencies
-- **Error Rate**: 4xx and 5xx errors
-- **Throughput**: Requests per second
-- **Timeout Rate**: Operations exceeding timeout
+- **Response Time**: p50、p95、p99 延遲
+- **Error Rate**: 4xx 和 5xx 錯誤
+- **Throughput**: 每秒請求數
+- **Timeout Rate**: 超過 timeout 的操作
 
 ### Asynchronous Operation Metrics
 
-- **Queue Depth**: Pending tasks in queue
-- **Processing Time**: Time from queue to completion
-- **Success Rate**: Successful vs failed operations
-- **Retry Rate**: Number of retries
-- **Dead Letter Queue Size**: Failed operations
+- **Queue Depth**: 佇列中的待處理任務
+- **Processing Time**: 從佇列到完成的時間
+- **Success Rate**: 成功 vs 失敗的操作
+- **Retry Rate**: 重試次數
+- **Dead Letter Queue Size**: 失敗的操作
 
 ---
 
@@ -1025,27 +1025,27 @@ public class OrderConfirmationEmailHandler extends AbstractDomainEventHandler<Or
 
 | Criteria | Synchronous | Asynchronous |
 |----------|-------------|--------------|
-| User waiting for result | ✅ Yes | ❌ No |
+| 使用者等待結果 | ✅ Yes | ❌ No |
 | Response time < 2s | ✅ Yes | ❌ No |
-| Strong consistency required | ✅ Yes | ❌ No |
-| External service call | ❌ No | ✅ Yes |
-| Long-running operation | ❌ No | ✅ Yes |
-| Eventual consistency OK | ❌ No | ✅ Yes |
-| Background processing | ❌ No | ✅ Yes |
-| Batch operation | ❌ No | ✅ Yes |
+| 需要強一致性 | ✅ Yes | ❌ No |
+| 外部 service 呼叫 | ❌ No | ✅ Yes |
+| 長時間執行的操作 | ❌ No | ✅ Yes |
+| 最終一致性可接受 | ❌ No | ✅ Yes |
+| 背景處理 | ❌ No | ✅ Yes |
+| 批次操作 | ❌ No | ✅ Yes |
 
 ---
 
 ## Related Documentation
 
-- [Concurrency Viewpoint Overview](overview.md) - Overall concurrency model ←
-- [Synchronization Mechanisms](synchronization.md) - Locking and coordination →
-- [State Management](state-management.md) - State handling strategies →
-- [Performance Perspective](../../perspectives/performance/overview.md) - Performance requirements
+- [Concurrency Viewpoint Overview](overview.md) - 整體 concurrency 模型 ←
+- [Synchronization Mechanisms](synchronization.md) - Locking 和協調 →
+- [State Management](state-management.md) - State 處理策略 →
+- [Performance Perspective](../../perspectives/performance/overview.md) - Performance 需求
 
 ---
 
-**Document Status**: Active  
-**Last Review**: 2025-10-23  
-**Next Review**: 2025-11-23  
+**Document Status**: Active
+**Last Review**: 2025-10-23
+**Next Review**: 2025-11-23
 **Owner**: Architecture Team

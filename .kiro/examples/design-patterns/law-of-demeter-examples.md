@@ -1,136 +1,136 @@
-# Law of Demeter - Detailed Examples
+# Law of Demeter - 詳細範例
 
-## Principle Overview
+## 原則概述
 
-The **Law of Demeter** (Principle of Least Knowledge) states that an object should only talk to its immediate friends, not to strangers. This reduces coupling and makes code more maintainable.
+**Law of Demeter**（最少知識原則）指出，物件應該只與其直接朋友交流，而不是與陌生人交流。這減少耦合並使程式碼更易於維護。
 
-## The "One Dot" Rule
+## 「單點」規則
 
-A method should only call methods on:
-1. The object itself (`this`)
-2. Objects passed as parameters
-3. Objects created locally
-4. Direct component objects (fields)
+方法應該只呼叫以下物件的方法：
+1. 物件本身（`this`）
+2. 作為參數傳入的物件
+3. 本地建立的物件
+4. 直接元件物件（欄位）
 
-**Exception**: Fluent APIs and builders are acceptable (e.g., `builder.withName().withEmail().build()`)
+**例外**：Fluent APIs 和 builders 是可接受的（例如 `builder.withName().withEmail().build()`）
 
 ---
 
-## Example 1: Address Information
+## 範例 1：地址資訊
 
-### ❌ Bad: Talking to Strangers
+### ❌ 錯誤：與陌生人交談
 
 ```java
 @RestController
 public class OrderController {
-    
+
     @GetMapping("/orders/{id}/shipping-city")
     public String getShippingCity(@PathVariable String id) {
         Order order = orderRepository.findById(id).orElseThrow();
-        
-        // Violation: Chaining through multiple objects
+
+        // 違反：透過多個物件鏈結
         return order.getCustomer().getAddress().getCity().getName();
         //     ↑ friend    ↑ stranger  ↑ stranger  ↑ stranger
     }
 }
 ```
 
-**Problems:**
-- Controller knows about Order's internal structure
-- Changes to Customer or Address break the controller
-- High coupling across multiple classes
-- Hard to test and mock
+**問題：**
+- Controller 知道 Order 的內部結構
+- Customer 或 Address 的變更會破壞 controller
+- 跨多個類別的高耦合
+- 難以測試和模擬
 
-### ✅ Good: Asking Friends Only
+### ✅ 正確：只詢問朋友
 
 ```java
 @RestController
 public class OrderController {
-    
+
     @GetMapping("/orders/{id}/shipping-city")
     public String getShippingCity(@PathVariable String id) {
         Order order = orderRepository.findById(id).orElseThrow();
-        
-        // Tell order to get the shipping city
+
+        // 告訴 order 取得配送城市
         return order.getShippingCityName();
     }
 }
 
-// Order provides a direct method
+// Order 提供直接方法
 @AggregateRoot
 public class Order {
     private Customer customer;
     private Address shippingAddress;
-    
+
     public String getShippingCityName() {
         return shippingAddress.getCityName();
     }
 }
 
-// Address provides a direct method
+// Address 提供直接方法
 public class Address {
     private City city;
-    
+
     public String getCityName() {
         return city.getName();
     }
 }
 ```
 
-**Benefits:**
-- Controller only talks to Order
-- Order encapsulates how to get city name
-- Easy to change internal structure
-- Low coupling
+**優點：**
+- Controller 只與 Order 交流
+- Order 封裝如何取得城市名稱
+- 易於變更內部結構
+- 低耦合
 
 ---
 
-## Example 2: Price Calculation
+## 範例 2：價格計算
 
-### ❌ Bad: Deep Navigation
+### ❌ 錯誤：深層導航
 
 ```java
 @Service
 public class InvoiceService {
-    
+
     public Money calculateInvoiceTotal(Invoice invoice) {
         Money total = Money.ZERO;
-        
-        // Violation: Navigating deep into object structure
+
+        // 違反：導航深入物件結構
         for (InvoiceLine line : invoice.getLines()) {
             Product product = line.getProduct();
             Money unitPrice = product.getPricing().getCurrentPrice().getAmount();
             int quantity = line.getQuantity();
-            
+
             total = total.add(unitPrice.multiply(quantity));
         }
-        
+
         return total;
     }
 }
 ```
 
-**Problems:**
-- Service knows about Product's pricing structure
-- Breaks if pricing structure changes
-- Calculation logic is external
+**問題：**
+- Service 知道 Product 的定價結構
+- 定價結構變更會破壞功能
+- 計算邏輯在外部
 
-### ✅ Good: Delegating to Objects
+### ✅ 正確：委派給物件
 
 ```java
 @Service
 public class InvoiceService {
-    
+
     public Money calculateInvoiceTotal(Invoice invoice) {
-        // Tell invoice to calculate its own total
+        // 告訴 invoice 計算自己的總計
         return invoice.calculateTotal();
     }
 }
 
-// Invoice calculates its own total
+// Invoice 計算自己的總計
 public class Invoice {
     private List<InvoiceLine> lines;
-    
+
     public Money calculateTotal() {
         return lines.stream()
             .map(InvoiceLine::calculateSubtotal)
@@ -138,62 +138,62 @@ public class Invoice {
     }
 }
 
-// InvoiceLine calculates its own subtotal
+// InvoiceLine 計算自己的小計
 public class InvoiceLine {
     private Product product;
     private int quantity;
-    
+
     public Money calculateSubtotal() {
         Money unitPrice = product.getCurrentPrice();
         return unitPrice.multiply(quantity);
     }
 }
 
-// Product provides a simple interface
+// Product 提供簡單介面
 public class Product {
     private Pricing pricing;
-    
+
     public Money getCurrentPrice() {
         return pricing.getCurrentAmount();
     }
 }
 
-// Pricing encapsulates its structure
+// Pricing 封裝其結構
 public class Pricing {
     private Price currentPrice;
-    
+
     public Money getCurrentAmount() {
         return currentPrice.getAmount();
     }
 }
 ```
 
-**Benefits:**
-- Each object handles its own calculations
-- Changes to pricing structure don't affect callers
-- Clear responsibility chain
+**優點：**
+- 每個物件處理自己的計算
+- 定價結構變更不影響呼叫者
+- 清楚的責任鏈
 
 ---
 
-## Example 3: Notification Preferences
+## 範例 3：通知偏好設定
 
-### ❌ Bad: Reaching Through Objects
+### ❌ 錯誤：穿透物件存取
 
 ```java
 @Service
 public class NotificationService {
-    
+
     public void sendOrderConfirmation(Order order) {
-        // Violation: Reaching through multiple objects
+        // 違反：穿透多個物件
         Customer customer = order.getCustomer();
         ContactInfo contactInfo = customer.getContactInfo();
         NotificationPreferences prefs = contactInfo.getNotificationPreferences();
-        
+
         if (prefs.isEmailEnabled()) {
             String email = contactInfo.getEmail().getValue();
             emailService.send(email, "Order Confirmation", buildMessage(order));
         }
-        
+
         if (prefs.isSmsEnabled()) {
             String phone = contactInfo.getPhone().getValue();
             smsService.send(phone, buildShortMessage(order));
@@ -202,26 +202,26 @@ public class NotificationService {
 }
 ```
 
-**Problems:**
-- Service navigates deep object graph
-- Knows about internal structure
-- Hard to change notification logic
+**問題：**
+- Service 導航深層物件圖
+- 知道內部結構
+- 難以變更通知邏輯
 
-### ✅ Good: Using Facade Methods
+### ✅ 正確：使用 Facade 方法
 
 ```java
 @Service
 public class NotificationService {
-    
+
     public void sendOrderConfirmation(Order order) {
         Customer customer = order.getCustomer();
-        
-        // Ask customer for notification channels
+
+        // 詢問 customer 通知管道
         if (customer.prefersEmailNotifications()) {
             String email = customer.getEmailAddress();
             emailService.send(email, "Order Confirmation", buildMessage(order));
         }
-        
+
         if (customer.prefersSmsNotifications()) {
             String phone = customer.getPhoneNumber();
             smsService.send(phone, buildShortMessage(order));
@@ -229,79 +229,79 @@ public class NotificationService {
     }
 }
 
-// Customer provides facade methods
+// Customer 提供 facade 方法
 @AggregateRoot
 public class Customer {
     private ContactInfo contactInfo;
-    
+
     public boolean prefersEmailNotifications() {
         return contactInfo.isEmailNotificationEnabled();
     }
-    
+
     public boolean prefersSmsNotifications() {
         return contactInfo.isSmsNotificationEnabled();
     }
-    
+
     public String getEmailAddress() {
         return contactInfo.getEmailValue();
     }
-    
+
     public String getPhoneNumber() {
         return contactInfo.getPhoneValue();
     }
 }
 
-// ContactInfo encapsulates its structure
+// ContactInfo 封裝其結構
 public class ContactInfo {
     private Email email;
     private Phone phone;
     private NotificationPreferences preferences;
-    
+
     public boolean isEmailNotificationEnabled() {
         return preferences.isEmailEnabled();
     }
-    
+
     public boolean isSmsNotificationEnabled() {
         return preferences.isSmsEnabled();
     }
-    
+
     public String getEmailValue() {
         return email.getValue();
     }
-    
+
     public String getPhoneValue() {
         return phone.getValue();
     }
 }
 ```
 
-**Benefits:**
-- Service only talks to Customer
-- Customer encapsulates contact details
-- Easy to change notification logic
+**優點：**
+- Service 只與 Customer 交流
+- Customer 封裝聯絡細節
+- 易於變更通知邏輯
 
 ---
 
-## Example 4: Order Validation
+## 範例 4：訂單驗證
 
-### ❌ Bad: Inspecting Internal State
+### ❌ 錯誤：檢查內部狀態
 
 ```java
 @Service
 public class OrderValidationService {
-    
+
     public void validateOrder(Order order) {
-        // Violation: Inspecting deep internal state
+        // 違反：檢查深層內部狀態
         for (OrderItem item : order.getItems()) {
             Product product = item.getProduct();
             Inventory inventory = product.getInventory();
-            
+
             if (inventory.getAvailableQuantity() < item.getQuantity()) {
                 throw new InsufficientInventoryException(
                     "Not enough inventory for: " + product.getName()
                 );
             }
-            
+
             if (product.getStatus() != ProductStatus.ACTIVE) {
                 throw new InactiveProductException(
                     "Product is not active: " + product.getName()
@@ -312,53 +312,53 @@ public class OrderValidationService {
 }
 ```
 
-**Problems:**
-- Service knows about Product and Inventory internals
-- Validation logic is scattered
-- Hard to maintain
+**問題：**
+- Service 知道 Product 和 Inventory 內部
+- 驗證邏輯分散
+- 難以維護
 
-### ✅ Good: Delegating Validation
+### ✅ 正確：委派驗證
 
 ```java
 @Service
 public class OrderValidationService {
-    
+
     public void validateOrder(Order order) {
-        // Tell order to validate itself
+        // 告訴 order 驗證自己
         order.validate();
     }
 }
 
-// Order validates itself
+// Order 驗證自己
 @AggregateRoot
 public class Order {
     private List<OrderItem> items;
-    
+
     public void validate() {
         if (items.isEmpty()) {
             throw new BusinessRuleViolationException("Order must have at least one item");
         }
-        
+
         items.forEach(OrderItem::validate);
     }
 }
 
-// OrderItem validates itself
+// OrderItem 驗證自己
 public class OrderItem {
     private Product product;
     private int quantity;
-    
+
     public void validate() {
         product.validateAvailability(quantity);
         product.validateActive();
     }
 }
 
-// Product provides validation methods
+// Product 提供驗證方法
 public class Product {
     private Inventory inventory;
     private ProductStatus status;
-    
+
     public void validateAvailability(int requestedQuantity) {
         if (!inventory.hasAvailableQuantity(requestedQuantity)) {
             throw new InsufficientInventoryException(
@@ -367,7 +367,7 @@ public class Product {
             );
         }
     }
-    
+
     public void validateActive() {
         if (status != ProductStatus.ACTIVE) {
             throw new InactiveProductException("Product is not active: " + name);
@@ -375,33 +375,33 @@ public class Product {
     }
 }
 
-// Inventory provides query method
+// Inventory 提供查詢方法
 public class Inventory {
     private int availableQuantity;
-    
+
     public boolean hasAvailableQuantity(int requested) {
         return availableQuantity >= requested;
     }
-    
+
     public int getAvailableQuantity() {
         return availableQuantity;
     }
 }
 ```
 
-**Benefits:**
-- Each object validates its own state
-- Validation logic is encapsulated
-- Easy to add new validation rules
+**優點：**
+- 每個物件驗證自己的狀態
+- 驗證邏輯被封裝
+- 易於新增新的驗證規則
 
 ---
 
-## Example 5: Fluent API (Acceptable Exception)
+## 範例 5：Fluent API（可接受的例外）
 
-### ✅ Acceptable: Builder Pattern
+### ✅ 可接受：Builder Pattern
 
 ```java
-// This is acceptable because it's a fluent API
+// 這是可接受的，因為它是 fluent API
 Customer customer = Customer.builder()
     .withName("John Doe")
     .withEmail("john@example.com")
@@ -412,7 +412,7 @@ Customer customer = Customer.builder()
         .build())
     .build();
 
-// This is also acceptable
+// 這也是可接受的
 String result = stringBuilder
     .append("Hello")
     .append(" ")
@@ -420,26 +420,26 @@ String result = stringBuilder
     .toString();
 ```
 
-**Why it's acceptable:**
-- Builder returns itself for chaining
-- It's a deliberate API design pattern
-- Doesn't expose internal structure
-- Improves readability
+**為什麼可接受：**
+- Builder 回傳自身以進行鏈結
+- 這是刻意的 API 設計模式
+- 不暴露內部結構
+- 提高可讀性
 
 ---
 
-## Refactoring Strategies
+## 重構策略
 
-### Strategy 1: Add Facade Methods
+### 策略 1：新增 Facade 方法
 
 ```java
-// Before
+// 之前
 String city = order.getCustomer().getAddress().getCity();
 
-// After
+// 之後
 String city = order.getCustomerCity();
 
-// Implementation
+// 實作
 public class Order {
     public String getCustomerCity() {
         return customer.getAddressCity();
@@ -453,20 +453,20 @@ public class Customer {
 }
 ```
 
-### Strategy 2: Move Behavior to Owner
+### 策略 2：將行為移到擁有者
 
 ```java
-// Before
+// 之前
 if (order.getCustomer().getMembershipLevel() == MembershipLevel.PREMIUM) {
     applyPremiumDiscount();
 }
 
-// After
+// 之後
 if (order.hasCustomerWithPremiumMembership()) {
     applyPremiumDiscount();
 }
 
-// Implementation
+// 實作
 public class Order {
     public boolean hasCustomerWithPremiumMembership() {
         return customer.isPremiumMember();
@@ -480,21 +480,21 @@ public class Customer {
 }
 ```
 
-### Strategy 3: Use Value Objects
+### 策略 3：使用 Value Objects
 
 ```java
-// Before
+// 之前
 String fullAddress = customer.getAddress().getStreet() + ", " +
                     customer.getAddress().getCity() + ", " +
                     customer.getAddress().getZipCode();
 
-// After
+// 之後
 String fullAddress = customer.getFormattedAddress();
 
-// Implementation
+// 實作
 public class Customer {
     private Address address;
-    
+
     public String getFormattedAddress() {
         return address.format();
     }
@@ -509,39 +509,39 @@ public class Address {
 
 ---
 
-## Common Violations and Fixes
+## 常見違反與修正
 
-### Violation 1: Configuration Access
+### 違反 1：配置存取
 
 ```java
-// ❌ Bad
+// ❌ 錯誤
 int maxRetries = config.getRetrySettings().getMaxAttempts();
 
-// ✅ Good
+// ✅ 正確
 int maxRetries = config.getMaxRetryAttempts();
 ```
 
-### Violation 2: Collection Navigation
+### 違反 2：集合導航
 
 ```java
-// ❌ Bad
+// ❌ 錯誤
 Money total = order.getItems().stream()
     .map(item -> item.getPrice())
     .reduce(Money.ZERO, Money::add);
 
-// ✅ Good
+// ✅ 正確
 Money total = order.calculateTotal();
 ```
 
-### Violation 3: Nested Conditionals
+### 違反 3：巢狀條件
 
 ```java
-// ❌ Bad
+// ❌ 錯誤
 if (order.getCustomer().getAddress().getCountry().equals("US")) {
     applyUSTax();
 }
 
-// ✅ Good
+// ✅ 正確
 if (order.isShippingToUS()) {
     applyUSTax();
 }
@@ -549,52 +549,52 @@ if (order.isShippingToUS()) {
 
 ---
 
-## Quick Reference
+## 快速參考
 
-### Allowed Method Calls
+### 允許的方法呼叫
 
 ```java
 public class Example {
     private Dependency dependency;  // Field
-    
+
     public void method(Parameter param) {  // Parameter
-        // ✅ Allowed
+        // ✅ 允許
         this.doSomething();           // this
         param.doSomething();          // parameter
         dependency.doSomething();     // field
-        
+
         Local local = new Local();    // local
         local.doSomething();          // local
-        
-        // ❌ Not allowed
+
+        // ❌ 不允許
         dependency.getOther().doSomething();  // stranger
         param.getChild().doSomething();       // stranger
     }
 }
 ```
 
-### Benefits
+### 優點
 
-- **Low Coupling**: Objects don't depend on internal structures
-- **High Cohesion**: Behavior stays with data
-- **Easy Refactoring**: Internal changes don't break clients
-- **Better Testing**: Fewer mocks needed
+- **低耦合**：物件不依賴內部結構
+- **高內聚**：行為與資料在一起
+- **易於重構**：內部變更不會破壞客戶端
+- **更好的測試**：需要更少的 mocks
 
-### Trade-offs
+### 取捨
 
-- **More Methods**: Need facade methods
-- **Potential Duplication**: Similar methods in different classes
-- **Learning Curve**: Requires thinking about object responsibilities
+- **更多方法**：需要 facade 方法
+- **潛在重複**：不同類別中的類似方法
+- **學習曲線**：需要思考物件責任
 
 ---
 
-## Related Principles
+## 相關原則
 
-- **Tell, Don't Ask**: Tell objects what to do
-- **Information Hiding**: Hide internal structure
-- **Encapsulation**: Protect object state
+- **Tell, Don't Ask**：告訴物件做什麼
+- **Information Hiding**：隱藏內部結構
+- **Encapsulation**：保護物件狀態
 
-## Further Reading
+## 延伸閱讀
 
 - [Tell, Don't Ask Examples](tell-dont-ask-examples.md)
 - [Design Principles](../../steering/design-principles.md)

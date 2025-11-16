@@ -1,28 +1,28 @@
-# Continuous Integration Guide
+# Continuous Integration 指南
 
-## Overview
+## 概述
 
-Practical guide for implementing Continuous Integration (CI) in our project.
+在我們專案中實作持續整合（Continuous Integration, CI）的實用指南。
 
-**Related Standards**: [Development Standards](../../steering/development-standards.md)
-
----
-
-## What is Continuous Integration?
-
-**Continuous Integration (CI)** is the practice of frequently integrating code changes into a shared repository, with automated builds and tests.
-
-### Core Principles
-
-1. **Integrate frequently** - Multiple times per day
-2. **Automate the build** - One command to build
-3. **Test automatically** - Every commit triggers tests
-4. **Fix broken builds immediately** - Top priority
-5. **Keep builds fast** - < 10 minutes
+**相關標準**：[Development Standards](../../steering/development-standards.md)
 
 ---
 
-## CI Workflow
+## 什麼是 Continuous Integration？
+
+**Continuous Integration (CI)** 是頻繁地將程式碼變更整合到共享儲存庫的實踐，伴隨自動化建置和測試。
+
+### 核心原則
+
+1. **頻繁整合** - 每天多次
+2. **自動化建置** - 一個指令建置
+3. **自動化測試** - 每次 commit 觸發測試
+4. **立即修復損壞的建置** - 最高優先級
+5. **保持建置快速** - < 10 分鐘
+
+---
+
+## CI 工作流程
 
 ```
 Developer → Commit → Push → CI Server → Build → Test → Deploy
@@ -30,7 +30,7 @@ Developer → Commit → Push → CI Server → Build → Test → Deploy
                             Notify Team
 ```
 
-### Daily Workflow
+### 每日工作流程
 
 ```bash
 # 1. Pull latest changes
@@ -73,12 +73,12 @@ git push origin feature/order-submission
 
 ---
 
-## Build Automation
+## 建置自動化
 
-### Single Command Build
+### 單一指令建置
 
 ```bash
-# ✅ GOOD: One command builds everything
+# ✅ 良好：一個指令建置所有內容
 ./gradlew clean build
 
 # This should:
@@ -88,7 +88,7 @@ git push origin feature/order-submission
 # - Create artifacts
 ```
 
-### Gradle Build Configuration
+### Gradle 建置配置
 
 ```gradle
 // build.gradle
@@ -125,9 +125,9 @@ tasks.register('ciBuild') {
 
 ---
 
-## Automated Testing
+## 自動化測試
 
-### Test Pyramid in CI
+### CI 中的測試金字塔
 
 ```
 ┌─────────────────┐
@@ -143,7 +143,7 @@ tasks.register('ciBuild') {
 └─────────────────┘
 ```
 
-### CI Test Execution
+### CI 測試執行
 
 ```bash
 # Stage 1: Fast feedback (< 2 min)
@@ -163,7 +163,7 @@ tasks.register('ciBuild') {
 
 ## GitHub Actions CI Pipeline
 
-### Basic CI Workflow
+### 基本 CI Workflow
 
 ```yaml
 # .github/workflows/ci.yml
@@ -178,36 +178,36 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Set up JDK 21
       uses: actions/setup-java@v3
       with:
         java-version: '21'
         distribution: 'temurin'
         cache: gradle
-    
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    
+
     - name: Build with Gradle
       run: ./gradlew build
-    
+
     - name: Run tests
       run: ./gradlew test
-    
+
     - name: Generate test report
       run: ./gradlew jacocoTestReport
-    
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
         files: ./build/reports/jacoco/test/jacocoTestReport.xml
 ```
 
-### Multi-Stage CI Pipeline
+### 多階段 CI Pipeline
 
 ```yaml
 # .github/workflows/ci-advanced.yml
@@ -233,7 +233,7 @@ jobs:
         cache: gradle
     - name: Quick tests
       run: ./gradlew quickTest
-  
+
   # Stage 2: Code quality
   code-quality:
     runs-on: ubuntu-latest
@@ -247,7 +247,7 @@ jobs:
         cache: gradle
     - name: Code quality checks
       run: ./gradlew checkstyleMain pmdMain spotbugsMain
-  
+
   # Stage 3: Integration tests
   integration-tests:
     runs-on: ubuntu-latest
@@ -262,7 +262,7 @@ jobs:
         cache: gradle
     - name: Integration tests
       run: ./gradlew integrationTest
-  
+
   # Stage 4: Security scan
   security-scan:
     runs-on: ubuntu-latest
@@ -276,7 +276,7 @@ jobs:
         cache: gradle
     - name: Security scan
       run: ./gradlew dependencyCheckAnalyze
-  
+
   # Stage 5: E2E tests (only on main)
   e2e-tests:
     if: github.ref == 'refs/heads/main'
@@ -296,16 +296,16 @@ jobs:
 
 ---
 
-## Build Notifications
+## 建置通知
 
-### Slack Integration
+### Slack 整合
 
 ```yaml
 # .github/workflows/ci.yml
 jobs:
   build:
     # ... build steps ...
-    
+
     - name: Notify Slack on failure
       if: failure()
       uses: slackapi/slack-github-action@v1
@@ -329,22 +329,22 @@ jobs:
 
 ---
 
-## Best Practices
+## 最佳實踐
 
-### 1. Commit Frequently
+### 1. 頻繁 Commit
 
 ```bash
-# ✅ GOOD: Small, frequent commits
+# ✅ 良好：小的、頻繁的 commits
 git commit -m "feat: add email validation"
 git commit -m "test: add test for empty email"
 git commit -m "refactor: extract validation to value object"
 
-# ❌ BAD: Large, infrequent commits
+# ❌ 不良：大的、不頻繁的 commits
 git commit -m "feat: complete entire order module"
 # (100+ files changed, 5000+ lines)
 ```
 
-### 2. Fix Broken Builds Immediately
+### 2. 立即修復損壞的建置
 
 ```
 Priority when build breaks:
@@ -359,7 +359,7 @@ If fix takes > 30 minutes:
 - Re-commit when ready
 ```
 
-### 3. Keep Builds Fast
+### 3. 保持建置快速
 
 ```
 Target build times:
@@ -374,15 +374,15 @@ Strategies:
 - Build caching
 ```
 
-### 4. Never Commit on Broken Build
+### 4. 永遠不要在損壞的建置上 Commit
 
 ```bash
-# ✅ GOOD: Check build status first
+# ✅ 良好：先檢查建置狀態
 ./gradlew test
 # All tests pass
 git commit -m "feat: add feature"
 
-# ❌ BAD: Commit without testing
+# ❌ 不良：未測試就 commit
 git commit -m "feat: add feature"
 # Build breaks for everyone
 ```
@@ -411,10 +411,10 @@ jobs:
       run: |
         ./gradlew build
         ./deploy-staging.sh
-    
+
     - name: Run smoke tests
       run: ./gradlew smokeTest -Denv=staging
-  
+
   deploy-production:
     needs: deploy-staging
     runs-on: ubuntu-latest
@@ -425,16 +425,16 @@ jobs:
       run: |
         ./gradlew build
         ./deploy-production.sh
-    
+
     - name: Run smoke tests
       run: ./gradlew smokeTest -Denv=production
 ```
 
 ---
 
-## Monitoring CI Health
+## 監控 CI 健康狀況
 
-### Key Metrics
+### 關鍵指標
 
 ```
 Build Success Rate:     > 95%
@@ -461,9 +461,9 @@ Failed Test Rate:       < 1%
 
 ---
 
-## Troubleshooting
+## 疑難排解
 
-### Build Fails Locally But Passes in CI
+### 本地建置失敗但 CI 通過
 
 ```bash
 # Check environment differences
@@ -489,7 +489,7 @@ Failed Test Rate:       < 1%
 # - Use proper test data setup
 ```
 
-### Slow Builds
+### 建置緩慢
 
 ```bash
 # Profile build
@@ -504,21 +504,21 @@ Failed Test Rate:       < 1%
 
 ---
 
-## Summary
+## 總結
 
-Effective CI requires:
+有效的 CI 需要：
 
-1. **Frequent integration** - Multiple commits per day
-2. **Automated builds** - One command to build and test
-3. **Fast feedback** - Builds complete in < 10 minutes
-4. **Immediate fixes** - Broken builds are top priority
-5. **Team discipline** - Everyone follows the process
+1. **頻繁整合** - 每天多次 commits
+2. **自動化建置** - 一個指令建置和測試
+3. **快速回饋** - 建置在 < 10 分鐘內完成
+4. **立即修復** - 損壞的建置是最高優先級
+5. **團隊紀律** - 每個人都遵循流程
 
-Remember: **CI is a practice, not just a tool** - it requires team commitment.
+記住：**CI 是一種實踐，而非僅是工具** - 它需要團隊承諾。
 
 ---
 
-**Related Documentation**:
+**相關文件**：
 - [Development Standards](../../steering/development-standards.md)
 - [Testing Strategy](../../steering/testing-strategy.md)
 - [Simple Design Examples](simple-design-examples.md)

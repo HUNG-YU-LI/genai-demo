@@ -1,26 +1,26 @@
-# Repository Pattern - Detailed Examples
+# Repository Pattern - 詳細範例
 
-## Principle Overview
+## 原則概述
 
-**Repository** provides an abstraction over data access, allowing the domain layer to work with domain objects without knowing about persistence details. The repository interface lives in the domain layer, while the implementation lives in the infrastructure layer.
+**Repository** 提供了資料存取的抽象，讓領域層可以使用領域物件而不需要知道持久化細節。Repository 介面存在於領域層，而實作則存在於基礎設施層。
 
-## Key Concepts
+## 核心概念
 
-- **Interface in Domain Layer** - Repository contract defined in domain
-- **Implementation in Infrastructure Layer** - Actual persistence logic
-- **Return Domain Objects** - Not database entities
-- **One Repository Per Aggregate Root** - Only aggregate roots have repositories
-- **Use Optional for Single Results** - Explicit handling of not found cases
+- **介面在領域層（Interface in Domain Layer）** - Repository 契約定義在領域層
+- **實作在基礎設施層（Implementation in Infrastructure Layer）** - 實際的持久化邏輯
+- **回傳領域物件（Return Domain Objects）** - 而非資料庫實體
+- **每個 Aggregate Root 一個 Repository** - 只有聚合根有 repositories
+- **使用 Optional 處理單一結果** - 明確處理找不到的情況
 
-**Related Standards**: [DDD Tactical Patterns](../../steering/ddd-tactical-patterns.md)
+**相關標準**：[DDD Tactical Patterns](../../steering/ddd-tactical-patterns.md)
 
 ---
 
-## Repository Interface (Domain Layer - Production Code)
+## Repository 介面（領域層 - 正式程式碼）
 
-### OrderRepository Interface
+### OrderRepository 介面
 
-This is the actual OrderRepository interface from our production codebase:
+這是我們正式程式碼庫中實際的 OrderRepository 介面：
 
 ```java
 package solid.humank.genaidemo.domain.order.repository;
@@ -40,23 +40,23 @@ import solid.humank.genaidemo.domain.shared.valueobject.CustomerId;
  */
 @Repository(name = "OrderRepository", description = "訂單聚合根儲存庫")
 public interface OrderRepository extends BaseRepository<Order, OrderId> {
-    
+
     /**
      * Save order
      */
     @Override
     Order save(Order order);
-    
+
     /**
      * Find order by ID
      */
     Optional<Order> findById(OrderId id);
-    
+
     /**
      * Find orders by customer ID
      */
     List<Order> findByCustomerId(CustomerId customerId);
-    
+
     /**
      * Find orders by customer ID (UUID version)
      */
@@ -64,7 +64,7 @@ public interface OrderRepository extends BaseRepository<Order, OrderId> {
 }
 ```
 
-### CustomerRepository Interface
+### CustomerRepository 介面
 
 ```java
 package solid.humank.genaidemo.domain.customer.repository;
@@ -83,33 +83,33 @@ import solid.humank.genaidemo.domain.shared.valueobject.CustomerId;
  */
 @Repository(name = "CustomerRepository", description = "客戶聚合根儲存庫")
 public interface CustomerRepository extends BaseRepository<Customer, CustomerId> {
-    
+
     /**
      * Save customer
      */
     @Override
     Customer save(Customer customer);
-    
+
     /**
      * Find customer by ID
      */
     Optional<Customer> findById(CustomerId id);
-    
+
     /**
      * Find customer by email
      */
     Optional<Customer> findByEmail(Email email);
-    
+
     /**
      * Find all customers
      */
     List<Customer> findAll();
-    
+
     /**
      * Delete customer
      */
     void delete(Customer customer);
-    
+
     /**
      * Check if customer exists by email
      */
@@ -119,11 +119,11 @@ public interface CustomerRepository extends BaseRepository<Customer, CustomerId>
 
 ---
 
-## Repository Implementation (Infrastructure Layer - Production Code)
+## Repository 實作（基礎設施層 - 正式程式碼）
 
-### JPA Repository Interface
+### JPA Repository 介面
 
-This is the actual JPA repository from our production codebase:
+這是我們正式程式碼庫中實際的 JPA repository：
 
 ```java
 package solid.humank.genaidemo.infrastructure.order.persistence.repository;
@@ -145,55 +145,55 @@ import solid.humank.genaidemo.infrastructure.order.persistence.entity.JpaOrderEn
  */
 @Repository
 public interface JpaOrderRepository extends JpaRepository<JpaOrderEntity, String> {
-    
+
     /**
      * Find orders by customer ID
      */
     List<JpaOrderEntity> findByCustomerId(String customerId);
-    
+
     /**
      * Find order by ID
      */
     Optional<JpaOrderEntity> findById(String id);
-    
+
     // ========== Statistical Query Methods ==========
-    
+
     /**
      * Count all order items
      */
     @Query("SELECT COUNT(oi) FROM JpaOrderEntity o JOIN o.items oi")
     long countAllOrderItems();
-    
+
     /**
      * Sum total amount by status
      */
     @Query("SELECT COALESCE(SUM(o.totalAmount), 0) FROM JpaOrderEntity o WHERE o.status = :status")
     BigDecimal sumTotalAmountByStatus(
             @Param("status") solid.humank.genaidemo.domain.common.valueobject.OrderStatus status);
-    
+
     /**
      * Count distinct customers
      */
     @Query("SELECT COUNT(DISTINCT o.customerId) FROM JpaOrderEntity o")
     long countDistinctCustomers();
-    
+
     /**
      * Count orders grouped by status
      */
     @Query("SELECT o.status, COUNT(o) FROM JpaOrderEntity o GROUP BY o.status")
     List<Object[]> countByStatusGrouped();
-    
+
     /**
      * Find distinct customer IDs
      */
     @Query("SELECT DISTINCT o.customerId FROM JpaOrderEntity o ORDER BY o.customerId")
     List<String> findDistinctCustomerIds();
-    
+
     /**
      * Check if customer has orders
      */
     boolean existsByCustomerId(String customerId);
-    
+
     /**
      * Count orders by customer ID
      */
@@ -201,7 +201,7 @@ public interface JpaOrderRepository extends JpaRepository<JpaOrderEntity, String
 }
 ```
 
-### Repository Adapter Implementation
+### Repository Adapter 實作
 
 ```java
 package solid.humank.genaidemo.infrastructure.order.persistence.adapter;
@@ -226,38 +226,38 @@ import solid.humank.genaidemo.infrastructure.order.persistence.repository.JpaOrd
  */
 @Component
 public class OrderRepositoryAdapter implements OrderRepository {
-    
+
     private final JpaOrderRepository jpaRepository;
     private final OrderMapper mapper;
-    
+
     public OrderRepositoryAdapter(JpaOrderRepository jpaRepository, OrderMapper mapper) {
         this.jpaRepository = jpaRepository;
         this.mapper = mapper;
     }
-    
+
     @Override
     public Order save(Order order) {
         // Convert domain object to JPA entity
         JpaOrderEntity entity = mapper.toEntity(order);
-        
+
         // Save to database
         JpaOrderEntity savedEntity = jpaRepository.save(entity);
-        
+
         // Convert back to domain object
         Order savedOrder = mapper.toDomain(savedEntity);
-        
+
         // Mark events as committed after successful save
         savedOrder.markEventsAsCommitted();
-        
+
         return savedOrder;
     }
-    
+
     @Override
     public Optional<Order> findById(OrderId id) {
         return jpaRepository.findById(id.getValue())
                 .map(mapper::toDomain);
     }
-    
+
     @Override
     public List<Order> findByCustomerId(CustomerId customerId) {
         return jpaRepository.findByCustomerId(customerId.getValue())
@@ -265,7 +265,7 @@ public class OrderRepositoryAdapter implements OrderRepository {
                 .map(mapper::toDomain)
                 .toList();
     }
-    
+
     @Override
     public List<Order> findByCustomerId(UUID customerId) {
         return jpaRepository.findByCustomerId(customerId.toString())
@@ -278,7 +278,7 @@ public class OrderRepositoryAdapter implements OrderRepository {
 
 ---
 
-## Domain-Entity Mapping (Production Code)
+## 領域-實體映射（正式程式碼）
 
 ### OrderMapper
 
@@ -303,7 +303,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public class OrderMapper {
-    
+
     /**
      * Convert domain object to JPA entity
      */
@@ -317,16 +317,16 @@ public class OrderMapper {
         entity.setEffectiveAmount(order.getEffectiveAmount().getAmount());
         entity.setCreatedAt(order.getCreatedAt());
         entity.setUpdatedAt(order.getUpdatedAt());
-        
+
         // Convert order items
         List<JpaOrderItemEntity> itemEntities = order.getItems().stream()
                 .map(item -> toItemEntity(item, entity))
                 .collect(Collectors.toList());
         entity.setItems(itemEntities);
-        
+
         return entity;
     }
-    
+
     /**
      * Convert JPA entity to domain object
      */
@@ -335,7 +335,7 @@ public class OrderMapper {
         List<OrderItem> items = entity.getItems().stream()
                 .map(this::toItemDomain)
                 .collect(Collectors.toList());
-        
+
         // Use reconstruction constructor
         return new Order(
                 OrderId.of(entity.getId()),
@@ -349,7 +349,7 @@ public class OrderMapper {
                 entity.getUpdatedAt()
         );
     }
-    
+
     private JpaOrderItemEntity toItemEntity(OrderItem item, JpaOrderEntity order) {
         JpaOrderItemEntity entity = new JpaOrderItemEntity();
         entity.setProductId(item.getProductId());
@@ -359,7 +359,7 @@ public class OrderMapper {
         entity.setOrder(order);
         return entity;
     }
-    
+
     private OrderItem toItemDomain(JpaOrderItemEntity entity) {
         return new OrderItem(
                 entity.getProductId(),
@@ -373,23 +373,23 @@ public class OrderMapper {
 
 ---
 
-## Usage in Application Services (Production Code)
+## 在 Application Services 中使用（正式程式碼）
 
 ```java
 @Service
 @Transactional
 public class OrderApplicationService {
-    
+
     private final OrderRepository orderRepository;
     private final DomainEventApplicationService eventService;
-    
+
     public OrderApplicationService(
             OrderRepository orderRepository,
             DomainEventApplicationService eventService) {
         this.orderRepository = orderRepository;
         this.eventService = eventService;
     }
-    
+
     /**
      * Submit order
      */
@@ -397,17 +397,17 @@ public class OrderApplicationService {
         // 1. Load aggregate from repository
         Order order = orderRepository.findById(command.orderId())
                 .orElseThrow(() -> new OrderNotFoundException(command.orderId()));
-        
+
         // 2. Execute business operation
         order.submit();
-        
+
         // 3. Save aggregate to repository
         orderRepository.save(order);
-        
+
         // 4. Publish collected events
         eventService.publishEventsFromAggregate(order);
     }
-    
+
     /**
      * Create order
      */
@@ -418,7 +418,7 @@ public class OrderApplicationService {
                 CustomerId.of(command.customerId()),
                 command.shippingAddress()
         );
-        
+
         // 2. Add items
         for (var item : command.items()) {
             order.addItem(
@@ -428,16 +428,16 @@ public class OrderApplicationService {
                     Money.twd(item.price())
             );
         }
-        
+
         // 3. Save aggregate to repository
         orderRepository.save(order);
-        
+
         // 4. Publish collected events
         eventService.publishEventsFromAggregate(order);
-        
+
         return order.getId();
     }
-    
+
     /**
      * Find orders by customer
      */
@@ -452,9 +452,9 @@ public class OrderApplicationService {
 
 ---
 
-## Key Patterns
+## 關鍵 Patterns
 
-### 1. Interface in Domain, Implementation in Infrastructure
+### 1. 介面在領域層，實作在基礎設施層
 
 ```java
 // Domain layer - interface
@@ -472,7 +472,7 @@ package solid.humank.genaidemo.infrastructure.order.persistence.adapter;
 public class OrderRepositoryAdapter implements OrderRepository {
     private final JpaOrderRepository jpaRepository;
     private final OrderMapper mapper;
-    
+
     @Override
     public Order save(Order order) {
         JpaOrderEntity entity = mapper.toEntity(order);
@@ -482,7 +482,7 @@ public class OrderRepositoryAdapter implements OrderRepository {
 }
 ```
 
-### 2. Return Domain Objects, Not Entities
+### 2. 回傳領域物件，而非實體
 
 ```java
 // ✅ Good: Return domain object
@@ -499,7 +499,7 @@ public Optional<JpaOrderEntity> findById(OrderId id) {
 }
 ```
 
-### 3. Use Optional for Single Results
+### 3. 使用 Optional 處理單一結果
 
 ```java
 // ✅ Good: Use Optional
@@ -509,12 +509,12 @@ Optional<Order> findById(OrderId id);
 Order findById(OrderId id); // May return null
 ```
 
-### 4. Mapper Pattern for Domain-Entity Conversion
+### 4. Mapper Pattern 進行領域-實體轉換
 
 ```java
 @Component
 public class OrderMapper {
-    
+
     // Domain to Entity
     public JpaOrderEntity toEntity(Order order) {
         JpaOrderEntity entity = new JpaOrderEntity();
@@ -523,7 +523,7 @@ public class OrderMapper {
         // ... map other fields
         return entity;
     }
-    
+
     // Entity to Domain
     public Order toDomain(JpaOrderEntity entity) {
         return new Order(
@@ -535,7 +535,7 @@ public class OrderMapper {
 }
 ```
 
-### 5. Mark Events as Committed After Save
+### 5. 儲存後標記事件已提交
 
 ```java
 @Override
@@ -543,39 +543,39 @@ public Order save(Order order) {
     JpaOrderEntity entity = mapper.toEntity(order);
     JpaOrderEntity savedEntity = jpaRepository.save(entity);
     Order savedOrder = mapper.toDomain(savedEntity);
-    
+
     // Mark events as committed after successful save
     savedOrder.markEventsAsCommitted();
-    
+
     return savedOrder;
 }
 ```
 
 ---
 
-## Best Practices
+## 最佳實踐
 
 ### ✅ DO
 
-1. **Interface in domain layer** - Repository contract belongs to domain
-2. **Implementation in infrastructure layer** - Persistence details hidden
-3. **Return domain objects** - Not database entities
-4. **Use Optional for single results** - Explicit not found handling
-5. **One repository per aggregate root** - Only aggregate roots have repositories
-6. **Use mapper pattern** - Clean separation between domain and persistence
-7. **Mark events as committed** - After successful save
+1. **介面在領域層** - Repository 契約屬於領域
+2. **實作在基礎設施層** - 隱藏持久化細節
+3. **回傳領域物件** - 而非資料庫實體
+4. **使用 Optional 處理單一結果** - 明確處理找不到的情況
+5. **每個聚合根一個 repository** - 只有聚合根有 repositories
+6. **使用 mapper pattern** - 領域與持久化的清楚分離
+7. **標記事件已提交** - 在成功儲存後
 
 ### ❌ DON'T
 
-1. **Don't expose JPA entities** - Always return domain objects
-2. **Don't put business logic in repository** - Repository is for persistence only
-3. **Don't create repositories for non-aggregate entities** - Only aggregate roots
-4. **Don't return null** - Use Optional instead
-5. **Don't leak persistence details** - Keep JPA annotations in infrastructure layer
+1. **不要暴露 JPA 實體** - 總是回傳領域物件
+2. **不要在 repository 中放入業務邏輯** - Repository 僅用於持久化
+3. **不要為非聚合實體建立 repositories** - 只有聚合根
+4. **不要回傳 null** - 使用 Optional 代替
+5. **不要洩漏持久化細節** - 將 JPA annotations 保持在基礎設施層
 
 ---
 
-## Testing Repositories
+## 測試 Repositories
 
 ### Integration Test
 
@@ -583,22 +583,22 @@ public Order save(Order order) {
 @DataJpaTest
 @ActiveProfiles("test")
 class OrderRepositoryTest {
-    
+
     @Autowired
     private TestEntityManager entityManager;
-    
+
     @Autowired
     private JpaOrderRepository jpaRepository;
-    
+
     private OrderMapper mapper;
     private OrderRepositoryAdapter repository;
-    
+
     @BeforeEach
     void setUp() {
         mapper = new OrderMapper();
         repository = new OrderRepositoryAdapter(jpaRepository, mapper);
     }
-    
+
     @Test
     void should_save_and_retrieve_order() {
         // Given
@@ -608,33 +608,33 @@ class OrderRepositoryTest {
                 "台北市信義區"
         );
         order.addItem("PROD-001", "Product 1", 2, Money.twd(100));
-        
+
         // When
         Order savedOrder = repository.save(order);
         entityManager.flush();
         entityManager.clear();
-        
+
         // Then
         Optional<Order> retrieved = repository.findById(savedOrder.getId());
         assertThat(retrieved).isPresent();
         assertThat(retrieved.get().getId()).isEqualTo(savedOrder.getId());
         assertThat(retrieved.get().getItems()).hasSize(1);
     }
-    
+
     @Test
     void should_find_orders_by_customer_id() {
         // Given
         CustomerId customerId = CustomerId.of("CUST-001");
         Order order1 = new Order(OrderId.generate(), customerId, "Address 1");
         Order order2 = new Order(OrderId.generate(), customerId, "Address 2");
-        
+
         repository.save(order1);
         repository.save(order2);
         entityManager.flush();
-        
+
         // When
         List<Order> orders = repository.findByCustomerId(customerId);
-        
+
         // Then
         assertThat(orders).hasSize(2);
         assertThat(orders).allMatch(o -> o.getCustomerId().equals(customerId));
@@ -644,18 +644,18 @@ class OrderRepositoryTest {
 
 ---
 
-## Summary
+## 總結
 
-Repository Pattern provides:
-- **Abstraction** - Domain doesn't know about persistence
-- **Testability** - Easy to mock for unit tests
-- **Flexibility** - Can change persistence technology
-- **Clean Architecture** - Clear separation of concerns
-- **Domain Focus** - Work with domain objects, not entities
+Repository Pattern 提供：
+- **抽象化** - 領域不需要知道持久化細節
+- **可測試性** - 易於模擬進行單元測試
+- **靈活性** - 可以變更持久化技術
+- **Clean Architecture** - 清楚的關注點分離
+- **領域焦點** - 使用領域物件，而非實體
 
 ---
 
-**Related Documentation**:
+**相關文件**：
 - [DDD Tactical Patterns](../../steering/ddd-tactical-patterns.md)
 - [Aggregate Root Examples](aggregate-root-examples.md)
 - [Domain Events Examples](domain-events-examples.md)

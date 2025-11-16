@@ -8,471 +8,469 @@ version: "1.0"
 status: "active"
 owner: "Performance Engineering Team"
 related_docs:
-
   - "../../viewpoints/functional/overview.md"
   - "../../viewpoints/deployment/overview.md"
   - "../../viewpoints/concurrency/overview.md"
-
 tags: ["performance", "scalability", "optimization", "caching", "load-testing"]
 ---
 
 # Performance & Scalability Perspective
 
-> **Status**: ✅ Active  
-> **Last Updated**: 2025-10-23  
-> **Owner**: Performance Engineering Team
+> **狀態**: ✅ Active
+> **最後更新**: 2025-10-23
+> **負責人**: Performance Engineering Team
 
-## Overview
+## 概述
 
-The Performance & Scalability Perspective addresses the system's ability to meet response time requirements under varying loads and to scale efficiently as demand grows. For an e-commerce platform, performance directly impacts user experience, conversion rates, and business success. This perspective ensures the system can handle peak loads during sales events while maintaining acceptable response times.
+Performance & Scalability Perspective 處理系統在不同負載下滿足回應時間需求的能力，以及隨著需求增長有效擴展的能力。對於電子商務平台，performance 直接影響使用者體驗、轉換率和業務成功。本觀點確保系統能夠處理銷售活動期間的尖峰負載，同時保持可接受的回應時間。
 
-Performance and scalability are achieved through multiple strategies including efficient algorithms, caching, asynchronous processing, database optimization, horizontal scaling, and load balancing. The system is designed to scale from hundreds to thousands of concurrent users without degradation in user experience.
+Performance 和 scalability 透過多種策略實現，包括高效演算法、caching、非同步處理、database 最佳化、horizontal scaling 和 load balancing。系統設計為可從數百個擴展到數千個並發使用者，而不會降低使用者體驗。
 
-## Purpose
+## 目的
 
-This perspective ensures:
+本觀點確保：
 
-- **Responsiveness**: Fast response times for all user interactions
-- **Throughput**: High transaction processing capacity
-- **Scalability**: Ability to handle growing user base and data volume
-- **Efficiency**: Optimal resource utilization
-- **Predictability**: Consistent performance under varying loads
-- **Cost-Effectiveness**: Efficient scaling without excessive infrastructure costs
+- **回應性**: 所有使用者互動的快速回應時間
+- **吞吐量**: 高交易處理容量
+- **擴展性**: 處理不斷增長的使用者群和資料量的能力
+- **效率**: 最佳資源利用
+- **可預測性**: 在不同負載下的一致 performance
+- **成本效益**: 高效擴展而不會產生過高的基礎設施成本
 
-## Stakeholders
+## 利害關係人
 
-### Primary Stakeholders
+### 主要利害關係人
 
-- **End Users**: Expect fast, responsive application
-- **Business Owners**: Concerned about conversion rates and customer satisfaction
-- **Development Team**: Responsible for implementing performance optimizations
-- **Operations Team**: Manages infrastructure scaling and monitoring
+- **終端使用者**: 期望快速、回應迅速的應用程式
+- **業務負責人**: 關注轉換率和客戶滿意度
+- **開發團隊**: 負責實作 performance 最佳化
+- **維運團隊**: 管理基礎設施擴展和監控
 
-### Secondary Stakeholders
+### 次要利害關係人
 
-- **Product Managers**: Define performance requirements based on business needs
-- **Marketing Team**: Plans campaigns that may cause traffic spikes
-- **Finance Team**: Concerned about infrastructure costs
-- **Customer Support**: Handles complaints about slow performance
+- **產品經理**: 根據業務需求定義 performance 需求
+- **行銷團隊**: 規劃可能導致流量高峰的活動
+- **財務團隊**: 關注基礎設施成本
+- **客戶支援**: 處理關於 performance 緩慢的投訴
 
-## Contents
+## 目錄
 
-### 📄 Documents
+### 📄 文檔
 
-- [Requirements](requirements.md) - Performance targets and quality attribute scenarios
-- [Scalability](scalability.md) - Horizontal and vertical scaling strategies
-- [Optimization](optimization.md) - Performance optimization techniques
-- [Verification](verification.md) - Load testing and performance validation
+- [Requirements](requirements.md) - Performance 目標和 quality attribute scenarios
+- [Scalability](scalability.md) - Horizontal 和 vertical scaling 策略
+- [Optimization](optimization.md) - Performance 最佳化技術
+- [Verification](verification.md) - Load testing 和 performance 驗證
 
-### 📊 Diagrams
+### 📊 圖表
 
-- [Caching Architecture](../../diagrams/perspectives/performance/caching-architecture.puml) - Multi-layer caching strategy
-- [Scaling Strategy](../../diagrams/perspectives/performance/scaling-strategy.puml) - Auto-scaling configuration
-- [Database Optimization](../../diagrams/perspectives/performance/database-optimization.puml) - Query optimization and indexing
-- [Load Distribution](../../diagrams/perspectives/performance/load-distribution.puml) - Load balancing architecture
+- [Caching Architecture](../../diagrams/perspectives/performance/caching-architecture.puml) - 多層 caching 策略
+- [Scaling Strategy](../../diagrams/perspectives/performance/scaling-strategy.puml) - Auto-scaling 配置
+- [Database Optimization](../../diagrams/perspectives/performance/database-optimization.puml) - Query 最佳化和 indexing
+- [Load Distribution](../../diagrams/perspectives/performance/load-distribution.puml) - Load balancing 架構
 
-## Key Concerns
+## 關鍵關注點
 
-### Concern 1: API Response Time
+### 關注點 1: API 回應時間
 
-**Description**: Ensuring all API endpoints respond within acceptable time limits to provide good user experience. Response time includes processing time, database queries, and network latency.
+**描述**: 確保所有 API endpoints 在可接受的時間限制內回應，以提供良好的使用者體驗。回應時間包括處理時間、database queries 和網路延遲。
 
-**Impact**: Slow API responses lead to poor user experience, abandoned shopping carts, and lost revenue. Studies show that 1-second delay can reduce conversions by 7%.
+**影響**: 緩慢的 API 回應導致不良的使用者體驗、放棄的購物車和收入損失。研究顯示，1 秒的延遲可使轉換率降低 7%。
 
-**Priority**: High
+**優先級**: 高
 
-**Affected Viewpoints**: Functional, Concurrency, Deployment
+**影響的 Viewpoints**: Functional、Concurrency、Deployment
 
-### Concern 2: Database Performance
+### 關注點 2: Database Performance
 
-**Description**: Maintaining fast database query performance as data volume grows. This includes query optimization, proper indexing, and efficient data access patterns.
+**描述**: 隨著資料量增長，維持快速的 database query performance。這包括 query 最佳化、適當的 indexing 和高效的資料存取模式。
 
-**Impact**: Database bottlenecks can cascade to affect entire system performance, causing timeouts and degraded user experience across all features.
+**影響**: Database 瓶頸可能連鎖影響整個系統 performance，導致所有功能的 timeouts 和使用者體驗降級。
 
-**Priority**: High
+**優先級**: 高
 
-**Affected Viewpoints**: Information, Concurrency, Operational
+**影響的 Viewpoints**: Information、Concurrency、Operational
 
-### Concern 3: Horizontal Scalability
+### 關注點 3: Horizontal Scalability
 
-**Description**: Ability to add more application instances to handle increased load without code changes or architectural modifications.
+**描述**: 無需程式碼變更或架構修改即可增加更多應用程式實例以處理增加的負載的能力。
 
-**Impact**: Without horizontal scalability, the system cannot handle traffic spikes during sales events, leading to outages and lost revenue.
+**影響**: 沒有 horizontal scalability，系統無法處理銷售活動期間的流量高峰，導致中斷和收入損失。
 
-**Priority**: High
+**優先級**: 高
 
-**Affected Viewpoints**: Deployment, Concurrency, Operational
+**影響的 Viewpoints**: Deployment、Concurrency、Operational
 
-### Concern 4: Caching Effectiveness
+### 關注點 4: Caching 有效性
 
-**Description**: Implementing multi-layer caching to reduce database load and improve response times for frequently accessed data.
+**描述**: 實作多層 caching 以減少 database 負載並改善經常存取資料的回應時間。
 
-**Impact**: Ineffective caching leads to unnecessary database queries, increased latency, and higher infrastructure costs.
+**影響**: 無效的 caching 導致不必要的 database queries、增加的延遲和更高的基礎設施成本。
 
-**Priority**: High
+**優先級**: 高
 
-**Affected Viewpoints**: Functional, Information, Deployment
+**影響的 Viewpoints**: Functional、Information、Deployment
 
-### Concern 5: Asynchronous Processing
+### 關注點 5: 非同步處理
 
-**Description**: Using asynchronous processing for long-running operations to avoid blocking user requests and improve perceived performance.
+**描述**: 對長時間執行的操作使用非同步處理，以避免阻塞使用者請求並改善感知 performance。
 
-**Impact**: Synchronous processing of heavy operations blocks user requests, leading to timeouts and poor user experience.
+**影響**: 重型操作的同步處理會阻塞使用者請求，導致 timeouts 和不良的使用者體驗。
 
-**Priority**: Medium
+**優先級**: 中
 
-**Affected Viewpoints**: Functional, Concurrency
+**影響的 Viewpoints**: Functional、Concurrency
 
-### Concern 6: Resource Utilization
+### 關注點 6: 資源利用
 
-**Description**: Efficient use of CPU, memory, and network resources to maximize throughput while minimizing infrastructure costs.
+**描述**: 有效使用 CPU、memory 和網路資源，以最大化吞吐量同時最小化基礎設施成本。
 
-**Impact**: Inefficient resource usage leads to higher costs and limits system capacity.
+**影響**: 低效的資源使用導致更高的成本並限制系統容量。
 
-**Priority**: Medium
+**優先級**: 中
 
-**Affected Viewpoints**: Deployment, Operational
+**影響的 Viewpoints**: Deployment、Operational
 
-## Quality Attribute Requirements
+## Quality Attribute 需求
 
-### Requirement 1: API Response Time
+### 需求 1: API 回應時間
 
-**Description**: All API endpoints must respond within specified time limits under normal and peak load conditions.
+**描述**: 所有 API endpoints 必須在正常和尖峰負載條件下的指定時間限制內回應。
 
-**Target**:
+**目標**:
 
-- Critical APIs (product search, checkout): ≤ 500ms (95th percentile)
-- Standard APIs (product details, cart operations): ≤ 1000ms (95th percentile)
-- Background APIs (order history, analytics): ≤ 2000ms (95th percentile)
+- Critical APIs (產品搜尋、結帳): ≤ 500ms (95th percentile)
+- Standard APIs (產品詳情、購物車操作): ≤ 1000ms (95th percentile)
+- Background APIs (訂單歷史、analytics): ≤ 2000ms (95th percentile)
 
-**Rationale**: Fast response times are critical for user experience and conversion rates. These targets are based on industry benchmarks and user expectations.
+**理由**: 快速的回應時間對使用者體驗和轉換率至關重要。這些目標基於行業基準和使用者期望。
 
-**Verification**: Load testing, APM monitoring, performance benchmarks
+**驗證**: Load testing、APM 監控、performance benchmarks
 
-### Requirement 2: Throughput Capacity
+### 需求 2: 吞吐量容量
 
-**Description**: System must handle specified number of concurrent users and transactions per second.
+**描述**: 系統必須處理指定數量的並發使用者和每秒交易數。
 
-**Target**:
+**目標**:
 
-- Concurrent users: 10,000 simultaneous users
-- Transactions per second: 1,000 TPS sustained, 2,000 TPS peak
-- Order processing: 500 orders per minute
-- Search queries: 5,000 queries per minute
+- 並發使用者: 10,000 個同時使用者
+- 每秒交易數: 1,000 TPS 持續，2,000 TPS 尖峰
+- 訂單處理: 每分鐘 500 個訂單
+- 搜尋 queries: 每分鐘 5,000 個 queries
 
-**Rationale**: Based on projected user growth and peak traffic during sales events.
+**理由**: 基於預計的使用者增長和銷售活動期間的尖峰流量。
 
-**Verification**: Load testing, stress testing, production monitoring
+**驗證**: Load testing、stress testing、production 監控
 
-### Requirement 3: Database Query Performance
+### 需求 3: Database Query Performance
 
-**Description**: Database queries must execute within acceptable time limits to avoid bottlenecks.
+**描述**: Database queries 必須在可接受的時間限制內執行，以避免瓶頸。
 
-**Target**:
+**目標**:
 
-- Simple queries (single table, indexed): ≤ 10ms (95th percentile)
-- Complex queries (joins, aggregations): ≤ 100ms (95th percentile)
-- Reporting queries: ≤ 1000ms (95th percentile)
-- Connection pool utilization: ≤ 80%
+- 簡單 queries (單表、indexed): ≤ 10ms (95th percentile)
+- 複雜 queries (joins、aggregations): ≤ 100ms (95th percentile)
+- 報表 queries: ≤ 1000ms (95th percentile)
+- Connection pool 利用率: ≤ 80%
 
-**Rationale**: Database performance directly impacts overall system performance. These targets ensure database is not a bottleneck.
+**理由**: Database performance 直接影響整體系統 performance。這些目標確保 database 不是瓶頸。
 
-**Verification**: Query profiling, slow query logs, database monitoring
+**驗證**: Query profiling、slow query logs、database 監控
 
-### Requirement 4: Scalability
+### 需求 4: Scalability
 
-**Description**: System must scale horizontally to handle 10x traffic increase within acceptable time.
+**描述**: 系統必須 horizontally scale 以在可接受的時間內處理 10 倍流量增長。
 
-**Target**:
+**目標**:
 
-- Auto-scale from 2 to 20 instances
-- Scale-up time: ≤ 5 minutes
-- Scale-down time: ≤ 10 minutes
-- No performance degradation during scaling
-- Linear scalability up to 20 instances
+- Auto-scale 從 2 到 20 個實例
+- Scale-up 時間: ≤ 5 分鐘
+- Scale-down 時間: ≤ 10 分鐘
+- Scaling 期間無 performance 降級
+- 高達 20 個實例的線性 scalability
 
-**Rationale**: Ability to handle traffic spikes during sales events without manual intervention.
+**理由**: 能夠在不需手動介入的情況下處理銷售活動期間的流量高峰。
 
-**Verification**: Load testing with auto-scaling, production monitoring
+**驗證**: Load testing with auto-scaling、production 監控
 
-### Requirement 5: Cache Hit Rate
+### 需求 5: Cache Hit Rate
 
-**Description**: Caching must effectively reduce database load and improve response times.
+**描述**: Caching 必須有效減少 database 負載並改善回應時間。
 
-**Target**:
+**目標**:
 
-- Product catalog cache hit rate: ≥ 90%
-- User session cache hit rate: ≥ 95%
-- API response cache hit rate: ≥ 80%
-- Cache invalidation time: ≤ 1 second
+- 產品目錄 cache hit rate: ≥ 90%
+- 使用者 session cache hit rate: ≥ 95%
+- API 回應 cache hit rate: ≥ 80%
+- Cache invalidation 時間: ≤ 1 秒
 
-**Rationale**: High cache hit rates significantly reduce database load and improve response times.
+**理由**: 高 cache hit rates 顯著減少 database 負載並改善回應時間。
 
-**Verification**: Cache monitoring, hit rate analysis
+**驗證**: Cache 監控、hit rate 分析
 
 ## Quality Attribute Scenarios
 
-### Scenario 1: Flash Sale Traffic Spike
+### Scenario 1: Flash Sale 流量高峰
 
-**Source**: Marketing campaign announcement
+**來源**: 行銷活動公告
 
-**Stimulus**: Traffic increases from 1,000 to 10,000 concurrent users over 10 minutes
+**刺激**: 流量在 10 分鐘內從 1,000 個並發使用者增加到 10,000 個
 
-**Environment**: Production system during flash sale event
+**環境**: Flash sale 活動期間的 production 系統
 
-**Artifact**: Web application and API services
+**產物**: Web 應用程式和 API services
 
-**Response**: System auto-scales to handle increased load, maintains response times
+**回應**: 系統 auto-scales 以處理增加的負載，維持回應時間
 
-**Response Measure**:
+**回應衡量**:
 
-- Auto-scaling triggers within 2 minutes
-- Additional instances deployed within 5 minutes
-- API response time remains ≤ 1000ms (95th percentile)
-- Zero service disruption
-- Success rate ≥ 99.5%
+- Auto-scaling 在 2 分鐘內觸發
+- 在 5 分鐘內部署額外的實例
+- API 回應時間保持 ≤ 1000ms (95th percentile)
+- 零服務中斷
+- 成功率 ≥ 99.5%
 
-**Priority**: High
+**優先級**: 高
 
-**Status**: ✅ Implemented
+**狀態**: ✅ 已實作
 
-### Scenario 2: Database Query Performance Under Load
+### Scenario 2: 負載下的 Database Query Performance
 
-**Source**: Multiple concurrent users
+**來源**: 多個並發使用者
 
-**Stimulus**: 1,000 concurrent product search queries
+**刺激**: 1,000 個並發產品搜尋 queries
 
-**Environment**: Production system with full product catalog (1M products)
+**環境**: 具有完整產品目錄 (1M 產品) 的 production 系統
 
-**Artifact**: Database and search service
+**產物**: Database 和搜尋服務
 
-**Response**: System executes queries efficiently using indexes and caching
+**回應**: 系統使用 indexes 和 caching 有效執行 queries
 
-**Response Measure**:
+**回應衡量**:
 
-- Query response time ≤ 100ms (95th percentile)
-- Database CPU utilization ≤ 70%
+- Query 回應時間 ≤ 100ms (95th percentile)
+- Database CPU 利用率 ≤ 70%
 - Cache hit rate ≥ 90%
-- Zero query timeouts
+- 零 query timeouts
 
-**Priority**: High
+**優先級**: 高
 
-**Status**: ✅ Implemented
+**狀態**: ✅ 已實作
 
-### Scenario 3: Checkout Process Performance
+### Scenario 3: 結帳流程 Performance
 
-**Source**: Customer
+**來源**: 客戶
 
-**Stimulus**: Completes checkout with 5 items in cart
+**刺激**: 完成購物車中有 5 個項目的結帳
 
-**Environment**: Peak traffic (5,000 concurrent users)
+**環境**: 尖峰流量 (5,000 並發使用者)
 
-**Artifact**: Checkout service, payment gateway integration
+**產物**: 結帳服務、payment gateway 整合
 
-**Response**: System processes checkout quickly with all validations
+**回應**: 系統快速處理結帳並進行所有驗證
 
-**Response Measure**:
+**回應衡量**:
 
-- Total checkout time ≤ 3 seconds
-- Payment processing ≤ 2 seconds
-- Order confirmation ≤ 1 second
-- Success rate ≥ 99.9%
+- 總結帳時間 ≤ 3 秒
+- Payment 處理 ≤ 2 秒
+- 訂單確認 ≤ 1 秒
+- 成功率 ≥ 99.9%
 
-**Priority**: High
+**優先級**: 高
 
-**Status**: ✅ Implemented
+**狀態**: ✅ 已實作
 
 ### Scenario 4: Cache Invalidation
 
-**Source**: Product manager
+**來源**: 產品經理
 
-**Stimulus**: Updates product price for 100 products
+**刺激**: 更新 100 個產品的價格
 
-**Environment**: Production system with active users browsing products
+**環境**: 有活躍使用者瀏覽產品的 production 系統
 
-**Artifact**: Product service and cache layer
+**產物**: 產品服務和 cache 層
 
-**Response**: System invalidates cache and updates all instances
+**回應**: 系統 invalidates cache 並更新所有實例
 
-**Response Measure**:
+**回應衡量**:
 
-- Cache invalidation propagates within 1 second
-- No stale data served after 2 seconds
-- Zero impact on ongoing user sessions
-- Cache rebuild time ≤ 5 seconds
+- Cache invalidation 在 1 秒內傳播
+- 2 秒後不提供過時資料
+- 對正在進行的使用者 sessions 零影響
+- Cache 重建時間 ≤ 5 秒
 
-**Priority**: Medium
+**優先級**: 中
 
-**Status**: ✅ Implemented
+**狀態**: ✅ 已實作
 
-### Scenario 5: Long-Running Report Generation
+### Scenario 5: 長時間執行的報表生成
 
-**Source**: Business analyst
+**來源**: 業務分析師
 
-**Stimulus**: Requests sales report for last 12 months
+**刺激**: 請求過去 12 個月的銷售報表
 
-**Environment**: Production system during business hours
+**環境**: 營業時間的 production 系統
 
-**Artifact**: Reporting service
+**產物**: 報表服務
 
-**Response**: System processes report asynchronously without blocking
+**回應**: 系統非同步處理報表而不阻塞
 
-**Response Measure**:
+**回應衡量**:
 
-- Request accepted immediately (≤ 100ms)
-- Report generated within 5 minutes
-- User notified when complete
-- Zero impact on other operations
+- 請求立即接受 (≤ 100ms)
+- 在 5 分鐘內生成報表
+- 完成時通知使用者
+- 對其他操作零影響
 
-**Priority**: Medium
+**優先級**: 中
 
-**Status**: 🚧 In Progress
+**狀態**: 🚧 進行中
 
-## Design Decisions
+## 設計決策
 
-### Decision 1: Redis for Distributed Caching
+### 決策 1: Redis for Distributed Caching
 
-**Context**: Need for fast, distributed caching to reduce database load and improve response times across multiple application instances.
+**背景**: 需要快速、分散式 caching 以減少 database 負載並改善多個應用程式實例的回應時間。
 
-**Decision**: Implement Redis as distributed cache for session data, product catalog, and API responses.
+**決策**: 實作 Redis 作為 session 資料、產品目錄和 API 回應的分散式 cache。
 
-**Rationale**:
+**理由**:
 
 - In-memory performance (sub-millisecond latency)
-- Distributed architecture supports horizontal scaling
-- Rich data structures (strings, hashes, sets, sorted sets)
-- Built-in expiration and eviction policies
-- Proven at scale in e-commerce applications
+- 分散式架構支援 horizontal scaling
+- 豐富的資料結構 (strings、hashes、sets、sorted sets)
+- 內建的 expiration 和 eviction policies
+- 在電子商務應用程式中已證明可擴展
 
-**Trade-offs**:
+**取捨**:
 
-- ✅ Gained: Excellent performance, scalability, flexibility
-- ❌ Sacrificed: Additional infrastructure component, cache consistency complexity
+- ✅ 獲得: 優秀的 performance、scalability、靈活性
+- ❌ 犧牲: 額外的基礎設施元件、cache 一致性複雜性
 
-**Impact on Quality Attribute**: Significantly improves response times and reduces database load, enabling higher throughput.
+**對 Quality Attribute 的影響**: 顯著改善回應時間並減少 database 負載，實現更高的吞吐量。
 
-**Related ADR**: ADR-004: Use Redis for Distributed Caching
+**相關 ADR**: ADR-004: Use Redis for Distributed Caching
 
-### Decision 2: Horizontal Auto-Scaling with EKS
+### 決策 2: Horizontal Auto-Scaling with EKS
 
-**Context**: Need to handle variable traffic loads efficiently without over-provisioning infrastructure.
+**背景**: 需要在不過度配置基礎設施的情況下有效處理可變流量負載。
 
-**Decision**: Deploy application on AWS EKS with Horizontal Pod Autoscaler (HPA) based on CPU and custom metrics.
+**決策**: 在 AWS EKS 上部署應用程式，基於 CPU 和自訂 metrics 使用 Horizontal Pod Autoscaler (HPA)。
 
-**Rationale**:
+**理由**:
 
-- Automatic scaling based on actual demand
-- Cost-effective (pay only for resources used)
-- Fast scaling (new pods in minutes)
-- Kubernetes-native solution
-- Supports custom metrics (request rate, queue depth)
+- 基於實際需求的自動 scaling
+- 成本效益 (僅為使用的資源付費)
+- 快速 scaling (幾分鐘內新增 pods)
+- Kubernetes-native 解決方案
+- 支援自訂 metrics (request rate、queue depth)
 
-**Trade-offs**:
+**取捨**:
 
-- ✅ Gained: Cost efficiency, automatic scaling, flexibility
-- ❌ Sacrificed: Complexity in configuration, cold start time
+- ✅ 獲得: 成本效率、自動 scaling、靈活性
+- ❌ 犧牲: 配置複雜性、cold start 時間
 
-**Impact on Quality Attribute**: Enables system to handle 10x traffic spikes while optimizing costs.
+**對 Quality Attribute 的影響**: 使系統能夠處理 10 倍流量高峰同時最佳化成本。
 
-**Related ADR**: ADR-016: Kubernetes Auto-Scaling Strategy
+**相關 ADR**: ADR-016: Kubernetes Auto-Scaling Strategy
 
-### Decision 3: Database Read Replicas
+### 決策 3: Database Read Replicas
 
-**Context**: Read-heavy workload with 90% reads and 10% writes causing database bottlenecks.
+**背景**: 讀取密集的工作負載，90% 讀取和 10% 寫入導致 database 瓶頸。
 
-**Decision**: Implement PostgreSQL read replicas with read/write splitting at application layer.
+**決策**: 在應用程式層實作 PostgreSQL read replicas 和讀寫分離。
 
-**Rationale**:
+**理由**:
 
-- Distributes read load across multiple database instances
-- Reduces load on primary database
-- Improves read query performance
-- Maintains data consistency (eventual consistency acceptable for reads)
+- 在多個 database 實例之間分配讀取負載
+- 減少 primary database 的負載
+- 改善讀取 query performance
+- 維持資料一致性 (eventual consistency 對讀取可接受)
 
-**Trade-offs**:
+**取捨**:
 
-- ✅ Gained: Better read performance, higher throughput, fault tolerance
-- ❌ Sacrificed: Replication lag (typically <1 second), increased complexity
+- ✅ 獲得: 更好的讀取 performance、更高的吞吐量、fault tolerance
+- ❌ 犧牲: Replication lag (通常 <1 秒)、增加的複雜性
 
-**Impact on Quality Attribute**: Improves database query performance and overall system throughput.
+**對 Quality Attribute 的影響**: 改善 database query performance 和整體系統吞吐量。
 
-**Related ADR**: ADR-017: Database Read Replica Strategy
+**相關 ADR**: ADR-017: Database Read Replica Strategy
 
-### Decision 4: Asynchronous Event Processing with Kafka
+### 決策 4: Asynchronous Event Processing with Kafka
 
-**Context**: Need to process events (order placed, inventory updated) without blocking user requests.
+**背景**: 需要處理事件 (訂單已下、庫存已更新) 而不阻塞使用者請求。
 
-**Decision**: Use Apache Kafka (AWS MSK) for asynchronous event processing with consumer groups.
+**決策**: 使用 Apache Kafka (AWS MSK) 進行非同步事件處理，配合 consumer groups。
 
-**Rationale**:
+**理由**:
 
-- Decouples event producers from consumers
-- High throughput (millions of events per second)
-- Durable message storage
-- Supports multiple consumers
-- Enables event-driven architecture
+- 解耦事件 producers 和 consumers
+- 高吞吐量 (每秒數百萬個事件)
+- 持久的 message 儲存
+- 支援多個 consumers
+- 實現 event-driven 架構
 
-**Trade-offs**:
+**取捨**:
 
-- ✅ Gained: Better responsiveness, scalability, resilience
-- ❌ Sacrificed: Eventual consistency, increased complexity
+- ✅ 獲得: 更好的回應性、scalability、resilience
+- ❌ 犧牲: Eventual consistency、增加的複雜性
 
-**Impact on Quality Attribute**: Improves API response times by offloading heavy processing to background workers.
+**對 Quality Attribute 的影響**: 透過將重型處理卸載到背景 workers 來改善 API 回應時間。
 
-**Related ADR**: ADR-005: Use Apache Kafka for Event Streaming
+**相關 ADR**: ADR-005: Use Apache Kafka for Event Streaming
 
-## Implementation Guidelines
+## 實作指南
 
-### Architectural Patterns
+### 架構模式
 
-- **Caching Strategy**: Multi-layer caching (browser, CDN, application, database)
-- **Database Optimization**: Query optimization, indexing, connection pooling
-- **Asynchronous Processing**: Event-driven architecture for non-critical operations
-- **Load Balancing**: Distribute traffic across multiple instances
-- **Circuit Breaker**: Prevent cascading failures from slow dependencies
-- **Bulkhead**: Isolate resources to prevent resource exhaustion
+- **Caching Strategy**: 多層 caching (browser、CDN、application、database)
+- **Database Optimization**: Query 最佳化、indexing、connection pooling
+- **Asynchronous Processing**: 非關鍵操作的 event-driven 架構
+- **Load Balancing**: 在多個實例之間分配流量
+- **Circuit Breaker**: 防止來自緩慢依賴項的連鎖故障
+- **Bulkhead**: 隔離資源以防止資源耗盡
 
-### Best Practices
+### 最佳實務
 
-1. **Cache Frequently Accessed Data**: Product catalog, user sessions, API responses
-2. **Optimize Database Queries**: Use indexes, avoid N+1 queries, use pagination
-3. **Use Connection Pooling**: Reuse database connections efficiently
-4. **Implement Lazy Loading**: Load data only when needed
-5. **Compress Responses**: Use gzip compression for API responses
-6. **Optimize Images**: Use CDN and appropriate image formats
-7. **Monitor Performance**: Continuous monitoring with alerts
-8. **Load Test Regularly**: Validate performance under realistic loads
+1. **Cache 經常存取的資料**: 產品目錄、使用者 sessions、API 回應
+2. **最佳化 Database Queries**: 使用 indexes、避免 N+1 queries、使用分頁
+3. **使用 Connection Pooling**: 有效重用 database connections
+4. **實作 Lazy Loading**: 僅在需要時載入資料
+5. **壓縮回應**: 對 API 回應使用 gzip 壓縮
+6. **最佳化圖片**: 使用 CDN 和適當的圖片格式
+7. **監控 Performance**: 持續監控並發出警報
+8. **定期 Load Test**: 在實際負載下驗證 performance
 
-### Anti-Patterns to Avoid
+### 應避免的反模式
 
-- ❌ **Premature Optimization**: Optimize based on actual bottlenecks, not assumptions
-- ❌ **Over-Caching**: Caching everything leads to stale data and memory issues
-- ❌ **Synchronous Heavy Operations**: Use async processing for long-running tasks
-- ❌ **N+1 Query Problem**: Always use eager loading or batch queries
-- ❌ **Ignoring Indexes**: Missing indexes cause slow queries
-- ❌ **Large Transactions**: Keep transactions small and focused
-- ❌ **Blocking I/O**: Use non-blocking I/O for better concurrency
+- ❌ **過早最佳化**: 基於實際瓶頸進行最佳化，而非假設
+- ❌ **過度 Caching**: Caching 所有內容導致過時資料和 memory 問題
+- ❌ **同步重型操作**: 對長時間執行的任務使用 async 處理
+- ❌ **N+1 Query 問題**: 始終使用 eager loading 或 batch queries
+- ❌ **忽略 Indexes**: 缺少 indexes 導致緩慢的 queries
+- ❌ **大型 Transactions**: 保持 transactions 小而專注
+- ❌ **阻塞 I/O**: 使用 non-blocking I/O 以獲得更好的並發性
 
-### Code Examples
+### 程式碼範例
 
-#### Example 1: Caching with Redis
+#### 範例 1: Caching with Redis
 
 ```java
 @Service
 @CacheConfig(cacheNames = "products")
 public class ProductService {
-    
+
     @Cacheable(key = "#productId", unless = "#result == null")
     public Product findById(String productId) {
         return productRepository.findById(productId)
             .orElseThrow(() -> new ProductNotFoundException(productId));
     }
-    
+
     @Cacheable(key = "'search:' + #query + ':' + #pageable.pageNumber")
     public Page<Product> searchProducts(String query, Pageable pageable) {
         return productRepository.searchByName(query, pageable);
     }
-    
+
     @CacheEvict(key = "#product.id")
     public Product updateProduct(Product product) {
         return productRepository.save(product);
@@ -480,298 +478,298 @@ public class ProductService {
 }
 ```
 
-#### Example 2: Async Processing
+#### 範例 2: Async Processing
 
 ```java
 @Service
 public class OrderService {
-    
+
     @Async("orderProcessingExecutor")
     public CompletableFuture<Void> processOrderAsync(String orderId) {
         return CompletableFuture.runAsync(() -> {
             Order order = orderRepository.findById(orderId).orElseThrow();
-            
+
             // Heavy processing
             inventoryService.reserveItems(order);
             paymentService.processPayment(order);
             notificationService.sendConfirmation(order);
-            
+
         }, orderProcessingExecutor);
     }
 }
 ```
 
-## Verification and Testing
+## 驗證和測試
 
-### Verification Methods
+### 驗證方法
 
-- **Load Testing**: Simulate realistic user loads with JMeter or Gatling
-- **Stress Testing**: Test system limits and breaking points
-- **Endurance Testing**: Verify performance over extended periods
-- **Spike Testing**: Test response to sudden traffic increases
-- **APM Monitoring**: Continuous performance monitoring in production
+- **Load Testing**: 使用 JMeter 或 Gatling 模擬實際使用者負載
+- **Stress Testing**: 測試系統限制和臨界點
+- **Endurance Testing**: 驗證長時間的 performance
+- **Spike Testing**: 測試對突然流量增加的回應
+- **APM Monitoring**: Production 中的持續 performance 監控
 
-### Testing Strategy
+### 測試策略
 
 #### Load Testing
 
-**Purpose**: Verify system meets performance requirements under expected load
+**目的**: 驗證系統在預期負載下滿足 performance 需求
 
-**Approach**:
+**方法**:
 
-- Simulate 10,000 concurrent users
-- Mix of operations (browse, search, checkout)
-- Ramp-up period of 10 minutes
-- Sustained load for 30 minutes
+- 模擬 10,000 個並發使用者
+- 混合操作 (瀏覽、搜尋、結帳)
+- 10 分鐘的 ramp-up 期
+- 持續負載 30 分鐘
 
-**Success Criteria**:
+**成功標準**:
 
-- Response time ≤ 1000ms (95th percentile)
-- Throughput ≥ 1000 TPS
-- Error rate < 0.1%
-- Resource utilization < 80%
+- 回應時間 ≤ 1000ms (95th percentile)
+- 吞吐量 ≥ 1000 TPS
+- 錯誤率 < 0.1%
+- 資源利用率 < 80%
 
-**Frequency**: Weekly + before major releases
+**頻率**: 每週 + 主要發布前
 
 #### Stress Testing
 
-**Purpose**: Identify system breaking points and failure modes
+**目的**: 識別系統臨界點和故障模式
 
-**Approach**:
+**方法**:
 
-- Gradually increase load beyond capacity
-- Monitor system behavior and failure points
-- Identify bottlenecks and limits
+- 逐漸增加負載超過容量
+- 監控系統行為和故障點
+- 識別瓶頸和限制
 
-**Success Criteria**:
+**成功標準**:
 
-- Graceful degradation under extreme load
-- No data corruption
-- Quick recovery after load reduction
+- 在極端負載下優雅降級
+- 無資料損壞
+- 負載減少後快速恢復
 
-**Frequency**: Monthly
+**頻率**: 每月
 
-### Metrics and Monitoring
+### Metrics 和監控
 
-| Metric | Target | Measurement Method | Alert Threshold |
+| Metric | 目標 | 測量方法 | 警報閾值 |
 |--------|--------|-------------------|-----------------|
-| API Response Time (p95) | ≤ 1000ms | APM (New Relic/DataDog) | > 2000ms |
-| API Response Time (p99) | ≤ 2000ms | APM | > 3000ms |
-| Throughput | ≥ 1000 TPS | Application metrics | < 500 TPS |
-| Error Rate | < 0.1% | Application logs | > 1% |
-| Database Query Time (p95) | ≤ 100ms | Database monitoring | > 200ms |
+| API 回應時間 (p95) | ≤ 1000ms | APM (New Relic/DataDog) | > 2000ms |
+| API 回應時間 (p99) | ≤ 2000ms | APM | > 3000ms |
+| 吞吐量 | ≥ 1000 TPS | Application metrics | < 500 TPS |
+| 錯誤率 | < 0.1% | Application logs | > 1% |
+| Database Query 時間 (p95) | ≤ 100ms | Database 監控 | > 200ms |
 | Cache Hit Rate | ≥ 90% | Redis metrics | < 80% |
-| CPU Utilization | ≤ 70% | CloudWatch | > 85% |
-| Memory Utilization | ≤ 80% | CloudWatch | > 90% |
-| Auto-Scaling Events | As needed | Kubernetes metrics | N/A |
+| CPU 利用率 | ≤ 70% | CloudWatch | > 85% |
+| Memory 利用率 | ≤ 80% | CloudWatch | > 90% |
+| Auto-Scaling 事件 | 根據需要 | Kubernetes metrics | N/A |
 
-## Affected Viewpoints
+## 受影響的 Viewpoints
 
 ### [Functional Viewpoint](../../viewpoints/functional/overview.md)
 
-**How this perspective applies**:
-All functional capabilities must be implemented with performance in mind, using efficient algorithms and appropriate caching strategies.
+**此觀點的應用方式**:
+所有功能能力都必須考慮 performance，使用高效演算法和適當的 caching 策略。
 
-**Specific concerns**:
+**具體關注點**:
 
 - API endpoint performance
-- Search functionality performance
-- Checkout process speed
-- Product catalog browsing
+- 搜尋功能 performance
+- 結帳流程速度
+- 產品目錄瀏覽
 
-**Implementation guidance**:
+**實作指導**:
 
-- Use caching for frequently accessed data
-- Implement pagination for large result sets
-- Optimize database queries with proper indexes
-- Use async processing for non-critical operations
+- 對經常存取的資料使用 caching
+- 對大型結果集實作分頁
+- 使用適當的 indexes 最佳化 database queries
+- 對非關鍵操作使用 async 處理
 
 ### [Information Viewpoint](../../viewpoints/information/overview.md)
 
-**How this perspective applies**:
-Data models and access patterns must be optimized for performance, with proper indexing and efficient queries.
+**此觀點的應用方式**:
+資料模型和存取模式必須針對 performance 進行最佳化，使用適當的 indexing 和高效的 queries。
 
-**Specific concerns**:
+**具體關注點**:
 
 - Database query performance
-- Data access patterns
-- Index strategy
-- Data volume growth
+- 資料存取模式
+- Index 策略
+- 資料量增長
 
-**Implementation guidance**:
+**實作指導**:
 
-- Create indexes on frequently queried fields
-- Use database query optimization techniques
-- Implement read replicas for read-heavy workloads
-- Monitor slow queries and optimize
+- 在經常查詢的欄位上建立 indexes
+- 使用 database query 最佳化技術
+- 對讀取密集的工作負載實作 read replicas
+- 監控緩慢的 queries 並最佳化
 
 ### [Concurrency Viewpoint](../../viewpoints/concurrency/overview.md)
 
-**How this perspective applies**:
-Concurrent operations must be handled efficiently without blocking or resource contention.
+**此觀點的應用方式**:
+並發操作必須有效處理，而不會阻塞或資源競爭。
 
-**Specific concerns**:
+**具體關注點**:
 
-- Thread pool configuration
-- Async processing
-- Lock contention
-- Resource pooling
+- Thread pool 配置
+- Async 處理
+- Lock 競爭
+- 資源 pooling
 
-**Implementation guidance**:
+**實作指導**:
 
-- Use appropriate thread pool sizes
-- Implement async processing for long operations
-- Minimize lock contention
-- Use connection pooling
+- 使用適當的 thread pool 大小
+- 對長時間操作實作 async 處理
+- 最小化 lock 競爭
+- 使用 connection pooling
 
 ### [Deployment Viewpoint](../../viewpoints/deployment/overview.md)
 
-**How this perspective applies**:
-Infrastructure must be configured for optimal performance and scalability.
+**此觀點的應用方式**:
+基礎設施必須配置以實現最佳 performance 和 scalability。
 
-**Specific concerns**:
+**具體關注點**:
 
-- Auto-scaling configuration
+- Auto-scaling 配置
 - Load balancing
-- Resource allocation
-- Network performance
+- 資源分配
+- 網路 performance
 
-**Implementation guidance**:
+**實作指導**:
 
-- Configure HPA with appropriate metrics
-- Use Application Load Balancer
-- Allocate sufficient resources per pod
-- Optimize network configuration
+- 使用適當的 metrics 配置 HPA
+- 使用 Application Load Balancer
+- 為每個 pod 分配足夠的資源
+- 最佳化網路配置
 
 ### [Operational Viewpoint](../../viewpoints/operational/overview.md)
 
-**How this perspective applies**:
-Operations must include performance monitoring, alerting, and optimization procedures.
+**此觀點的應用方式**:
+營運必須包括 performance 監控、警報和最佳化程序。
 
-**Specific concerns**:
+**具體關注點**:
 
-- Performance monitoring
-- Alert configuration
-- Performance troubleshooting
-- Capacity planning
+- Performance 監控
+- 警報配置
+- Performance 故障排除
+- 容量規劃
 
-**Implementation guidance**:
+**實作指導**:
 
-- Implement comprehensive APM monitoring
-- Configure alerts for performance degradation
-- Establish performance troubleshooting procedures
-- Regular capacity planning reviews
+- 實作全面的 APM 監控
+- 配置 performance 降級的警報
+- 建立 performance 故障排除程序
+- 定期容量規劃審查
 
-## Related Documentation
+## 相關文檔
 
-### Related Perspectives
+### 相關 Perspectives
 
-- [Availability Perspective](../availability/overview.md) - Performance impacts availability
-- [Cost Perspective](../cost/overview.md) - Performance optimization affects costs
-- [Scalability Perspective](scalability.md) - Detailed scaling strategies
+- [Availability Perspective](../availability/overview.md) - Performance 影響 availability
+- [Cost Perspective](../cost/overview.md) - Performance 最佳化影響成本
+- [Scalability Perspective](scalability.md) - 詳細的 scaling 策略
 
-### Related Architecture Decisions
+### 相關 Architecture Decisions
 
 - [ADR-004: Use Redis for Distributed Caching](../../architecture/adrs/ADR-004-redis-caching.md)
 - [ADR-005: Use Apache Kafka for Event Streaming](../../architecture/adrs/ADR-005-kafka-messaging.md)
 - [ADR-016: Kubernetes Auto-Scaling Strategy](../../architecture/adrs/ADR-016-k8s-autoscaling.md)
 - [ADR-017: Database Read Replica Strategy](../../architecture/adrs/ADR-017-db-read-replicas.md)
 
-### Related Standards and Guidelines
+### 相關標準和指南
 
-- [Performance Standards](../../.kiro/steering/performance-standards.md) - Detailed performance standards
-- [Test Performance Standards](../../.kiro/steering/test-performance-standards.md) - Test performance guidelines
+- [Performance Standards](../../.kiro/steering/performance-standards.md) - 詳細的 performance 標準
+- [Test Performance Standards](../../.kiro/steering/test-performance-standards.md) - 測試 performance 指南
 
-### Related Tools
+### 相關工具
 
-- JMeter: Load testing tool
+- JMeter: Load testing 工具
 - Gatling: Performance testing framework
-- New Relic / DataDog: APM monitoring
+- New Relic / DataDog: APM 監控
 - Redis: Distributed caching
-- Prometheus + Grafana: Metrics and monitoring
+- Prometheus + Grafana: Metrics 和監控
 
-## Known Issues and Limitations
+## 已知問題和限制
 
-### Current Limitations
+### 目前限制
 
-- **Cold Start Time**: New pod instances take 30-60 seconds to become ready
-- **Cache Warm-up**: Cache needs time to reach optimal hit rate after restart
-- **Database Connection Limits**: Maximum 100 connections per database instance
+- **Cold Start 時間**: 新的 pod 實例需要 30-60 秒才能就緒
+- **Cache Warm-up**: 重啟後 cache 需要時間才能達到最佳 hit rate
+- **Database Connection 限制**: 每個 database 實例最多 100 個 connections
 
-### Technical Debt
+### 技術債務
 
-- **Query Optimization**: Some complex reporting queries need optimization
-- **Cache Strategy**: Need to implement cache warming for critical data
-- **Monitoring Gaps**: Some custom metrics not yet implemented
+- **Query 最佳化**: 某些複雜的報表 queries 需要最佳化
+- **Cache 策略**: 需要實作關鍵資料的 cache warming
+- **監控缺口**: 某些自訂 metrics 尚未實作
 
-### Risks
+### 風險
 
-| Risk | Probability | Impact | Mitigation Strategy |
+| 風險 | 機率 | 影響 | 緩解策略 |
 |------|-------------|--------|-------------------|
-| Database becomes bottleneck | Medium | High | Implement read replicas, optimize queries, add caching |
-| Cache failure impacts performance | Low | High | Implement cache fallback, monitor cache health |
-| Auto-scaling too slow | Medium | Medium | Tune HPA parameters, implement predictive scaling |
-| Third-party API slowness | Medium | Medium | Implement circuit breaker, caching, timeouts |
+| Database 成為瓶頸 | 中 | 高 | 實作 read replicas、最佳化 queries、增加 caching |
+| Cache 故障影響 performance | 低 | 高 | 實作 cache fallback、監控 cache 健康狀態 |
+| Auto-scaling 太慢 | 中 | 中 | 調整 HPA 參數、實作預測性 scaling |
+| 第三方 API 緩慢 | 中 | 中 | 實作 circuit breaker、caching、timeouts |
 
-## Future Considerations
+## 未來考量
 
-### Planned Improvements
+### 計劃改進
 
-- **Predictive Auto-Scaling**: Use ML to predict traffic and scale proactively (Q2 2025)
-- **Edge Caching**: Implement CloudFront for static content (Q2 2025)
-- **Database Sharding**: Horizontal database partitioning for massive scale (Q3 2025)
-- **GraphQL**: Optimize API queries with GraphQL (Q4 2025)
+- **預測性 Auto-Scaling**: 使用 ML 預測流量並主動 scale (Q2 2025)
+- **Edge Caching**: 對靜態內容實作 CloudFront (Q2 2025)
+- **Database Sharding**: 大規模的 horizontal database 分區 (Q3 2025)
+- **GraphQL**: 使用 GraphQL 最佳化 API queries (Q4 2025)
 
-### Evolution Strategy
+### 演化策略
 
-The performance perspective will evolve to address growing scale and emerging technologies:
+Performance perspective 將演化以應對不斷增長的規模和新興技術:
 
-- Continuous performance optimization based on production metrics
-- Adoption of new caching technologies (e.g., Memcached, Hazelcast)
-- Implementation of advanced scaling strategies
-- Integration of AI/ML for performance prediction and optimization
+- 基於 production metrics 的持續 performance 最佳化
+- 採用新的 caching 技術 (例如 Memcached、Hazelcast)
+- 實作進階 scaling 策略
+- 整合 AI/ML 用於 performance 預測和最佳化
 
-### Emerging Technologies
+### 新興技術
 
-- **Serverless Computing**: AWS Lambda for specific workloads
-- **Edge Computing**: CloudFront Functions for edge processing
-- **In-Memory Databases**: Redis Enterprise for ultra-low latency
-- **Service Mesh**: Istio for advanced traffic management
+- **Serverless Computing**: 特定工作負載的 AWS Lambda
+- **Edge Computing**: 邊緣處理的 CloudFront Functions
+- **In-Memory Databases**: 超低延遲的 Redis Enterprise
+- **Service Mesh**: 進階流量管理的 Istio
 
-## Quick Links
+## 快速連結
 
-- [Back to All Perspectives](../README.md)
+- [返回所有 Perspectives](../README.md)
 - [Architecture Overview](../../architecture/README.md)
-- [Main Documentation](../../README.md)
+- [主要文檔](../../README.md)
 - [Performance Standards](../../.kiro/steering/performance-standards.md)
 
-## Appendix
+## 附錄
 
-### Glossary
+### 詞彙表
 
-- **Response Time**: Time from request to response
-- **Throughput**: Number of transactions per second
-- **Latency**: Delay in processing
+- **Response Time**: 從請求到回應的時間
+- **Throughput**: 每秒交易數
+- **Latency**: 處理延遲
 - **TPS**: Transactions Per Second
-- **p95/p99**: 95th/99th percentile (95%/99% of requests faster than this)
-- **Cache Hit Rate**: Percentage of requests served from cache
+- **p95/p99**: 95th/99th percentile (95%/99% 的請求比這更快)
+- **Cache Hit Rate**: 從 cache 提供的請求百分比
 - **APM**: Application Performance Monitoring
 - **HPA**: Horizontal Pod Autoscaler
 
-### References
+### 參考資料
 
 - Performance Testing Guide: <https://martinfowler.com/articles/performance-testing.html>
 - AWS Performance Best Practices: <https://aws.amazon.com/architecture/performance-efficiency/>
 - Redis Best Practices: <https://redis.io/docs/manual/patterns/>
 - Kubernetes HPA: <https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/>
 
-### Change History
+### 變更歷史
 
-| Date | Version | Author | Changes |
+| 日期 | 版本 | 作者 | 變更 |
 |------|---------|--------|---------|
-| 2025-10-23 | 1.0 | Performance Engineering Team | Initial version |
+| 2025-10-23 | 1.0 | Performance Engineering Team | 初始版本 |
 
 ---
 
-**Template Version**: 1.0  
-**Last Template Update**: 2025-01-17
+**模板版本**: 1.0
+**最後模板更新**: 2025-01-17
