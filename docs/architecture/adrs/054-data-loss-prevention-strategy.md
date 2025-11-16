@@ -12,127 +12,127 @@ affected_perspectives: ["security", "availability"]
 
 # ADR-054: Data Loss Prevention (DLP) Strategy
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform handles sensitive customer data that requires comprehensive protection against:
+The Enterprise E-Commerce Platform 處理s sensitive customer data that 需要comprehensive protection against:
 
-- Data exfiltration by external attackers
-- Insider threats and unauthorized access
+- Data exfiltration 透過 external attackers
+- Insider threats 和 unauthorized access
 - Accidental data exposure
 - Compliance violations (GDPR, PCI-DSS)
-- Data breaches and leaks
+- Data breaches 和 leaks
 - Unauthorized data sharing
 
-Taiwan's regulatory environment and cyber threat landscape require:
+Taiwan's regulatory environment 和 cyber threat landscape require:
 
-- Compliance with Taiwan Personal Data Protection Act
+- Compliance 與 Taiwan Personal Data Protection Act
 - Protection against state-sponsored data theft
 - Secure handling of payment card data (PCI-DSS)
-- Audit trails for data access and usage
-- Data residency and sovereignty requirements
+- Audit trails 用於 data access 和 usage
+- Data residency 和 sovereignty requirements
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Protect customer trust and platform reputation
-- Comply with data protection regulations
+- Protect customer trust 和 platform reputation
+- Comply 與 data protection regulations
 - Prevent financial losses from data breaches
-- Maintain PCI-DSS compliance for payment processing
-- Enable secure business operations
+- 維持 PCI-DSS compliance 用於 payment processing
+- 啟用 secure business operations
 
-**Constraints**:
+**限制條件**：
 
-- Must not impact system performance significantly
-- Cannot block legitimate business operations
-- Must support data analytics and reporting
-- Budget: $3,000/month for DLP tools and services
+- 必須 not impact system performance signifi可以tly
+- 可以not block legitimate business operations
+- 必須 支援 data analytics 和 reporting
+- 預算: $3,000/month 用於 DLP tools 和 services
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- Basic encryption at rest and in transit (ADR-016)
-- RBAC for access control (ADR-015)
+- Basic encryption at rest 和 in transit (ADR-016)
+- RBAC 用於 access control (ADR-015)
 - No data classification system
 - No data exfiltration detection
-- No data masking for non-production environments
+- No data masking 用於 non-production environments
 - Manual data access auditing
 
-**Requirements**:
+**需求**：
 
-- Sensitive data identification and classification
+- Sensitive data identification 和 classification
 - Data exfiltration prevention
-- Data masking for non-production environments
-- Access control and monitoring
-- Audit trails for compliance
+- Data masking 用於 non-production environments
+- Access control 和 monitoring
+- Audit trails 用於 compliance
 - Automated policy enforcement
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Data Protection**: Prevent unauthorized data access and exfiltration
+1. **Data Protection**: Prevent unauthorized data access 和 exfiltration
 2. **Compliance**: Meet GDPR, PCI-DSS, Taiwan PDPA requirements
 3. **Performance**: Minimal impact on system performance (< 5% overhead)
-4. **Usability**: Enable legitimate business operations
-5. **Auditability**: Complete audit trails for compliance
-6. **Scalability**: Handle growing data volumes
-7. **Cost**: Optimize operational costs
-8. **Automation**: Automated policy enforcement and monitoring
+4. **Usability**: 啟用 legitimate business operations
+5. **Auditability**: Complete audit trails 用於 compliance
+6. **Scalability**: 處理 growing data volumes
+7. **成本**： Optimize operational costs
+8. **Automation**: Automated policy enforcement 和 monitoring
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Comprehensive DLP Strategy (Recommended)
+### 選項 1： Comprehensive DLP Strategy (Recommended)
 
-**Description**: Multi-layered data loss prevention with classification, monitoring, masking, and access control
+**描述**： Multi-layered data loss prevention with classification, monitoring, masking, and access control
 
 **Components**:
 
-- **Data Classification**: Identify and tag sensitive data (PII, PCI, confidential)
-- **Database Activity Monitoring**: Monitor all database access and queries
+- **Data Classification**: Identify 和 tag sensitive data (PII, PCI, confidential)
+- **Database Activity Monitoring**: Monitor all database access 和 queries
 - **API Call Auditing**: Track all API calls accessing sensitive data
 - **Data Masking**: Mask sensitive data in non-production environments
-- **Access Control**: Least privilege principle with periodic reviews
+- **Access Control**: Least privilege principle 與 periodic reviews
 - **Anomaly Detection**: Detect unusual data access patterns
-- **Audit Logging**: Comprehensive audit trails for compliance
+- **Audit Logging**: Comprehensive audit trails 用於 compliance
 
-**Pros**:
+**優點**：
 
 - ✅ Defense-in-depth data protection
 - ✅ Compliance-ready (GDPR, PCI-DSS, Taiwan PDPA)
 - ✅ Automated policy enforcement
 - ✅ Comprehensive audit trails
-- ✅ Supports legitimate business operations
+- ✅ 支援s legitimate business operations
 - ✅ Scalable architecture
 - ✅ Cost-effective ($3,000/month)
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Implementation complexity
+- ⚠️ Implementation 複雜的ity
 - ⚠️ Requires data classification effort
 - ⚠️ Potential false positives
 - ⚠️ Operational overhead
 
-**Cost**: $3,000/month (AWS Macie $1,500, monitoring tools $1,500)
+**成本**： $3,000/month (AWS Macie $1,500, monitoring tools $1,500)
 
-**Risk**: **Low** - Proven DLP practices
+**風險**： **Low** - Proven DLP practices
 
-### Option 2: Basic Data Protection (Encryption Only)
+### 選項 2： Basic Data Protection (Encryption Only)
 
-**Description**: Rely on encryption and basic access control
+**描述**： Rely on encryption and basic access control
 
-**Pros**:
+**優點**：
 
-- ✅ Simple to implement
-- ✅ Low operational overhead
+- ✅ 簡單implement
+- ✅ Low 營運開銷
 - ✅ Low cost
 
-**Cons**:
+**缺點**：
 
 - ❌ No data exfiltration detection
 - ❌ No data masking
@@ -140,45 +140,45 @@ Taiwan's regulatory environment and cyber threat landscape require:
 - ❌ Compliance gaps
 - ❌ No anomaly detection
 
-**Cost**: $0 (already implemented)
+**成本**： $0 (already implemented)
 
-**Risk**: **High** - Insufficient data protection
+**風險**： **High** - Insufficient data protection
 
-### Option 3: Third-Party DLP Solution (Symantec, McAfee)
+### 選項 3： Third-Party DLP Solution (Symantec, McAfee)
 
-**Description**: Deploy enterprise DLP solution
+**描述**： Deploy enterprise DLP solution
 
-**Pros**:
+**優點**：
 
 - ✅ Advanced DLP features
 - ✅ Proven enterprise solution
-- ✅ Professional support
+- ✅ Professional 支援
 
-**Cons**:
+**缺點**：
 
 - ❌ Very high cost ($10,000-20,000/month)
-- ❌ Complex deployment
+- ❌ 複雜的 deployment
 - ❌ Performance overhead
 - ❌ Vendor lock-in
 
-**Cost**: $15,000/month
+**成本**： $15,000/month
 
-**Risk**: **Medium** - High cost and complexity
+**風險**： **Medium** - High cost and complexity
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Comprehensive DLP Strategy (Option 1)**
+**選擇的選項**： **Comprehensive DLP Strategy (Option 1)**
 
-### Rationale
+### 理由
 
-Comprehensive DLP strategy was selected for the following reasons:
+Comprehensive DLP strategy被選擇的原因如下：
 
-1. **Compliance**: Meets GDPR, PCI-DSS, and Taiwan PDPA requirements
-2. **Cost-Effective**: $3,000/month vs $15,000+ for enterprise DLP
+1. **Compliance**: Meets GDPR, PCI-DSS, 和 Taiwan PDPA requirements
+2. **Cost-Effective**: $3,000/month vs $15,000+ 用於 enterprise DLP
 3. **AWS Native**: Leverages AWS services (Macie, CloudTrail, GuardDuty)
-4. **Scalable**: Handles platform growth automatically
-5. **Automated**: Policy enforcement and monitoring with minimal overhead
-6. **Flexible**: Supports legitimate business operations
+4. **Scalable**: 處理s platform growth automatically
+5. **Automated**: Policy enforcement 和 monitoring 與 minimal overhead
+6. **Flexible**: 支援s legitimate business operations
 7. **Comprehensive**: Multi-layered protection against data loss
 
 ### Data Classification
@@ -192,12 +192,12 @@ Comprehensive DLP strategy was selected for the following reasons:
 - Payment card numbers (PAN)
 - Bank account information
 - Government ID numbers
-- Passwords and authentication credentials
+- Passwords 和 authentication credentials
 
 **Tier 2: Sensitive (Business Data)**
 
-- Order details and history
-- Inventory levels and pricing
+- Order details 和 history
+- Inventory levels 和 pricing
 - Customer purchase patterns
 - Business analytics data
 - Internal communications
@@ -244,10 +244,10 @@ public class Customer {
 
 **Monitoring Approach**:
 
-- Enable PostgreSQL audit logging
+- 啟用 PostgreSQL audit logging
 - Monitor all SELECT, INSERT, UPDATE, DELETE operations
-- Track query patterns and data volumes
-- Detect anomalous queries (large result sets, unusual times)
+- Track query patterns 和 data volumes
+- Detect anomalous queries (大型的 result sets, unusual times)
 - Alert on suspicious activity
 
 **Implementation**:
@@ -424,7 +424,7 @@ public class DataAccessAuditAspect {
 **Test Environment**: Synthetic data
 
 - Generated fake data using Faker library
-- Realistic but not real customer data
+- Realistic 但 not real customer data
 
 **Implementation**:
 
@@ -494,8 +494,8 @@ public class DataMaskingService {
 
 **Least Privilege Principle**:
 
-- Users have minimum permissions required for their role
-- Temporary elevated access for specific tasks
+- Users have minimum permissions required 用於 their role
+- Temporary elevated access 用於 specific tasks
 - Automatic permission expiration
 - Regular permission reviews (quarterly)
 
@@ -504,7 +504,7 @@ public class DataMaskingService {
 | Role | Customer PII | Payment Data | Order Data | Product Data |
 |------|--------------|--------------|------------|--------------|
 | Customer | Own data only | Own data only | Own data only | Read all |
-| Customer Support | Read all | Read last 4 digits | Read all | Read all |
+| Customer 支援 | Read all | Read last 4 digits | Read all | Read all |
 | Admin | Read/Write all | Read last 4 digits | Read/Write all | Read/Write all |
 | Developer | No access | No access | Read staging | Read/Write all |
 | Analyst | Masked data | No access | Read all | Read all |
@@ -590,8 +590,8 @@ public class DataAccessControlService {
 
 **Sensitive Data Discovery**:
 
-- Automatically scan S3 buckets for sensitive data
-- Identify PII, PCI, and confidential data
+- Automatically s可以 S3 buckets 用於 sensitive data
+- Identify PII, PCI, 和 confidential data
 - Generate data classification reports
 - Alert on unencrypted sensitive data
 
@@ -624,31 +624,31 @@ classification_job = aws_macie.CfnClassificationJob(
 )
 ```
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
 | Development Team | Medium | Data masking in non-prod environments | Automated masking, synthetic data |
-| Data Analysts | Medium | Access to masked data only | Provide aggregated data, masked datasets |
-| Customer Support | Low | Audit logging of data access | Clear policies, training |
+| Data Analysts | Medium | Access to masked data only | 提供 aggregated data, masked datasets |
+| Customer 支援 | Low | Audit logging of data access | Clear policies, training |
 | Security Team | Positive | Enhanced data protection | Regular reviews, automated monitoring |
-| Compliance Team | Positive | Audit trails for compliance | Automated reporting |
+| Compliance Team | Positive | Audit trails 用於 compliance | Automated reporting |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
-- All databases and data stores
+- All databases 和 資料儲存s
 - All API endpoints accessing sensitive data
 - All non-production environments
-- Data analytics and reporting
+- Data analytics 和 reporting
 - Access control policies
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
@@ -658,11 +658,11 @@ Affects:
 | Access control bypass | Low | Critical | Regular audits, penetration testing |
 | Compliance violations | Low | Critical | Automated compliance checks, regular reviews |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Data Classification (Week 1-2)
+### 第 1 階段： Data Classification （第 1-2 週）
 
 - [ ] Define data classification tiers
 - [ ] Annotate database schemas
@@ -670,53 +670,53 @@ Affects:
 - [ ] Create data inventory
 - [ ] Document data flows
 
-### Phase 2: Monitoring and Auditing (Week 3-4)
+### 第 2 階段： Monitoring and Auditing （第 3-4 週）
 
-- [ ] Enable database audit logging
+- [ ] 啟用 database audit logging
 - [ ] Implement API call auditing
 - [ ] Create audit log storage
 - [ ] Set up anomaly detection
 - [ ] Configure alerts
 
-### Phase 3: Data Masking (Week 5-6)
+### 第 3 階段： Data Masking （第 5-6 週）
 
 - [ ] Implement masking service
-- [ ] Create masked datasets for staging
-- [ ] Generate synthetic data for dev/test
+- [ ] Create masked datasets 用於 staging
+- [ ] Generate synthetic data 用於 dev/test
 - [ ] Test masking accuracy
 - [ ] Deploy to non-production environments
 
-### Phase 4: Access Control (Week 7-8)
+### 第 4 階段： Access Control （第 7-8 週）
 
 - [ ] Implement access control service
 - [ ] Create access control matrix
 - [ ] Set up temporary access workflow
 - [ ] Implement permission reviews
-- [ ] Enable AWS Macie
-- [ ] Test and validate
+- [ ] 啟用 AWS Macie
+- [ ] Test 和 validate
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Critical performance degradation (> 10% overhead)
 - Data masking errors exposing real data
 - Access control blocking legitimate operations
 - Excessive false positive alerts
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Disable anomaly detection alerts
 2. Relax access control policies
 3. Disable data masking temporarily
-4. Investigate and fix issues
-5. Gradually re-enable features
+4. Investigate 和 fix issues
+5. Gradually re-啟用 features
 
-**Rollback Time**: < 2 hours
+**回滾時間**： < 2 hours
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Data classification coverage: 100% of sensitive data
 - ✅ Audit log coverage: 100% of sensitive data access
@@ -726,74 +726,74 @@ Affects:
 - ✅ Performance overhead: < 5%
 - ✅ Zero data breach incidents
 
-### Monitoring Plan
+### 監控計畫
 
 **CloudWatch Metrics**:
 
-- `dlp.data.access.count` (count by data tier)
-- `dlp.anomaly.detected` (count by type)
-- `dlp.access.denied` (count by reason)
+- `dlp.data.access.count` (count 透過 data tier)
+- `dlp.anomaly.detected` (count 透過 type)
+- `dlp.access.denied` (count 透過 reason)
 - `dlp.audit.log.size` (bytes)
 - `dlp.masking.errors` (count)
 
-**Alerts**:
+**告警**：
 
 - Anomalous data access detected
-- Large data export (> 10,000 rows)
+- 大型的 data export (> 10,000 rows)
 - Unusual access time (3-6 AM)
 - Access control violation
 - Data masking error
 
-**Review Schedule**:
+**審查時程**：
 
 - Daily: Review anomalous access alerts
 - Weekly: Analyze data access patterns
 - Monthly: Permission review
 - Quarterly: Compliance audit
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Data Protection**: Comprehensive protection against data loss
 - ✅ **Compliance**: Meets GDPR, PCI-DSS, Taiwan PDPA requirements
-- ✅ **Auditability**: Complete audit trails for compliance
-- ✅ **Insider Threat Protection**: Detect and prevent insider threats
-- ✅ **Cost-Effective**: $3,000/month for enterprise-grade DLP
-- ✅ **Automated**: Policy enforcement with minimal overhead
+- ✅ **Auditability**: Complete audit trails 用於 compliance
+- ✅ **Insider Threat Protection**: Detect 和 prevent insider threats
+- ✅ **Cost-Effective**: $3,000/month 用於 enterprise-grade DLP
+- ✅ **Automated**: Policy enforcement 與 minimal overhead
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Implementation Complexity**: Multiple components to implement
-- ⚠️ **Operational Overhead**: Monitoring and alert management
-- ⚠️ **Performance Impact**: 3-5% overhead for auditing
-- ⚠️ **False Positives**: Potential for legitimate operations to trigger alerts
+- ⚠️ **Implementation 複雜的ity**: Multiple components to implement
+- ⚠️ **Operational Overhead**: Monitoring 和 alert management
+- ⚠️ **Performance Impact**: 3-5% overhead 用於 auditing
+- ⚠️ **False Positives**: Potential 用於 legitimate operations to trigger alerts
 - ⚠️ **Data Masking Effort**: Initial effort to create masked datasets
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Manual data classification (acceptable initially)
 2. Basic anomaly detection (rule-based)
 3. No ML-powered threat detection
 4. Limited data lineage tracking
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Implement ML-powered anomaly detection
-- **Q3 2026**: Automate data classification with Macie
+- **Q3 2026**: Automate data classification 與 Macie
 - **Q4 2026**: Implement data lineage tracking
-- **2027**: Integrate with CASB for cloud data protection
+- **2027**: Integrate 與 CASB 用於 cloud data protection
 
-## Related Decisions
+## 相關決策
 
 - [ADR-015: Role-Based Access Control (RBAC) Implementation](015-role-based-access-control-implementation.md) - Access control foundation
-- [ADR-016: Data Encryption Strategy](016-data-encryption-strategy.md) - Data encryption at rest and in transit
-- [ADR-053: Security Monitoring and Incident Response](053-security-monitoring-incident-response.md) - Security monitoring integration
-- [ADR-055: Vulnerability Management and Patching Strategy](055-vulnerability-management-patching-strategy.md) - Vulnerability management
+- [ADR-016: Data Encryption Strategy](016-data-encryption-strategy.md) - Data encryption at rest 和 in transit
+- [ADR-053: Security Monitoring 和 Incident Response](053-security-monitoring-incident-response.md) - Security monitoring integration
+- [ADR-055: Vulnerability Management 和 Patching Strategy](055-vulnerability-management-patching-strategy.md) - Vulnerability management
 
-## Notes
+## 備註
 
 ### Data Classification Tags
 
@@ -824,11 +824,11 @@ public enum DataType {
 ### Compliance Mapping
 
 - **GDPR Article 32**: Security of processing (encryption, audit logs)
-- **PCI-DSS Requirement 10**: Track and monitor all access to network resources and cardholder data
-- **Taiwan PDPA Article 27**: Security measures for personal data protection
+- **PCI-DSS Requirement 10**: Track 和 monitor all access to network resources 和 cardholder data
+- **Taiwan PDPA Article 27**: Security measures 用於 personal data protection
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

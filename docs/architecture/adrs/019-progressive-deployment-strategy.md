@@ -1,6 +1,6 @@
 ---
 adr_number: 019
-title: "Progressive Deployment Strategy (Canary + Rolling Update)"
+title: "Progressive Deployment Strategy (可以ary + Rolling Update)"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,66 +10,66 @@ affected_viewpoints: ["deployment", "operational"]
 affected_perspectives: ["availability", "evolution"]
 ---
 
-# ADR-019: Progressive Deployment Strategy (Canary + Rolling Update)
+# ADR-019: Progressive Deployment Strategy (可以ary + Rolling Update)
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires a safe, reliable deployment strategy to:
+The Enterprise E-Commerce Platform 需要safe, reliable deployment strategy to:
 
 **Business Requirements**:
 
-- **Zero Downtime**: Maintain 99.9% availability during deployments
+- **Zero Downtime**: 維持 99.9% availability 期間 deployments
 - **Risk Mitigation**: Minimize impact of faulty releases
 - **Fast Rollback**: Quick recovery from deployment failures (< 5 minutes)
 - **Confidence**: Validate releases before full rollout
-- **Frequency**: Support multiple deployments per day
-- **Compliance**: Meet audit and compliance requirements
+- **Frequency**: 支援 multiple deployments per 天
+- **Compliance**: Meet audit 和 compliance requirements
 
 **Technical Challenges**:
 
-- Complex microservices architecture (13 bounded contexts)
+- 複雜的 microservices architecture (13 bounded contexts)
 - High traffic volume (10,000+ requests/minute)
 - Database schema changes
 - API compatibility requirements
 - Cross-service dependencies
 - Multi-region deployment coordination
-- Monitoring and validation complexity
+- Monitoring 和 validation 複雜的ity
 
-**Current State**:
+**目前狀態**：
 
 - All-at-once deployments
-- Significant downtime during releases
+- Signifi可以t downtime 期間 releases
 - High risk of widespread failures
 - Manual rollback procedures
 - Limited deployment validation
 - Infrequent releases (weekly)
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Enable continuous delivery
-- Reduce deployment risk
-- Improve time-to-market
+- 啟用 continuous delivery
+- 降低 deployment risk
+- 改善 time-to-market
 - Increase deployment frequency
 - Minimize customer impact
-- Support A/B testing
+- 支援 A/B testing
 
-**Constraints**:
+**限制條件**：
 
-- Budget: $50,000 for implementation
-- Timeline: 2 months
+- 預算: $50,000 用於 implementation
+- Timeline: 2 個月
 - Team: 3 DevOps engineers
-- Must work with existing EKS infrastructure
-- Cannot disrupt current operations
+- 必須 work 與 existing EKS infrastructure
+- 可以not disrupt current operations
 
-### Technical Context
+### 技術上下文
 
 **Current Deployment**:
 
@@ -85,24 +85,24 @@ The Enterprise E-Commerce Platform requires a safe, reliable deployment strategy
 - Traffic-based validation
 - Automatic rollback on failures
 - Continuous monitoring
-- Multiple deployments per day
+- Multiple deployments per 天
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **Safety**: Minimize blast radius of faulty deployments
-2. **Speed**: Enable rapid rollback when issues detected
-3. **Confidence**: Validate releases with real traffic
-4. **Automation**: Reduce manual intervention
-5. **Observability**: Comprehensive monitoring during rollout
-6. **Flexibility**: Support different rollout strategies
-7. **Simplicity**: Easy to understand and operate
-8. **Cost**: Optimize infrastructure costs
+2. **Speed**: 啟用 rapid rollback when issues detected
+3. **Confidence**: Validate releases 與 real traffic
+4. **Automation**: 降低 manual intervention
+5. **Observability**: Comprehensive monitoring 期間 rollout
+6. **Flexibility**: 支援 different rollout strategies
+7. **Simplicity**: 容易understand 和 operate
+8. **成本**： Optimize infrastructure costs
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Canary + Rolling Update (Recommended)
+### 選項 1： Canary + Rolling Update (Recommended)
 
-**Description**: Combine canary deployment for validation with rolling update for full rollout
+**描述**： Combine canary deployment for validation with rolling update for full rollout
 
 **Strategy**:
 
@@ -145,7 +145,7 @@ interface ProgressiveDeploymentStrategy {
 }
 ```
 
-**Canary Deployment with Flagger**:
+**可以ary Deployment 與 Flagger**:
 
 ```yaml
 # Flagger Canary Resource
@@ -400,7 +400,7 @@ spec:
         terminationGracePeriodSeconds: 30
 ```
 
-**Deployment Pipeline with Progressive Rollout**:
+**Deployment Pipeline 與 Progressive Rollout**:
 
 ```yaml
 # GitHub Actions workflow
@@ -561,94 +561,94 @@ interface DatabaseMigrationStrategy {
 }
 ```
 
-**Pros**:
+**優點**：
 
 - ✅ Zero downtime deployments
-- ✅ Automatic validation with real traffic
+- ✅ Automatic validation 與 real traffic
 - ✅ Fast rollback (< 5 minutes)
 - ✅ Gradual risk exposure
 - ✅ Comprehensive monitoring
-- ✅ Supports A/B testing
+- ✅ 支援s A/B testing
 - ✅ Database migration safety
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Longer deployment time (30-45 minutes)
 - ⚠️ Requires additional infrastructure (Flagger)
-- ⚠️ Complex configuration
+- ⚠️ 複雜的 configuration
 - ⚠️ Need comprehensive metrics
 
-**Cost**: $50,000 implementation + $5,000/year operational
+**成本**： $50,000 implementation + $5,000/year operational
 
-**Risk**: **Low** - Industry-proven approach
+**風險**： **Low** - Industry-proven approach
 
-### Option 2: Blue-Green Deployment
+### 選項 2： Blue-Green Deployment
 
-**Description**: Maintain two identical environments, switch traffic between them
+**描述**： Maintain two identical environments, switch traffic between them
 
-**Pros**:
+**優點**：
 
 - ✅ Instant rollback
 - ✅ Full environment testing
-- ✅ Simple concept
+- ✅ 簡單的 concept
 
-**Cons**:
+**缺點**：
 
 - ❌ Double infrastructure cost
 - ❌ No gradual validation
-- ❌ Complex for databases
+- ❌ 複雜的 用於 databases
 - ❌ All-or-nothing switch
 
-**Cost**: $80,000 implementation + $40,000/year operational (2x infrastructure)
+**成本**： $80,000 implementation + $40,000/year operational (2x infrastructure)
 
-**Risk**: **Medium** - Higher cost and complexity
+**風險**： **Medium** - Higher cost and complexity
 
-### Option 3: Recreate Deployment
+### 選項 3： Recreate Deployment
 
-**Description**: Stop all old pods, then start new pods
+**描述**： Stop all old pods, then start new pods
 
-**Pros**:
+**優點**：
 
-- ✅ Simplest approach
+- ✅ 簡單的st approach
 - ✅ No version overlap
-- ✅ Easy to understand
+- ✅ 容易understand
 
-**Cons**:
+**缺點**：
 
-- ❌ Downtime during deployment
+- ❌ Downtime 期間 deployment
 - ❌ High risk
 - ❌ No gradual validation
 - ❌ Slow rollback
 
-**Cost**: $10,000 implementation
+**成本**： $10,000 implementation
 
-**Risk**: **High** - Unacceptable downtime
+**風險**： **High** - Unacceptable downtime
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Canary + Rolling Update (Option 1)**
+**選擇的選項**： **Canary + Rolling Update (Option 1)**
 
-### Rationale
+### 理由
 
-Combining canary deployment for validation with rolling update for full rollout provides the optimal balance of safety, speed, and zero downtime, justifying the implementation complexity.
+Combining 可以ary deployment 用於 validation 與 rolling update 用於 full rollout 提供s the optimal balance of safety, speed, 和 zero downtime, justifying the implementation 複雜的ity.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
 | Development Team | Medium | New deployment workflow | Training, documentation, automation |
-| DevOps Team | High | New tools and processes | Training, runbooks, support |
+| DevOps Team | High | New tools 和 processes | Training, runbooks, 支援 |
 | QA Team | Low | Automated validation | Test automation integration |
 | Operations Team | Medium | New monitoring requirements | Dashboards, alerts, training |
-| Customers | Low | Improved availability | Transparent deployments |
+| Customers | Low | 改善d availability | Transparent deployments |
 
 ### Impact Radius Assessment
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All application deployments
 - CI/CD pipeline
@@ -657,21 +657,21 @@ Affects:
 - Database migrations
 - Team workflows
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
-| Canary false positives | Medium | Low | Tune metrics thresholds, manual override |
+| 可以ary false positives | Medium | Low | Tune metrics thresholds, manual override |
 | Slow rollouts | Low | Medium | Optimize validation duration |
 | Metric collection failures | Low | High | Redundant monitoring, fallback to manual |
 | Database migration issues | Medium | Critical | Backward compatible migrations, testing |
-| Team adoption | Medium | Medium | Training, documentation, support |
+| Team adoption | Medium | Medium | Training, documentation, 支援 |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Infrastructure Setup (Week 1-2)
+### 第 1 階段： Infrastructure Setup （第 1-2 週）
 
 **Tasks**:
 
@@ -687,28 +687,28 @@ Affects:
 - Metrics collection working
 - Dashboards configured
 
-### Phase 2: Pilot Service (Week 3-4)
+### 第 2 階段： Pilot Service （第 3-4 週）
 
 **Tasks**:
 
 - [ ] Select pilot service
-- [ ] Create Canary resource
-- [ ] Configure metrics and thresholds
-- [ ] Test canary deployment
+- [ ] Create 可以ary resource
+- [ ] Configure metrics 和 thresholds
+- [ ] Test 可以ary deployment
 - [ ] Validate rollback
 - [ ] Document process
 
 **Success Criteria**:
 
-- Successful canary deployment
+- Successful 可以ary deployment
 - Automatic rollback tested
-- Team comfortable with process
+- Team comfortable 與 process
 
-### Phase 3: Rollout to All Services (Week 5-6)
+### 第 3 階段： Rollout to All Services （第 5-6 週）
 
 **Tasks**:
 
-- [ ] Create Canary resources for all services
+- [ ] Create 可以ary resources 用於 all services
 - [ ] Update CI/CD pipelines
 - [ ] Configure service-specific metrics
 - [ ] Train team on new process
@@ -720,7 +720,7 @@ Affects:
 - CI/CD pipelines updated
 - Team trained
 
-### Phase 4: Database Migration Strategy (Week 7-8)
+### 第 4 階段： Database Migration Strategy （第 7-8 週）
 
 **Tasks**:
 
@@ -736,26 +736,26 @@ Affects:
 - Templates available
 - Team trained
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Flagger failures
 - Metric collection issues
 - Team concerns
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Disable Flagger
 2. Use standard rolling update
 3. Fix issues
-4. Re-enable Flagger
+4. Re-啟用 Flagger
 
-**Rollback Time**: < 1 hour
+**回滾時間**： < 1 hour
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
@@ -772,64 +772,64 @@ Affects:
 - **Monthly**: Process optimization
 - **Quarterly**: Strategy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Zero Downtime**: 100% availability during deployments
+- ✅ **Zero Downtime**: 100% availability 期間 deployments
 - ✅ **Risk Mitigation**: Gradual rollout limits blast radius
 - ✅ **Fast Rollback**: < 5 minute recovery from failures
 - ✅ **Confidence**: Real traffic validation before full rollout
-- ✅ **Frequency**: Multiple deployments per day
-- ✅ **Automation**: Reduced manual intervention
+- ✅ **Frequency**: Multiple deployments per 天
+- ✅ **Automation**: 降低d manual intervention
 - ✅ **Observability**: Comprehensive deployment monitoring
 
-### Negative Consequences
+### 負面後果
 
 - ⚠️ **Deployment Time**: 30-45 minutes vs 10 minutes
-- ⚠️ **Complexity**: More complex than simple rolling update
+- ⚠️ **複雜的ity**: More 複雜的 than 簡單的 rolling update
 - ⚠️ **Infrastructure**: Additional components (Flagger)
 - ⚠️ **Metrics Dependency**: Requires reliable metrics collection
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Some services lack comprehensive metrics
 2. Manual metric threshold tuning
 3. Basic rollback procedures
 4. Limited A/B testing capabilities
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q2 2026**: Comprehensive metrics for all services
+- **Q2 2026**: Comprehensive metrics 用於 all services
 - **Q3 2026**: Automated threshold tuning
 - **Q4 2026**: Advanced A/B testing features
 
-## Related Decisions
+## 相關決策
 
-- [ADR-007: Use AWS CDK for Infrastructure as Code](007-use-aws-cdk-for-infrastructure.md)
+- [ADR-007: Use AWS CDK 用於 Infrastructure as Code](007-use-aws-cdk-for-infrastructure.md)
 - [ADR-017: Multi-Region Deployment Strategy](017-multi-region-deployment-strategy.md)
-- [ADR-018: Container Orchestration with AWS EKS](018-container-orchestration-with-aws-eks.md)
+- [ADR-018: Container Orchestration 與 AWS EKS](018-container-orchestration-with-aws-eks.md)
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）
 
-## Notes
+## 備註
 
 ### Deployment Strategy Comparison
 
-| Strategy | Downtime | Rollback Speed | Risk | Complexity | Cost |
+| Strategy | Downtime | Rollback Speed | Risk | 複雜的ity | Cost |
 |----------|----------|----------------|------|------------|------|
-| Canary + Rolling | None | < 5 min | Low | High | Medium |
+| 可以ary + Rolling | None | < 5 min | Low | High | Medium |
 | Blue-Green | None | Instant | Medium | Medium | High |
 | Rolling Update | None | 10-15 min | Medium | Low | Low |
 | Recreate | Yes | 15-30 min | High | Very Low | Very Low |
 
-### Canary Stages
+### 可以ary Stages
 
 | Stage | Traffic % | Duration | Validation |
 |-------|-----------|----------|------------|
@@ -840,9 +840,9 @@ Affects:
 
 ### Best Practices
 
-**Canary Deployment**:
+**可以ary Deployment**:
 
-- Start with small traffic percentage (10%)
+- Start 與 small traffic percentage (10%)
 - Monitor comprehensive metrics
 - Use automated validation
 - Have clear rollback criteria
@@ -850,8 +850,8 @@ Affects:
 
 **Rolling Update**:
 
-- Set maxUnavailable to 0 for zero downtime
-- Use appropriate maxSurge for faster rollout
+- Set maxUnavailable to 0 用於 zero downtime
+- Use appropriate maxSurge 用於 faster rollout
 - Implement proper health checks
 - Set reasonable timeout values
 - Monitor pod startup times
@@ -862,12 +862,12 @@ Affects:
 - Test migrations in staging
 - Have rollback plan
 - Monitor data integrity
-- Use feature flags for code changes
+- Use feature flags 用於 code changes
 
 **Monitoring**:
 
 - Track deployment progress
-- Compare canary vs stable metrics
+- Compare 可以ary vs stable metrics
 - Alert on anomalies
 - Log all deployment events
 - Create deployment dashboards

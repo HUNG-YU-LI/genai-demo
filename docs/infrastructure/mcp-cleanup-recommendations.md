@@ -1,113 +1,113 @@
-# MCP Configuration Cleanup Recommendations
+# MCP Configuration 清理建議
 
-> **Last Updated**: 2025-01-22  
-> **Status**: Ready for Execution
+> **最後更新**: 2025-01-22
+> **狀態**: 準備執行
 
-## 🎯 Quick Summary
+## 🎯 快速摘要
 
-Your MCP configuration has:
+您的 MCP configuration 有：
 
-- ✅ **5 working project servers** (time, aws-docs, aws-cdk, aws-pricing, excalidraw)
-- ✅ **6 working global servers** (github, aws-docs, cdk, pricing, lambda, iam)
-- ⚠️ **2 duplicates** (aws-docs, time)
-- ⚠️ **10 disabled servers** in global config (taking up space)
+- ✅ **5 個運作中的專案 servers**（time, aws-docs, aws-cdk, aws-pricing, excalidraw）
+- ✅ **6 個運作中的全域 servers**（github, aws-docs, cdk, pricing, lambda, iam）
+- ⚠️ **2 個重複項**（aws-docs, time）
+- ⚠️ **10 個已停用的 servers** 在全域 config 中（占用空間）
 
 ---
 
-## 📋 Recommended Actions
+## 📋 建議的行動
 
-### Step 1: Backup Configurations ✅
+### 步驟 1：備份 Configurations ✅
 
 ```bash
-# Backup global config
+# 備份全域 config
 cp ~/.kiro/settings/mcp.json ~/.kiro/settings/mcp.json.backup.$(date +%Y%m%d)
 
-# Backup project config
+# 備份專案 config
 cp .kiro/settings/mcp.json .kiro/settings/mcp.json.backup.$(date +%Y%m%d)
 ```
 
-### Step 2: Remove Duplicates from Global Config
+### 步驟 2：從全域 Config 移除重複項
 
-**Duplicates to Remove from `~/.kiro/settings/mcp.json`:**
+**從 `~/.kiro/settings/mcp.json` 移除的重複項：**
 
-1. **`aws-docs`** - Already active in project config
-2. **`time`** - Already active in project config (global version is disabled anyway)
+1. **`aws-docs`** - 已在專案 config 中啟用
+2. **`time`** - 已在專案 config 中啟用（全域版本反正已停用）
 
-**Why**: Project-level config takes precedence, so these global entries are unused.
+**原因**：專案層級 config 優先，因此這些全域項目未被使用。
 
-**Note about Time Server**:
+**關於 Time Server 的注意事項**：
 
-- The `time` MCP server provides timezone conversions and time formatting
-- However, Kiro can also get current time via system commands (`date`)
-- **Recommendation**: Keep `time` server in project config for advanced time operations
-  - Timezone conversions
-  - Time formatting in different formats
-  - Time difference calculations
-  - Multiple timezone support
+- `time` MCP server 提供時區轉換與時間格式化
+- 然而，Kiro 也可以透過系統命令（`date`）取得目前時間
+- **建議**：在專案 config 中保留 `time` server 以進行進階時間操作
+  - 時區轉換
+  - 以不同格式格式化時間
+  - 時間差異計算
+  - 多時區支援
 
-### Step 3: Clean Up Disabled Servers (Optional)
+### 步驟 3：清理已停用的 Servers（選用）
 
-**Disabled servers in global config that can be removed:**
+**全域 config 中可移除的已停用 servers：**
 
-| Server | Reason to Remove |
+| Server | 移除原因 |
 |--------|------------------|
-| `aws-knowledge-mcp-server` | Requires AWS MCP service access (not available) |
-| `fetch` | Not being used |
-| `awslabs.core-mcp-server` | Not being used |
-| `awslabs.terraform-mcp-server` | Not using Terraform in this project |
-| `sqlite` | Not using SQLite |
-| `kubernetes` | Not managing K8s from MCP |
-| `docker` | Not managing Docker from MCP |
-| `awslabs.ec2-mcp-server` | Not managing EC2 from MCP |
-| `ppt-automation` | Depends on external project |
+| `aws-knowledge-mcp-server` | 需要 AWS MCP service 存取（尚未可用） |
+| `fetch` | 未使用 |
+| `awslabs.core-mcp-server` | 未使用 |
+| `awslabs.terraform-mcp-server` | 此專案未使用 Terraform |
+| `sqlite` | 未使用 SQLite |
+| `kubernetes` | 不從 MCP 管理 K8s |
+| `docker` | 不從 MCP 管理 Docker |
+| `awslabs.ec2-mcp-server` | 不從 MCP 管理 EC2 |
+| `ppt-automation` | 依賴外部專案 |
 
-**Keep these disabled servers if you might use them later:**
+**如果稍後可能使用，請保留這些已停用的 servers：**
 
-- `kubernetes`, `docker`, `sqlite` - Useful for infrastructure management
-- `awslabs.ec2-mcp-server` - Useful for AWS EC2 management
+- `kubernetes`, `docker`, `sqlite` - 對 infrastructure 管理有用
+- `awslabs.ec2-mcp-server` - 對 AWS EC2 管理有用
 
-### Step 4: Fix GitHub Token (If Using GitHub MCP)
+### 步驟 4：修正 GitHub Token（如使用 GitHub MCP）
 
-The GitHub token in global config may be expired:
+全域 config 中的 GitHub token 可能已過期：
 
 ```json
 "Bearer ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
-**Action**:
+**行動**：
 
-1. Generate new token: <https://github.com/settings/tokens>
-2. Update in `~/.kiro/settings/mcp.json`
+1. 產生新 token：<https://github.com/settings/tokens>
+2. 在 `~/.kiro/settings/mcp.json` 中更新
 
-**⚠️ SECURITY NOTE**: Never commit actual tokens to the repository. Use placeholders like above.
-3. Or disable the server if not needed
+**⚠️ 安全注意事項**：絕不將實際 tokens commit 到 repository。使用如上的佔位符。
+3. 或如不需要請停用該 server
 
 ---
 
-## 🔧 Manual Cleanup Steps
+## 🔧 手動清理步驟
 
-### Option A: Conservative Cleanup (Recommended)
+### 選項 A：保守清理（建議）
 
-Only remove duplicates, keep disabled servers for future use.
+僅移除重複項，保留已停用的 servers 供未來使用。
 
-**Edit `~/.kiro/settings/mcp.json`:**
+**編輯 `~/.kiro/settings/mcp.json`：**
 
 ```bash
-# Open in editor
+# 在編輯器中開啟
 code ~/.kiro/settings/mcp.json
 
-# Remove these two entries:
+# 移除這兩個項目：
 # 1. "aws-docs": { ... }
 # 2. "time": { ... }
 ```
 
-### Option B: Aggressive Cleanup
+### 選項 B：積極清理
 
-Remove duplicates AND all disabled servers.
+移除重複項與所有已停用的 servers。
 
-**Edit `~/.kiro/settings/mcp.json`:**
+**編輯 `~/.kiro/settings/mcp.json`：**
 
-Remove these entries:
+移除這些項目：
 
 - `aws-docs`
 - `time`
@@ -123,11 +123,11 @@ Remove these entries:
 
 ---
 
-## 📊 Recommended Final Configuration
+## 📊 建議的最終 Configuration
 
-### Global Config (`~/.kiro/settings/mcp.json`)
+### 全域 Config（`~/.kiro/settings/mcp.json`）
 
-**Keep only these active servers:**
+**僅保留這些啟用的 servers：**
 
 ```json
 {
@@ -206,9 +206,9 @@ Remove these entries:
 }
 ```
 
-### Project Config (`.kiro/settings/mcp.json`)
+### 專案 Config（`.kiro/settings/mcp.json`）
 
-**Keep as is - already optimal:**
+**保持原樣 - 已是最佳狀態：**
 
 ```json
 {
@@ -281,78 +281,78 @@ Remove these entries:
 
 ---
 
-## ✅ Verification Steps
+## ✅ 驗證步驟
 
-After cleanup:
+清理後：
 
-1. **Restart Kiro**
-   - Close and reopen Kiro to reload MCP configuration
+1. **重新啟動 Kiro**
+   - 關閉並重新開啟 Kiro 以重新載入 MCP configuration
 
-2. **Check MCP Server Status**
-   - Open Command Palette: `Cmd+Shift+P`
-   - Search: "MCP Server"
-   - Select: "View MCP Servers"
-   - Verify all servers show "Connected"
+2. **檢查 MCP Server 狀態**
+   - 開啟 Command Palette：`Cmd+Shift+P`
+   - 搜尋："MCP Server"
+   - 選擇："View MCP Servers"
+   - 驗證所有 servers 顯示 "Connected"
 
-3. **Test Key Servers**
+3. **測試關鍵 Servers**
 
    ```
-   Ask Kiro to:
+   詢問 Kiro：
 
-   - "What time is it?" (tests time server)
-   - "Search AWS docs for Lambda" (tests aws-docs)
-   - "Create a simple diagram" (tests excalidraw)
+   - "現在幾點？"（測試 time server）
+   - "搜尋 AWS docs 中關於 Lambda 的資訊"（測試 aws-docs）
+   - "建立一個簡單的圖表"（測試 excalidraw）
 
    ```
 
 ---
 
-## 📈 Expected Results
+## 📈 預期結果
 
-**Before Cleanup:**
+**清理前：**
 
-- Total servers: 21
-- Active: 11
-- Disabled: 10
-- Duplicates: 2
+- Servers 總數：21
+- 啟用中：11
+- 已停用：10
+- 重複項：2
 
-**After Conservative Cleanup:**
+**保守清理後：**
 
-- Total servers: 19
-- Active: 11
-- Disabled: 8
-- Duplicates: 0
+- Servers 總數：19
+- 啟用中：11
+- 已停用：8
+- 重複項：0
 
-**After Aggressive Cleanup:**
+**積極清理後：**
 
-- Total servers: 11
-- Active: 11
-- Disabled: 0
-- Duplicates: 0
+- Servers 總數：11
+- 啟用中：11
+- 已停用：0
+- 重複項：0
 
 ---
 
-## 🔄 Rollback Plan
+## 🔄 復原計畫
 
-If something goes wrong:
+如果出問題：
 
 ```bash
-# Restore global config
+# 復原全域 config
 cp ~/.kiro/settings/mcp.json.backup.YYYYMMDD ~/.kiro/settings/mcp.json
 
-# Restore project config
+# 復原專案 config
 cp .kiro/settings/mcp.json.backup.YYYYMMDD .kiro/settings/mcp.json
 
-# Restart Kiro
+# 重新啟動 Kiro
 ```
 
 ---
 
-## 📝 Notes
+## 📝 注意事項
 
-- **Excalidraw**: ✅ Fully functional, no changes needed
-- **GitHub**: ⚠️ Update token if using GitHub features
-- **AWS Servers**: ✅ All working with kim-sso profile
-- **Duplicates**: Safe to remove from global config
+- **Excalidraw**：✅ 完全正常運作，無需變更
+- **GitHub**：⚠️ 如使用 GitHub 功能請更新 token
+- **AWS Servers**：✅ 全部使用 kim-sso profile 運作正常
+- **重複項**：從全域 config 移除是安全的
 
-**Recommendation**: Start with **Conservative Cleanup** to minimize risk.
+**建議**：從 **保守清理** 開始以降低風險。

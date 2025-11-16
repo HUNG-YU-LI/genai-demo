@@ -19,36 +19,36 @@ tags: ["rest-api", "domain-events", "interfaces", "integration"]
 
 # Functional Interfaces
 
-> **Status**: ✅ Active  
-> **Last Updated**: 2025-10-22  
+> **Status**: ✅ Active
+> **Last Updated**: 2025-10-22
 > **Owner**: API Team
 
 ## Overview
 
-This document describes the functional interfaces of the Enterprise E-Commerce Platform. The system exposes two primary types of interfaces:
+本文件描述 Enterprise E-Commerce Platform 的功能介面。系統暴露兩種主要的介面類型：
 
-1. **REST APIs**: Synchronous request-response interfaces for real-time operations
-2. **Domain Events**: Asynchronous event-driven interfaces for cross-context communication
+1. **REST APIs**：用於即時操作的同步 request-response 介面
+2. **Domain Events**：用於跨 context 通訊的非同步 event-driven 介面
 
-All interfaces follow consistent design principles and are documented with OpenAPI 3.0 specifications.
+所有介面遵循一致的設計原則，並使用 OpenAPI 3.0 規格記錄。
 
 ## Interface Design Principles
 
 ### REST API Principles
 
-- **RESTful Design**: Follow REST architectural constraints
-- **Resource-Oriented**: URLs represent resources, not actions
-- **HTTP Semantics**: Proper use of HTTP methods and status codes
-- **Versioning**: URL-based versioning (`/api/v1/`)
-- **Consistency**: Consistent naming, error handling, and response formats
+- **RESTful Design**：遵循 REST 架構約束
+- **Resource-Oriented**：URLs 代表資源，而非動作
+- **HTTP Semantics**：正確使用 HTTP methods 和 status codes
+- **Versioning**：基於 URL 的版本控制（`/api/v1/`）
+- **Consistency**：一致的命名、錯誤處理和回應格式
 
 ### Domain Event Principles
 
-- **Event Sourcing**: Events are immutable records of what happened
-- **Past Tense**: Event names use past tense (e.g., `OrderSubmitted`)
-- **Self-Contained**: Events contain all necessary data
-- **Idempotent Handling**: Event handlers can process events multiple times safely
-- **Schema Evolution**: Events support backward-compatible schema changes
+- **Event Sourcing**：Events 是已發生事件的不可變記錄
+- **Past Tense**：Event 名稱使用過去式（例如，`OrderSubmitted`）
+- **Self-Contained**：Events 包含所有必要的資料
+- **Idempotent Handling**：Event handlers 可以安全地多次處理 events
+- **Schema Evolution**：Events 支援向後相容的 schema 變更
 
 ---
 
@@ -56,19 +56,19 @@ All interfaces follow consistent design principles and are documented with OpenA
 
 ### API Base URL
 
-- **Development**: `http://localhost:8080/api/v1`
-- **Staging**: `https://staging-api.example.com/api/v1`
-- **Production**: `https://api.example.com/api/v1`
+- **Development**：`http://localhost:8080/api/v1`
+- **Staging**：`https://staging-api.example.com/api/v1`
+- **Production**：`https://api.example.com/api/v1`
 
 ### Authentication
 
-All API endpoints (except public endpoints) require JWT authentication:
+所有 API endpoints（公開 endpoints 除外）需要 JWT 驗證：
 
 ```http
 Authorization: Bearer {jwt_token}
 ```
 
-**Public Endpoints** (no authentication required):
+**Public Endpoints**（不需驗證）：
 
 - `GET /api/v1/products` - List products
 - `GET /api/v1/products/{id}` - Get product details
@@ -127,7 +127,7 @@ Authorization: Bearer {jwt_token}
 | GET | `/api/v1/customers/{id}/reward-points` | Get reward points | Yes |
 | PUT | `/api/v1/customers/{id}/preferences` | Update preferences | Yes |
 
-**Detailed Documentation**: [Customer API Reference](../../api/rest/endpoints/customers.md)
+**Detailed Documentation**：[Customer API Reference](../../api/rest/endpoints/customers.md)
 
 #### Order Context APIs
 
@@ -141,7 +141,7 @@ Authorization: Bearer {jwt_token}
 | GET | `/api/v1/orders/{id}/history` | Get order history | Yes |
 | GET | `/api/v1/orders/{id}/invoice` | Download invoice | Yes |
 
-**Detailed Documentation**: [Order API Reference](../../api/rest/endpoints/orders.md)
+**Detailed Documentation**：[Order API Reference](../../api/rest/endpoints/orders.md)
 
 #### Product Context APIs
 
@@ -156,7 +156,7 @@ Authorization: Bearer {jwt_token}
 | DELETE | `/api/v1/products/{id}` | Delete product | Yes (Admin) |
 | GET | `/api/v1/products/{id}/reviews` | Get product reviews | No |
 
-**Detailed Documentation**: [Product API Reference](../../api/rest/endpoints/products.md)
+**Detailed Documentation**：[Product API Reference](../../api/rest/endpoints/products.md)
 
 #### Shopping Cart Context APIs
 
@@ -169,7 +169,7 @@ Authorization: Bearer {jwt_token}
 | DELETE | `/api/v1/carts/{customerId}` | Clear cart | Yes |
 | POST | `/api/v1/carts/{customerId}/checkout` | Checkout cart | Yes |
 
-**Detailed Documentation**: [Shopping Cart API Reference](../../api/rest/endpoints/carts.md)
+**Detailed Documentation**：[Shopping Cart API Reference](../../api/rest/endpoints/carts.md)
 
 #### Payment Context APIs
 
@@ -180,7 +180,7 @@ Authorization: Bearer {jwt_token}
 | POST | `/api/v1/payments/{id}/refund` | Process refund | Yes (Admin) |
 | GET | `/api/v1/payments/{id}/receipt` | Download receipt | Yes |
 
-**Detailed Documentation**: [Payment API Reference](../../api/rest/endpoints/payments.md)
+**Detailed Documentation**：[Payment API Reference](../../api/rest/endpoints/payments.md)
 
 #### Delivery Context APIs
 
@@ -190,7 +190,7 @@ Authorization: Bearer {jwt_token}
 | GET | `/api/v1/deliveries/track/{trackingNumber}` | Track delivery | No |
 | POST | `/api/v1/deliveries/{id}/update-status` | Update status | Yes (Logistics) |
 
-**Detailed Documentation**: [Delivery API Reference](../../api/rest/endpoints/deliveries.md)
+**Detailed Documentation**：[Delivery API Reference](../../api/rest/endpoints/deliveries.md)
 
 #### Inventory Context APIs
 
@@ -200,7 +200,7 @@ Authorization: Bearer {jwt_token}
 | POST | `/api/v1/inventory/{productId}/replenish` | Add stock | Yes (Admin/Seller) |
 | GET | `/api/v1/inventory/low-stock` | List low stock items | Yes (Admin) |
 
-**Detailed Documentation**: [Inventory API Reference](../../api/rest/endpoints/inventory.md)
+**Detailed Documentation**：[Inventory API Reference](../../api/rest/endpoints/inventory.md)
 
 #### Promotion Context APIs
 
@@ -212,7 +212,7 @@ Authorization: Bearer {jwt_token}
 | PUT | `/api/v1/promotions/{id}` | Update promotion | Yes (Admin) |
 | DELETE | `/api/v1/promotions/{id}` | Delete promotion | Yes (Admin) |
 
-**Detailed Documentation**: [Promotion API Reference](../../api/rest/endpoints/promotions.md)
+**Detailed Documentation**：[Promotion API Reference](../../api/rest/endpoints/promotions.md)
 
 #### Review Context APIs
 
@@ -225,7 +225,7 @@ Authorization: Bearer {jwt_token}
 | POST | `/api/v1/reviews/{id}/approve` | Approve review | Yes (Admin) |
 | POST | `/api/v1/reviews/{id}/reject` | Reject review | Yes (Admin) |
 
-**Detailed Documentation**: [Review API Reference](../../api/rest/endpoints/reviews.md)
+**Detailed Documentation**：[Review API Reference](../../api/rest/endpoints/reviews.md)
 
 #### Seller Context APIs
 
@@ -237,7 +237,7 @@ Authorization: Bearer {jwt_token}
 | GET | `/api/v1/sellers/{id}/products` | List seller products | No |
 | POST | `/api/v1/sellers/{id}/approve` | Approve seller | Yes (Admin) |
 
-**Detailed Documentation**: [Seller API Reference](../../api/rest/endpoints/sellers.md)
+**Detailed Documentation**：[Seller API Reference](../../api/rest/endpoints/sellers.md)
 
 ---
 
@@ -245,7 +245,7 @@ Authorization: Bearer {jwt_token}
 
 ### Event Structure
 
-All domain events follow a consistent structure:
+所有 domain events 遵循一致的結構：
 
 ```java
 public record CustomerCreatedEvent(
@@ -256,12 +256,12 @@ public record CustomerCreatedEvent(
     UUID eventId,                    // Event metadata
     LocalDateTime occurredOn         // Event metadata
 ) implements DomainEvent {
-    
+
     @Override
     public String getEventType() {
         return "CustomerCreated";
     }
-    
+
     @Override
     public String getAggregateId() {
         return customerId.getValue();
@@ -273,14 +273,14 @@ public record CustomerCreatedEvent(
 
 ```mermaid
 graph TD
-    N1["1. Aggregate Root collects events during business operations"]
-    N2["2. Application Service saves aggregate to repository"]
+    N1["1. Aggregate Root 在業務操作期間收集 events"]
+    N2["2. Application Service 將 aggregate 儲存到 repository"]
     N1 --> N2
-    N3["3. Application Service publishes collected events"]
+    N3["3. Application Service 發布收集到的 events"]
     N2 --> N3
-    N4["4. Event Publisher sends events to message broker (Kafka)"]
+    N4["4. Event Publisher 將 events 發送到 message broker (Kafka)"]
     N3 --> N4
-    N5["5. Event Handlers in other contexts consume events"]
+    N5["5. 其他 contexts 中的 Event Handlers 消費 events"]
     N4 --> N5
 ```
 
@@ -298,7 +298,7 @@ graph TD
 | `RewardPointsEarnedEvent` | Order completed | Notification |
 | `RewardPointsRedeemedEvent` | Points used | Notification, Pricing |
 
-**Detailed Documentation**: [Customer Events Reference](../../api/events/contexts/customer-events.md)
+**Detailed Documentation**：[Customer Events Reference](../../api/events/contexts/customer-events.md)
 
 #### Order Context Events
 
@@ -312,7 +312,7 @@ graph TD
 | `OrderDeliveredEvent` | Order delivered | Review, Customer, Notification |
 | `OrderCompletedEvent` | Order completed | Customer, Seller, Observability |
 
-**Detailed Documentation**: [Order Events Reference](../../api/events/contexts/order-events.md)
+**Detailed Documentation**：[Order Events Reference](../../api/events/contexts/order-events.md)
 
 #### Product Context Events
 
@@ -324,7 +324,7 @@ graph TD
 | `ProductStatusChangedEvent` | Status changed | Shopping Cart, Inventory |
 | `ProductDiscontinuedEvent` | Product discontinued | Shopping Cart, Inventory |
 
-**Detailed Documentation**: [Product Events Reference](../../api/events/contexts/product-events.md)
+**Detailed Documentation**：[Product Events Reference](../../api/events/contexts/product-events.md)
 
 #### Inventory Context Events
 
@@ -336,7 +336,7 @@ graph TD
 | `InventoryDepletedEvent` | Stock depleted | Product, Shopping Cart, Notification |
 | `StockLevelChangedEvent` | Stock level changed | Product, Observability |
 
-**Detailed Documentation**: [Inventory Events Reference](../../api/events/contexts/inventory-events.md)
+**Detailed Documentation**：[Inventory Events Reference](../../api/events/contexts/inventory-events.md)
 
 #### Payment Context Events
 
@@ -347,7 +347,7 @@ graph TD
 | `PaymentFailedEvent` | Payment failed | Order, Notification |
 | `RefundProcessedEvent` | Refund completed | Customer, Notification |
 
-**Detailed Documentation**: [Payment Events Reference](../../api/events/contexts/payment-events.md)
+**Detailed Documentation**：[Payment Events Reference](../../api/events/contexts/payment-events.md)
 
 #### Delivery Context Events
 
@@ -359,7 +359,7 @@ graph TD
 | `DeliveryDeliveredEvent` | Delivered | Order, Review, Customer, Notification |
 | `DeliveryFailedEvent` | Delivery failed | Order, Notification |
 
-**Detailed Documentation**: [Delivery Events Reference](../../api/events/contexts/delivery-events.md)
+**Detailed Documentation**：[Delivery Events Reference](../../api/events/contexts/delivery-events.md)
 
 #### Promotion Context Events
 
@@ -371,7 +371,7 @@ graph TD
 | `CouponAppliedEvent` | Coupon applied | Pricing, Observability |
 | `CouponRedeemedEvent` | Coupon redeemed | Pricing, Observability |
 
-**Detailed Documentation**: [Promotion Events Reference](../../api/events/contexts/promotion-events.md)
+**Detailed Documentation**：[Promotion Events Reference](../../api/events/contexts/promotion-events.md)
 
 #### Review Context Events
 
@@ -382,7 +382,7 @@ graph TD
 | `ReviewRejectedEvent` | Review rejected | Notification |
 | `ReviewUpdatedEvent` | Review updated | Product, Observability |
 
-**Detailed Documentation**: [Review Events Reference](../../api/events/contexts/review-events.md)
+**Detailed Documentation**：[Review Events Reference](../../api/events/contexts/review-events.md)
 
 #### Seller Context Events
 
@@ -393,7 +393,7 @@ graph TD
 | `SellerSuspendedEvent` | Seller suspended | Product, Notification |
 | `SellerRatingUpdatedEvent` | Rating updated | Observability |
 
-**Detailed Documentation**: [Seller Events Reference](../../api/events/contexts/seller-events.md)
+**Detailed Documentation**：[Seller Events Reference](../../api/events/contexts/seller-events.md)
 
 ---
 
@@ -403,41 +403,41 @@ graph TD
 
 #### Request Validation
 
-- All request bodies validated using Bean Validation annotations
-- Invalid requests return `400 Bad Request` with field-level errors
-- Required fields enforced at API layer
+- 使用 Bean Validation annotations 驗證所有 request bodies
+- 無效的 requests 回傳 `400 Bad Request` 並包含欄位級錯誤
+- 在 API layer 執行必填欄位
 
 #### Response Guarantees
 
-- Successful operations return appropriate 2xx status codes
-- Failed operations return appropriate 4xx/5xx status codes
-- All responses include timestamp and trace ID for debugging
+- 成功的操作回傳適當的 2xx status codes
+- 失敗的操作回傳適當的 4xx/5xx status codes
+- 所有回應都包含 timestamp 和 trace ID 以便除錯
 
 #### Idempotency
 
-- POST operations with idempotency keys supported
-- PUT operations are naturally idempotent
-- DELETE operations are idempotent (deleting non-existent resource returns 404)
+- 支援帶有 idempotency keys 的 POST 操作
+- PUT 操作本質上是 idempotent
+- DELETE 操作是 idempotent（刪除不存在的資源回傳 404）
 
 ### Domain Event Contracts
 
 #### Event Schema Stability
 
-- Event schemas are versioned
-- New fields added as optional to maintain backward compatibility
-- Breaking changes require new event type
+- Event schemas 有版本控制
+- 新欄位作為可選項新增以保持向後相容
+- Breaking changes 需要新的 event type
 
 #### Delivery Guarantees
 
-- **At-least-once delivery**: Events may be delivered multiple times
-- **Ordering**: Events from same aggregate are ordered
-- **Durability**: Events are persisted before publishing
+- **At-least-once delivery**：Events 可能被交付多次
+- **Ordering**：來自同一 aggregate 的 events 是有序的
+- **Durability**：Events 在發布前持久化
 
 #### Event Handling
 
-- Handlers must be idempotent
-- Handlers must not throw exceptions (use dead letter queue)
-- Handlers process events asynchronously
+- Handlers 必須是 idempotent
+- Handlers 不得拋出例外（使用 dead letter queue）
+- Handlers 非同步處理 events
 
 ---
 
@@ -445,13 +445,13 @@ graph TD
 
 ### URL Versioning
 
-- Current version: `/api/v1/`
-- Future versions: `/api/v2/`, `/api/v3/`
+- 目前版本：`/api/v1/`
+- 未來版本：`/api/v2/`、`/api/v3/`
 
 ### Deprecation Policy
 
-- Minimum 6 months notice before deprecation
-- Deprecation headers included in responses:
+- 棄用前至少提前 6 個月通知
+- 回應中包含棄用標頭：
 
   ```http
   Deprecation: true
@@ -461,9 +461,9 @@ graph TD
 
 ### Backward Compatibility
 
-- Additive changes (new fields, new endpoints) in same version
-- Breaking changes require new version
-- Old versions supported for at least 12 months
+- 同一版本中的附加變更（新欄位、新 endpoints）
+- Breaking changes 需要新版本
+- 舊版本至少支援 12 個月
 
 ---
 
@@ -572,13 +572,13 @@ Retry-After: 60
 
 ### Synchronous Integration (REST API)
 
-**When to Use**:
+**When to Use**：
 
-- Real-time queries requiring immediate response
-- User-initiated operations
-- Operations within same bounded context
+- 需要立即回應的即時查詢
+- 用戶發起的操作
+- 同一 bounded context 內的操作
 
-**Example**:
+**Example**：
 
 ```mermaid
 graph LR
@@ -591,13 +591,13 @@ graph LR
 
 ### Asynchronous Integration (Domain Events)
 
-**When to Use**:
+**When to Use**：
 
-- Cross-context workflows
-- Operations that can be eventually consistent
-- Notification and audit trails
+- 跨 context 工作流
+- 可以最終一致的操作
+- 通知和稽核軌跡
 
-**Example**:
+**Example**：
 
 ```text
 Order Context publishes OrderSubmittedEvent
@@ -608,13 +608,13 @@ Order Context publishes OrderSubmittedEvent
 
 ### Hybrid Integration
 
-Some workflows use both patterns:
+某些工作流使用兩種模式：
 
-**Example: Order Submission**:
+**Example: Order Submission**：
 
-1. **Synchronous**: Customer submits order via REST API
-2. **Asynchronous**: Order publishes events for inventory, payment, delivery
-3. **Synchronous**: Customer polls order status via REST API
+1. **Synchronous**：客戶透過 REST API 提交訂單
+2. **Asynchronous**：訂單為 inventory、payment、delivery 發布 events
+3. **Synchronous**：客戶透過 REST API 輪詢訂單狀態
 
 ---
 
@@ -622,26 +622,26 @@ Some workflows use both patterns:
 
 ### OpenAPI/Swagger
 
-**Swagger UI**: `http://localhost:8080/swagger-ui.html`
+**Swagger UI**：`http://localhost:8080/swagger-ui.html`
 
-**OpenAPI Spec**: `http://localhost:8080/v3/api-docs`
+**OpenAPI Spec**：`http://localhost:8080/v3/api-docs`
 
 ### Postman Collection
 
-**Location**: `docs/api/rest/postman/ecommerce-api.json`
+**Location**：`docs/api/rest/postman/ecommerce-api.json`
 
-**Import Instructions**:
+**Import Instructions**：
 
-1. Open Postman
-2. Click "Import"
-3. Select `ecommerce-api.json`
-4. Configure environment variables (base URL, auth token)
+1. 開啟 Postman
+2. 點擊 "Import"
+3. 選擇 `ecommerce-api.json`
+4. 配置環境變數（base URL、auth token）
 
 ### Code Examples
 
-**Location**: `docs/api/rest/examples/`
+**Location**：`docs/api/rest/examples/`
 
-**Languages**:
+**Languages**：
 
 - cURL
 - JavaScript/TypeScript
@@ -654,23 +654,23 @@ Some workflows use both patterns:
 
 ### Authentication
 
-- JWT tokens with 1-hour expiration
-- Refresh tokens with 24-hour expiration
-- Token rotation on refresh
+- JWT tokens，1 小時過期
+- Refresh tokens，24 小時過期
+- 刷新時輪換 Token
 
 ### Authorization
 
-- Role-based access control (RBAC)
-- Resource-level permissions
-- Admin, Seller, Customer roles
+- 基於角色的存取控制（RBAC）
+- 資源級權限
+- Admin、Seller、Customer 角色
 
 ### Data Protection
 
-- Sensitive data encrypted in transit (TLS 1.3)
-- Sensitive data encrypted at rest (AES-256)
-- PII masked in logs and error messages
+- 傳輸中的敏感資料加密（TLS 1.3）
+- 靜態敏感資料加密（AES-256）
+- 日誌和錯誤訊息中遮罩 PII
 
-**Detailed Documentation**: [Security Perspective](../../perspectives/security/overview.md)
+**Detailed Documentation**：[Security Perspective](../../perspectives/security/overview.md)
 
 ---
 
@@ -678,23 +678,23 @@ Some workflows use both patterns:
 
 ### Response Time Targets
 
-- **Critical APIs** (auth, payment): ≤ 500ms (95th percentile)
-- **Business APIs** (orders, customers): ≤ 1000ms (95th percentile)
-- **Search APIs**: ≤ 2000ms (95th percentile)
+- **Critical APIs**（auth、payment）：≤ 500ms（95th percentile）
+- **Business APIs**（orders、customers）：≤ 1000ms（95th percentile）
+- **Search APIs**：≤ 2000ms（95th percentile）
 
 ### Caching Strategy
 
-- Product catalog: 15 minutes TTL
-- Customer profile: 5 minutes TTL
-- Inventory levels: 1 minute TTL
+- Product catalog：15 分鐘 TTL
+- Customer profile：5 分鐘 TTL
+- Inventory levels：1 分鐘 TTL
 
 ### Pagination
 
-- Default page size: 20 items
-- Maximum page size: 100 items
-- Cursor-based pagination for large datasets
+- 預設頁面大小：20 項目
+- 最大頁面大小：100 項目
+- 大型資料集使用基於游標的分頁
 
-**Detailed Documentation**: [Performance Perspective](../../perspectives/performance/overview.md)
+**Detailed Documentation**：[Performance Perspective](../../perspectives/performance/overview.md)
 
 ---
 
@@ -715,5 +715,5 @@ Some workflows use both patterns:
 
 ---
 
-**Document Version**: 1.0  
+**Document Version**: 1.0
 **Last Updated**: 2025-10-22

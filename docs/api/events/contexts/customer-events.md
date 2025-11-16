@@ -1,34 +1,34 @@
 # Customer Context Events
 
-## Overview
+## 概述
 
-This document describes all domain events published by the Customer bounded context. These events capture significant changes in customer lifecycle, profile management, and account status.
+本文件描述由 Customer bounded context 發布的所有 domain events。這些 events 捕捉客戶生命週期、個人資料管理和帳戶狀態的重要變更。
 
-**Last Updated**: 2025-10-25
+**最後更新**: 2025-10-25
 
 ---
 
-## Event List
+## Event 清單
 
 | Event Name | Trigger | Frequency | Priority |
 |------------|---------|-----------|----------|
-| `CustomerCreatedEvent` | Customer registration | High | P0 |
-| `CustomerProfileUpdatedEvent` | Profile edit | High | P1 |
-| `CustomerEmailVerifiedEvent` | Email verification | Medium | P1 |
-| `CustomerPasswordChangedEvent` | Password change | Low | P2 |
-| `CustomerDeactivatedEvent` | Account closure | Low | P1 |
-| `CustomerReactivatedEvent` | Account reactivation | Low | P1 |
-| `CustomerMembershipUpgradedEvent` | Membership upgrade | Low | P0 |
+| `CustomerCreatedEvent` | 客戶註冊 | High | P0 |
+| `CustomerProfileUpdatedEvent` | 個人資料編輯 | High | P1 |
+| `CustomerEmailVerifiedEvent` | Email 驗證 | Medium | P1 |
+| `CustomerPasswordChangedEvent` | 密碼變更 | Low | P2 |
+| `CustomerDeactivatedEvent` | 帳戶關閉 | Low | P1 |
+| `CustomerReactivatedEvent` | 帳戶重新啟用 | Low | P1 |
+| `CustomerMembershipUpgradedEvent` | 會員升級 | Low | P0 |
 
 ---
 
 ## CustomerCreatedEvent
 
-### Description
+### 描述
 
-Published when a new customer successfully registers an account in the system.
+當新客戶成功在系統中註冊帳戶時發布。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record CustomerCreatedEvent(
@@ -41,7 +41,7 @@ public record CustomerCreatedEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     public static CustomerCreatedEvent create(
         CustomerId customerId,
         CustomerName customerName,
@@ -61,20 +61,20 @@ public record CustomerCreatedEvent(
 }
 ```
 
-### Payload Fields
+### Payload 欄位
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `customerId` | CustomerId | Yes | Unique customer identifier |
-| `customerName` | CustomerName | Yes | Customer's full name |
-| `email` | Email | Yes | Customer's email address |
-| `membershipLevel` | MembershipLevel | Yes | Initial membership level (STANDARD, PREMIUM, VIP) |
-| `birthDate` | Optional<LocalDate> | No | Customer's birth date (V2 field) |
-| `address` | Optional<Address> | No | Customer's primary address (V2 field) |
-| `eventId` | UUID | Yes | Unique event identifier |
-| `occurredOn` | LocalDateTime | Yes | Event timestamp |
+| `customerId` | CustomerId | Yes | 唯一客戶識別碼 |
+| `customerName` | CustomerName | Yes | 客戶全名 |
+| `email` | Email | Yes | 客戶 email 地址 |
+| `membershipLevel` | MembershipLevel | Yes | 初始會員等級 (STANDARD, PREMIUM, VIP) |
+| `birthDate` | Optional<LocalDate> | No | 客戶生日 (V2 欄位) |
+| `address` | Optional<Address> | No | 客戶主要地址 (V2 欄位) |
+| `eventId` | UUID | Yes | 唯一 event 識別碼 |
+| `occurredOn` | LocalDateTime | Yes | Event 時間戳記 |
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -98,24 +98,24 @@ public record CustomerCreatedEvent(
 
 | Handler | Action | Context |
 |---------|--------|---------|
-| `WelcomeEmailHandler` | Send welcome email | Notification |
-| `CustomerStatsHandler` | Create customer statistics record | Analytics |
-| `LoyaltyProgramHandler` | Initialize loyalty points | Promotion |
+| `WelcomeEmailHandler` | 發送歡迎 email | Notification |
+| `CustomerStatsHandler` | 建立客戶統計記錄 | Analytics |
+| `LoyaltyProgramHandler` | 初始化忠誠點數 | Promotion |
 
-### Related Events
+### 相關 Events
 
-- Triggers: `NotificationSentEvent` (welcome email)
-- Follows: None (initial event)
+- 觸發: `NotificationSentEvent` (歡迎 email)
+- 接續: None (初始 event)
 
 ---
 
 ## CustomerProfileUpdatedEvent
 
-### Description
+### 描述
 
-Published when a customer updates their profile information (name, address, phone, etc.).
+當客戶更新其個人資料資訊（姓名、地址、電話等）時發布。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record CustomerProfileUpdatedEvent(
@@ -128,7 +128,7 @@ public record CustomerProfileUpdatedEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     public static CustomerProfileUpdatedEvent create(
         CustomerId customerId,
         CustomerName newName,
@@ -148,20 +148,20 @@ public record CustomerProfileUpdatedEvent(
 }
 ```
 
-### Payload Fields
+### Payload 欄位
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `customerId` | CustomerId | Yes | Customer identifier |
-| `newName` | CustomerName | Yes | Updated customer name |
-| `newEmail` | Email | Yes | Updated email address |
-| `newPhone` | Phone | Yes | Updated phone number |
-| `newAddress` | Optional<Address> | No | Updated address |
-| `changedFields` | Map<String, String> | Yes | Map of changed field names to old values |
-| `eventId` | UUID | Yes | Unique event identifier |
-| `occurredOn` | LocalDateTime | Yes | Event timestamp |
+| `customerId` | CustomerId | Yes | 客戶識別碼 |
+| `newName` | CustomerName | Yes | 更新後的客戶姓名 |
+| `newEmail` | Email | Yes | 更新後的 email 地址 |
+| `newPhone` | Phone | Yes | 更新後的電話號碼 |
+| `newAddress` | Optional<Address> | No | 更新後的地址 |
+| `changedFields` | Map<String, String> | Yes | 變更欄位名稱對應舊值的 Map |
+| `eventId` | UUID | Yes | 唯一 event 識別碼 |
+| `occurredOn` | LocalDateTime | Yes | Event 時間戳記 |
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -188,24 +188,24 @@ public record CustomerProfileUpdatedEvent(
 
 | Handler | Action | Context |
 |---------|--------|---------|
-| `CustomerSearchIndexHandler` | Update search index | Search |
-| `EmailVerificationHandler` | Send verification email if email changed | Notification |
-| `OrderHistoryHandler` | Update customer info in order history | Order |
+| `CustomerSearchIndexHandler` | 更新搜尋索引 | Search |
+| `EmailVerificationHandler` | 如果 email 變更則發送驗證 email | Notification |
+| `OrderHistoryHandler` | 在訂單歷史中更新客戶資訊 | Order |
 
-### Related Events
+### 相關 Events
 
-- May trigger: `CustomerEmailVerifiedEvent` (if email changed)
-- Follows: `CustomerCreatedEvent`
+- 可能觸發: `CustomerEmailVerifiedEvent` (如果 email 變更)
+- 接續: `CustomerCreatedEvent`
 
 ---
 
 ## CustomerEmailVerifiedEvent
 
-### Description
+### 描述
 
-Published when a customer successfully verifies their email address.
+當客戶成功驗證其 email 地址時發布。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record CustomerEmailVerifiedEvent(
@@ -215,7 +215,7 @@ public record CustomerEmailVerifiedEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     public static CustomerEmailVerifiedEvent create(
         CustomerId customerId,
         Email verifiedEmail
@@ -230,17 +230,17 @@ public record CustomerEmailVerifiedEvent(
 }
 ```
 
-### Payload Fields
+### Payload 欄位
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `customerId` | CustomerId | Yes | Customer identifier |
-| `verifiedEmail` | Email | Yes | Verified email address |
-| `verifiedAt` | LocalDateTime | Yes | Verification timestamp |
-| `eventId` | UUID | Yes | Unique event identifier |
-| `occurredOn` | LocalDateTime | Yes | Event timestamp |
+| `customerId` | CustomerId | Yes | 客戶識別碼 |
+| `verifiedEmail` | Email | Yes | 已驗證的 email 地址 |
+| `verifiedAt` | LocalDateTime | Yes | 驗證時間戳記 |
+| `eventId` | UUID | Yes | 唯一 event 識別碼 |
+| `occurredOn` | LocalDateTime | Yes | Event 時間戳記 |
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -257,22 +257,22 @@ public record CustomerEmailVerifiedEvent(
 
 | Handler | Action | Context |
 |---------|--------|---------|
-| `CustomerStatusHandler` | Update customer verification status | Customer |
-| `PromotionEligibilityHandler` | Enable verified-only promotions | Promotion |
+| `CustomerStatusHandler` | 更新客戶驗證狀態 | Customer |
+| `PromotionEligibilityHandler` | 啟用僅限已驗證用戶的促銷活動 | Promotion |
 
-### Related Events
+### 相關 Events
 
-- Follows: `CustomerCreatedEvent` or `CustomerProfileUpdatedEvent`
+- 接續: `CustomerCreatedEvent` 或 `CustomerProfileUpdatedEvent`
 
 ---
 
 ## CustomerPasswordChangedEvent
 
-### Description
+### 描述
 
-Published when a customer successfully changes their password.
+當客戶成功變更其密碼時發布。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record CustomerPasswordChangedEvent(
@@ -282,7 +282,7 @@ public record CustomerPasswordChangedEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     public static CustomerPasswordChangedEvent create(
         CustomerId customerId,
         String changeReason
@@ -298,17 +298,17 @@ public record CustomerPasswordChangedEvent(
 }
 ```
 
-### Payload Fields
+### Payload 欄位
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `customerId` | CustomerId | Yes | Customer identifier |
-| `changedAt` | LocalDateTime | Yes | Password change timestamp |
-| `changeReason` | String | Yes | Reason for change (USER_INITIATED, FORCED_RESET, SECURITY_POLICY) |
-| `eventId` | UUID | Yes | Unique event identifier |
-| `occurredOn` | LocalDateTime | Yes | Event timestamp |
+| `customerId` | CustomerId | Yes | 客戶識別碼 |
+| `changedAt` | LocalDateTime | Yes | 密碼變更時間戳記 |
+| `changeReason` | String | Yes | 變更原因 (USER_INITIATED, FORCED_RESET, SECURITY_POLICY) |
+| `eventId` | UUID | Yes | 唯一 event 識別碼 |
+| `occurredOn` | LocalDateTime | Yes | Event 時間戳記 |
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -325,22 +325,22 @@ public record CustomerPasswordChangedEvent(
 
 | Handler | Action | Context |
 |---------|--------|---------|
-| `SecurityAuditHandler` | Log security event | Security |
-| `NotificationHandler` | Send password change confirmation email | Notification |
+| `SecurityAuditHandler` | 記錄安全事件 | Security |
+| `NotificationHandler` | 發送密碼變更確認 email | Notification |
 
-### Related Events
+### 相關 Events
 
-- Follows: `CustomerCreatedEvent`
+- 接續: `CustomerCreatedEvent`
 
 ---
 
 ## CustomerDeactivatedEvent
 
-### Description
+### 描述
 
-Published when a customer account is deactivated (soft delete).
+當客戶帳戶被停用時發布（軟刪除）。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record CustomerDeactivatedEvent(
@@ -350,7 +350,7 @@ public record CustomerDeactivatedEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     public static CustomerDeactivatedEvent create(
         CustomerId customerId,
         String deactivationReason
@@ -366,17 +366,17 @@ public record CustomerDeactivatedEvent(
 }
 ```
 
-### Payload Fields
+### Payload 欄位
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `customerId` | CustomerId | Yes | Customer identifier |
-| `deactivationReason` | String | Yes | Reason for deactivation |
-| `deactivatedAt` | LocalDateTime | Yes | Deactivation timestamp |
-| `eventId` | UUID | Yes | Unique event identifier |
-| `occurredOn` | LocalDateTime | Yes | Event timestamp |
+| `customerId` | CustomerId | Yes | 客戶識別碼 |
+| `deactivationReason` | String | Yes | 停用原因 |
+| `deactivatedAt` | LocalDateTime | Yes | 停用時間戳記 |
+| `eventId` | UUID | Yes | 唯一 event 識別碼 |
+| `occurredOn` | LocalDateTime | Yes | Event 時間戳記 |
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -393,24 +393,24 @@ public record CustomerDeactivatedEvent(
 
 | Handler | Action | Context |
 |---------|--------|---------|
-| `CustomerAccessHandler` | Revoke access tokens | Security |
-| `SubscriptionHandler` | Cancel active subscriptions | Subscription |
-| `DataRetentionHandler` | Schedule data deletion per GDPR | Compliance |
+| `CustomerAccessHandler` | 撤銷存取 tokens | Security |
+| `SubscriptionHandler` | 取消活躍的訂閱 | Subscription |
+| `DataRetentionHandler` | 依 GDPR 排程資料刪除 | Compliance |
 
-### Related Events
+### 相關 Events
 
-- May trigger: `SubscriptionCancelledEvent`
-- Follows: `CustomerCreatedEvent`
+- 可能觸發: `SubscriptionCancelledEvent`
+- 接續: `CustomerCreatedEvent`
 
 ---
 
 ## CustomerReactivatedEvent
 
-### Description
+### 描述
 
-Published when a previously deactivated customer account is reactivated.
+當先前停用的客戶帳戶被重新啟用時發布。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record CustomerReactivatedEvent(
@@ -419,7 +419,7 @@ public record CustomerReactivatedEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     public static CustomerReactivatedEvent create(
         CustomerId customerId
     ) {
@@ -433,16 +433,16 @@ public record CustomerReactivatedEvent(
 }
 ```
 
-### Payload Fields
+### Payload 欄位
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `customerId` | CustomerId | Yes | Customer identifier |
-| `reactivatedAt` | LocalDateTime | Yes | Reactivation timestamp |
-| `eventId` | UUID | Yes | Unique event identifier |
-| `occurredOn` | LocalDateTime | Yes | Event timestamp |
+| `customerId` | CustomerId | Yes | 客戶識別碼 |
+| `reactivatedAt` | LocalDateTime | Yes | 重新啟用時間戳記 |
+| `eventId` | UUID | Yes | 唯一 event 識別碼 |
+| `occurredOn` | LocalDateTime | Yes | Event 時間戳記 |
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -458,22 +458,22 @@ public record CustomerReactivatedEvent(
 
 | Handler | Action | Context |
 |---------|--------|---------|
-| `CustomerAccessHandler` | Restore access | Security |
-| `WelcomeBackHandler` | Send welcome back email | Notification |
+| `CustomerAccessHandler` | 恢復存取 | Security |
+| `WelcomeBackHandler` | 發送歡迎回來 email | Notification |
 
-### Related Events
+### 相關 Events
 
-- Follows: `CustomerDeactivatedEvent`
+- 接續: `CustomerDeactivatedEvent`
 
 ---
 
 ## CustomerMembershipUpgradedEvent
 
-### Description
+### 描述
 
-Published when a customer's membership level is upgraded (e.g., STANDARD → PREMIUM → VIP).
+當客戶的會員等級升級時發布（例如 STANDARD → PREMIUM → VIP）。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record CustomerMembershipUpgradedEvent(
@@ -485,7 +485,7 @@ public record CustomerMembershipUpgradedEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     public static CustomerMembershipUpgradedEvent create(
         CustomerId customerId,
         MembershipLevel previousLevel,
@@ -502,19 +502,19 @@ public record CustomerMembershipUpgradedEvent(
 }
 ```
 
-### Payload Fields
+### Payload 欄位
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `customerId` | CustomerId | Yes | Customer identifier |
-| `previousLevel` | MembershipLevel | Yes | Previous membership level |
-| `newLevel` | MembershipLevel | Yes | New membership level |
-| `upgradeReason` | String | Yes | Reason for upgrade (PURCHASE, LOYALTY_POINTS, PROMOTION) |
-| `upgradedAt` | LocalDateTime | Yes | Upgrade timestamp |
-| `eventId` | UUID | Yes | Unique event identifier |
-| `occurredOn` | LocalDateTime | Yes | Event timestamp |
+| `customerId` | CustomerId | Yes | 客戶識別碼 |
+| `previousLevel` | MembershipLevel | Yes | 先前的會員等級 |
+| `newLevel` | MembershipLevel | Yes | 新的會員等級 |
+| `upgradeReason` | String | Yes | 升級原因 (PURCHASE, LOYALTY_POINTS, PROMOTION) |
+| `upgradedAt` | LocalDateTime | Yes | 升級時間戳記 |
+| `eventId` | UUID | Yes | 唯一 event 識別碼 |
+| `occurredOn` | LocalDateTime | Yes | Event 時間戳記 |
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -533,20 +533,20 @@ public record CustomerMembershipUpgradedEvent(
 
 | Handler | Action | Context |
 |---------|--------|---------|
-| `BenefitsHandler` | Activate premium benefits | Promotion |
-| `PricingHandler` | Update pricing tier | Pricing |
-| `NotificationHandler` | Send upgrade congratulations | Notification |
+| `BenefitsHandler` | 啟用高級會員福利 | Promotion |
+| `PricingHandler` | 更新定價層級 | Pricing |
+| `NotificationHandler` | 發送升級恭喜 | Notification |
 
-### Related Events
+### 相關 Events
 
-- May trigger: `PromotionActivatedEvent`
-- Follows: `CustomerCreatedEvent`
+- 可能觸發: `PromotionActivatedEvent`
+- 接續: `CustomerCreatedEvent`
 
 ---
 
-## Event Flow Diagrams
+## Event Flow 圖表
 
-### Customer Registration Flow
+### 客戶註冊流程
 
 ```mermaid
 sequenceDiagram
@@ -566,7 +566,7 @@ sequenceDiagram
     N->>C: Send Verification Confirmation
 ```
 
-### Profile Update Flow
+### 個人資料更新流程
 
 ```mermaid
 sequenceDiagram
@@ -589,9 +589,9 @@ sequenceDiagram
 
 ---
 
-## Testing Guidelines
+## 測試指南
 
-### Unit Tests
+### 單元測試
 
 ```java
 @Test
@@ -601,12 +601,12 @@ void should_create_customer_created_event_with_all_fields() {
     CustomerName name = new CustomerName("張小明");
     Email email = new Email("ming.chang@example.com");
     MembershipLevel level = MembershipLevel.STANDARD;
-    
+
     // When
     CustomerCreatedEvent event = CustomerCreatedEvent.create(
         customerId, name, email, level, null, null
     );
-    
+
     // Then
     assertThat(event.customerId()).isEqualTo(customerId);
     assertThat(event.customerName()).isEqualTo(name);
@@ -617,29 +617,29 @@ void should_create_customer_created_event_with_all_fields() {
 }
 ```
 
-### Integration Tests
+### 整合測試
 
 ```java
 @SpringBootTest
 @ActiveProfiles("test")
 class CustomerEventIntegrationTest {
-    
+
     @Autowired
     private CustomerService customerService;
-    
+
     @Autowired
     private DomainEventPublisher eventPublisher;
-    
+
     @Test
     void should_publish_customer_created_event_when_customer_registered() {
         // Given
         CreateCustomerCommand command = new CreateCustomerCommand(
             "張小明", "ming.chang@example.com", "password123"
         );
-        
+
         // When
         Customer customer = customerService.registerCustomer(command);
-        
+
         // Then
         verify(eventPublisher).publish(any(CustomerCreatedEvent.class));
     }
@@ -648,7 +648,7 @@ class CustomerEventIntegrationTest {
 
 ---
 
-## Related Documentation
+## 相關文件
 
 - **Event Catalog**: [event-catalog.md](../event-catalog.md)
 - **Customer API**: `docs/api/rest/endpoints/customers.md`
@@ -657,6 +657,6 @@ class CustomerEventIntegrationTest {
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2025-10-25  
-**Owner**: Customer Domain Team
+**文件版本**: 1.0
+**最後更新**: 2025-10-25
+**負責人**: Customer Domain Team

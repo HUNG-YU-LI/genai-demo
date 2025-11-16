@@ -1,33 +1,33 @@
-# Environment Configuration Guide
+# 環境配置指南
 
-## Overview
+## 概述
 
-This document describes the configuration for each environment in the Enterprise E-Commerce Platform.
+本文件描述企業電商平台中每個環境的配置。
 
-## Environment Overview
+## 環境概覽
 
-| Environment | Purpose | URL | AWS Account | Region |
+| 環境 | 目的 | URL | AWS 帳號 | 區域 |
 |-------------|---------|-----|-------------|--------|
-| Local | Development | localhost | N/A | N/A |
-| Staging | Pre-production testing | staging.ecommerce.example.com | 123456789012 | ap-northeast-1 |
-| Production | Live customer-facing | api.ecommerce.example.com | 987654321098 | ap-northeast-1 |
+| Local | 開發 | localhost | N/A | N/A |
+| Staging | 上線前測試 | staging.ecommerce.example.com | 123456789012 | ap-northeast-1 |
+| Production | 實際對外服務 | api.ecommerce.example.com | 987654321098 | ap-northeast-1 |
 
-## Local Environment
+## Local 環境
 
-### Purpose
+### 目的
 
-- Individual developer workstation
-- Rapid development and testing
-- Unit and integration testing
+- 個別開發人員工作站
+- 快速開發與測試
+- Unit 與 integration 測試
 
-### Infrastructure
+### 基礎架構
 
-- **Database**: H2 in-memory or PostgreSQL Docker container
+- **Database**: H2 in-memory 或 PostgreSQL Docker container
 - **Cache**: Redis Docker container
-- **Message Queue**: Kafka Docker container (optional)
-- **Object Storage**: LocalStack S3 (optional)
+- **Message Queue**: Kafka Docker container (選用)
+- **Object Storage**: LocalStack S3 (選用)
 
-### Configuration
+### 配置
 
 ```yaml
 # application-local.yml

@@ -1,6 +1,6 @@
 ---
 adr_number: 039
-title: "Regional Failover and Failback Strategy"
+title: "Regional Failover 和 Failback Strategy"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,17 +10,17 @@ affected_viewpoints: ["deployment", "operational"]
 affected_perspectives: ["availability", "performance"]
 ---
 
-# ADR-039: Regional Failover and Failback Strategy
+# ADR-039: Regional Failover 和 Failback Strategy
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-Active-active multi-region architecture (ADR-037) requires robust failover and failback mechanisms to handle regional failures:
+Active-active multi-region architecture (ADR-037) 需要robust failover 和 failback mechanisms to 處理 regional failures:
 
 **Failure Scenarios**:
 
@@ -36,39 +36,39 @@ Active-active multi-region architecture (ADR-037) requires robust failover and f
 - **Failover Time**: Minimize RTO (Recovery Time Objective)
 - **Data Loss**: Minimize RPO (Recovery Point Objective)
 - **False Positives**: Avoid unnecessary failovers
-- **Failback Complexity**: Safe return to normal operations
-- **Data Reconciliation**: Handle data divergence during outage
+- **Failback 複雜的ity**: Safe return to normal operations
+- **Data Reconciliation**: 處理 data divergence 期間 outage
 
 **Business Impact**:
 
-- Revenue loss during downtime
+- Revenue loss 期間 downtime
 - Customer trust erosion
 - Data inconsistency
 - Operational chaos
 - Regulatory compliance issues
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - Minimize downtime (RTO < 5 minutes)
 - Minimize data loss (RPO < 1 minute)
-- Automatic failover for critical scenarios
-- Manual control for complex scenarios
+- Automatic failover 用於 critical scenarios
+- Manual control 用於 複雜的 scenarios
 - Safe failback procedures
-- Business continuity during geopolitical crises
+- Business continuity 期間 geopolitical crises
 
-**Constraints**:
+**限制條件**：
 
-- Budget: $100,000/year for failover infrastructure
-- Must support both automatic and manual failover
-- Zero data loss for Tier 1 data (orders, payments)
-- Acceptable data loss for Tier 2 data (< 5 seconds)
+- 預算: $100,000/year 用於 failover infrastructure
+- 必須 支援 both automatic 和 manual failover
+- Zero data loss 用於 Tier 1 data (orders, payments)
+- Acceptable data loss 用於 Tier 2 data (< 5 seconds)
 - 24/7 on-call team required
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
 - Active-active architecture deployed
 - Basic health checks in place
@@ -76,40 +76,40 @@ Active-active multi-region architecture (ADR-037) requires robust failover and f
 - No automated failover
 - No failback procedures
 
-**Requirements**:
+**需求**：
 
-- Automatic failover for critical failures
+- Automatic failover 用於 critical failures
 - Manual failover capability
 - Health check system
 - Traffic routing automation
 - Data reconciliation procedures
 - Failback automation
-- Comprehensive monitoring and alerting
+- Comprehensive monitoring 和 alerting
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **RTO**: Achieve < 5 minutes recovery time
 2. **RPO**: Achieve < 1 minute data loss
-3. **Automation**: Automatic failover for clear failures
-4. **Control**: Manual override for complex scenarios
-5. **Safety**: Prevent split-brain and data corruption
-6. **Visibility**: Clear status and alerting
+3. **Automation**: Automatic failover 用於 clear failures
+4. **Control**: Manual override 用於 複雜的 scenarios
+5. **Safety**: Prevent split-brain 和 data corruption
+6. **Visibility**: Clear status 和 alerting
 7. **Testing**: Regular failover drills
-8. **Cost**: Optimize failover infrastructure costs
+8. **成本**： Optimize failover infrastructure costs
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Hybrid Automatic/Manual Failover (Recommended)
+### 選項 1： Hybrid Automatic/Manual Failover (Recommended)
 
-**Description**: Automatic failover for clear failures, manual for complex scenarios
+**描述**： Automatic failover for clear failures, manual for complex scenarios
 
 **Automatic Failover Triggers**:
 
 - Complete regional failure (all health checks fail)
-- Database master failure (cannot connect)
+- Database master failure (可以not connect)
 - Critical service failures (> 50% pods down)
 - Network partition (cross-region connectivity lost)
-- Error rate spike (> 10% for 5 minutes)
+- Error rate spike (> 10% 用於 5 minutes)
 
 **Manual Failover Scenarios**:
 
@@ -117,7 +117,7 @@ Active-active multi-region architecture (ADR-037) requires robust failover and f
 - Planned maintenance
 - Geopolitical events (war warning)
 - Data consistency concerns
-- Complex multi-component failures
+- 複雜的 multi-component failures
 
 **Failover Process**:
 
@@ -140,81 +140,81 @@ graph TD
     N5 --> N6
 ```
 
-**Pros**:
+**優點**：
 
-- ✅ Fast automatic failover for clear failures (< 5 min)
-- ✅ Human judgment for complex scenarios
+- ✅ Fast 自動容錯移轉 用於 clear failures (< 5 min)
+- ✅ Human judgment 用於 複雜的 scenarios
 - ✅ Prevents false positive failovers
-- ✅ Flexible and safe
+- ✅ Flexible 和 safe
 - ✅ Meets RTO/RPO targets
-- ✅ Supports both emergency and planned scenarios
+- ✅ 支援s both emergency 和 planned scenarios
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Requires 24/7 on-call team
-- ⚠️ Complex decision logic
+- ⚠️ 複雜的 decision logic
 - ⚠️ Manual failover slower (10-15 min)
 
-**Cost**: $100,000/year (infrastructure + on-call)
+**成本**： $100,000/year (infrastructure + on-call)
 
-**Risk**: **Low** - Balanced approach
+**風險**： **Low** - Balanced approach
 
-### Option 2: Fully Automatic Failover
+### 選項 2： Fully Automatic Failover
 
-**Description**: All failovers automated based on health checks
+**描述**： All failovers automated based on health checks
 
-**Pros**:
+**優點**：
 
 - ✅ Fastest failover (< 3 minutes)
 - ✅ No human intervention needed
 - ✅ Consistent behavior
 
-**Cons**:
+**缺點**：
 
 - ❌ Risk of false positive failovers
-- ❌ No human judgment for complex scenarios
-- ❌ Potential for cascading failures
-- ❌ Difficult to handle edge cases
+- ❌ No human judgment 用於 複雜的 scenarios
+- ❌ Potential 用於 cascading failures
+- ❌ 難以處理 edge cases
 
-**Cost**: $80,000/year
+**成本**： $80,000/year
 
-**Risk**: **High** - False positives
+**風險**： **High** - False positives
 
-### Option 3: Fully Manual Failover
+### 選項 3： Fully Manual Failover
 
-**Description**: All failovers require manual approval
+**描述**： All failovers require manual approval
 
-**Pros**:
+**優點**：
 
 - ✅ Full human control
 - ✅ No false positives
 - ✅ Careful decision making
 
-**Cons**:
+**缺點**：
 
 - ❌ Slow failover (15-30 minutes)
 - ❌ Requires immediate human response
 - ❌ Fails RTO target
-- ❌ Not suitable for sudden failures
+- ❌ Not suitable 用於 sudden failures
 
-**Cost**: $60,000/year
+**成本**： $60,000/year
 
-**Risk**: **High** - Too slow
+**風險**： **High** - Too slow
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Hybrid Automatic/Manual Failover (Option 1)**
+**選擇的選項**： **Hybrid Automatic/Manual Failover (Option 1)**
 
-### Rationale
+### 理由
 
-Hybrid approach provides optimal balance:
+Hybrid approach 提供s optimal balance:
 
-1. **Speed**: Automatic failover for clear failures meets RTO < 5 min
+1. **Speed**: Automatic failover 用於 clear failures meets RTO < 5 min
 2. **Safety**: Manual control prevents false positives
-3. **Flexibility**: Handles both emergency and planned scenarios
-4. **Judgment**: Human oversight for complex situations
+3. **Flexibility**: 處理s both emergency 和 planned scenarios
+4. **Judgment**: Human oversight 用於 複雜的 situations
 5. **Testing**: Regular drills validate both paths
-6. **Cost-Effective**: Reasonable infrastructure and staffing costs
+6. **Cost-Effective**: Reasonable infrastructure 和 staffing costs
 
 ### Failover Architecture
 
@@ -634,10 +634,10 @@ class FailoverOrchestrator:
 
 ### Step 1: Reduce DNS TTL (15 minutes before failover)
 ```bash
-# Reduce TTL to 60 seconds for faster propagation
+# 降低 TTL to 60 seconds 用於 faster propagation
 aws route53 change-resource-record-sets \
   --hosted-zone-id Z1234567890ABC \
-  --change-batch file://reduce-ttl.json
+  --change-batch file://降低-ttl.json
 ```text
 
 ### Step 2: Verify Target Region
@@ -646,7 +646,7 @@ aws route53 change-resource-record-sets \
 # Run health check script
 ./scripts/verify-region-health.sh tokyo
 
-# Expected output:
+# 預期的 output:
 # ✅ Database: Healthy
 # ✅ Redis: Healthy
 # ✅ Kafka: Healthy
@@ -664,7 +664,7 @@ aws route53 change-resource-record-sets \
   --reason "Planned maintenance" \
   --mode manual
 
-# Script will:
+# Script 將:
 # 1. Update Route 53 DNS records
 # 2. Adjust load balancer weights
 # 3. Verify traffic shift
@@ -677,7 +677,7 @@ aws route53 change-resource-record-sets \
 # Monitor traffic metrics
 watch -n 10 './scripts/check-traffic-distribution.sh'
 
-# Expected progression:
+# 預期的 progression:
 # Taiwan: 100% → 75% → 50% → 25% → 0%
 # Tokyo:  0%   → 25% → 50% → 75% → 100%
 ```text
@@ -688,7 +688,7 @@ watch -n 10 './scripts/check-traffic-distribution.sh'
 # Check error rates
 ./scripts/check-error-rates.sh tokyo
 
-# Check response times
+# Check 回應時間
 ./scripts/check-response-times.sh tokyo
 
 # Check business metrics
@@ -723,11 +723,11 @@ If issues detected within 30 minutes:
 
 **Failback Principles**:
 
-1. **Non-Urgent**: Failback is not time-critical (can wait hours/days)
-2. **Data Reconciliation**: Ensure data consistency before failback
-3. **Gradual**: Canary failback with traffic percentage
+1. **Non-Urgent**: Failback is not time-critical (可以 wait hours/days)
+2. **Data Reconciliation**: Ensure 資料一致性 before failback
+3. **Gradual**: 可以ary failback 與 traffic percentage
 4. **Validated**: Extensive testing before full failback
-5. **Reversible**: Can abort and stay in failover region
+5. **Reversible**: 可以 abort 和 stay in failover region
 
 **Failback Process**:
 ```mermaid
@@ -940,7 +940,7 @@ public class DataReconciliationService {
 }
 ```
 
-### Failover Testing and Drills
+### Failover Testing 和 Drills
 
 **Quarterly Failover Drill Schedule**:
 
@@ -956,7 +956,7 @@ public class DataReconciliationService {
 - Scenario: Taiwan database master failure
 - Type: Automatic failover
 - Duration: 2 hours
-- Objectives: Validate automatic failover, RTO/RPO
+- Objectives: Validate 自動容錯移轉, RTO/RPO
 
 **Q3 Drill - Complete Regional Failure**:
 
@@ -1007,9 +1007,9 @@ public class DataReconciliationService {
 
 ```
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
@@ -1017,42 +1017,42 @@ public class DataReconciliationService {
 | Operations Team | High | 24/7 on-call, drill execution | Training, automation, runbooks |
 | End Users | Low | Transparent failover | Proper testing, monitoring |
 | Business | Medium | Downtime minimized | Clear RTO/RPO, regular drills |
-| Support Team | Medium | Customer communication | Templates, training |
+| 支援 Team | Medium | Customer communication | Templates, training |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **Enterprise**
+**選擇的影響半徑**： **Enterprise**
 
-Affects:
+影響：
 
 - All application services
-- All data stores
+- All 資料儲存s
 - DNS routing
-- Monitoring and alerting
+- Monitoring 和 alerting
 - On-call procedures
 - Customer communications
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | False positive failover | Low | High | Multi-layer validation, manual override |
 | Failover failure | Low | Critical | Regular drills, automated testing |
-| Data loss during failover | Low | Critical | Replication monitoring, RPO < 1 min |
+| Data loss 期間 failover | Low | Critical | Replication monitoring, RPO < 1 min |
 | Slow failover | Medium | High | Automation, monitoring, optimization |
 | Failback issues | Medium | Medium | Gradual failback, data reconciliation |
 
-**Overall Risk Level**: **Medium**
+**整體風險等級**： **Medium**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Health Check System (Month 1)
+### 第 1 階段： Health Check System (Month 1)
 
 **Objectives**:
 
 - Deploy comprehensive health check system
 - Configure Route 53 health checks
-- Set up monitoring and alerting
+- Set up monitoring 和 alerting
 
 **Tasks**:
 
@@ -1069,13 +1069,13 @@ Affects:
 - Alerts triggering correctly
 - Dashboards showing real-time status
 
-### Phase 2: Automatic Failover (Month 2)
+### 第 2 階段： Automatic Failover (Month 2)
 
 **Objectives**:
 
-- Implement automatic failover logic
+- Implement 自動容錯移轉 logic
 - Deploy failover orchestration
-- Test automatic failover
+- Test 自動容錯移轉
 
 **Tasks**:
 
@@ -1083,7 +1083,7 @@ Affects:
 - [ ] Deploy failover orchestration Lambda
 - [ ] Configure automatic DNS updates
 - [ ] Implement notification system
-- [ ] Test automatic failover scenarios
+- [ ] Test 自動容錯移轉 scenarios
 - [ ] Validate RTO < 5 minutes
 
 **Success Criteria**:
@@ -1092,7 +1092,7 @@ Affects:
 - RTO < 5 minutes achieved
 - Notifications sent correctly
 
-### Phase 3: Manual Failover (Month 3)
+### 第 3 階段： Manual Failover (Month 3)
 
 **Objectives**:
 
@@ -1111,11 +1111,11 @@ Affects:
 
 **Success Criteria**:
 
-- Runbooks complete and tested
-- Team trained and confident
+- Runbooks complete 和 tested
+- Team trained 和 confident
 - Manual failover successful
 
-### Phase 4: Failback Procedures (Month 4)
+### 第 4 階段： Failback Procedures (Month 4)
 
 **Objectives**:
 
@@ -1128,7 +1128,7 @@ Affects:
 - [ ] Implement failback orchestration
 - [ ] Develop data reconciliation tools
 - [ ] Create failback runbooks
-- [ ] Test canary failback
+- [ ] Test 可以ary failback
 - [ ] Perform full failback drill
 - [ ] Document lessons learned
 
@@ -1162,20 +1162,20 @@ Affects:
 - Team fully trained
 - Production ready
 
-### Rollback Strategy
+### 回滾策略
 
 **Not Applicable** - Failover/failback is the rollback mechanism itself
 
-**Continuous Improvement**:
+**Continuous 改善ment**:
 
 - Quarterly drills
 - Regular runbook updates
-- Automation improvements
+- Automation 改善ments
 - Team training refreshers
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
@@ -1245,56 +1245,56 @@ const failoverMetrics = {
 - **Weekly**: Failover metrics review
 - **Monthly**: Drill planning
 - **Quarterly**: Failover drill execution
-- **Annually**: Comprehensive review and optimization
+- **Annually**: Comprehensive review 和 optimization
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Fast Recovery**: RTO < 5 minutes for automatic failover
+- ✅ **Fast Recovery**: RTO < 5 minutes 用於 自動容錯移轉
 - ✅ **Minimal Data Loss**: RPO < 1 minute
-- ✅ **Business Continuity**: Operations continue during regional failures
+- ✅ **Business Continuity**: Operations continue 期間 regional failures
 - ✅ **Confidence**: Regular drills build team confidence
-- ✅ **Automation**: Reduces human error
-- ✅ **Flexibility**: Supports both automatic and manual scenarios
+- ✅ **Automation**: 降低s human error
+- ✅ **Flexibility**: 支援s both automatic 和 manual scenarios
 - ✅ **Validated**: Quarterly drills ensure procedures work
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Cost**: $100,000/year for infrastructure and on-call
-- ⚠️ **Complexity**: Complex failover logic and procedures
+- ⚠️ **成本**： $100,000/year for infrastructure and on-call
+- ⚠️ **複雜的ity**: 複雜的 failover logic 和 procedures
 - ⚠️ **On-Call Burden**: 24/7 on-call team required
-- ⚠️ **Drill Disruption**: Quarterly drills require coordination
+- ⚠️ **Drill Disruption**: Quarterly drills 需要coordination
 - ⚠️ **False Positives**: Risk of unnecessary failovers
 - ⚠️ **Training**: Ongoing training required
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. Manual data reconciliation for some scenarios
+1. Manual data reconciliation 用於 some scenarios
 2. Basic health check logic (no ML prediction)
 3. Limited automated testing of failover
 4. Manual drill coordination
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q2 2026**: Automated data reconciliation for all scenarios
+- **Q2 2026**: Automated data reconciliation 用於 all scenarios
 - **Q3 2026**: ML-powered failure prediction
 - **Q4 2026**: Fully automated failover testing (chaos engineering)
-- **2027**: Automated drill scheduling and execution
+- **2027**: Automated drill scheduling 和 execution
 
-## Related Decisions
+## 相關決策
 
-- [ADR-035: Disaster Recovery Strategy](035-disaster-recovery-strategy.md) - DR integrated with failover
+- [ADR-035: Disaster Recovery Strategy](035-disaster-recovery-strategy.md) - DR integrated 與 failover
 - [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md) - Multi-region foundation
-- [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md) - Data replication for failover
+- [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md) - Data replication 用於 failover
 - [ADR-040: Network Partition Handling Strategy](040-network-partition-handling-strategy.md) - Split-brain prevention
-- [ADR-043: Observability for Multi-Region Operations](043-observability-multi-region.md) - Monitoring integration
+- [ADR-043: Observability 用於 Multi-Region Operations](043-observability-multi-region.md) - Monitoring integration
 
-## Notes
+## 備註
 
-### RTO/RPO Targets by Scenario
+### RTO/RPO Targets 透過 Scenario
 
 | Scenario | RTO Target | RPO Target | Failover Type |
 |----------|------------|------------|---------------|
@@ -1353,6 +1353,6 @@ Status updates: status.ecommerce.com
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

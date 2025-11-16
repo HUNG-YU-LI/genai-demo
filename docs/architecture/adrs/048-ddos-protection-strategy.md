@@ -12,61 +12,61 @@ affected_perspectives: ["security", "availability", "performance"]
 
 # ADR-048: DDoS Protection Strategy (Multi-Layer Defense)
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform, operating in Taiwan, faces significant DDoS (Distributed Denial of Service) attack risks due to:
+The Enterprise E-Commerce Platform, operating in Taiwan, faces signifi可以t DDoS (Distributed Denial of Service) attack risks due to:
 
 - **Geopolitical Tensions**: Taiwan-China relations create elevated cyber attack risks
-- **High-Value Target**: E-commerce platform with financial transactions
+- **High-Value Target**: E-commerce platform 與 financial transactions
 - **24/7 Availability Requirement**: Business-critical system requiring 99.9% uptime
-- **Multi-Channel Access**: Web, mobile, and API endpoints all vulnerable
-- **Reputation Risk**: DDoS attacks can damage customer trust and brand reputation
+- **Multi-Channel Access**: Web, mobile, 和 API endpoints all vulnerable
+- **Reputation Risk**: DDoS attacks 可以 damage customer trust 和 brand reputation
 
-The platform requires a comprehensive, multi-layer DDoS protection strategy that can:
+The platform 需要comprehensive, multi-layer DDoS protection strategy that 可以:
 
-- Detect and mitigate Layer 3/4 (network/transport) attacks
-- Detect and mitigate Layer 7 (application) attacks
-- Maintain service availability during attacks
+- Detect 和 mitigate Layer 3/4 (network/transport) attacks
+- Detect 和 mitigate Layer 7 (application) attacks
+- 維持 service availability 期間 attacks
 - Minimize false positives (legitimate traffic blocked)
-- Provide real-time monitoring and alerting
-- Scale automatically to handle attack traffic
-- Integrate with existing AWS infrastructure
+- 提供 real-time monitoring 和 alerting
+- Scale automatically to 處理 attack traffic
+- Integrate 與 existing AWS infrastructure
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - **Revenue Protection**: Downtime costs $10,000/hour in lost sales
 - **Customer Trust**: DDoS attacks damage brand reputation
-- **Regulatory Compliance**: Must maintain service availability commitments
+- **Regulatory Compliance**: 必須 維持 service availability commitments
 - **Competitive Advantage**: Reliable service differentiates from competitors
 
 **Taiwan-Specific Context**:
 
 - **Frequent Attacks**: Taiwan experiences regular DDoS attacks from China-based sources
-- **Political Sensitivity**: Attacks often coincide with political events
+- **Political Sensitivity**: Attacks often coincide 與 political events
 - **Submarine Cable Vulnerability**: Limited international connectivity increases risk
 - **Regional Targeting**: Taiwan-based services are high-priority targets
 
-**Constraints**:
+**限制條件**：
 
-- Budget: $3,000-5,000/month for DDoS protection
-- Must integrate with existing AWS infrastructure
-- Cannot impact legitimate user experience
-- Must support multi-region deployment (Taiwan + Tokyo)
+- 預算: $3,000-5,000/month 用於 DDoS protection
+- 必須 integrate 與 existing AWS infrastructure
+- 可以not impact legitimate 用戶體驗
+- 必須 支援 multi-region deployment (Taiwan + Tokyo)
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- AWS EKS deployment with Application Load Balancer
-- CloudFront CDN for static content
+- AWS EKS deployment 與 Application Load Balancer
+- CloudFront CDN 用於 static content
 - No dedicated DDoS protection (only AWS Shield Standard)
 - No WAF (Web Application Firewall) configured
 - Single region deployment (Taiwan)
@@ -79,24 +79,24 @@ The platform requires a comprehensive, multi-layer DDoS protection strategy that
 - **Protocol Attacks**: Exploiting protocol weaknesses
 - **Application Attacks**: Targeting specific endpoints (login, search, checkout)
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Availability**: Maintain 99.9% uptime during attacks
-2. **Attack Coverage**: Protect against Layer 3/4 and Layer 7 attacks
-3. **Response Time**: Detect and mitigate attacks within 1 minute
+1. **Availability**: 維持 99.9% uptime 期間 attacks
+2. **Attack Coverage**: Protect against Layer 3/4 和 Layer 7 attacks
+3. **Response Time**: Detect 和 mitigate attacks within 1 minute
 4. **False Positives**: < 0.1% legitimate traffic blocked
-5. **Cost-Effectiveness**: Balance protection level with budget
-6. **Scalability**: Handle attacks up to 100 Gbps
-7. **Integration**: Seamless integration with AWS infrastructure
+5. **Cost-Effectiveness**: Balance protection level 與 預算
+6. **Scalability**: 處理 attacks up to 100 Gbps
+7. **Integration**: Seamless integration 與 AWS infrastructure
 8. **Monitoring**: Real-time visibility into attack patterns
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: AWS Shield Advanced + WAF + CloudFront (Recommended)
+### 選項 1： AWS Shield Advanced + WAF + CloudFront (Recommended)
 
-**Description**: Comprehensive AWS-native DDoS protection with multi-layer defense
+**描述**： Comprehensive AWS-native DDoS protection with multi-layer defense
 
-**Architecture**:
+**架構**：
 
 ```mermaid
 graph LR
@@ -113,37 +113,37 @@ graph LR
     N5 --> N6
 ```
 
-**Pros**:
+**優點**：
 
 - ✅ **Comprehensive Protection**: Layer 3/4 (Shield) + Layer 7 (WAF)
-- ✅ **AWS Integration**: Native integration with CloudFront, ALB, Route 53
-- ✅ **DDoS Response Team**: 24/7 AWS DDoS Response Team (DRT) support
-- ✅ **Cost Protection**: DDoS cost protection (no scaling charges during attacks)
+- ✅ **AWS Integration**: Native integration 與 CloudFront, ALB, Route 53
+- ✅ **DDoS Response Team**: 24/7 AWS DDoS Response Team (DRT) 支援
+- ✅ **Cost Protection**: DDoS cost protection (no scaling charges 期間 attacks)
 - ✅ **Advanced Detection**: Machine learning-based attack detection
 - ✅ **Real-Time Mitigation**: Automatic mitigation within seconds
 - ✅ **CloudFront Benefits**: Hide origin IP, absorb attack traffic at edge
-- ✅ **Health-Based Routing**: Route 53 health checks for automatic failover
+- ✅ **Health-Based Routing**: Route 53 health checks 用於 自動容錯移轉
 
-**Cons**:
+**缺點**：
 
-- ⚠️ **Cost**: $3,000/month base + $1/million requests (WAF)
-- ⚠️ **Complexity**: Requires configuration and tuning
+- ⚠️ **成本**： $3,000/month base + $1/million requests (WAF)
+- ⚠️ **複雜的ity**: Requires configuration 和 tuning
 - ⚠️ **Learning Curve**: Team needs training on Shield Advanced features
 
-**Cost**:
+**成本**：
 
 - Shield Advanced: $3,000/month
-- WAF: ~$500/month (estimated for 100M requests)
+- WAF: ~$500/month (estimated 用於 100M requests)
 - CloudFront: ~$500/month (data transfer)
 - **Total**: ~$4,000/month
 
-**Risk**: **Low** - Proven AWS service with extensive production use
+**風險**： **Low** - Proven AWS service with extensive production use
 
-### Option 2: AWS Shield Standard + WAF + CloudFront (Budget Option)
+### 選項 2： AWS Shield Standard + WAF + CloudFront (Budget Option)
 
-**Description**: Basic AWS DDoS protection with WAF for application layer
+**描述**： Basic AWS DDoS protection with WAF for application layer
 
-**Architecture**:
+**架構**：
 
 ```mermaid
 graph LR
@@ -158,84 +158,84 @@ graph LR
     N4 --> N5
 ```
 
-**Pros**:
+**優點**：
 
 - ✅ **Lower Cost**: No Shield Advanced fees
 - ✅ **Basic Protection**: Shield Standard included free
-- ✅ **Application Protection**: WAF for Layer 7 attacks
-- ✅ **CloudFront Benefits**: Edge caching and basic DDoS absorption
+- ✅ **Application Protection**: WAF 用於 Layer 7 attacks
+- ✅ **CloudFront Benefits**: Edge caching 和 basic DDoS absorption
 
-**Cons**:
+**缺點**：
 
 - ❌ **Limited Protection**: No advanced Layer 3/4 mitigation
-- ❌ **No DRT Support**: No 24/7 DDoS Response Team
-- ❌ **No Cost Protection**: Scaling charges during attacks
-- ❌ **Manual Mitigation**: Requires manual intervention for large attacks
+- ❌ **No DRT 支援**: No 24/7 DDoS Response Team
+- ❌ **No Cost Protection**: Scaling charges 期間 attacks
+- ❌ **Manual Mitigation**: Requires manual intervention 用於 大型的 attacks
 - ❌ **Slower Response**: No automatic advanced mitigation
 
-**Cost**: ~$1,000/month (WAF + CloudFront only)
+**成本**： ~$1,000/month (WAF + CloudFront only)
 
-**Risk**: **High** - Insufficient for Taiwan's threat environment
+**風險**： **High** - Insufficient for Taiwan's threat environment
 
-### Option 3: Third-Party DDoS Protection (Cloudflare, Akamai)
+### 選項 3： Third-Party DDoS Protection (Cloudflare, Akamai)
 
-**Description**: Use third-party DDoS protection service
+**描述**： Use third-party DDoS protection service
 
-**Pros**:
+**優點**：
 
 - ✅ **Specialized Protection**: DDoS protection is core business
-- ✅ **Global Network**: Large edge network for traffic absorption
-- ✅ **Advanced Features**: Bot management, rate limiting, caching
+- ✅ **Global Network**: 大型的 edge network 用於 traffic absorption
+- ✅ **Advanced Features**: Bot management, 速率限制, caching
 
-**Cons**:
+**缺點**：
 
-- ❌ **Higher Cost**: $5,000-10,000/month for enterprise plans
-- ❌ **Vendor Lock-In**: Difficult to migrate away
-- ❌ **Integration Complexity**: Requires DNS changes and configuration
+- ❌ **Higher Cost**: $5,000-10,000/month 用於 enterprise plans
+- ❌ **Vendor Lock-In**: 難以migrate away
+- ❌ **Integration 複雜的ity**: Requires DNS changes 和 configuration
 - ❌ **Data Privacy**: Traffic routed through third-party
 - ❌ **Latency**: Additional hop in traffic path
 
-**Cost**: $5,000-10,000/month
+**成本**： $5,000-10,000/month
 
-**Risk**: **Medium** - Vendor dependency and higher cost
+**風險**： **Medium** - Vendor dependency and higher cost
 
-### Option 4: On-Premises DDoS Appliance
+### 選項 4： On-Premises DDoS Appliance
 
-**Description**: Deploy dedicated DDoS protection hardware
+**描述**： Deploy dedicated DDoS protection hardware
 
-**Pros**:
+**優點**：
 
 - ✅ **Full Control**: Complete control over protection
 - ✅ **No Recurring Fees**: One-time hardware cost
 
-**Cons**:
+**缺點**：
 
-- ❌ **High Initial Cost**: $50,000-100,000 for hardware
+- ❌ **High Initial Cost**: $50,000-100,000 用於 hardware
 - ❌ **Operational Overhead**: Requires dedicated team
-- ❌ **Limited Capacity**: Fixed capacity, cannot scale
+- ❌ **Limited Capacity**: Fixed capacity, 可以not scale
 - ❌ **Single Point of Failure**: Hardware failure risk
 - ❌ **Not Cloud-Native**: Doesn't fit AWS architecture
 
-**Cost**: $50,000-100,000 initial + $10,000/year maintenance
+**成本**： $50,000-100,000 initial + $10,000/year maintenance
 
-**Risk**: **High** - Not suitable for cloud-native architecture
+**風險**： **High** - Not suitable for cloud-native architecture
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **AWS Shield Advanced + WAF + CloudFront (Multi-Layer Defense)**
+**選擇的選項**： **AWS Shield Advanced + WAF + CloudFront (Multi-Layer Defense)**
 
-### Rationale
+### 理由
 
-AWS Shield Advanced with WAF and CloudFront was selected for the following reasons:
+AWS Shield Advanced 與 WAF 和 CloudFront被選擇的原因如下：
 
-1. **Comprehensive Protection**: Covers both Layer 3/4 (Shield) and Layer 7 (WAF) attacks
+1. **Comprehensive Protection**: Covers both Layer 3/4 (Shield) 和 Layer 7 (WAF) attacks
 2. **Taiwan Context**: Proven effective against China-based DDoS attacks
-3. **24/7 Support**: AWS DDoS Response Team provides expert assistance
-4. **Cost Protection**: No scaling charges during attacks (critical for budget predictability)
-5. **AWS Integration**: Seamless integration with existing infrastructure
-6. **Automatic Mitigation**: Machine learning-based detection and mitigation
-7. **CloudFront Benefits**: Hides origin IP and absorbs attack traffic at edge
-8. **Scalability**: Can handle attacks up to 100+ Gbps
+3. **24/7 支援**: AWS DDoS Response Team 提供s expert assistance
+4. **Cost Protection**: No scaling charges 期間 attacks (critical 用於 預算 predictability)
+5. **AWS Integration**: Seamless integration 與 existing infrastructure
+6. **Automatic Mitigation**: Machine learning-based detection 和 mitigation
+7. **CloudFront Benefits**: Hides origin IP 和 absorbs attack traffic at edge
+8. **Scalability**: 可以 處理 attacks up to 100+ Gbps
 
 **Multi-Layer Defense Strategy**:
 
@@ -243,8 +243,8 @@ AWS Shield Advanced with WAF and CloudFront was selected for the following reaso
 
 - Hide origin server IP addresses
 - Absorb volumetric attacks at edge locations
-- Cache static content to reduce origin load
-- Geo-blocking for high-risk countries (optional)
+- Cache static content to 降低 origin load
+- Geo-blocking 用於 high-risk countries (optional)
 
 **Layer 2 - AWS Shield Advanced (Network/Transport Protection)**:
 
@@ -256,148 +256,148 @@ AWS Shield Advanced with WAF and CloudFront was selected for the following reaso
 **Layer 3 - AWS WAF (Application Protection)**:
 
 - Rate limiting (2000 requests/min per IP)
-- SQL injection and XSS protection
-- Bot detection and mitigation
-- Custom rules for application-specific attacks
-- Geo-blocking for high-risk regions
+- SQL injection 和 XSS protection
+- Bot detection 和 mitigation
+- Custom rules 用於 application-specific attacks
+- Geo-blocking 用於 high-risk regions
 
 **Layer 4 - Application Load Balancer (Distribution)**:
 
-- Health checks and automatic failover
-- Connection draining during attacks
+- Health checks 和 自動容錯移轉
+- Connection draining 期間 attacks
 - SSL/TLS termination
 
 **Layer 5 - Auto-Scaling (Capacity)**:
 
 - Automatic scaling based on traffic
-- Absorb attack traffic with additional capacity
-- Cost-effective scaling with Spot Instances
+- Absorb attack traffic 與 additional capacity
+- Cost-effective scaling 與 Spot Instances
 
-**Why Not Shield Standard**: Insufficient protection for Taiwan's threat environment. No advanced mitigation or DRT support.
+**為何不選 Shield Standard**： Insufficient protection 用於 Taiwan's threat environment. No advanced mitigation 或 DRT 支援.
 
-**Why Not Third-Party**: Higher cost ($5K-10K/month) and vendor lock-in not justified when AWS Shield Advanced provides comprehensive protection at lower cost.
+**為何不選 Third-Party**： Higher cost ($5K-10K/month) 和 vendor lock-in not justified when AWS Shield Advanced 提供s comprehensive protection at lower cost.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Development Team | Low | Minimal code changes | Documentation and training |
-| Operations Team | Medium | Need to monitor and respond to attacks | Training, runbooks, 24/7 on-call |
+| Development Team | Low | Minimal code changes | Documentation 和 training |
+| Operations Team | Medium | Need to monitor 和 respond to attacks | Training, runbooks, 24/7 on-call |
 | Security Team | Positive | Enhanced security posture | Regular security reviews |
 | End Users | None | Transparent protection | N/A |
-| Finance Team | Medium | $4K/month additional cost | Budget approval obtained |
-| Business Team | Positive | Reduced downtime risk | N/A |
+| Finance Team | Medium | $4K/month additional cost | 預算 approval obtained |
+| Business Team | Positive | 降低d downtime risk | N/A |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All public-facing endpoints (web, mobile, API)
 - CloudFront distribution configuration
 - Route 53 DNS configuration
 - Application Load Balancer configuration
-- WAF rules and policies
-- Monitoring and alerting systems
+- WAF rules 和 policies
+- Monitoring 和 alerting systems
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
-| False positives blocking legitimate traffic | Low | High | Careful WAF rule tuning, whitelist for known IPs |
-| Shield Advanced cost overrun | Low | Medium | Cost monitoring, budget alerts |
+| False positives blocking legitimate traffic | Low | High | Careful WAF rule tuning, whitelist 用於 known IPs |
+| Shield Advanced cost overrun | Low | Medium | Cost monitoring, 預算 alerts |
 | Configuration errors | Medium | High | Thorough testing, staged rollout |
 | Attack bypassing protection | Low | Critical | Regular security audits, penetration testing |
 | DRT response delay | Low | Medium | Proactive monitoring, automated mitigation |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: CloudFront Setup (Week 1)
+### 第 1 階段： CloudFront Setup （第 1 週）
 
 - [x] Create CloudFront distribution
-- [x] Configure origin (ALB) with custom headers
-- [x] Enable origin access control (OAC)
+- [x] Configure origin (ALB) 與 custom headers
+- [x] 啟用 origin access control (OAC)
 - [x] Configure SSL/TLS (ACM certificate)
 - [x] Set up geo-restriction (optional)
 - [x] Configure caching policies
 - [x] Update DNS (Route 53) to point to CloudFront
 
-### Phase 2: AWS Shield Advanced Activation (Week 2)
+### 第 2 階段： AWS Shield Advanced Activation （第 2 週）
 
 - [x] Subscribe to AWS Shield Advanced
-- [x] Associate Shield Advanced with CloudFront, ALB, Route 53
+- [x] Associate Shield Advanced 與 CloudFront, ALB, Route 53
 - [x] Configure DDoS Response Team (DRT) access
 - [x] Set up Shield Advanced notifications
 - [x] Configure health-based routing in Route 53
-- [x] Test Shield Advanced detection and mitigation
+- [x] Test Shield Advanced detection 和 mitigation
 
-### Phase 3: WAF Configuration (Week 3)
+### 第 3 階段： WAF Configuration （第 3 週）
 
 - [x] Create WAF Web ACL
 - [x] Configure AWS Managed Rules (Core Rule Set, Known Bad Inputs)
-- [x] Configure rate limiting rules (2000 req/min per IP)
+- [x] Configure 速率限制 rules (2000 req/min per IP)
 - [x] Configure geo-blocking rules (optional)
-- [x] Configure custom rules for application-specific attacks
-- [x] Associate WAF with CloudFront distribution
-- [x] Test WAF rules with simulated attacks
+- [x] Configure custom rules 用於 application-specific attacks
+- [x] Associate WAF 與 CloudFront distribution
+- [x] Test WAF rules 與 simulated attacks
 
-### Phase 4: Monitoring and Alerting (Week 4)
+### 第 4 階段： Monitoring and Alerting （第 4 週）
 
-- [x] Configure CloudWatch metrics for Shield Advanced
-- [x] Configure CloudWatch metrics for WAF
-- [x] Set up CloudWatch alarms for attack detection
-- [x] Configure SNS notifications for security team
-- [x] Create CloudWatch dashboard for DDoS monitoring
+- [x] Configure CloudWatch metrics 用於 Shield Advanced
+- [x] Configure CloudWatch metrics 用於 WAF
+- [x] Set up CloudWatch alarms 用於 attack detection
+- [x] Configure SNS notifications 用於 security team
+- [x] Create CloudWatch dashboard 用於 DDoS monitoring
 - [x] Set up log aggregation (WAF logs to S3)
 - [x] Configure automated response (Lambda + EventBridge)
 
-### Phase 5: Testing and Validation (Week 5)
+### Phase 5: Testing and Validation （第 5 週）
 
 - [x] Conduct simulated DDoS attacks (Layer 3/4)
 - [x] Conduct simulated application attacks (Layer 7)
 - [x] Validate automatic mitigation
 - [x] Test DRT escalation process
 - [x] Validate false positive rate
-- [x] Load testing with legitimate traffic
-- [x] Document runbooks and procedures
+- [x] Load testing 與 legitimate traffic
+- [x] Document runbooks 和 procedures
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - False positive rate > 1% (legitimate traffic blocked)
-- Service degradation during normal traffic
+- Service degradation 期間 normal traffic
 - Configuration errors causing outages
-- Cost overrun > 50% of budget
+- Cost overrun > 50% of 預算
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Disable WAF rules causing false positives
 2. Remove CloudFront distribution (revert to direct ALB access)
 3. Downgrade to Shield Standard if Shield Advanced issues
 4. Restore previous DNS configuration
-5. Investigate and fix issues
-6. Re-deploy with corrections
+5. Investigate 和 fix issues
+6. Re-deploy 與 corrections
 
-**Rollback Time**: < 1 hour
+**回滾時間**： < 1 hour
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
-- ✅ **Availability**: Maintain 99.9% uptime during attacks
-- ✅ **Attack Mitigation**: 100% of attacks detected and mitigated
+- ✅ **Availability**: 維持 99.9% uptime 期間 attacks
+- ✅ **Attack Mitigation**: 100% of attacks detected 和 mitigated
 - ✅ **Response Time**: Mitigation within 1 minute of attack detection
 - ✅ **False Positives**: < 0.1% legitimate traffic blocked
-- ✅ **Cost Protection**: No scaling charges during attacks
-- ✅ **User Experience**: No degradation for legitimate users
+- ✅ **Cost Protection**: No scaling charges 期間 attacks
+- ✅ **User Experience**: No degradation 用於 legitimate users
 
-### Monitoring Plan
+### 監控計畫
 
 **CloudWatch Metrics**:
 
@@ -412,10 +412,10 @@ Affects:
 - `CloudFront5xxErrorRate`
 - `CloudFrontRequests`
 
-**Alerts**:
+**告警**：
 
 - **P0 Critical**: DDoS attack detected (immediate notification)
-- **P1 High**: WAF block rate > 10% (potential attack or false positives)
+- **P1 High**: WAF block rate > 10% (potential attack 或 false positives)
 - **P2 Medium**: CloudFront error rate > 5%
 - **P3 Low**: Unusual traffic patterns
 
@@ -424,59 +424,59 @@ Affects:
 - Real-time WAF log analysis (Kinesis + Lambda)
 - Attack pattern analysis (Athena queries on S3 logs)
 - Geo-location analysis of attack sources
-- Bot detection and analysis
+- Bot detection 和 analysis
 
-**Review Schedule**:
+**審查時程**：
 
 - **Real-Time**: 24/7 monitoring dashboard
-- **Daily**: Review attack logs and blocked requests
-- **Weekly**: Analyze attack patterns and tune WAF rules
-- **Monthly**: Security review with DRT (if attacks occurred)
-- **Quarterly**: Comprehensive security audit and penetration testing
+- **Daily**: Review attack logs 和 blocked requests
+- **Weekly**: Analyze attack patterns 和 tune WAF rules
+- **Monthly**: Security review 與 DRT (if attacks occurred)
+- **Quarterly**: Comprehensive security audit 和 penetration testing
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Enhanced Availability**: 99.9% uptime maintained during attacks
+- ✅ **Enhanced Availability**: 99.9% uptime 維持ed 期間 attacks
 - ✅ **Comprehensive Protection**: Multi-layer defense against all attack types
-- ✅ **Cost Predictability**: DDoS cost protection prevents budget overruns
-- ✅ **Expert Support**: 24/7 AWS DRT assistance
-- ✅ **Automatic Mitigation**: Machine learning-based detection and response
+- ✅ **Cost Predictability**: DDoS cost protection prevents 預算 overruns
+- ✅ **Expert 支援**: 24/7 AWS DRT assistance
+- ✅ **Automatic Mitigation**: Machine learning-based detection 和 response
 - ✅ **Customer Trust**: Reliable service builds brand reputation
 - ✅ **Competitive Advantage**: Superior availability vs competitors
 - ✅ **Regulatory Compliance**: Meets availability commitments
 
-### Negative Consequences
+### 負面後果
 
 - ⚠️ **Increased Cost**: $4,000/month additional infrastructure cost
-- ⚠️ **Operational Complexity**: Requires monitoring and tuning
-- ⚠️ **False Positive Risk**: Potential for blocking legitimate traffic
-- ⚠️ **Configuration Overhead**: Initial setup and ongoing maintenance
+- ⚠️ **Operational 複雜的ity**: Requires monitoring 和 tuning
+- ⚠️ **False Positive Risk**: Potential 用於 blocking legitimate traffic
+- ⚠️ **Configuration Overhead**: Initial setup 和 ongoing maintenance
 - ⚠️ **Dependency on AWS**: Reliance on AWS Shield Advanced service
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Manual WAF rule tuning (acceptable initially)
 2. No automated attack response beyond AWS defaults
 3. Limited geo-blocking (may need expansion)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Implement automated WAF rule tuning based on attack patterns
 - **Q3 2026**: Develop custom automated response (Lambda functions)
 - **Q4 2026**: Expand geo-blocking based on attack source analysis
 
-## Related Decisions
+## 相關決策
 
-- [ADR-049: Web Application Firewall (WAF) Rules and Policies](049-web-application-firewall-rules-and-policies.md) - Detailed WAF configuration
-- [ADR-050: API Security and Rate Limiting Strategy](050-api-security-and-rate-limiting-strategy.md) - Application-level protection
-- [ADR-053: Security Monitoring and Incident Response](053-security-monitoring-and-incident-response.md) - Security operations
-- [ADR-056: Network Segmentation and Isolation Strategy](056-network-segmentation-and-isolation-strategy.md) - Network security
+- [ADR-049: Web Application Firewall (WAF) Rules 和 Policies](049-web-application-firewall-rules-and-policies.md) - Detailed WAF configuration
+- [ADR-050: API Security 和 Rate Limiting Strategy](050-api-security-and-rate-limiting-strategy.md) - Application-level protection
+- [ADR-053: Security Monitoring 和 Incident Response](053-security-monitoring-and-incident-response.md) - Security operations
+- [ADR-056: Network Segmentation 和 Isolation Strategy](056-network-segmentation-and-isolation-strategy.md) - Network security
 
-## Notes
+## 備註
 
 ### DDoS Protection Layers
 
@@ -488,7 +488,7 @@ Affects:
 
 **Layer 2 - Shield Advanced (Network/Transport)**:
 
-- **Purpose**: Detect and mitigate Layer 3/4 attacks
+- **Purpose**: Detect 和 mitigate Layer 3/4 attacks
 - **Protection**: SYN floods, UDP floods, reflection attacks
 - **Capacity**: Up to 100+ Gbps
 
@@ -500,13 +500,13 @@ Affects:
 
 **Layer 4 - ALB (Distribution)**:
 
-- **Purpose**: Distribute traffic and health checks
+- **Purpose**: Distribute traffic 和 health checks
 - **Protection**: Connection draining, health-based routing
 - **Capacity**: Auto-scaling based on traffic
 
 **Layer 5 - Auto-Scaling (Capacity)**:
 
-- **Purpose**: Absorb attack traffic with additional capacity
+- **Purpose**: Absorb attack traffic 與 additional capacity
 - **Protection**: Capacity-based attacks
 - **Capacity**: Unlimited (auto-scaling)
 
@@ -514,54 +514,54 @@ Affects:
 
 **Attack Patterns**:
 
-- **Timing**: Attacks often coincide with political events
+- **Timing**: Attacks often coincide 與 political events
 - **Sources**: Primarily from China-based IP ranges
-- **Types**: Mix of volumetric (Layer 3/4) and application (Layer 7) attacks
-- **Duration**: Typically 1-4 hours, sometimes sustained for days
+- **Types**: Mix of volumetric (Layer 3/4) 和 application (Layer 7) attacks
+- **Duration**: Typically 1-4 hours, sometimes sustained 用於 天
 
 **Mitigation Strategies**:
 
-- **Geo-Blocking**: Consider blocking China IP ranges during attacks (business impact assessment required)
-- **Proactive Monitoring**: Increased monitoring during sensitive political periods
-- **DRT Engagement**: Proactive engagement with AWS DRT during high-risk periods
-- **Multi-Region**: Leverage Tokyo region for failover during Taiwan-specific attacks
+- **Geo-Blocking**: Consider blocking China IP ranges 期間 attacks (business impact assessment required)
+- **Proactive Monitoring**: Increased monitoring 期間 sensitive political periods
+- **DRT Engagement**: Proactive engagement 與 AWS DRT 期間 high-risk periods
+- **Multi-Region**: Leverage Tokyo region 用於 failover 期間 Taiwan-specific attacks
 
 ### Cost Breakdown
 
 **Monthly Costs**:
 
 - AWS Shield Advanced: $3,000/month (base fee)
-- WAF: $5/month (Web ACL) + $1/million requests (~$500/month for 100M requests)
-- CloudFront: $0.085/GB data transfer (~$500/month for 6TB)
+- WAF: $5/month (Web ACL) + $1/million requests (~$500/month 用於 100M requests)
+- CloudFront: $0.085/GB data transfer (~$500/month 用於 6TB)
 - Route 53: $0.50/hosted zone + $0.40/million queries (~$50/month)
 - **Total**: ~$4,050/month
 
 **Cost Protection**:
 
 - Shield Advanced includes DDoS cost protection
-- No scaling charges during attacks (EC2, ELB, CloudFront, Route 53)
-- Potential savings: $10,000+ during large attacks
+- No scaling charges 期間 attacks (EC2, ELB, CloudFront, Route 53)
+- Potential savings: $10,000+ 期間 大型的 attacks
 
 ### Emergency Procedures
 
 **During Active Attack**:
 
 1. **Immediate**: Verify Shield Advanced is mitigating
-2. **5 minutes**: Review WAF logs for application-layer attacks
+2. **5 minutes**: Review WAF logs 用於 application-layer attacks
 3. **10 minutes**: Engage AWS DRT if attack persists
-4. **15 minutes**: Consider additional mitigation (geo-blocking, rate limiting)
-5. **30 minutes**: Communicate with stakeholders
-6. **Post-Attack**: Conduct post-mortem and update runbooks
+4. **15 minutes**: Consider additional mitigation (geo-blocking, 速率限制)
+5. **30 minutes**: Communicate 與 stakeholders
+6. **Post-Attack**: Conduct post-mortem 和 update runbooks
 
 **DRT Escalation**:
 
-- **Trigger**: Attack persists > 15 minutes or causes service degradation
-- **Contact**: AWS Support (Enterprise plan) or DRT hotline
+- **Trigger**: Attack persists > 15 minutes 或 causes service degradation
+- **Contact**: AWS 支援 (Enterprise plan) 或 DRT hotline
 - **Information**: Attack type, affected resources, business impact
-- **Response Time**: < 15 minutes for P0 incidents
+- **Response Time**: < 15 minutes 用於 P0 incidents
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

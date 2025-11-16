@@ -1,240 +1,240 @@
 # Domain Events Catalog
 
-## Overview
+## 概述
 
-This document provides a comprehensive catalog of all domain events in the e-commerce platform. Events are organized by bounded context and include descriptions, payload information, and related events.
+本文件提供電子商務平台中所有 domain events 的完整目錄。事件依 bounded context 組織，並包括描述、payload 資訊和相關事件。
 
-**Last Updated**: 2025-10-25
+**最後更新**: 2025-10-25
 
 ---
 
-## Event Naming Convention
+## 事件命名慣例
 
-All events follow these naming conventions:
+所有事件遵循以下命名慣例：
 
-- **Past Tense**: Events use past tense verbs (e.g., `CustomerCreated`, not `CreateCustomer`)
-- **Context Prefix**: Events include the aggregate name (e.g., `OrderSubmitted`, `PaymentProcessed`)
-- **Descriptive**: Event names clearly describe what happened
+- **過去式**：事件使用過去式動詞（例如：`CustomerCreated`，而非 `CreateCustomer`）
+- **Context 前綴**：事件包含 aggregate 名稱（例如：`OrderSubmitted`、`PaymentProcessed`）
+- **描述性**：事件名稱清楚描述發生了什麼
 
 ---
 
 ## Customer Context Events
 
-| Event Name | Description | Aggregate | Triggers |
+| 事件名稱 | 描述 | Aggregate | 觸發條件 |
 |------------|-------------|-----------|----------|
-| `CustomerCreatedEvent` | A new customer account was created | Customer | Customer registration |
-| `CustomerProfileUpdatedEvent` | Customer profile information was updated | Customer | Profile edit |
-| `CustomerEmailVerifiedEvent` | Customer email address was verified | Customer | Email verification |
-| `CustomerPasswordChangedEvent` | Customer password was changed | Customer | Password change |
-| `CustomerDeactivatedEvent` | Customer account was deactivated | Customer | Account closure |
-| `CustomerReactivatedEvent` | Customer account was reactivated | Customer | Account reactivation |
-| `CustomerMembershipUpgradedEvent` | Customer membership level was upgraded | Customer | Membership upgrade |
+| `CustomerCreatedEvent` | 建立了新的客戶帳戶 | Customer | 客戶註冊 |
+| `CustomerProfileUpdatedEvent` | 更新了客戶資料 | Customer | 編輯個人資料 |
+| `CustomerEmailVerifiedEvent` | 驗證了客戶 email 地址 | Customer | Email 驗證 |
+| `CustomerPasswordChangedEvent` | 變更了客戶密碼 | Customer | 變更密碼 |
+| `CustomerDeactivatedEvent` | 停用了客戶帳戶 | Customer | 關閉帳戶 |
+| `CustomerReactivatedEvent` | 重新啟用了客戶帳戶 | Customer | 重新啟用帳戶 |
+| `CustomerMembershipUpgradedEvent` | 升級了客戶會員等級 | Customer | 會員升級 |
 
-**Total**: 7 events
+**總計**：7 個事件
 
-**Details**: See [Customer Events Documentation](contexts/customer-events.md)
+**詳細資訊**：參見 [Customer Events 文件](contexts/customer-events.md)
 
 ---
 
 ## Order Context Events
 
-| Event Name | Description | Aggregate | Triggers |
+| 事件名稱 | 描述 | Aggregate | 觸發條件 |
 |------------|-------------|-----------|----------|
-| `OrderCreatedEvent` | A new order was created from shopping cart | Order | Checkout initiation |
-| `OrderSubmittedEvent` | Order was submitted for processing | Order | Order submission |
-| `OrderConfirmedEvent` | Order was confirmed after payment | Order | Payment success |
-| `OrderCancelledEvent` | Order was cancelled by customer or system | Order | Order cancellation |
-| `OrderShippedEvent` | Order was shipped to customer | Order | Shipping dispatch |
-| `OrderDeliveredEvent` | Order was delivered to customer | Order | Delivery confirmation |
-| `OrderReturnedEvent` | Order was returned by customer | Order | Return request |
-| `OrderRefundedEvent` | Order was refunded to customer | Order | Refund processing |
-| `OrderItemAddedEvent` | Item was added to order | Order | Item addition |
-| `OrderItemRemovedEvent` | Item was removed from order | Order | Item removal |
-| `OrderItemQuantityChangedEvent` | Item quantity was changed in order | Order | Quantity update |
+| `OrderCreatedEvent` | 從購物車建立了新訂單 | Order | 結帳啟動 |
+| `OrderSubmittedEvent` | 提交訂單進行處理 | Order | 提交訂單 |
+| `OrderConfirmedEvent` | 付款後確認訂單 | Order | 付款成功 |
+| `OrderCancelledEvent` | 客戶或系統取消了訂單 | Order | 取消訂單 |
+| `OrderShippedEvent` | 訂單已出貨給客戶 | Order | 配送發貨 |
+| `OrderDeliveredEvent` | 訂單已送達客戶 | Order | 確認送達 |
+| `OrderReturnedEvent` | 客戶退回了訂單 | Order | 退貨請求 |
+| `OrderRefundedEvent` | 訂單已退款給客戶 | Order | 處理退款 |
+| `OrderItemAddedEvent` | 項目已加入訂單 | Order | 加入項目 |
+| `OrderItemRemovedEvent` | 項目已從訂單移除 | Order | 移除項目 |
+| `OrderItemQuantityChangedEvent` | 訂單中的項目數量已變更 | Order | 更新數量 |
 
-**Total**: 11 events
+**總計**：11 個事件
 
-**Details**: See [Order Events Documentation](contexts/order-events.md)
+**詳細資訊**：參見 [Order Events 文件](contexts/order-events.md)
 
 ---
 
 ## Product Context Events
 
-| Event Name | Description | Aggregate | Triggers |
+| 事件名稱 | 描述 | Aggregate | 觸發條件 |
 |------------|-------------|-----------|----------|
-| `ProductCreatedEvent` | A new product was added to catalog | Product | Product creation |
-| `ProductUpdatedEvent` | Product information was updated | Product | Product edit |
-| `ProductPriceChangedEvent` | Product price was changed | Product | Price update |
-| `ProductStockUpdatedEvent` | Product stock level was updated | Product | Stock adjustment |
-| `ProductDeactivatedEvent` | Product was removed from catalog | Product | Product deactivation |
-| `ProductReactivatedEvent` | Product was restored to catalog | Product | Product reactivation |
-| `ProductCategoryChangedEvent` | Product category was changed | Product | Category update |
+| `ProductCreatedEvent` | 新產品已加入目錄 | Product | 建立產品 |
+| `ProductUpdatedEvent` | 產品資訊已更新 | Product | 編輯產品 |
+| `ProductPriceChangedEvent` | 產品價格已變更 | Product | 更新價格 |
+| `ProductStockUpdatedEvent` | 產品庫存量已更新 | Product | 調整庫存 |
+| `ProductDeactivatedEvent` | 產品已從目錄移除 | Product | 停用產品 |
+| `ProductReactivatedEvent` | 產品已恢復到目錄 | Product | 重新啟用產品 |
+| `ProductCategoryChangedEvent` | 產品類別已變更 | Product | 更新類別 |
 
-**Total**: 7 events
+**總計**：7 個事件
 
-**Details**: See [Product Events Documentation](contexts/product-events.md)
+**詳細資訊**：參見 [Product Events 文件](contexts/product-events.md)
 
 ---
 
 ## Payment Context Events
 
-| Event Name | Description | Aggregate | Triggers |
+| 事件名稱 | 描述 | Aggregate | 觸發條件 |
 |------------|-------------|-----------|----------|
-| `PaymentInitiatedEvent` | Payment process was initiated | Payment | Payment start |
-| `PaymentProcessedEvent` | Payment was successfully processed | Payment | Payment success |
-| `PaymentFailedEvent` | Payment processing failed | Payment | Payment failure |
-| `PaymentRefundedEvent` | Payment was refunded to customer | Payment | Refund processing |
-| `PaymentCancelledEvent` | Payment was cancelled | Payment | Payment cancellation |
+| `PaymentInitiatedEvent` | 付款流程已啟動 | Payment | 開始付款 |
+| `PaymentProcessedEvent` | 付款已成功處理 | Payment | 付款成功 |
+| `PaymentFailedEvent` | 付款處理失敗 | Payment | 付款失敗 |
+| `PaymentRefundedEvent` | 付款已退款給客戶 | Payment | 處理退款 |
+| `PaymentCancelledEvent` | 付款已取消 | Payment | 取消付款 |
 
-**Total**: 5 events
+**總計**：5 個事件
 
-**Details**: See [Payment Events Documentation](contexts/payment-events.md)
+**詳細資訊**：參見 [Payment Events 文件](contexts/payment-events.md)
 
 ---
 
 ## Inventory Context Events
 
-| Event Name | Description | Aggregate | Triggers |
+| 事件名稱 | 描述 | Aggregate | 觸發條件 |
 |------------|-------------|-----------|----------|
-| `InventoryReservedEvent` | Inventory was reserved for order | Inventory | Order submission |
-| `InventoryReleasedEvent` | Reserved inventory was released | Inventory | Order cancellation |
-| `InventoryAdjustedEvent` | Inventory level was manually adjusted | Inventory | Stock adjustment |
-| `InventoryLowStockAlertEvent` | Inventory fell below threshold | Inventory | Low stock detection |
+| `InventoryReservedEvent` | 為訂單保留了庫存 | Inventory | 提交訂單 |
+| `InventoryReleasedEvent` | 釋放了保留的庫存 | Inventory | 取消訂單 |
+| `InventoryAdjustedEvent` | 手動調整了庫存量 | Inventory | 調整庫存 |
+| `InventoryLowStockAlertEvent` | 庫存低於閾值 | Inventory | 偵測到低庫存 |
 
-**Total**: 4 events
+**總計**：4 個事件
 
-**Details**: See [Inventory Events Documentation](contexts/inventory-events.md)
+**詳細資訊**：參見 [Inventory Events 文件](contexts/inventory-events.md)
 
 ---
 
 ## Shipping Context Events
 
-| Event Name | Description | Aggregate | Triggers |
+| 事件名稱 | 描述 | Aggregate | 觸發條件 |
 |------------|-------------|-----------|----------|
-| `ShippingScheduledEvent` | Shipping was scheduled for order | Shipping | Order confirmation |
-| `ShippingLabelCreatedEvent` | Shipping label was generated | Shipping | Label generation |
-| `ShippingDispatchedEvent` | Package was dispatched | Shipping | Package pickup |
-| `ShippingInTransitEvent` | Package is in transit | Shipping | Transit update |
-| `ShippingDeliveredEvent` | Package was delivered | Shipping | Delivery confirmation |
-| `ShippingFailedEvent` | Delivery attempt failed | Shipping | Delivery failure |
+| `ShippingScheduledEvent` | 為訂單安排了配送 | Shipping | 確認訂單 |
+| `ShippingLabelCreatedEvent` | 產生了配送標籤 | Shipping | 產生標籤 |
+| `ShippingDispatchedEvent` | 包裹已發貨 | Shipping | 包裹取件 |
+| `ShippingInTransitEvent` | 包裹運送中 | Shipping | 運送更新 |
+| `ShippingDeliveredEvent` | 包裹已送達 | Shipping | 確認送達 |
+| `ShippingFailedEvent` | 配送嘗試失敗 | Shipping | 配送失敗 |
 
-**Total**: 6 events
+**總計**：6 個事件
 
-**Details**: See [Shipping Events Documentation](contexts/shipping-events.md)
+**詳細資訊**：參見 [Shipping Events 文件](contexts/shipping-events.md)
 
 ---
 
 ## Promotion Context Events
 
-| Event Name | Description | Aggregate | Triggers |
+| 事件名稱 | 描述 | Aggregate | 觸發條件 |
 |------------|-------------|-----------|----------|
-| `PromotionCreatedEvent` | A new promotion was created | Promotion | Promotion setup |
-| `PromotionActivatedEvent` | Promotion was activated | Promotion | Promotion start |
-| `PromotionDeactivatedEvent` | Promotion was deactivated | Promotion | Promotion end |
-| `PromotionAppliedEvent` | Promotion was applied to order | Promotion | Discount application |
+| `PromotionCreatedEvent` | 建立了新促銷活動 | Promotion | 設定促銷 |
+| `PromotionActivatedEvent` | 促銷活動已啟動 | Promotion | 促銷開始 |
+| `PromotionDeactivatedEvent` | 促銷活動已停用 | Promotion | 促銷結束 |
+| `PromotionAppliedEvent` | 促銷活動已套用至訂單 | Promotion | 套用折扣 |
 
-**Total**: 4 events
+**總計**：4 個事件
 
-**Details**: See [Promotion Events Documentation](contexts/promotion-events.md)
+**詳細資訊**：參見 [Promotion Events 文件](contexts/promotion-events.md)
 
 ---
 
 ## Notification Context Events
 
-| Event Name | Description | Aggregate | Triggers |
+| 事件名稱 | 描述 | Aggregate | 觸發條件 |
 |------------|-------------|-----------|----------|
-| `NotificationSentEvent` | Notification was sent to customer | Notification | Event trigger |
-| `NotificationFailedEvent` | Notification sending failed | Notification | Send failure |
-| `NotificationReadEvent` | Notification was read by customer | Notification | Read action |
+| `NotificationSentEvent` | 通知已發送給客戶 | Notification | 事件觸發 |
+| `NotificationFailedEvent` | 通知發送失敗 | Notification | 發送失敗 |
+| `NotificationReadEvent` | 客戶已讀取通知 | Notification | 讀取動作 |
 
-**Total**: 3 events
+**總計**：3 個事件
 
-**Details**: See [Notification Events Documentation](contexts/notification-events.md)
+**詳細資訊**：參見 [Notification Events 文件](contexts/notification-events.md)
 
 ---
 
 ## Review Context Events
 
-| Event Name | Description | Aggregate | Triggers |
+| 事件名稱 | 描述 | Aggregate | 觸發條件 |
 |------------|-------------|-----------|----------|
-| `ReviewCreatedEvent` | Customer created a product review | Review | Review submission |
-| `ReviewUpdatedEvent` | Customer updated their review | Review | Review edit |
-| `ReviewDeletedEvent` | Review was deleted | Review | Review deletion |
-| `ReviewApprovedEvent` | Review was approved by moderator | Review | Moderation approval |
+| `ReviewCreatedEvent` | 客戶建立了產品評價 | Review | 提交評價 |
+| `ReviewUpdatedEvent` | 客戶更新了評價 | Review | 編輯評價 |
+| `ReviewDeletedEvent` | 評價已刪除 | Review | 刪除評價 |
+| `ReviewApprovedEvent` | 評價已由審核員核准 | Review | 審核核准 |
 
-**Total**: 4 events
+**總計**：4 個事件
 
-**Details**: See [Review Events Documentation](contexts/review-events.md)
+**詳細資訊**：參見 [Review Events 文件](contexts/review-events.md)
 
 ---
 
 ## Shopping Cart Context Events
 
-| Event Name | Description | Aggregate | Triggers |
+| 事件名稱 | 描述 | Aggregate | 觸發條件 |
 |------------|-------------|-----------|----------|
-| `CartCreatedEvent` | A new shopping cart was created | ShoppingCart | Cart initialization |
-| `ItemAddedToCartEvent` | Item was added to cart | ShoppingCart | Add to cart |
-| `ItemRemovedFromCartEvent` | Item was removed from cart | ShoppingCart | Remove from cart |
-| `CartItemQuantityChangedEvent` | Item quantity was changed in cart | ShoppingCart | Quantity update |
-| `CartCheckedOutEvent` | Cart was checked out | ShoppingCart | Checkout |
+| `CartCreatedEvent` | 建立了新購物車 | ShoppingCart | 購物車初始化 |
+| `ItemAddedToCartEvent` | 項目已加入購物車 | ShoppingCart | 加入購物車 |
+| `ItemRemovedFromCartEvent` | 項目已從購物車移除 | ShoppingCart | 從購物車移除 |
+| `CartItemQuantityChangedEvent` | 購物車中的項目數量已變更 | ShoppingCart | 更新數量 |
+| `CartCheckedOutEvent` | 購物車已結帳 | ShoppingCart | 結帳 |
 
-**Total**: 5 events
+**總計**：5 個事件
 
-**Details**: See [Shopping Cart Events Documentation](contexts/shopping-cart-events.md)
+**詳細資訊**：參見 [Shopping Cart Events 文件](contexts/shopping-cart-events.md)
 
 ---
 
 ## Pricing Context Events
 
-| Event Name | Description | Aggregate | Triggers |
+| 事件名稱 | 描述 | Aggregate | 觸發條件 |
 |------------|-------------|-----------|----------|
-| `PriceCalculatedEvent` | Price was calculated for order | Pricing | Price calculation |
-| `DiscountAppliedEvent` | Discount was applied to order | Pricing | Discount application |
-| `TaxCalculatedEvent` | Tax was calculated for order | Pricing | Tax calculation |
+| `PriceCalculatedEvent` | 為訂單計算了價格 | Pricing | 價格計算 |
+| `DiscountAppliedEvent` | 訂單已套用折扣 | Pricing | 套用折扣 |
+| `TaxCalculatedEvent` | 為訂單計算了稅金 | Pricing | 稅金計算 |
 
-**Total**: 3 events
+**總計**：3 個事件
 
-**Details**: See [Pricing Events Documentation](contexts/pricing-events.md)
+**詳細資訊**：參見 [Pricing Events 文件](contexts/pricing-events.md)
 
 ---
 
 ## Seller Context Events
 
-| Event Name | Description | Aggregate | Triggers |
+| 事件名稱 | 描述 | Aggregate | 觸發條件 |
 |------------|-------------|-----------|----------|
-| `SellerRegisteredEvent` | A new seller was registered | Seller | Seller registration |
-| `SellerVerifiedEvent` | Seller was verified | Seller | Verification completion |
-| `SellerSuspendedEvent` | Seller account was suspended | Seller | Account suspension |
-| `SellerReactivatedEvent` | Seller account was reactivated | Seller | Account reactivation |
-| `SellerProductListedEvent` | Seller listed a new product | Seller | Product listing |
+| `SellerRegisteredEvent` | 註冊了新賣家 | Seller | 賣家註冊 |
+| `SellerVerifiedEvent` | 賣家已驗證 | Seller | 完成驗證 |
+| `SellerSuspendedEvent` | 賣家帳戶已暫停 | Seller | 暫停帳戶 |
+| `SellerReactivatedEvent` | 賣家帳戶已重新啟用 | Seller | 重新啟用帳戶 |
+| `SellerProductListedEvent` | 賣家上架了新產品 | Seller | 產品上架 |
 
-**Total**: 5 events
+**總計**：5 個事件
 
-**Details**: See [Seller Events Documentation](contexts/seller-events.md)
+**詳細資訊**：參見 [Seller Events 文件](contexts/seller-events.md)
 
 ---
 
 ## Delivery Context Events
 
-| Event Name | Description | Aggregate | Triggers |
+| 事件名稱 | 描述 | Aggregate | 觸發條件 |
 |------------|-------------|-----------|----------|
-| `DeliveryScheduledEvent` | Delivery was scheduled | Delivery | Delivery scheduling |
-| `DeliveryAssignedEvent` | Delivery was assigned to driver | Delivery | Driver assignment |
-| `DeliveryInProgressEvent` | Delivery is in progress | Delivery | Delivery start |
-| `DeliveryCompletedEvent` | Delivery was completed | Delivery | Delivery completion |
-| `DeliveryFailedEvent` | Delivery attempt failed | Delivery | Delivery failure |
+| `DeliveryScheduledEvent` | 配送已安排 | Delivery | 安排配送 |
+| `DeliveryAssignedEvent` | 配送已指派給司機 | Delivery | 指派司機 |
+| `DeliveryInProgressEvent` | 配送進行中 | Delivery | 配送開始 |
+| `DeliveryCompletedEvent` | 配送已完成 | Delivery | 完成配送 |
+| `DeliveryFailedEvent` | 配送嘗試失敗 | Delivery | 配送失敗 |
 
-**Total**: 5 events
+**總計**：5 個事件
 
-**Details**: See [Delivery Events Documentation](contexts/delivery-events.md)
+**詳細資訊**：參見 [Delivery Events 文件](contexts/delivery-events.md)
 
 ---
 
-## Event Statistics
+## 事件統計
 
-### By Context
+### 依 Context
 
-| Context | Event Count | Percentage |
+| Context | 事件數量 | 百分比 |
 |---------|-------------|------------|
 | Order | 11 | 16.9% |
 | Customer | 7 | 10.8% |
@@ -249,24 +249,24 @@ All events follow these naming conventions:
 | Review | 4 | 6.2% |
 | Notification | 3 | 4.6% |
 | Pricing | 3 | 4.6% |
-| **Total** | **65** | **100%** |
+| **總計** | **65** | **100%** |
 
-### By Category
+### 依類別
 
-| Category | Event Count | Description |
+| 類別 | 事件數量 | 描述 |
 |----------|-------------|-------------|
-| Lifecycle | 25 | Created, Updated, Deleted events |
-| State Transition | 20 | Status change events |
-| Business Action | 15 | Business operation events |
-| System Event | 5 | System-generated events |
+| Lifecycle | 25 | Created、Updated、Deleted 事件 |
+| State Transition | 20 | 狀態變更事件 |
+| Business Action | 15 | 業務操作事件 |
+| System Event | 5 | 系統產生的事件 |
 
 ---
 
-## Event Dependencies
+## 事件依賴關係
 
-### Common Event Flows
+### 常見事件流程
 
-#### Order Processing Flow
+#### 訂單處理流程
 
 ```text
 CartCheckedOutEvent
@@ -282,15 +282,15 @@ CartCheckedOutEvent
     → OrderDeliveredEvent
 ```
 
-#### Customer Registration Flow
+#### 客戶註冊流程
 
 ```text
 CustomerCreatedEvent
-    → NotificationSentEvent (Welcome Email)
+    → NotificationSentEvent (歡迎 Email)
     → CustomerEmailVerifiedEvent
 ```
 
-#### Product Purchase Flow
+#### 產品購買流程
 
 ```text
 ItemAddedToCartEvent
@@ -302,28 +302,28 @@ ItemAddedToCartEvent
 
 ---
 
-## Event Versioning
+## 事件版本控制
 
-### Current Versions
+### 當前版本
 
-All events are currently at version 1.0. Future versions will be documented here.
+所有事件目前都在版本 1.0。未來版本將在此處記錄。
 
-### Deprecated Events
+### 已棄用事件
 
-No events are currently deprecated.
-
----
-
-## Related Documentation
-
-- **Event Schemas**: See [schemas/](schemas/) directory
-- **Event Handling**: See `.kiro/steering/domain-events.md`
-- **Architecture**: See `docs/viewpoints/information/data-flow.md`
-- **API Documentation**: See [README.md](README.md)
+目前沒有已棄用的事件。
 
 ---
 
-## Quick Navigation
+## 相關文件
+
+- **事件 Schemas**：參見 [schemas/](schemas/) 目錄
+- **事件處理**：參見 `.kiro/steering/domain-events.md`
+- **架構**：參見 `docs/viewpoints/information/data-flow.md`
+- **API 文件**：參見 [README.md](README.md)
+
+---
+
+## 快速導覽
 
 - [Customer Events](contexts/customer-events.md)
 - [Order Events](contexts/order-events.md)
@@ -341,6 +341,6 @@ No events are currently deprecated.
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2025-10-25  
-**Owner**: Architecture Team
+**文件版本**: 1.0
+**最後更新**: 2025-10-25
+**負責人**: 架構團隊

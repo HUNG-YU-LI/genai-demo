@@ -1,19 +1,19 @@
-# API Design Patterns
+# API 設計模式
 
-## Overview
+## 概述
 
-RESTful API design patterns and best practices for our project.
+我們專案的 RESTful API 設計模式和最佳實踐。
 
-**Related Standards**: [Development Standards](../../steering/development-standards.md)
+**相關標準**: [Development Standards](../../steering/development-standards.md)
 
 ---
 
-## RESTful URL Design
+## RESTful URL 設計
 
-### Resource Naming
+### 資源命名
 
 ```java
-// ✅ GOOD: RESTful conventions
+// ✅ 好: RESTful 慣例
 GET    /api/v1/customers                    // List customers
 GET    /api/v1/customers/{id}               // Get customer
 POST   /api/v1/customers                    // Create customer
@@ -30,7 +30,7 @@ POST   /api/v1/orders/{id}/submit           // Submit order
 POST   /api/v1/orders/{id}/cancel           // Cancel order
 POST   /api/v1/orders/{id}/ship             // Ship order
 
-// ❌ BAD: Non-RESTful
+// ❌ 壞: 非 RESTful
 GET    /api/v1/getCustomer?id=123
 POST   /api/v1/createCustomer
 POST   /api/v1/customer/delete
@@ -38,9 +38,9 @@ POST   /api/v1/customer/delete
 
 ---
 
-## Request/Response Design
+## Request/Response 設計
 
-### DTOs and Validation
+### DTOs 和驗證
 
 ```java
 // Request DTO
@@ -72,19 +72,19 @@ public record CustomerResponse(
 }
 ```
 
-### HTTP Status Codes
+### HTTP 狀態碼
 
 ```java
 @RestController
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
-    
+
     @GetMapping
     public ResponseEntity<Page<CustomerResponse>> listCustomers(Pageable pageable) {
         // 200 OK for successful GET
         return ResponseEntity.ok(customerService.findAll(pageable));
     }
-    
+
     @PostMapping
     public ResponseEntity<CustomerResponse> createCustomer(
             @Valid @RequestBody CreateCustomerRequest request) {
@@ -94,7 +94,7 @@ public class CustomerController {
             .created(URI.create("/api/v1/customers/" + customer.getId()))
             .body(CustomerResponse.from(customer));
     }
-    
+
     @PutMapping("/{id}")
     public ResponseEntity<CustomerResponse> updateCustomer(
             @PathVariable String id,
@@ -103,7 +103,7 @@ public class CustomerController {
         // 200 OK for successful PUT
         return ResponseEntity.ok(CustomerResponse.from(customer));
     }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable String id) {
         customerService.deleteCustomer(id);
@@ -115,28 +115,28 @@ public class CustomerController {
 
 ---
 
-## Pagination and Filtering
+## 分頁和過濾
 
 ```java
 @RestController
 public class ProductController {
-    
+
     @GetMapping("/api/v1/products")
     public ResponseEntity<Page<ProductResponse>> searchProducts(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @PageableDefault(size = 20, sort = "name") Pageable pageable) {
-        
+
         ProductSearchCriteria criteria = ProductSearchCriteria.builder()
             .category(category)
             .minPrice(minPrice)
             .maxPrice(maxPrice)
             .build();
-        
+
         Page<Product> products = productService.search(criteria, pageable);
         Page<ProductResponse> response = products.map(ProductResponse::from);
-        
+
         return ResponseEntity.ok(response);
     }
 }
@@ -158,7 +158,7 @@ public class ProductController {
 
 ---
 
-## API Versioning
+## API 版本控制
 
 ```java
 // URL versioning (recommended)
@@ -174,10 +174,10 @@ public class CustomerControllerV2 { }
 @RestController
 @RequestMapping("/api/customers")
 public class CustomerController {
-    
+
     @GetMapping(headers = "API-Version=1")
     public ResponseEntity<CustomerResponseV1> getCustomerV1(@PathVariable String id) { }
-    
+
     @GetMapping(headers = "API-Version=2")
     public ResponseEntity<CustomerResponseV2> getCustomerV2(@PathVariable String id) { }
 }
@@ -185,7 +185,7 @@ public class CustomerController {
 
 ---
 
-## Error Responses
+## 錯誤回應
 
 ```java
 // Consistent error format
@@ -227,14 +227,14 @@ public record ErrorResponse(
 
 ---
 
-## API Documentation
+## API 文件
 
 ```java
 @RestController
 @RequestMapping("/api/v1/customers")
 @Tag(name = "Customer Management", description = "APIs for managing customers")
 public class CustomerController {
-    
+
     @Operation(
         summary = "Create a new customer",
         description = "Creates a new customer with the provided information"
@@ -258,21 +258,21 @@ public class CustomerController {
 
 ---
 
-## Summary
+## 總結
 
-Key API design principles:
+關鍵 API 設計原則：
 
-1. **Use RESTful conventions** for URLs and HTTP methods
-2. **Return appropriate status codes** (200, 201, 204, 400, 404, 409, 500)
-3. **Validate input** with Bean Validation
-4. **Provide consistent error responses** with error codes
-5. **Support pagination and filtering** for list endpoints
-6. **Version your APIs** for backward compatibility
-7. **Document with OpenAPI** (Swagger)
+1. **使用 RESTful 慣例**用於 URLs 和 HTTP 方法
+2. **回傳適當的狀態碼**（200、201、204、400、404、409、500）
+3. **使用 Bean Validation 驗證輸入**
+4. **提供一致的錯誤回應**帶有錯誤代碼
+5. **支援分頁和過濾**用於清單端點
+6. **版本控制您的 APIs**以實現向後相容性
+7. **使用 OpenAPI 記錄**（Swagger）
 
 ---
 
-**Related Documentation**:
+**相關文件**:
 - [Development Standards](../../steering/development-standards.md)
 - [Error Handling](error-handling.md)
 - [Code Quality Checklist](../../steering/code-quality-checklist.md)

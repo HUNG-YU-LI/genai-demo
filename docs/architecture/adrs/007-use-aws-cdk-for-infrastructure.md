@@ -1,6 +1,6 @@
 ---
 adr_number: 007
-title: "Use AWS CDK for Infrastructure as Code"
+title: "Use AWS CDK 用於 Infrastructure as Code"
 date: 2025-10-24
 status: "accepted"
 supersedes: []
@@ -10,212 +10,212 @@ affected_viewpoints: ["deployment", "operational"]
 affected_perspectives: ["evolution", "development-resource"]
 ---
 
-# ADR-007: Use AWS CDK for Infrastructure as Code
+# ADR-007: Use AWS CDK 用於 Infrastructure as Code
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-24
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires a robust Infrastructure as Code (IaC) solution that:
+The Enterprise E-Commerce Platform 需要robust Infrastructure as Code (IaC) solution that:
 
-- Provisions and manages AWS infrastructure reliably
-- Supports version control and code review for infrastructure changes
-- Enables automated deployment and rollback
-- Provides type safety and IDE support
-- Integrates well with CI/CD pipelines
-- Supports multiple environments (dev, staging, production)
+- Provisions 和 manages AWS infrastructure reliably
+- 支援s version control 和 code review 用於 infrastructure changes
+- 啟用s automated deployment 和 rollback
+- 提供s type safety 和 IDE 支援
+- Integrates well 與 CI/CD pipelines
+- 支援s multiple environments (dev, staging, production)
 - Allows infrastructure testing before deployment
-- Maintains consistency across environments
+- 維持s consistency 跨 environments
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Need for repeatable, consistent infrastructure deployments
-- Requirement for disaster recovery and environment replication
-- Compliance requirements for infrastructure audit trails
+- 需要 repeatable, consistent infrastructure deployments
+- Requirement 用於 disaster recovery 和 environment replication
+- Compliance requirements 用於 infrastructure audit trails
 - Team growth requiring infrastructure automation
-- Multi-region deployment for global users
+- Multi-region deployment 用於 global users
 - Cost optimization through infrastructure as code
 
-**Constraints**:
+**限制條件**：
 
 - AWS cloud platform (already decided)
 - Team has strong Java/TypeScript experience
 - Limited DevOps/infrastructure experience
-- Budget: Infrastructure management should not require dedicated team
-- Timeline: 3 months to production deployment
+- 預算: Infrastructure management 應該 not 需要dedicated team
+- Timeline: 3 個月 to production deployment
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- AWS cloud infrastructure
+- AWS 雲端基礎設施
 - Spring Boot application (Java 21)
 - PostgreSQL on RDS (ADR-001)
 - Kafka on MSK (ADR-005)
-- EKS for container orchestration
+- EKS 用於 container orchestration
 - Multiple environments needed (dev, staging, production)
 
-**Requirements**:
+**需求**：
 
 - Provision VPC, subnets, security groups
 - Manage RDS PostgreSQL instances
 - Configure EKS clusters
 - Set up MSK Kafka clusters
 - Configure ElastiCache Redis
-- Manage IAM roles and policies
+- Manage IAM roles 和 policies
 - Set up CloudWatch monitoring
-- Support multi-region deployment
+- 支援 multi-region deployment
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **Type Safety**: Catch infrastructure errors at compile time
 2. **Developer Experience**: Familiar programming language (TypeScript/Java)
-3. **AWS Integration**: Native AWS service support
+3. **AWS Integration**: Native AWS service 支援
 4. **Testing**: Ability to test infrastructure code
 5. **Reusability**: Create reusable infrastructure components
 6. **Team Skills**: Leverage existing programming skills
-7. **Maintainability**: Easy to understand and modify
-8. **Cost**: No additional licensing costs
+7. **維持ability**: 容易understand 和 modify
+8. **成本**： No additional licensing costs
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: AWS CDK (Cloud Development Kit)
+### 選項 1： AWS CDK (Cloud Development Kit)
 
-**Description**: Infrastructure as Code using TypeScript/Python/Java with AWS constructs
+**描述**： Infrastructure as Code using TypeScript/Python/Java with AWS constructs
 
-**Pros**:
+**優點**：
 
 - ✅ Type-safe infrastructure code (TypeScript/Java)
-- ✅ Full IDE support (autocomplete, refactoring)
-- ✅ Familiar programming language for team
-- ✅ Reusable constructs and patterns
+- ✅ Full IDE 支援 (autocomplete, refactoring)
+- ✅ Familiar programming language 用於 team
+- ✅ Reusable constructs 和 patterns
 - ✅ Built-in testing framework
-- ✅ Native AWS service support
+- ✅ Native AWS service 支援
 - ✅ Synthesizes to CloudFormation
-- ✅ Active AWS development and support
+- ✅ Active AWS development 和 支援
 - ✅ Higher-level abstractions (L2/L3 constructs)
-- ✅ Can use npm packages for extensions
+- ✅ 可以 use npm packages 用於 extensions
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Learning curve for CDK concepts
+- ⚠️ Learning curve 用於 CDK concepts
 - ⚠️ Generates CloudFormation (inherits CF limitations)
 - ⚠️ Younger than Terraform (less mature ecosystem)
 - ⚠️ AWS-specific (vendor lock-in)
 
-**Cost**: $0 (open source)
+**成本**： $0 (open source)
 
-**Risk**: **Low** - AWS-backed, growing adoption
+**風險**： **Low** - AWS-backed, growing adoption
 
-### Option 2: Terraform
+### 選項 2： Terraform
 
-**Description**: HashiCorp's infrastructure as code tool with HCL language
+**描述**： HashiCorp's infrastructure as code tool with HCL language
 
-**Pros**:
+**優點**：
 
-- ✅ Multi-cloud support (not AWS-specific)
-- ✅ Mature ecosystem and community
-- ✅ Large module library
+- ✅ Multi-cloud 支援 (not AWS-specific)
+- ✅ Mature ecosystem 和 community
+- ✅ 大型的 module library
 - ✅ State management built-in
 - ✅ Plan/apply workflow
 - ✅ Wide industry adoption
 
-**Cons**:
+**缺點**：
 
 - ❌ HCL is new language to learn
-- ❌ No type safety or IDE support
+- ❌ No type safety 或 IDE 支援
 - ❌ Limited testing capabilities
 - ❌ Verbose configuration
-- ❌ State management complexity
+- ❌ State management 複雜的ity
 - ❌ Slower AWS feature adoption
-- ❌ Requires separate Terraform Cloud for team collaboration
+- ❌ Requires separate Terraform Cloud 用於 team collaboration
 
-**Cost**: $0 (open source), Terraform Cloud: $20/user/month
+**成本**： $0 (open source), Terraform Cloud: $20/user/month
 
-**Risk**: **Low** - Mature, widely adopted
+**風險**： **Low** - Mature, widely adopted
 
-### Option 3: AWS CloudFormation (YAML/JSON)
+### 選項 3： AWS CloudFormation (YAML/JSON)
 
-**Description**: AWS native IaC using YAML or JSON templates
+**描述**： AWS native IaC using YAML or JSON templates
 
-**Pros**:
+**優點**：
 
 - ✅ Native AWS service
 - ✅ No additional tools needed
 - ✅ Direct AWS integration
-- ✅ Change sets for preview
-- ✅ Rollback support
+- ✅ Change sets 用於 preview
+- ✅ Rollback 支援
 
-**Cons**:
+**缺點**：
 
-- ❌ YAML/JSON is verbose and error-prone
+- ❌ YAML/JSON is verbose 和 error-prone
 - ❌ No type safety
-- ❌ Limited IDE support
-- ❌ Difficult to test
+- ❌ Limited IDE 支援
+- ❌ 難以test
 - ❌ No reusable components
 - ❌ Poor developer experience
-- ❌ Hard to maintain large templates
+- ❌ Hard to 維持 大型的 templates
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **Low** - AWS native, but poor DX
+**風險**： **Low** - AWS native, but poor DX
 
-### Option 4: Pulumi
+### 選項 4： Pulumi
 
-**Description**: Infrastructure as Code using general-purpose programming languages
+**描述**： Infrastructure as Code using general-purpose programming languages
 
-**Pros**:
+**優點**：
 
 - ✅ Use TypeScript/Python/Go/C#
-- ✅ Type safety and IDE support
-- ✅ Multi-cloud support
-- ✅ Good testing support
+- ✅ Type safety 和 IDE 支援
+- ✅ Multi-cloud 支援
+- ✅ 良好的 testing 支援
 - ✅ Familiar programming paradigms
 
-**Cons**:
+**缺點**：
 
-- ❌ Requires Pulumi Cloud for state management
+- ❌ Requires Pulumi Cloud 用於 state management
 - ❌ Smaller community than Terraform
 - ❌ Additional service dependency
 - ❌ Less AWS-specific optimization
-- ❌ Licensing costs for teams
+- ❌ Licensing costs 用於 teams
 
-**Cost**: Free tier limited, Team: $75/user/month
+**成本**： Free tier limited, Team: $75/user/month
 
-**Risk**: **Medium** - Smaller ecosystem, cost concerns
+**風險**： **Medium** - Smaller ecosystem, cost concerns
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **AWS CDK (Cloud Development Kit) with TypeScript**
+**選擇的選項**： **AWS CDK (Cloud Development Kit) with TypeScript**
 
-### Rationale
+### 理由
 
-AWS CDK was selected for the following reasons:
+AWS CDK被選擇的原因如下：
 
-1. **Type Safety**: TypeScript provides compile-time error checking for infrastructure code
+1. **Type Safety**: TypeScript 提供s compile-time error checking 用於 infrastructure code
 2. **Developer Experience**: Team already knows TypeScript (Next.js frontend)
-3. **IDE Support**: Full IntelliSense, refactoring, and debugging support
-4. **AWS Native**: Best-in-class AWS service support and fastest feature adoption
-5. **Testing**: Built-in testing framework for infrastructure validation
-6. **Reusability**: Create custom constructs for common patterns
-7. **Higher Abstractions**: L2/L3 constructs reduce boilerplate
-8. **No Additional Costs**: Open source with no licensing fees
-9. **CloudFormation Backend**: Inherits CF's reliability and rollback capabilities
+3. **IDE 支援**: Full IntelliSense, refactoring, 和 debugging 支援
+4. **AWS Native**: Best-in-class AWS service 支援 和 fastest feature adoption
+5. **Testing**: Built-in testing framework 用於 infrastructure validation
+6. **Reusability**: Create custom constructs 用於 common patterns
+7. **Higher Abstractions**: L2/L3 constructs 降低 boilerplate
+8. **No Additional Costs**: Open source 與 no licensing fees
+9. **CloudFormation Backend**: Inherits CF's reliability 和 rollback capabilities
 
-**Implementation Strategy**:
+**實作策略**：
 
 **Language Choice**: TypeScript
 
 - Team has TypeScript experience (Next.js)
-- Best CDK documentation and examples
+- Best CDK documentation 和 examples
 - Strong type safety
-- Excellent IDE support
+- 優秀的 IDE 支援
 
 **Project Structure**:
 
@@ -238,29 +238,29 @@ infrastructure/
 └── package.json
 ```
 
-**Why Not Terraform**: While Terraform is mature and multi-cloud, our commitment to AWS and team's TypeScript skills make CDK a better fit. HCL is another language to learn with no type safety.
+**為何不選 Terraform**： While Terraform is mature 和 multi-cloud, our commitment to AWS 和 team's TypeScript skills make CDK a 更好的 fit. HCL is another language to learn 與 no type safety.
 
-**Why Not CloudFormation**: YAML/JSON templates are too verbose and error-prone. CDK provides better developer experience while still using CloudFormation backend.
+**為何不選 CloudFormation**： YAML/JSON templates are too verbose 和 error-prone. CDK 提供s 更好的 developer experience while still using CloudFormation backend.
 
-**Why Not Pulumi**: Requires paid service for team collaboration and state management. CDK is free and AWS-native.
+**為何不選 Pulumi**： Requires paid service 用於 team collaboration 和 state management. CDK is free 和 AWS-native.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
 | Development Team | Medium | Need to learn CDK concepts | Training, examples, documentation |
 | Operations Team | High | Infrastructure now in code | Training, runbooks, gradual adoption |
-| Architects | Positive | Infrastructure versioned and reviewable | Architecture reviews for infrastructure |
-| Security Team | Positive | Infrastructure changes auditable | Security scanning in CI/CD |
+| Architects | Positive | Infrastructure versioned 和 reviewable | Architecture reviews 用於 infrastructure |
+| Security Team | Positive | Infrastructure changes auditable | Security s可以ning in CI/CD |
 | Business | Positive | Faster, more reliable deployments | N/A |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All AWS infrastructure provisioning
 - Deployment processes
@@ -269,7 +269,7 @@ Affects:
 - Cost management
 - Security configuration
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
@@ -277,13 +277,13 @@ Affects:
 | CloudFormation limitations | Medium | Medium | Understand CF limits, use escape hatches |
 | Infrastructure drift | Medium | High | Regular drift detection, automated reconciliation |
 | Breaking changes in CDK | Low | Medium | Pin CDK versions, test upgrades |
-| Vendor lock-in to AWS | Low | Low | Acceptable trade-off for AWS commitment |
+| Vendor lock-in to AWS | Low | Low | Acceptable trade-off 用於 AWS commitment |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Setup and Training (Week 1-2)
+### 第 1 階段： Setup and Training （第 1-2 週）
 
 - [x] Install AWS CDK CLI
 
@@ -299,11 +299,11 @@ Affects:
   cdk init app --language typescript
   ```
 
-- [x] Configure AWS credentials and profiles
-- [x] Set up CDK context for environments
+- [x] Configure AWS credentials 和 profiles
+- [x] Set up CDK context 用於 environments
 - [x] Conduct team training on CDK basics
 
-### Phase 2: Network Infrastructure (Week 2-3)
+### 第 2 階段： Network Infrastructure （第 2-3 週）
 
 - [ ] Create VPC stack
 
@@ -338,9 +338,9 @@ Affects:
 
 - [ ] Configure security groups
 - [ ] Set up VPC endpoints
-- [ ] Deploy and test network stack
+- [ ] Deploy 和 test network stack
 
-### Phase 3: Database Infrastructure (Week 3-4)
+### 第 3 階段： Database Infrastructure （第 3-4 週）
 
 - [ ] Create RDS stack
 
@@ -375,9 +375,9 @@ Affects:
 
 - [ ] Configure read replicas
 - [ ] Set up automated backups
-- [ ] Deploy and test database stack
+- [ ] Deploy 和 test database stack
 
-### Phase 4: Compute Infrastructure (Week 4-5)
+### 第 4 階段： Compute Infrastructure （第 4-5 週）
 
 - [ ] Create EKS cluster stack
 
@@ -408,16 +408,16 @@ Affects:
 
 - [ ] Configure auto-scaling
 - [ ] Set up load balancers
-- [ ] Deploy and test compute stack
+- [ ] Deploy 和 test compute stack
 
-### Phase 5: Messaging and Caching (Week 5-6)
+### Phase 5: Messaging and Caching （第 5-6 週）
 
 - [ ] Create MSK Kafka cluster
 - [ ] Create ElastiCache Redis cluster
-- [ ] Configure security and networking
-- [ ] Deploy and test
+- [ ] Configure security 和 networking
+- [ ] Deploy 和 test
 
-### Phase 6: Monitoring and Observability (Week 6-7)
+### Phase 6: Monitoring and Observability （第 6-7 週）
 
 - [ ] Create monitoring stack
 
@@ -442,10 +442,10 @@ Affects:
   ```
 
 - [ ] Set up CloudWatch dashboards
-- [ ] Configure alarms and notifications
-- [ ] Deploy and test
+- [ ] Configure alarms 和 notifications
+- [ ] Deploy 和 test
 
-### Phase 7: CI/CD Integration (Week 7-8)
+### Phase 7: CI/CD Integration （第 7-8 週）
 
 - [ ] Create CDK pipeline
 
@@ -476,16 +476,16 @@ Affects:
 - [ ] Set up approval gates
 - [ ] Test deployment pipeline
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - CDK deployment failures > 50%
 - Team unable to manage infrastructure
 - CloudFormation limitations blocking progress
 - Infrastructure drift issues
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Export current infrastructure to Terraform
 2. Migrate state management
@@ -493,13 +493,13 @@ Affects:
 4. Train team on Terraform
 5. Decommission CDK infrastructure
 
-**Rollback Time**: 2-3 weeks
+**回滾時間**： 2-3 weeks
 
-**Note**: Rollback is complex due to CloudFormation backend. Prevention through testing is key.
+**Note**: Rollback is 複雜的 due to CloudFormation backend. Prevention through testing is key.
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ 100% of infrastructure defined in CDK
 - ✅ Zero manual infrastructure changes
@@ -509,7 +509,7 @@ Affects:
 - ✅ Deployment time < 30 minutes
 - ✅ Rollback time < 15 minutes
 
-### Monitoring Plan
+### 監控計畫
 
 **CDK Deployment Metrics**:
 
@@ -529,63 +529,63 @@ new cloudwatch.Metric({
 });
 ```
 
-**Alerts**:
+**告警**：
 
 - Deployment failures
 - Stack drift detected
 - CloudFormation stack in ROLLBACK state
 - Resource creation failures
 
-**Review Schedule**:
+**審查時程**：
 
 - Daily: Check deployment status
 - Weekly: Review infrastructure changes
 - Monthly: Infrastructure cost optimization
 - Quarterly: CDK version upgrades
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Type Safety**: Catch errors at compile time
-- ✅ **IDE Support**: Full IntelliSense and refactoring
+- ✅ **IDE 支援**: Full IntelliSense 和 refactoring
 - ✅ **Testability**: Unit test infrastructure code
 - ✅ **Reusability**: Create custom constructs
 - ✅ **Version Control**: Infrastructure changes tracked in Git
 - ✅ **Code Review**: Infrastructure changes reviewed like code
-- ✅ **Consistency**: Same infrastructure across environments
-- ✅ **Automation**: Automated deployments and rollbacks
+- ✅ **Consistency**: Same infrastructure 跨 environments
+- ✅ **Automation**: Automated deployments 和 rollbacks
 
-### Negative Consequences
+### 負面後果
 
 - ⚠️ **Learning Curve**: Team needs to learn CDK concepts
 - ⚠️ **CloudFormation Limitations**: Inherits CF constraints
 - ⚠️ **AWS Lock-in**: CDK is AWS-specific
-- ⚠️ **Complexity**: More complex than simple YAML templates
-- ⚠️ **Debugging**: CloudFormation errors can be cryptic
+- ⚠️ **複雜的ity**: More 複雜的 than 簡單的 YAML templates
+- ⚠️ **Debugging**: CloudFormation errors 可以 be cryptic
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. No infrastructure testing yet (acceptable for MVP)
-2. Manual drift detection (can be automated)
-3. Limited custom constructs (will grow over time)
+1. No infrastructure testing yet (acceptable 用於 MVP)
+2. Manual drift detection (可以 be automated)
+3. Limited custom constructs (將 grow over time)
 4. No multi-region deployment yet (future requirement)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q1 2026**: Implement comprehensive infrastructure testing
-- **Q2 2026**: Automate drift detection and remediation
+- **Q2 2026**: Automate drift detection 和 remediation
 - **Q3 2026**: Create library of custom constructs
 - **Q4 2026**: Implement multi-region deployment
 
-## Related Decisions
+## 相關決策
 
-- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md) - RDS provisioning
-- [ADR-005: Use Apache Kafka for Event Streaming](005-use-kafka-for-event-streaming.md) - MSK provisioning
+- [ADR-001: Use PostgreSQL 用於 Primary Database](001-use-postgresql-for-primary-database.md) - RDS provisioning
+- [ADR-005: Use Apache Kafka 用於 Event Streaming](005-use-kafka-for-event-streaming.md) - MSK provisioning
 
-## Notes
+## 備註
 
 ### CDK Best Practices
 
@@ -721,6 +721,6 @@ database.applyRemovalPolicy(cdk.RemovalPolicy.RETAIN);
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-24  
-**Next Review**: 2026-01-24 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-24  
+**下次審查**： 2026-01-24 （每季）

@@ -1,6 +1,6 @@
 ---
 adr_number: 041
-title: "Data Residency and Sovereignty Strategy"
+title: "Data Residency 和 Sovereignty Strategy"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,95 +10,95 @@ affected_viewpoints: ["information", "deployment"]
 affected_perspectives: ["security", "location"]
 ---
 
-# ADR-041: Data Residency and Sovereignty Strategy
+# ADR-041: Data Residency 和 Sovereignty Strategy
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-Active-active multi-region architecture must comply with data residency and sovereignty regulations:
+Active-active multi-region architecture 必須 comply 與 data residency 和 sovereignty regulations:
 
 **Regulatory Requirements**:
 
-- **GDPR (EU)**: Personal data of EU residents must stay in EU or adequate countries
+- **GDPR (EU)**: Personal data of EU residents 必須 stay in EU 或 adequate countries
 - **Taiwan PDPA**: Personal data protection requirements
 - **Japan APPI**: Act on Protection of Personal Information
 - **China Cybersecurity Law**: Data localization requirements (if expanding to China)
-- **Industry Standards**: PCI-DSS for payment data
+- **Industry Standards**: PCI-DSS 用於 payment data
 
 **Data Sovereignty Challenges**:
 
-- **Cross-Border Transfer**: Restrictions on moving personal data across borders
+- **Cross-Border Transfer**: Restrictions on moving personal data 跨 borders
 - **Data Localization**: Requirements to store data in specific countries
 - **Lawful Access**: Government access to data
-- **Compliance Complexity**: Multiple overlapping regulations
+- **Compliance 複雜的ity**: Multiple overlapping regulations
 - **Business Flexibility**: Need to serve customers globally
 
 **Business Impact**:
 
-- Regulatory fines (up to 4% of revenue for GDPR)
+- Regulatory fines (up to 4% of revenue 用於 GDPR)
 - Legal liability
 - Customer trust erosion
 - Market access restrictions
-- Operational complexity
+- Operational 複雜的ity
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - Regulatory compliance (mandatory)
-- Customer trust and privacy
+- Customer trust 和 privacy
 - Market expansion (Japan, potentially China)
 - Competitive advantage (privacy-focused)
 - Risk mitigation
 
-**Constraints**:
+**限制條件**：
 
-- Budget: $75,000/year for compliance infrastructure
-- Must support Taiwan and Japan markets
+- 預算: $75,000/year 用於 compliance infrastructure
+- 必須 支援 Taiwan 和 Japan markets
 - Future expansion to China possible
-- Cross-region replication needed for availability
+- Cross-region replication needed 用於 availability
 - Performance requirements (low latency)
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- Active-active architecture in Taiwan and Tokyo
+- Active-active architecture in Taiwan 和 Tokyo
 - Cross-region data replication
 - No data classification system
 - No residency controls
 - No compliance monitoring
 
-**Requirements**:
+**需求**：
 
-- Data classification by sensitivity
+- Data classification 透過 sensitivity
 - Regional data isolation where required
 - Controlled cross-border transfers
-- Audit trails for data access
-- Compliance monitoring and reporting
-- Support for future regions
+- Audit trails 用於 data access
+- Compliance monitoring 和 reporting
+- 支援 用於 future regions
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **Compliance**: Meet all regulatory requirements
 2. **Privacy**: Protect customer personal data
-3. **Flexibility**: Support global operations
-4. **Performance**: Maintain low latency
-5. **Availability**: Support multi-region architecture
+3. **Flexibility**: 支援 global operations
+4. **Performance**: 維持 low latency
+5. **Availability**: 支援 multi-region architecture
 6. **Auditability**: Comprehensive audit trails
-7. **Cost**: Optimize compliance costs
-8. **Scalability**: Support future regions
+7. **成本**： Optimize compliance costs
+8. **Scalability**: 支援 future regions
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Tiered Data Classification with Regional Isolation (Recommended)
+### 選項 1： Tiered Data Classification with Regional Isolation (Recommended)
 
-**Description**: Classify data into tiers with different residency requirements
+**描述**： Classify data into tiers with different residency requirements
 
 **Data Classification Tiers**:
 
@@ -116,13 +116,13 @@ Active-active multi-region architecture must comply with data residency and sove
 **Tier 2 - Controlled Cross-Region (Transactional)**:
 
 - **Data Types**: Orders, inventory, transactions
-- **Storage**: Cross-region replication with controls
-- **Access**: Cross-region with audit
+- **Storage**: Cross-region replication 與 controls
+- **Access**: Cross-region 與 audit
 - **Regulations**: Business data protection
 - **Examples**:
-  - Order data → Replicated for availability
-  - Inventory → Replicated for consistency
-  - Transaction logs → Replicated for audit
+  - Order data → Replicated 用於 availability
+  - Inventory → Replicated 用於 consistency
+  - Transaction logs → Replicated 用於 audit
 
 **Tier 3 - Global Replication (Public/Non-Sensitive)**:
 
@@ -135,81 +135,81 @@ Active-active multi-region architecture must comply with data residency and sove
   - Marketing content → Global
   - Public reviews → Global
 
-**Pros**:
+**優點**：
 
-- ✅ Compliant with all regulations
-- ✅ Flexible for different data types
-- ✅ Maintains availability where possible
+- ✅ Compliant 與 all regulations
+- ✅ Flexible 用於 different data types
+- ✅ 維持s availability where possible
 - ✅ Clear classification rules
-- ✅ Supports future regions
-- ✅ Balances compliance and performance
+- ✅ 支援s future regions
+- ✅ Balances compliance 和 performance
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Complexity in data classification
-- ⚠️ Regional data silos for Tier 1
-- ⚠️ Cross-region queries more complex
+- ⚠️ 複雜的ity in data classification
+- ⚠️ Regional data silos 用於 Tier 1
+- ⚠️ Cross-region queries more 複雜的
 
-**Cost**: $75,000/year
+**成本**： $75,000/year
 
-**Risk**: **Low** - Industry best practice
+**風險**： **Low** - Industry best practice
 
-### Option 2: Full Regional Isolation
+### 選項 2： Full Regional Isolation
 
-**Description**: All customer data stays in customer's region
+**描述**： All customer data stays in customer's region
 
-**Pros**:
+**優點**：
 
 - ✅ Maximum compliance
-- ✅ Simple to understand
+- ✅ 簡單understand
 - ✅ Clear data boundaries
 
-**Cons**:
+**缺點**：
 
-- ❌ Poor availability (no cross-region failover for PII)
-- ❌ Complex cross-region operations
-- ❌ Performance issues for global features
-- ❌ Operational complexity
+- ❌ Poor availability (no cross-region failover 用於 PII)
+- ❌ 複雜的 cross-region operations
+- ❌ Performance issues 用於 global features
+- ❌ Operational 複雜的ity
 
-**Cost**: $60,000/year
+**成本**： $60,000/year
 
-**Risk**: **Medium** - Availability impact
+**風險**： **Medium** - Availability impact
 
-### Option 3: Global Data with Consent
+### 選項 3： Global Data with Consent
 
-**Description**: Store all data globally with user consent
+**描述**： Store all data globally with user consent
 
-**Pros**:
+**優點**：
 
-- ✅ Simple architecture
+- ✅ 簡單的 architecture
 - ✅ Best performance
 - ✅ Easy operations
 
-**Cons**:
+**缺點**：
 
 - ❌ Regulatory non-compliance
 - ❌ Privacy concerns
 - ❌ Market access restrictions
 - ❌ Legal risks
 
-**Cost**: $40,000/year
+**成本**： $40,000/year
 
-**Risk**: **High** - Regulatory violations
+**風險**： **High** - Regulatory violations
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Tiered Data Classification with Regional Isolation (Option 1)**
+**選擇的選項**： **Tiered Data Classification with Regional Isolation (Option 1)**
 
-### Rationale
+### 理由
 
-Tiered data classification provides optimal balance:
+Tiered data classification 提供s optimal balance:
 
 1. **Compliance**: Meets all regulatory requirements
-2. **Flexibility**: Different rules for different data types
+2. **Flexibility**: Different rules 用於 different data types
 3. **Availability**: Cross-region replication where allowed
-4. **Performance**: Regional data for low latency
-5. **Pragmatic**: Balances compliance and operations
-6. **Scalable**: Easy to add new regions
+4. **Performance**: Regional data 用於 low latency
+5. **Pragmatic**: Balances compliance 和 operations
+6. **Scalable**: 容易add new regions
 
 ### Data Classification Matrix
 
@@ -280,7 +280,7 @@ class DataResidencyRouter {
 }
 ```
 
-**Database Schema with Regional Partitioning**:
+**Database Schema 與 Regional Partitioning**:
 
 ```sql
 -- Customer PII table with regional partitioning
@@ -530,7 +530,7 @@ public class DataTransferAgreement {
 }
 ```
 
-### Compliance Monitoring and Audit
+### Compliance Monitoring 和 Audit
 
 **Data Access Audit Trail**:
 
@@ -755,7 +755,7 @@ public class ConsentService {
 
 ### Data Subject Rights (GDPR/APPI/PDPA)
 
-**Data Subject Request Handler**:
+**Data Subject Request 處理r**:
 
 ```java
 @Service
@@ -850,23 +850,23 @@ public class DataSubjectRequestService {
 }
 ```
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
 | Development Team | High | Data classification, regional routing | Patterns, libraries, training |
 | Operations Team | High | Compliance monitoring, audit management | Automation, dashboards |
-| Legal/Compliance | High | Regulatory compliance, audit support | Tools, reporting |
+| Legal/Compliance | High | Regulatory compliance, audit 支援 | Tools, reporting |
 | End Users | Low | Transparent compliance | Clear privacy policies |
-| Business | Medium | Compliance costs, operational complexity | ROI analysis, automation |
+| Business | Medium | Compliance costs, operational 複雜的ity | ROI analysis, automation |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **Enterprise**
+**選擇的影響半徑**： **Enterprise**
 
-Affects:
+影響：
 
 - All data models
 - All database schemas
@@ -876,21 +876,21 @@ Affects:
 - Compliance procedures
 - Legal agreements
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | Regulatory violation | Low | Critical | Automated compliance monitoring |
 | Data leakage | Low | Critical | Encryption, access controls, audit |
-| Compliance complexity | High | Medium | Clear classification, automation |
+| Compliance 複雜的ity | High | Medium | Clear classification, automation |
 | Performance impact | Medium | Medium | Caching, optimization |
 | Operational errors | Medium | High | Automation, validation, training |
 
-**Overall Risk Level**: **Medium**
+**整體風險等級**： **Medium**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Data Classification (Month 1-2)
+### 第 1 階段： Data Classification (Month 1-2)
 
 **Objectives**:
 
@@ -900,7 +900,7 @@ Affects:
 
 **Tasks**:
 
-- [ ] Define data tiers and rules
+- [ ] Define data tiers 和 rules
 - [ ] Audit existing data
 - [ ] Classify all data types
 - [ ] Implement @DataClassification annotations
@@ -912,7 +912,7 @@ Affects:
 - Classification rules documented
 - Team trained on classification
 
-### Phase 2: Regional Isolation (Month 3-4)
+### 第 2 階段： Regional Isolation (Month 3-4)
 
 **Objectives**:
 
@@ -934,7 +934,7 @@ Affects:
 - Regional routing working
 - No cross-border violations
 
-### Phase 3: Audit and Compliance (Month 5-6)
+### 第 3 階段： Audit and Compliance (Month 5-6)
 
 **Objectives**:
 
@@ -956,7 +956,7 @@ Affects:
 - Compliance monitoring active
 - Reports generated
 
-### Phase 4: Consent Management (Month 7-8)
+### 第 4 階段： Consent Management (Month 7-8)
 
 **Objectives**:
 
@@ -968,7 +968,7 @@ Affects:
 
 - [ ] Implement consent service
 - [ ] Create consent UI
-- [ ] Integrate with data access
+- [ ] Integrate 與 data access
 - [ ] Test consent validation
 - [ ] Document consent procedures
 
@@ -996,9 +996,9 @@ Affects:
 
 **Success Criteria**:
 
-- All DSR types supported
+- All DSR types 支援ed
 - Portal operational
-- Response time < 30 days
+- Response time < 30 天
 
 ### Phase 6: Production Readiness (Month 11-12)
 
@@ -1011,10 +1011,10 @@ Affects:
 **Tasks**:
 
 - [ ] Conduct compliance audit
-- [ ] Legal review and approval
+- [ ] Legal review 和 approval
 - [ ] Train all teams
 - [ ] Deploy to production
-- [ ] Monitor for 60 days
+- [ ] Monitor 用於 60 天
 
 **Success Criteria**:
 
@@ -1022,35 +1022,35 @@ Affects:
 - Legal approval obtained
 - Production stable
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Compliance violations
 - Data leakage
 - Performance issues
 - Operational problems
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. **Immediate**: Disable cross-border transfers
 2. **Isolate**: Full regional isolation
 3. **Audit**: Review all data access
 4. **Fix**: Address issues
-5. **Redeploy**: Gradual re-enablement
+5. **Redeploy**: Gradual re-啟用ment
 
-**Rollback Time**: < 4 hours
+**回滾時間**： < 4 hours
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
 | Compliance Violations | 0 | Audit logs |
 | Tier 1 Cross-Border Transfers | 0 | Monitoring |
 | Audit Trail Coverage | 100% | Audit logs |
-| DSR Response Time | < 30 days | DSR tracking |
+| DSR Response Time | < 30 天 | DSR tracking |
 | Consent Validity | 100% | Consent checks |
 | Data Classification Coverage | 100% | Classification audit |
 
@@ -1093,7 +1093,7 @@ const residencyMetrics = {
 
 **Data Classification Dashboard**:
 
-- Data by tier
+- Data 透過 tier
 - Regional distribution
 - Cross-border transfers
 - Access patterns
@@ -1106,58 +1106,58 @@ const residencyMetrics = {
 - **Quarterly**: Compliance audit
 - **Annually**: Legal review, regulation updates
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Regulatory Compliance**: Meets GDPR, APPI, PDPA, PCI-DSS
 - ✅ **Customer Trust**: Strong privacy protection
-- ✅ **Market Access**: Can operate in regulated markets
-- ✅ **Risk Mitigation**: Reduces legal and financial risks
+- ✅ **Market Access**: 可以 operate in regulated markets
+- ✅ **Risk Mitigation**: 降低s legal 和 financial risks
 - ✅ **Competitive Advantage**: Privacy-focused positioning
 - ✅ **Audit Trail**: Comprehensive data access tracking
-- ✅ **Flexibility**: Supports future regions
+- ✅ **Flexibility**: 支援s future regions
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Complexity**: Complex data classification and routing
+- ⚠️ **複雜的ity**: 複雜的 data classification 和 routing
 - ⚠️ **Performance**: Regional isolation may impact performance
-- ⚠️ **Cost**: $75,000/year compliance infrastructure
-- ⚠️ **Operations**: Increased operational complexity
+- ⚠️ **成本**： $75,000/year compliance infrastructure
+- ⚠️ **Operations**: Increased operational 複雜的ity
 - ⚠️ **Development**: Additional development effort
-- ⚠️ **Cross-Region**: Limited cross-region operations for Tier 1
+- ⚠️ **Cross-Region**: Limited cross-region operations 用於 Tier 1
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. Manual data classification for some data types
+1. Manual data classification 用於 some data types
 2. Basic consent management (no granular controls)
 3. Limited DSR automation
 4. Manual compliance reporting
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Automated data classification
 - **Q3 2026**: Granular consent controls
 - **Q4 2026**: Fully automated DSR handling
 - **2027**: AI-powered compliance monitoring
 
-## Related Decisions
+## 相關決策
 
-- [ADR-016: Data Encryption Strategy](016-data-encryption-strategy.md) - Encryption for data protection
+- [ADR-016: Data Encryption Strategy](016-data-encryption-strategy.md) - Encryption 用於 data protection
 - [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md) - Multi-region foundation
-- [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md) - Replication with residency controls
-- [ADR-040: Network Partition Handling Strategy](040-network-partition-handling-strategy.md) - Partition handling with residency
-- [ADR-058: Security Compliance and Audit Strategy](058-security-compliance-audit-strategy.md) - Overall compliance framework
+- [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md) - Replication 與 residency controls
+- [ADR-040: Network Partition Handling Strategy](040-network-partition-handling-strategy.md) - Partition handling 與 residency
+- [ADR-058: Security Compliance 和 Audit Strategy](058-security-compliance-audit-strategy.md) - Overall compliance framework
 
-## Notes
+## 備註
 
 ### Regulatory Comparison
 
 | Regulation | Jurisdiction | Key Requirements | Penalties |
 |------------|--------------|------------------|-----------|
-| **GDPR** | EU/EEA | Consent, data minimization, right to erasure | Up to 4% of revenue or €20M |
+| **GDPR** | EU/EEA | Consent, data minimization, right to erasure | Up to 4% of revenue 或 €20M |
 | **Taiwan PDPA** | Taiwan | Consent, purpose limitation, security | Up to NT$200M (~$6.5M) |
 | **Japan APPI** | Japan | Consent, purpose notification, security | Up to ¥100M (~$900K) |
 | **PCI-DSS** | Global | Payment card data protection | Loss of payment processing |
@@ -1168,19 +1168,19 @@ const residencyMetrics = {
 
 - No strict data localization
 - Personal data protection required
-- Cross-border transfer allowed with safeguards
+- Cross-border transfer allowed 與 safeguards
 
 **Japan**:
 
 - No strict data localization
 - APPI compliance required
-- Cross-border transfer allowed with consent
+- Cross-border transfer allowed 與 consent
 
 **China** (Future):
 
 - Strict data localization
-- Critical data must stay in China
-- Cross-border transfer requires approval
+- Critical data 必須 stay in China
+- Cross-border transfer 需要approval
 
 ### Standard Contractual Clauses (SCC)
 
@@ -1195,10 +1195,10 @@ For cross-border transfers, use EU Standard Contractual Clauses:
 
 | Data Type | Retention Period | Legal Basis |
 |-----------|------------------|-------------|
-| Customer PII | Account lifetime + 7 years | Tax law |
-| Order data | 7 years | Tax law, commercial law |
-| Payment data | 7 years | PCI-DSS, tax law |
-| Audit logs | 7 years | Compliance |
+| Customer PII | Account lifetime + 7 年 | Tax law |
+| Order data | 7 年 | Tax law, commercial law |
+| Payment data | 7 年 | PCI-DSS, tax law |
+| Audit logs | 7 年 | Compliance |
 | Marketing data | Until consent revoked | GDPR |
 
 ### Future Considerations
@@ -1207,7 +1207,7 @@ For cross-border transfers, use EU Standard Contractual Clauses:
 
 - Requires separate China region
 - Full data localization
-- Government approval for cross-border
+- Government approval 用於 cross-border
 - Local partner may be required
 
 **EU Expansion**:
@@ -1219,6 +1219,6 @@ For cross-border transfers, use EU Standard Contractual Clauses:
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

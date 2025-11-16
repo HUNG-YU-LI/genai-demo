@@ -1,8 +1,8 @@
-# Security and Compliance Maintenance Guide
+# 安全與合規維護指南
 
-## Overview
+## 概述
 
-This guide covers security patch management, user access control, audit logging, encryption key management, SSL/TLS certificate management, compliance reporting, vulnerability scanning, and access review procedures.
+本指南涵蓋安全性 patch 管理、使用者存取控制、audit logging、加密金鑰管理、SSL/TLS 憑證管理、合規報告、漏洞掃描和存取審查程序。
 
 ## Security Patch Management
 

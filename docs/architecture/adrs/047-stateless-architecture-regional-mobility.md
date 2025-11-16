@@ -1,6 +1,6 @@
 ---
 adr_number: 047
-title: "Stateless Architecture for Regional Mobility"
+title: "Stateless Architecture 用於 Regional Mobility"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,98 +10,98 @@ affected_viewpoints: ["deployment", "development", "concurrency"]
 affected_perspectives: ["availability", "performance", "evolution"]
 ---
 
-# ADR-047: Stateless Architecture for Regional Mobility
+# ADR-047: Stateless Architecture 用於 Regional Mobility
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-Multi-region active-active architecture requires seamless regional mobility, but stateful components create barriers:
+Multi-region active-active architecture 需要seamless regional mobility, 但 stateful components create barriers:
 
 **Stateful Architecture Challenges**:
 
 - **Session Affinity**: Users tied to specific regions
-- **In-Memory State**: Lost during failover
-- **Local Caching**: Inconsistent across regions
+- **In-Memory State**: Lost 期間 failover
+- **Local Caching**: Inconsistent 跨 regions
 - **File Storage**: Region-specific file systems
 - **Connection Pooling**: Region-bound connections
-- **Scheduled Jobs**: Duplicate execution across regions
+- **Scheduled Jobs**: Duplicate execution 跨 regions
 
 **Impact on Regional Mobility**:
 
 - Slow failover (need to migrate state)
-- User session loss during failover
-- Inconsistent user experience
-- Complex failover procedures
+- User session loss 期間 failover
+- Inconsistent 用戶體驗
+- 複雜的 failover procedures
 - Limited load balancing flexibility
-- Difficult testing and deployment
+- Difficult testing 和 deployment
 
 **Current State Issues**:
 
-- Some services maintain in-memory session state
-- Local file storage for uploads
+- Some services 維持 記憶體內 session state
+- Local file storage 用於 uploads
 - Region-specific caching
 - Stateful WebSocket connections
-- Background jobs with local state
+- Background jobs 與 local state
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - Seamless failover (< 5 minutes)
-- Consistent user experience
+- Consistent 用戶體驗
 - Global load balancing
 - Simplified operations
 - Cost optimization
 - Scalability
 
-**Constraints**:
+**限制條件**：
 
-- Cannot break existing functionality
-- Must maintain performance
+- 可以not break existing functionality
+- 必須 維持 performance
 - Minimize refactoring effort
-- Support gradual migration
-- Budget: $30,000 for implementation
+- 支援 gradual migration
+- 預算: $30,000 用於 implementation
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- Mix of stateful and stateless services
+- Mix of stateful 和 stateless services
 - Session state in application memory
 - Local file storage
 - Region-specific caches
 - Manual failover procedures
 
-**Requirements**:
+**需求**：
 
-- All services must be stateless
-- Externalized session management
+- All services 必須 be stateless
+- Externalized 會話管理
 - Distributed caching
 - Shared file storage
 - Idempotent operations
 - Automated failover
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Regional Mobility**: Enable seamless cross-region failover
-2. **Scalability**: Support horizontal scaling
-3. **Availability**: Improve failover speed (< 5 minutes)
-4. **Consistency**: Ensure consistent user experience
-5. **Simplicity**: Simplify operations and deployment
-6. **Performance**: Maintain or improve performance
-7. **Cost**: Optimize infrastructure costs
-8. **Evolution**: Support future architectural changes
+1. **Regional Mobility**: 啟用 seamless cross-region failover
+2. **Scalability**: 支援 horizontal scaling
+3. **Availability**: 改善 failover speed (< 5 minutes)
+4. **Consistency**: Ensure consistent 用戶體驗
+5. **Simplicity**: Simplify operations 和 deployment
+6. **Performance**: 維持 或 改善 performance
+7. **成本**： Optimize infrastructure costs
+8. **Evolution**: 支援 future architectural changes
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Comprehensive Stateless Architecture (Recommended)
+### 選項 1： Comprehensive Stateless Architecture (Recommended)
 
-**Description**: Implement fully stateless architecture with externalized state management
+**描述**： Implement fully stateless architecture with externalized state management
 
 **Architecture Principles**:
 
@@ -678,82 +678,82 @@ interface MigrationStrategy {
 }
 ```
 
-**Pros**:
+**優點**：
 
 - ✅ Seamless regional failover (< 5 minutes)
 - ✅ Unlimited horizontal scalability
 - ✅ Simplified operations
-- ✅ Consistent user experience
+- ✅ Consistent 用戶體驗
 - ✅ Automated failover
 - ✅ Cost optimization
-- ✅ Easier testing and deployment
-- ✅ Better resource utilization
+- ✅ Easier testing 和 deployment
+- ✅ 更好的 resource utilization
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Refactoring effort (16 weeks)
+- ⚠️ Refactoring effort (16 週)
 - ⚠️ External dependencies (Redis, S3, DynamoDB)
-- ⚠️ Network latency for state access
-- ⚠️ Complexity in distributed state management
+- ⚠️ Network latency 用於 state access
+- ⚠️ 複雜的ity in distributed state management
 
-**Cost**: $30,000 implementation + $15,000/year operational
+**成本**： $30,000 implementation + $15,000/year operational
 
-**Risk**: **Low** - Proven architecture pattern
+**風險**： **Low** - Proven architecture pattern
 
-### Option 2: Hybrid Stateful/Stateless
+### 選項 2： Hybrid Stateful/Stateless
 
-**Description**: Keep some stateful components, externalize critical state only
+**描述**： Keep some stateful components, externalize critical state only
 
-**Pros**:
+**優點**：
 
 - ✅ Lower refactoring effort
 - ✅ Faster implementation
 
-**Cons**:
+**缺點**：
 
 - ❌ Limited regional mobility
-- ❌ Complex failover
+- ❌ 複雜的 failover
 - ❌ Inconsistent architecture
 
-**Cost**: $15,000 implementation
+**成本**： $15,000 implementation
 
-**Risk**: **Medium** - Partial solution
+**風險**： **Medium** - Partial solution
 
-### Option 3: Sticky Sessions with State Replication
+### 選項 3： Sticky Sessions with State Replication
 
-**Description**: Use sticky sessions with background state replication
+**描述**： Use sticky sessions with background state replication
 
-**Pros**:
+**優點**：
 
 - ✅ Minimal refactoring
 - ✅ Familiar pattern
 
-**Cons**:
+**缺點**：
 
 - ❌ Slow failover
 - ❌ Session loss on failure
 - ❌ Limited scalability
-- ❌ Complex operations
+- ❌ 複雜的 operations
 
-**Cost**: $10,000 implementation
+**成本**： $10,000 implementation
 
-**Risk**: **High** - Does not solve core problems
+**風險**： **High** - Does not solve core problems
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Comprehensive Stateless Architecture (Option 1)**
+**選擇的選項**： **Comprehensive Stateless Architecture (Option 1)**
 
-### Rationale
+### 理由
 
-Fully stateless architecture provides optimal regional mobility, scalability, and operational simplicity, justifying the refactoring investment.
+Fully stateless architecture 提供s optimal regional mobility, scalability, 和 operational simplicity, justifying the refactoring investment.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Development Team | High | Significant refactoring required | Training, documentation, phased approach |
+| Development Team | High | Signifi可以t refactoring required | Training, documentation, phased approach |
 | Operations Team | Medium | New infrastructure to manage | Automation, training, runbooks |
 | QA Team | High | Extensive testing required | Test automation, clear test plans |
 | Customers | Low | Transparent changes | Gradual rollout, monitoring |
@@ -761,9 +761,9 @@ Fully stateless architecture provides optimal regional mobility, scalability, an
 
 ### Impact Radius Assessment
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All application services
 - Session management
@@ -773,26 +773,26 @@ Affects:
 - WebSocket connections
 - Deployment processes
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | Performance degradation | Medium | High | Performance testing, optimization |
-| Migration complexity | High | Medium | Phased approach, thorough testing |
+| Migration 複雜的ity | High | Medium | Phased approach, thorough testing |
 | External dependency failures | Low | High | Redundancy, fallback mechanisms |
 | Data consistency issues | Low | Critical | Strong consistency guarantees, testing |
-| Cost overruns | Medium | Medium | Budget monitoring, phased approach |
+| Cost overruns | Medium | Medium | 預算 monitoring, phased approach |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Assessment & Planning (Week 1-2)
+### 第 1 階段： Assessment & Planning （第 1-2 週）
 
 **Tasks**:
 
-- [ ] Audit all services for stateful components
-- [ ] Identify dependencies and migration order
+- [ ] Audit all services 用於 stateful components
+- [ ] Identify dependencies 和 migration order
 - [ ] Create detailed migration plan
 - [ ] Set up project tracking
 - [ ] Allocate resources
@@ -803,7 +803,7 @@ Affects:
 - Migration plan approved
 - Resources allocated
 
-### Phase 2: Infrastructure Setup (Week 3-4)
+### 第 2 階段： Infrastructure Setup （第 3-4 週）
 
 **Tasks**:
 
@@ -811,7 +811,7 @@ Affects:
 - [ ] Configure S3 cross-region replication
 - [ ] Set up DynamoDB Global Tables
 - [ ] Configure networking
-- [ ] Test connectivity and replication
+- [ ] Test connectivity 和 replication
 - [ ] Set up monitoring
 
 **Success Criteria**:
@@ -820,11 +820,11 @@ Affects:
 - Replication working
 - Monitoring configured
 
-### Phase 3: Session Management Migration (Week 5-6)
+### 第 3 階段： Session Management Migration （第 5-6 週）
 
 **Tasks**:
 
-- [ ] Implement Spring Session with Redis
+- [ ] Implement Spring Session 與 Redis
 - [ ] Migrate session data structure
 - [ ] Update authentication flow
 - [ ] Test session persistence
@@ -834,14 +834,14 @@ Affects:
 **Success Criteria**:
 
 - Sessions externalized
-- No session loss during failover
-- Performance maintained
+- No session loss 期間 failover
+- Performance 維持ed
 
-### Phase 4: Caching Migration (Week 7-8)
+### 第 4 階段： Caching Migration （第 7-8 週）
 
 **Tasks**:
 
-- [ ] Configure distributed caching
+- [ ] Configure 分散式快取
 - [ ] Migrate cache keys
 - [ ] Update cache access patterns
 - [ ] Test cache consistency
@@ -850,14 +850,14 @@ Affects:
 **Success Criteria**:
 
 - Distributed caching operational
-- Cache hit rates maintained
+- Cache hit rates 維持ed
 - Cross-region consistency
 
-### Phase 5: File Storage Migration (Week 9-10)
+### Phase 5: File Storage Migration （第 9-10 週）
 
 **Tasks**:
 
-- [ ] Set up S3 buckets with replication
+- [ ] Set up S3 buckets 與 replication
 - [ ] Migrate existing files
 - [ ] Update file upload/download logic
 - [ ] Implement pre-signed URLs
@@ -870,7 +870,7 @@ Affects:
 - Cross-region replication working
 - File access performance acceptable
 
-### Phase 6: Idempotency Implementation (Week 11-12)
+### Phase 6: Idempotency Implementation （第 11-12 週）
 
 **Tasks**:
 
@@ -882,11 +882,11 @@ Affects:
 
 **Success Criteria**:
 
-- Idempotency working for all critical operations
+- Idempotency working 用於 all critical operations
 - No duplicate processing
 - API clients updated
 
-### Phase 7: Background Jobs Migration (Week 13-14)
+### Phase 7: Background Jobs Migration （第 13-14 週）
 
 **Tasks**:
 
@@ -902,7 +902,7 @@ Affects:
 - No duplicate execution
 - Proper failover
 
-### Phase 8: Testing & Validation (Week 15-16)
+### Phase 8: Testing & Validation （第 15-16 週）
 
 **Tasks**:
 
@@ -917,29 +917,29 @@ Affects:
 
 - All tests passing
 - Failover < 5 minutes
-- Performance maintained
+- Performance 維持ed
 - Documentation complete
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Critical performance degradation
 - Data consistency issues
 - Failover failures
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Revert to previous version
 2. Restore stateful components
 3. Investigate issues
-4. Fix and retry
+4. Fix 和 retry
 
-**Rollback Time**: < 4 hours
+**回滾時間**： < 4 hours
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
@@ -952,46 +952,46 @@ Affects:
 
 ### Review Schedule
 
-- **Weekly**: Progress review during implementation
-- **Monthly**: Performance and cost review
+- **Weekly**: Progress review 期間 implementation
+- **Monthly**: Performance 和 cost review
 - **Quarterly**: Architecture review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Seamless Failover**: < 5 minute regional failover
-- ✅ **Unlimited Scalability**: Horizontal scaling without limits
-- ✅ **Simplified Operations**: Easier deployment and management
-- ✅ **Consistent Experience**: No session loss during failover
-- ✅ **Cost Optimization**: Better resource utilization
-- ✅ **Easier Testing**: Simplified testing and debugging
-- ✅ **Future-Proof**: Foundation for further evolution
+- ✅ **Unlimited Scalability**: Horizontal scaling 沒有 limits
+- ✅ **Simplified Operations**: Easier deployment 和 management
+- ✅ **Consistent Experience**: No session loss 期間 failover
+- ✅ **Cost Optimization**: 更好的 resource utilization
+- ✅ **Easier Testing**: Simplified testing 和 debugging
+- ✅ **Future-Proof**: Foundation 用於 further evolution
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Refactoring Effort**: 16 weeks of development
+- ⚠️ **Refactoring Effort**: 16 週 of development
 - ⚠️ **External Dependencies**: Reliance on Redis, S3, DynamoDB
-- ⚠️ **Network Latency**: Slight increase for state access
-- ⚠️ **Operational Cost**: $15K/year for external services
-- ⚠️ **Complexity**: Distributed state management complexity
+- ⚠️ **Network Latency**: Slight increase 用於 state access
+- ⚠️ **Operational Cost**: $15K/year 用於 external services
+- ⚠️ **複雜的ity**: Distributed state management 複雜的ity
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Some legacy components still stateful
 2. Manual state migration scripts
 3. Basic monitoring
 4. Limited automation
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Complete legacy migration
 - **Q3 2026**: Advanced monitoring
 - **Q4 2026**: Full automation
 
-## Related Decisions
+## 相關決策
 
 - [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md)
 - [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md)
@@ -1000,11 +1000,11 @@ Affects:
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）
 
-## Notes
+## 備註
 
 ### Stateless vs Stateful Comparison
 
@@ -1014,7 +1014,7 @@ Affects:
 | Session Loss | Yes | No |
 | Scalability | Limited | Unlimited |
 | Load Balancing | Sticky sessions | Any instance |
-| Deployment | Complex | Simple |
+| Deployment | 複雜的 | 簡單的 |
 | Testing | Difficult | Easy |
 | Cost | Higher | Lower |
 
@@ -1040,20 +1040,20 @@ Affects:
 - Use appropriate TTL
 - Implement cache warming
 - Monitor hit rates
-- Handle cache failures gracefully
+- 處理 cache failures gracefully
 
 **File Storage**:
 
 - Use pre-signed URLs
-- Implement CDN for public files
+- Implement CDN 用於 public files
 - Monitor storage costs
 - Implement lifecycle policies
 
 **Idempotency**:
 
-- Use UUID v4 for keys
-- Store for 24 hours
-- Return same result for duplicate requests
+- Use UUID v4 用於 keys
+- Store 用於 24 hours
+- Return same result 用於 duplicate requests
 - Log duplicate attempts
 
 ### Migration Checklist

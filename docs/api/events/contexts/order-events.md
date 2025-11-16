@@ -1,38 +1,38 @@
 # Order Context Events
 
-## Overview
+## 概述
 
-This document describes all domain events published by the Order bounded context. These events capture the complete order lifecycle from creation through delivery, including order modifications, cancellations, and returns.
+本文件描述由 Order bounded context 發布的所有 domain events。這些 events 捕捉從建立到交付的完整訂單生命週期，包括訂單修改、取消和退貨。
 
-**Last Updated**: 2025-10-25
+**最後更新**: 2025-10-25
 
 ---
 
-## Event List
+## Event 清單
 
 | Event Name | Trigger | Frequency | Priority |
 |------------|---------|-----------|----------|
-| `OrderCreatedEvent` | Checkout initiation | Very High | P0 |
-| `OrderSubmittedEvent` | Order submission | Very High | P0 |
-| `OrderConfirmedEvent` | Payment success | Very High | P0 |
-| `OrderCancelledEvent` | Order cancellation | Medium | P1 |
-| `OrderShippedEvent` | Shipping dispatch | High | P0 |
-| `OrderDeliveredEvent` | Delivery confirmation | High | P0 |
-| `OrderReturnedEvent` | Return request | Low | P1 |
-| `OrderRefundedEvent` | Refund processing | Low | P1 |
-| `OrderItemAddedEvent` | Item addition | Medium | P2 |
-| `OrderItemRemovedEvent` | Item removal | Medium | P2 |
-| `OrderItemQuantityChangedEvent` | Quantity update | Medium | P2 |
+| `OrderCreatedEvent` | 結帳啟動 | Very High | P0 |
+| `OrderSubmittedEvent` | 訂單提交 | Very High | P0 |
+| `OrderConfirmedEvent` | 付款成功 | Very High | P0 |
+| `OrderCancelledEvent` | 訂單取消 | Medium | P1 |
+| `OrderShippedEvent` | 出貨派送 | High | P0 |
+| `OrderDeliveredEvent` | 送達確認 | High | P0 |
+| `OrderReturnedEvent` | 退貨請求 | Low | P1 |
+| `OrderRefundedEvent` | 退款處理 | Low | P1 |
+| `OrderItemAddedEvent` | 項目新增 | Medium | P2 |
+| `OrderItemRemovedEvent` | 項目移除 | Medium | P2 |
+| `OrderItemQuantityChangedEvent` | 數量更新 | Medium | P2 |
 
 ---
 
 ## OrderCreatedEvent
 
-### Description
+### 描述
 
-Published when a new order is created from a shopping cart during checkout initiation.
+當在結帳啟動期間從購物車建立新訂單時發布。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record OrderCreatedEvent(
@@ -44,7 +44,7 @@ public record OrderCreatedEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     public static OrderCreatedEvent create(
         OrderId orderId,
         CustomerId customerId,
@@ -63,19 +63,19 @@ public record OrderCreatedEvent(
 }
 ```
 
-### Payload Fields
+### Payload 欄位
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `orderId` | OrderId | Yes | Unique order identifier |
-| `customerId` | CustomerId | Yes | Customer who created the order |
-| `items` | List<OrderItemDto> | Yes | List of order items |
-| `subtotal` | Money | Yes | Order subtotal before tax and shipping |
-| `shippingAddress` | ShippingAddress | Yes | Delivery address |
-| `eventId` | UUID | Yes | Unique event identifier |
-| `occurredOn` | LocalDateTime | Yes | Event timestamp |
+| `orderId` | OrderId | Yes | 唯一訂單識別碼 |
+| `customerId` | CustomerId | Yes | 建立訂單的客戶 |
+| `items` | List<OrderItemDto> | Yes | 訂單項目清單 |
+| `subtotal` | Money | Yes | 稅金和運費前的訂單小計 |
+| `shippingAddress` | ShippingAddress | Yes | 配送地址 |
+| `eventId` | UUID | Yes | 唯一 event 識別碼 |
+| `occurredOn` | LocalDateTime | Yes | Event 時間戳記 |
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -113,25 +113,25 @@ public record OrderCreatedEvent(
 
 | Handler | Action | Context |
 |---------|--------|---------|
-| `OrderValidationHandler` | Validate order details | Order |
-| `InventoryCheckHandler` | Check product availability | Inventory |
-| `PricingCalculationHandler` | Calculate final price | Pricing |
+| `OrderValidationHandler` | 驗證訂單詳細資料 | Order |
+| `InventoryCheckHandler` | 檢查產品可用性 | Inventory |
+| `PricingCalculationHandler` | 計算最終價格 | Pricing |
 
-### Related Events
+### 相關 Events
 
-- Triggers: `PriceCalculatedEvent`, `TaxCalculatedEvent`
-- Follows: `CartCheckedOutEvent`
-- Precedes: `OrderSubmittedEvent`
+- 觸發: `PriceCalculatedEvent`, `TaxCalculatedEvent`
+- 接續: `CartCheckedOutEvent`
+- 先於: `OrderSubmittedEvent`
 
 ---
 
 ## OrderSubmittedEvent
 
-### Description
+### 描述
 
-Published when a customer submits an order for processing after reviewing order details.
+當客戶在檢視訂單詳細資料後提交訂單進行處理時發布。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record OrderSubmittedEvent(
@@ -143,7 +143,7 @@ public record OrderSubmittedEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     public static OrderSubmittedEvent create(
         OrderId orderId,
         CustomerId customerId,
@@ -160,19 +160,19 @@ public record OrderSubmittedEvent(
 }
 ```
 
-### Payload Fields
+### Payload 欄位
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `orderId` | OrderId | Yes | Order identifier |
-| `customerId` | CustomerId | Yes | Customer identifier |
-| `totalAmount` | Money | Yes | Total order amount including tax and shipping |
-| `itemCount` | int | Yes | Total number of items |
-| `paymentMethod` | PaymentMethod | Yes | Selected payment method |
-| `eventId` | UUID | Yes | Unique event identifier |
-| `occurredOn` | LocalDateTime | Yes | Event timestamp |
+| `orderId` | OrderId | Yes | 訂單識別碼 |
+| `customerId` | CustomerId | Yes | 客戶識別碼 |
+| `totalAmount` | Money | Yes | 包含稅金和運費的訂單總金額 |
+| `itemCount` | int | Yes | 項目總數 |
+| `paymentMethod` | PaymentMethod | Yes | 選擇的付款方式 |
+| `eventId` | UUID | Yes | 唯一 event 識別碼 |
+| `occurredOn` | LocalDateTime | Yes | Event 時間戳記 |
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -194,25 +194,25 @@ public record OrderSubmittedEvent(
 
 | Handler | Action | Context |
 |---------|--------|---------|
-| `PaymentInitiationHandler` | Initiate payment processing | Payment |
-| `InventoryReservationHandler` | Reserve inventory | Inventory |
-| `OrderStatusHandler` | Update order status to PENDING | Order |
+| `PaymentInitiationHandler` | 啟動付款處理 | Payment |
+| `InventoryReservationHandler` | 保留庫存 | Inventory |
+| `OrderStatusHandler` | 更新訂單狀態為 PENDING | Order |
 
-### Related Events
+### 相關 Events
 
-- Triggers: `PaymentInitiatedEvent`, `InventoryReservedEvent`
-- Follows: `OrderCreatedEvent`
-- Precedes: `OrderConfirmedEvent`
+- 觸發: `PaymentInitiatedEvent`, `InventoryReservedEvent`
+- 接續: `OrderCreatedEvent`
+- 先於: `OrderConfirmedEvent`
 
 ---
 
 ## OrderConfirmedEvent
 
-### Description
+### 描述
 
-Published when an order is confirmed after successful payment processing.
+當訂單在付款處理成功後確認時發布。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record OrderConfirmedEvent(
@@ -224,7 +224,7 @@ public record OrderConfirmedEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     public static OrderConfirmedEvent create(
         OrderId orderId,
         CustomerId customerId,
@@ -241,19 +241,19 @@ public record OrderConfirmedEvent(
 }
 ```
 
-### Payload Fields
+### Payload 欄位
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `orderId` | OrderId | Yes | Order identifier |
-| `customerId` | CustomerId | Yes | Customer identifier |
-| `paymentId` | PaymentId | Yes | Payment transaction identifier |
-| `paidAmount` | Money | Yes | Amount paid |
-| `confirmedAt` | LocalDateTime | Yes | Confirmation timestamp |
-| `eventId` | UUID | Yes | Unique event identifier |
-| `occurredOn` | LocalDateTime | Yes | Event timestamp |
+| `orderId` | OrderId | Yes | 訂單識別碼 |
+| `customerId` | CustomerId | Yes | 客戶識別碼 |
+| `paymentId` | PaymentId | Yes | 付款交易識別碼 |
+| `paidAmount` | Money | Yes | 已付金額 |
+| `confirmedAt` | LocalDateTime | Yes | 確認時間戳記 |
+| `eventId` | UUID | Yes | 唯一 event 識別碼 |
+| `occurredOn` | LocalDateTime | Yes | Event 時間戳記 |
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -275,26 +275,26 @@ public record OrderConfirmedEvent(
 
 | Handler | Action | Context |
 |---------|--------|---------|
-| `ShippingScheduleHandler` | Schedule shipping | Shipping |
-| `OrderConfirmationEmailHandler` | Send confirmation email | Notification |
-| `InvoiceGenerationHandler` | Generate invoice | Billing |
-| `LoyaltyPointsHandler` | Award loyalty points | Promotion |
+| `ShippingScheduleHandler` | 排程出貨 | Shipping |
+| `OrderConfirmationEmailHandler` | 發送確認 email | Notification |
+| `InvoiceGenerationHandler` | 產生發票 | Billing |
+| `LoyaltyPointsHandler` | 獎勵忠誠點數 | Promotion |
 
-### Related Events
+### 相關 Events
 
-- Triggers: `ShippingScheduledEvent`, `NotificationSentEvent`
-- Follows: `PaymentProcessedEvent`
-- Precedes: `OrderShippedEvent`
+- 觸發: `ShippingScheduledEvent`, `NotificationSentEvent`
+- 接續: `PaymentProcessedEvent`
+- 先於: `OrderShippedEvent`
 
 ---
 
 ## OrderCancelledEvent
 
-### Description
+### 描述
 
-Published when an order is cancelled by the customer or system (e.g., payment failure, out of stock).
+當訂單被客戶或系統取消時發布（例如付款失敗、缺貨）。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record OrderCancelledEvent(
@@ -306,7 +306,7 @@ public record OrderCancelledEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     public static OrderCancelledEvent create(
         OrderId orderId,
         CustomerId customerId,
@@ -323,19 +323,19 @@ public record OrderCancelledEvent(
 }
 ```
 
-### Payload Fields
+### Payload 欄位
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `orderId` | OrderId | Yes | Order identifier |
-| `customerId` | CustomerId | Yes | Customer identifier |
-| `cancellationReason` | String | Yes | Reason for cancellation |
-| `source` | CancellationSource | Yes | Who cancelled (CUSTOMER, SYSTEM, ADMIN) |
-| `cancelledAt` | LocalDateTime | Yes | Cancellation timestamp |
-| `eventId` | UUID | Yes | Unique event identifier |
-| `occurredOn` | LocalDateTime | Yes | Event timestamp |
+| `orderId` | OrderId | Yes | 訂單識別碼 |
+| `customerId` | CustomerId | Yes | 客戶識別碼 |
+| `cancellationReason` | String | Yes | 取消原因 |
+| `source` | CancellationSource | Yes | 取消者 (CUSTOMER, SYSTEM, ADMIN) |
+| `cancelledAt` | LocalDateTime | Yes | 取消時間戳記 |
+| `eventId` | UUID | Yes | 唯一 event 識別碼 |
+| `occurredOn` | LocalDateTime | Yes | Event 時間戳記 |
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -354,24 +354,24 @@ public record OrderCancelledEvent(
 
 | Handler | Action | Context |
 |---------|--------|---------|
-| `InventoryReleaseHandler` | Release reserved inventory | Inventory |
-| `PaymentRefundHandler` | Process refund if paid | Payment |
-| `CancellationEmailHandler` | Send cancellation confirmation | Notification |
+| `InventoryReleaseHandler` | 釋放保留的庫存 | Inventory |
+| `PaymentRefundHandler` | 如果已付款則處理退款 | Payment |
+| `CancellationEmailHandler` | 發送取消確認 | Notification |
 
-### Related Events
+### 相關 Events
 
-- Triggers: `InventoryReleasedEvent`, `PaymentRefundedEvent`
-- Can follow: `OrderCreatedEvent`, `OrderSubmittedEvent`, `OrderConfirmedEvent`
+- 觸發: `InventoryReleasedEvent`, `PaymentRefundedEvent`
+- 可能接續: `OrderCreatedEvent`, `OrderSubmittedEvent`, `OrderConfirmedEvent`
 
 ---
 
 ## OrderShippedEvent
 
-### Description
+### 描述
 
-Published when an order is shipped and dispatched to the customer.
+當訂單出貨並派送給客戶時發布。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record OrderShippedEvent(
@@ -385,7 +385,7 @@ public record OrderShippedEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     public static OrderShippedEvent create(
         OrderId orderId,
         CustomerId customerId,
@@ -404,21 +404,21 @@ public record OrderShippedEvent(
 }
 ```
 
-### Payload Fields
+### Payload 欄位
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `orderId` | OrderId | Yes | Order identifier |
-| `customerId` | CustomerId | Yes | Customer identifier |
-| `shippingId` | ShippingId | Yes | Shipping record identifier |
-| `trackingNumber` | String | Yes | Carrier tracking number |
-| `carrier` | String | Yes | Shipping carrier name |
-| `shippedAt` | LocalDateTime | Yes | Shipping timestamp |
-| `estimatedDelivery` | LocalDateTime | Yes | Estimated delivery date |
-| `eventId` | UUID | Yes | Unique event identifier |
-| `occurredOn` | LocalDateTime | Yes | Event timestamp |
+| `orderId` | OrderId | Yes | 訂單識別碼 |
+| `customerId` | CustomerId | Yes | 客戶識別碼 |
+| `shippingId` | ShippingId | Yes | 出貨記錄識別碼 |
+| `trackingNumber` | String | Yes | 物流追蹤號碼 |
+| `carrier` | String | Yes | 物流業者名稱 |
+| `shippedAt` | LocalDateTime | Yes | 出貨時間戳記 |
+| `estimatedDelivery` | LocalDateTime | Yes | 預計送達日期 |
+| `eventId` | UUID | Yes | 唯一 event 識別碼 |
+| `occurredOn` | LocalDateTime | Yes | Event 時間戳記 |
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -439,25 +439,25 @@ public record OrderShippedEvent(
 
 | Handler | Action | Context |
 |---------|--------|---------|
-| `ShippingNotificationHandler` | Send shipping notification | Notification |
-| `TrackingUpdateHandler` | Enable tracking updates | Shipping |
-| `DeliveryScheduleHandler` | Schedule delivery | Delivery |
+| `ShippingNotificationHandler` | 發送出貨通知 | Notification |
+| `TrackingUpdateHandler` | 啟用追蹤更新 | Shipping |
+| `DeliveryScheduleHandler` | 排程送達 | Delivery |
 
-### Related Events
+### 相關 Events
 
-- Triggers: `ShippingDispatchedEvent`, `NotificationSentEvent`
-- Follows: `OrderConfirmedEvent`
-- Precedes: `OrderDeliveredEvent`
+- 觸發: `ShippingDispatchedEvent`, `NotificationSentEvent`
+- 接續: `OrderConfirmedEvent`
+- 先於: `OrderDeliveredEvent`
 
 ---
 
 ## OrderDeliveredEvent
 
-### Description
+### 描述
 
-Published when an order is successfully delivered to the customer.
+當訂單成功送達給客戶時發布。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record OrderDeliveredEvent(
@@ -470,7 +470,7 @@ public record OrderDeliveredEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     public static OrderDeliveredEvent create(
         OrderId orderId,
         CustomerId customerId,
@@ -488,20 +488,20 @@ public record OrderDeliveredEvent(
 }
 ```
 
-### Payload Fields
+### Payload 欄位
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `orderId` | OrderId | Yes | Order identifier |
-| `customerId` | CustomerId | Yes | Customer identifier |
-| `shippingId` | ShippingId | Yes | Shipping record identifier |
-| `deliveredAt` | LocalDateTime | Yes | Delivery timestamp |
-| `deliverySignature` | String | No | Delivery signature/proof |
-| `deliveryStatus` | DeliveryStatus | Yes | Delivery status (DELIVERED, LEFT_AT_DOOR, etc.) |
-| `eventId` | UUID | Yes | Unique event identifier |
-| `occurredOn` | LocalDateTime | Yes | Event timestamp |
+| `orderId` | OrderId | Yes | 訂單識別碼 |
+| `customerId` | CustomerId | Yes | 客戶識別碼 |
+| `shippingId` | ShippingId | Yes | 出貨記錄識別碼 |
+| `deliveredAt` | LocalDateTime | Yes | 送達時間戳記 |
+| `deliverySignature` | String | No | 送達簽名/證明 |
+| `deliveryStatus` | DeliveryStatus | Yes | 送達狀態 (DELIVERED, LEFT_AT_DOOR, etc.) |
+| `eventId` | UUID | Yes | 唯一 event 識別碼 |
+| `occurredOn` | LocalDateTime | Yes | Event 時間戳記 |
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -521,24 +521,24 @@ public record OrderDeliveredEvent(
 
 | Handler | Action | Context |
 |---------|--------|---------|
-| `DeliveryConfirmationHandler` | Send delivery confirmation | Notification |
-| `ReviewRequestHandler` | Request product review | Review |
-| `OrderCompletionHandler` | Mark order as completed | Order |
+| `DeliveryConfirmationHandler` | 發送送達確認 | Notification |
+| `ReviewRequestHandler` | 請求產品評價 | Review |
+| `OrderCompletionHandler` | 標記訂單為已完成 | Order |
 
-### Related Events
+### 相關 Events
 
-- Triggers: `NotificationSentEvent`, `ReviewRequestedEvent`
-- Follows: `OrderShippedEvent`
+- 觸發: `NotificationSentEvent`, `ReviewRequestedEvent`
+- 接續: `OrderShippedEvent`
 
 ---
 
 ## OrderReturnedEvent
 
-### Description
+### 描述
 
-Published when a customer initiates a return for a delivered order.
+當客戶對已送達的訂單發起退貨時發布。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record OrderReturnedEvent(
@@ -551,7 +551,7 @@ public record OrderReturnedEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     public static OrderReturnedEvent create(
         OrderId orderId,
         CustomerId customerId,
@@ -570,20 +570,20 @@ public record OrderReturnedEvent(
 }
 ```
 
-### Payload Fields
+### Payload 欄位
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `orderId` | OrderId | Yes | Order identifier |
-| `customerId` | CustomerId | Yes | Customer identifier |
-| `returnId` | ReturnId | Yes | Return request identifier |
-| `returnItems` | List<ReturnItemDto> | Yes | Items being returned |
-| `returnReason` | String | Yes | Reason for return |
-| `returnRequestedAt` | LocalDateTime | Yes | Return request timestamp |
-| `eventId` | UUID | Yes | Unique event identifier |
-| `occurredOn` | LocalDateTime | Yes | Event timestamp |
+| `orderId` | OrderId | Yes | 訂單識別碼 |
+| `customerId` | CustomerId | Yes | 客戶識別碼 |
+| `returnId` | ReturnId | Yes | 退貨請求識別碼 |
+| `returnItems` | List<ReturnItemDto> | Yes | 退貨項目 |
+| `returnReason` | String | Yes | 退貨原因 |
+| `returnRequestedAt` | LocalDateTime | Yes | 退貨請求時間戳記 |
+| `eventId` | UUID | Yes | 唯一 event 識別碼 |
+| `occurredOn` | LocalDateTime | Yes | Event 時間戳記 |
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -609,25 +609,25 @@ public record OrderReturnedEvent(
 
 | Handler | Action | Context |
 |---------|--------|---------|
-| `ReturnProcessingHandler` | Process return request | Order |
-| `ReturnLabelHandler` | Generate return shipping label | Shipping |
-| `ReturnNotificationHandler` | Send return confirmation | Notification |
+| `ReturnProcessingHandler` | 處理退貨請求 | Order |
+| `ReturnLabelHandler` | 產生退貨物流標籤 | Shipping |
+| `ReturnNotificationHandler` | 發送退貨確認 | Notification |
 
-### Related Events
+### 相關 Events
 
-- Triggers: `ReturnLabelCreatedEvent`
-- Follows: `OrderDeliveredEvent`
-- Precedes: `OrderRefundedEvent`
+- 觸發: `ReturnLabelCreatedEvent`
+- 接續: `OrderDeliveredEvent`
+- 先於: `OrderRefundedEvent`
 
 ---
 
 ## OrderRefundedEvent
 
-### Description
+### 描述
 
-Published when a refund is processed for a returned or cancelled order.
+當針對退貨或取消的訂單處理退款時發布。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record OrderRefundedEvent(
@@ -641,7 +641,7 @@ public record OrderRefundedEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     public static OrderRefundedEvent create(
         OrderId orderId,
         CustomerId customerId,
@@ -660,21 +660,21 @@ public record OrderRefundedEvent(
 }
 ```
 
-### Payload Fields
+### Payload 欄位
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `orderId` | OrderId | Yes | Order identifier |
-| `customerId` | CustomerId | Yes | Customer identifier |
-| `refundId` | RefundId | Yes | Refund transaction identifier |
-| `refundAmount` | Money | Yes | Refund amount |
-| `refundReason` | String | Yes | Reason for refund |
-| `refundMethod` | RefundMethod | Yes | Refund method (ORIGINAL_PAYMENT, STORE_CREDIT) |
-| `refundedAt` | LocalDateTime | Yes | Refund timestamp |
-| `eventId` | UUID | Yes | Unique event identifier |
-| `occurredOn` | LocalDateTime | Yes | Event timestamp |
+| `orderId` | OrderId | Yes | 訂單識別碼 |
+| `customerId` | CustomerId | Yes | 客戶識別碼 |
+| `refundId` | RefundId | Yes | 退款交易識別碼 |
+| `refundAmount` | Money | Yes | 退款金額 |
+| `refundReason` | String | Yes | 退款原因 |
+| `refundMethod` | RefundMethod | Yes | 退款方式 (ORIGINAL_PAYMENT, STORE_CREDIT) |
+| `refundedAt` | LocalDateTime | Yes | 退款時間戳記 |
+| `eventId` | UUID | Yes | 唯一 event 識別碼 |
+| `occurredOn` | LocalDateTime | Yes | Event 時間戳記 |
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -698,24 +698,24 @@ public record OrderRefundedEvent(
 
 | Handler | Action | Context |
 |---------|--------|---------|
-| `PaymentRefundHandler` | Process payment refund | Payment |
-| `InventoryRestockHandler` | Restock returned items | Inventory |
-| `RefundNotificationHandler` | Send refund confirmation | Notification |
+| `PaymentRefundHandler` | 處理付款退款 | Payment |
+| `InventoryRestockHandler` | 重新入庫退回項目 | Inventory |
+| `RefundNotificationHandler` | 發送退款確認 | Notification |
 
-### Related Events
+### 相關 Events
 
-- Triggers: `PaymentRefundedEvent`, `InventoryAdjustedEvent`
-- Follows: `OrderReturnedEvent` or `OrderCancelledEvent`
+- 觸發: `PaymentRefundedEvent`, `InventoryAdjustedEvent`
+- 接續: `OrderReturnedEvent` 或 `OrderCancelledEvent`
 
 ---
 
 ## OrderItemAddedEvent
 
-### Description
+### 描述
 
-Published when an item is added to an existing order (before submission).
+當項目被新增到現有訂單時發布（提交前）。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record OrderItemAddedEvent(
@@ -728,7 +728,7 @@ public record OrderItemAddedEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -749,11 +749,11 @@ public record OrderItemAddedEvent(
 
 ## OrderItemRemovedEvent
 
-### Description
+### 描述
 
-Published when an item is removed from an existing order (before submission).
+當項目從現有訂單中移除時發布（提交前）。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record OrderItemRemovedEvent(
@@ -769,11 +769,11 @@ public record OrderItemRemovedEvent(
 
 ## OrderItemQuantityChangedEvent
 
-### Description
+### 描述
 
-Published when the quantity of an item in an order is changed (before submission).
+當訂單中項目的數量變更時發布（提交前）。
 
-### Event Structure
+### Event 結構
 
 ```java
 public record OrderItemQuantityChangedEvent(
@@ -788,9 +788,9 @@ public record OrderItemQuantityChangedEvent(
 
 ---
 
-## Event Flow Diagrams
+## Event Flow 圖表
 
-### Complete Order Processing Flow
+### 完整訂單處理流程
 
 ```mermaid
 sequenceDiagram
@@ -822,7 +822,7 @@ sequenceDiagram
     N->>C: Delivery Confirmation
 ```
 
-### Order Cancellation Flow
+### 訂單取消流程
 
 ```mermaid
 sequenceDiagram
@@ -843,9 +843,9 @@ sequenceDiagram
 
 ---
 
-## Testing Guidelines
+## 測試指南
 
-### Unit Tests
+### 單元測試
 
 ```java
 @Test
@@ -854,12 +854,12 @@ void should_create_order_submitted_event_with_correct_data() {
     OrderId orderId = OrderId.of("ORD-2025-001");
     CustomerId customerId = CustomerId.of("CUST-001");
     Money totalAmount = Money.of(37695, "TWD");
-    
+
     // When
     OrderSubmittedEvent event = OrderSubmittedEvent.create(
         orderId, customerId, totalAmount, 1, PaymentMethod.CREDIT_CARD
     );
-    
+
     // Then
     assertThat(event.orderId()).isEqualTo(orderId);
     assertThat(event.totalAmount()).isEqualTo(totalAmount);
@@ -867,22 +867,22 @@ void should_create_order_submitted_event_with_correct_data() {
 }
 ```
 
-### Integration Tests
+### 整合測試
 
 ```java
 @SpringBootTest
 @ActiveProfiles("test")
 class OrderEventIntegrationTest {
-    
+
     @Test
     void should_publish_order_confirmed_event_after_payment_success() {
         // Given
         Order order = createTestOrder();
         Payment payment = processPayment(order);
-        
+
         // When
         orderService.confirmOrder(order.getId(), payment.getId());
-        
+
         // Then
         verify(eventPublisher).publish(any(OrderConfirmedEvent.class));
     }
@@ -891,7 +891,7 @@ class OrderEventIntegrationTest {
 
 ---
 
-## Related Documentation
+## 相關文件
 
 - **Event Catalog**: [event-catalog.md](../event-catalog.md)
 - **Order API**: `docs/api/rest/endpoints/orders.md`
@@ -901,6 +901,6 @@ class OrderEventIntegrationTest {
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2025-10-25  
-**Owner**: Order Domain Team
+**文件版本**: 1.0
+**最後更新**: 2025-10-25
+**負責人**: Order Domain Team

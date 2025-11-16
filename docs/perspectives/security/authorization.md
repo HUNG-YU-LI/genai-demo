@@ -1,69 +1,69 @@
 # Authorization
 
-> **Last Updated**: 2025-10-23  
+> **Last Updated**: 2025-10-23
 > **Status**: ✅ Active
 
-## Overview
+## 概述
 
-This document describes the authorization mechanisms used in the e-commerce platform. Authorization determines what authenticated users are allowed to do - which resources they can access and what operations they can perform. The system implements Role-Based Access Control (RBAC) with fine-grained permissions.
+本文件描述電子商務平台中使用的 authorization 機制。Authorization 決定已 authentication 的使用者可以做什麼 - 他們可以存取哪些資源以及可以執行哪些操作。系統實作具有細粒度權限的基於角色的存取控制（RBAC）。
 
-## Authorization Model
+## Authorization 模型
 
-### Role-Based Access Control (RBAC)
+### 基於角色的存取控制 (RBAC)
 
-The system uses RBAC where:
+系統使用 RBAC，其中：
 
-- **Users** are assigned one or more **Roles**
-- **Roles** have associated **Permissions**
-- **Permissions** define access to specific resources and operations
+- **使用者** 被指派一個或多個 **角色**
+- **角色** 具有關聯的 **權限**
+- **權限** 定義對特定資源和操作的存取
 
-### Roles
+### 角色
 
 #### ADMIN
 
-- **Description**: System administrators with full access
-- **Permissions**: All operations on all resources
-- **Use Cases**: System management, user management, configuration
+- **描述**：具有完整存取權的系統管理員
+- **權限**：所有資源上的所有操作
+- **使用案例**：系統管理、使用者管理、配置
 
 #### CUSTOMER
 
-- **Description**: Regular customers who purchase products
-- **Permissions**:
-  - Read own profile and orders
-  - Create orders and reviews
-  - Update own profile
-  - Cannot access other customers' data
+- **描述**：購買產品的一般客戶
+- **權限**：
+  - 讀取自己的個人資料和訂單
+  - 建立訂單和評論
+  - 更新自己的個人資料
+  - 無法存取其他客戶的資料
 
 #### SELLER
 
-- **Description**: Sellers who list and manage products
-- **Permissions**:
-  - Manage own products and inventory
-  - View own sales and orders
-  - Cannot access other sellers' data
+- **描述**：列出和管理產品的賣家
+- **權限**：
+  - 管理自己的產品和庫存
+  - 查看自己的銷售和訂單
+  - 無法存取其他賣家的資料
 
 #### GUEST
 
-- **Description**: Unauthenticated users
-- **Permissions**:
-  - Browse products
-  - View public content
-  - Cannot place orders or access user data
+- **描述**：未 authentication 的使用者
+- **權限**：
+  - 瀏覽產品
+  - 查看公開內容
+  - 無法下訂單或存取使用者資料
 
-## Permission Model
+## 權限模型
 
-### Permission Format
+### 權限格式
 
-Permissions follow the format: `resource:operation`
+權限遵循格式：`resource:operation`
 
-Examples:
+範例：
 
-- `customer:read` - Read customer data
-- `order:create` - Create orders
-- `product:update` - Update products
-- `admin:*` - All admin operations
+- `customer:read` - 讀取客戶資料
+- `order:create` - 建立訂單
+- `product:update` - 更新產品
+- `admin:*` - 所有管理員操作
 
-### Permission Matrix
+### 權限矩陣
 
 | Resource | ADMIN | CUSTOMER | SELLER | GUEST |
 |----------|-------|----------|--------|-------|
@@ -92,9 +92,9 @@ Examples:
 | Delete Any | ✅ | ❌ | ❌ | ❌ |
 | Delete Own | ✅ | ✅ | ❌ | ❌ |
 
-## Implementation
+## 實作
 
-### Method-Level Security
+### 方法級 Security
 
 ```java
 @Configuration
@@ -104,7 +104,7 @@ Examples:
     jsr250Enabled = true
 )
 public class MethodSecurityConfiguration {
-    
+
     @Bean
     public PermissionEvaluator permissionEvaluator() {
         return new CustomPermissionEvaluator();
@@ -112,101 +112,95 @@ public class MethodSecurityConfiguration {
 }
 ```
 
-### Using @PreAuthorize
+### 使用 @PreAuthorize
 
 ```java
 @RestController
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
-    
+
     /**
-
-     * Admin can access any customer, users can only access their own data
-
+     * Admin 可以存取任何客戶，使用者只能存取自己的資料
      */
     @GetMapping("/{customerId}")
     @PreAuthorize("hasRole('ADMIN') or #customerId == authentication.principal.customerId")
     public ResponseEntity<CustomerResponse> getCustomer(
             @PathVariable String customerId) {
-        
+
         Customer customer = customerService.findById(customerId);
         return ResponseEntity.ok(CustomerResponse.from(customer));
     }
-    
+
     /**
-
-     * Only admins can list all customers
-
+     * 只有管理員可以列出所有客戶
      */
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<CustomerResponse>> listCustomers(
             Pageable pageable) {
-        
+
         Page<Customer> customers = customerService.findAll(pageable);
         return ResponseEntity.ok(customers.map(CustomerResponse::from));
     }
-    
+
     /**
-
-     * Users can update their own profile
-
+     * 使用者可以更新自己的個人資料
      */
     @PutMapping("/{customerId}")
     @PreAuthorize("#customerId == authentication.principal.customerId")
     public ResponseEntity<CustomerResponse> updateCustomer(
             @PathVariable String customerId,
             @Valid @RequestBody UpdateCustomerRequest request) {
-        
+
         Customer customer = customerService.updateCustomer(customerId, request);
         return ResponseEntity.ok(CustomerResponse.from(customer));
     }
 }
 ```
 
-### Custom Permission Evaluator
+### 自訂權限評估器
 
 ```java
 @Component
 public class CustomPermissionEvaluator implements PermissionEvaluator {
-    
+
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
-    
+
     @Override
     public boolean hasPermission(
             Authentication authentication,
             Object targetDomainObject,
             Object permission) {
-        
+
         if (authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
-        
+
         String permissionString = permission.toString();
-        
+
         if (targetDomainObject instanceof Order order) {
             return evaluateOrderPermission(authentication, order, permissionString);
         }
-        
+
         if (targetDomainObject instanceof Product product) {
             return evaluateProductPermission(authentication, product, permissionString);
         }
-        
+
         return false;
     }
-    
+
     @Override
     public boolean hasPermission(
             Authentication authentication,
             Serializable targetId,
             String targetType,
             Object permission) {
-        
+
         if (authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
-        
+
         return switch (targetType) {
             case "Order" -> evaluateOrderPermissionById(
                 authentication, targetId.toString(), permission.toString()
@@ -217,41 +211,41 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             default -> false;
         };
     }
-    
+
     private boolean evaluateOrderPermission(
             Authentication auth,
             Order order,
             String permission) {
-        
+
         String userId = auth.getName();
-        
-        // Admins have all permissions
+
+        // 管理員擁有所有權限
         if (hasRole(auth, "ADMIN")) {
             return true;
         }
-        
+
         return switch (permission) {
             case "READ" -> order.getCustomerId().equals(userId);
-            case "CANCEL" -> order.getCustomerId().equals(userId) 
+            case "CANCEL" -> order.getCustomerId().equals(userId)
                 && order.getStatus() == OrderStatus.PENDING;
-            case "UPDATE", "DELETE" -> false; // Only admins
+            case "UPDATE", "DELETE" -> false; // 僅管理員
             default -> false;
         };
     }
-    
+
     private boolean evaluateProductPermission(
             Authentication auth,
             Product product,
             String permission) {
-        
+
         String userId = auth.getName();
-        
-        // Admins have all permissions
+
+        // 管理員擁有所有權限
         if (hasRole(auth, "ADMIN")) {
             return true;
         }
-        
-        // Sellers can manage their own products
+
+        // 賣家可以管理自己的產品
         if (hasRole(auth, "SELLER")) {
             return switch (permission) {
                 case "READ" -> true;
@@ -259,11 +253,11 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                 default -> false;
             };
         }
-        
-        // Customers can only read
+
+        // 客戶只能讀取
         return "READ".equals(permission);
     }
-    
+
     private boolean hasRole(Authentication auth, String role) {
         return auth.getAuthorities().stream()
             .anyMatch(a -> a.getAuthority().equals("ROLE_" + role));
@@ -271,17 +265,15 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 }
 ```
 
-### Using Custom Permissions
+### 使用自訂權限
 
 ```java
 @RestController
 @RequestMapping("/api/v1/orders")
 public class OrderController {
-    
+
     /**
-
-     * Check permission on loaded domain object
-
+     * 檢查已載入領域物件的權限
      */
     @GetMapping("/{orderId}")
     @PreAuthorize("hasPermission(#orderId, 'Order', 'READ')")
@@ -289,114 +281,106 @@ public class OrderController {
         Order order = orderService.findById(orderId);
         return ResponseEntity.ok(OrderResponse.from(order));
     }
-    
+
     /**
-
-     * Check permission after loading object
-
+     * 載入物件後檢查權限
      */
     @PostMapping("/{orderId}/cancel")
     public ResponseEntity<Void> cancelOrder(@PathVariable String orderId) {
         Order order = orderService.findById(orderId);
-        
-        // Check permission on actual object
+
+        // 檢查實際物件的權限
         if (!hasPermission(order, "CANCEL")) {
             throw new AccessDeniedException("Cannot cancel this order");
         }
-        
+
         orderService.cancelOrder(orderId);
         return ResponseEntity.noContent().build();
     }
 }
 ```
 
-### Service-Level Authorization
+### Service 級 Authorization
 
 ```java
 @Service
 @Transactional
 public class OrderService {
-    
+
     private final OrderRepository orderRepository;
     private final SecurityContext securityContext;
-    
+
     /**
-
-     * Enforce authorization at service level
-
+     * 在 service 級別強制執行 authorization
      */
     public Order findById(String orderId) {
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new OrderNotFoundException(orderId));
-        
-        // Verify user has permission to access this order
+
+        // 驗證使用者有權限存取此訂單
         String currentUserId = securityContext.getCurrentUserId();
-        if (!order.getCustomerId().equals(currentUserId) 
+        if (!order.getCustomerId().equals(currentUserId)
                 && !securityContext.hasRole("ADMIN")) {
             throw new AccessDeniedException(
                 "User does not have permission to access this order"
             );
         }
-        
+
         return order;
     }
-    
+
     /**
-
-     * Filter results based on user permissions
-
+     * 根據使用者權限過濾結果
      */
     public Page<Order> findOrders(Pageable pageable) {
         String currentUserId = securityContext.getCurrentUserId();
-        
-        // Admins see all orders
+
+        // 管理員查看所有訂單
         if (securityContext.hasRole("ADMIN")) {
             return orderRepository.findAll(pageable);
         }
-        
-        // Customers see only their own orders
+
+        // 客戶只查看自己的訂單
         return orderRepository.findByCustomerId(currentUserId, pageable);
     }
 }
 ```
 
-## Data Filtering
+## 資料過濾
 
-### Row-Level Security
+### 行級 Security
 
 ```java
 @Component
 public class DataFilteringAspect {
-    
+
     /**
-
-     * Automatically filter query results based on user permissions
-
+     * 根據使用者權限自動過濾查詢結果
      */
     @Around("@annotation(FilterByUser)")
     public Object filterResults(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = joinPoint.proceed();
-        
+
         if (result instanceof List<?> list) {
             return filterList(list);
         }
-        
+
         if (result instanceof Page<?> page) {
             return filterPage(page);
         }
-        
+
         return result;
     }
-    
+
     private List<?> filterList(List<?> list) {
         String currentUserId = SecurityContextHolder.getContext()
             .getAuthentication().getName();
-        
+
         return list.stream()
             .filter(item -> canAccess(item, currentUserId))
             .collect(Collectors.toList());
     }
-    
+
     private boolean canAccess(Object item, String userId) {
         if (item instanceof OwnedByUser ownedItem) {
             return ownedItem.getOwnerId().equals(userId);
@@ -406,60 +390,56 @@ public class DataFilteringAspect {
 }
 ```
 
-### Field-Level Security
+### 欄位級 Security
 
 ```java
 @Component
 public class FieldMaskingService {
-    
+
     /**
-
-     * Mask sensitive fields based on user role
-
+     * 根據使用者角色遮罩敏感欄位
      */
     public CustomerDto maskSensitiveFields(Customer customer, String userRole) {
         CustomerDto dto = CustomerDto.from(customer);
-        
-        // Non-admins cannot see full email and phone
+
+        // 非管理員無法查看完整 email 和電話
         if (!"ADMIN".equals(userRole)) {
             dto.setEmail(maskEmail(dto.getEmail()));
             dto.setPhoneNumber(maskPhoneNumber(dto.getPhoneNumber()));
         }
-        
+
         return dto;
     }
-    
+
     private String maskEmail(String email) {
         if (email == null || !email.contains("@")) {
             return email;
         }
-        
+
         String[] parts = email.split("@");
         String localPart = parts[0];
         String domain = parts[1];
-        
+
         if (localPart.length() <= 2) {
             return "*".repeat(localPart.length()) + "@" + domain;
         }
-        
-        return localPart.charAt(0) 
 
-            + "*".repeat(localPart.length() - 2) 
-            + localPart.charAt(localPart.length() - 1) 
+        return localPart.charAt(0)
+            + "*".repeat(localPart.length() - 2)
+            + localPart.charAt(localPart.length() - 1)
             + "@" + domain;
-
     }
 }
 ```
 
-## Authorization Patterns
+## Authorization 模式
 
-### Resource Ownership
+### 資源所有權
 
 ```java
 public interface OwnedResource {
     String getOwnerId();
-    
+
     default boolean isOwnedBy(String userId) {
         return getOwnerId().equals(userId);
     }
@@ -467,10 +447,10 @@ public interface OwnedResource {
 
 @Entity
 public class Order implements OwnedResource {
-    
+
     @Column(name = "customer_id")
     private String customerId;
-    
+
     @Override
     public String getOwnerId() {
         return customerId;
@@ -478,46 +458,46 @@ public class Order implements OwnedResource {
 }
 ```
 
-### Hierarchical Permissions
+### 階層式權限
 
 ```java
 public enum Permission {
-    // Admin permissions (highest level)
+    // Admin 權限（最高級別）
     ADMIN_ALL("admin:*"),
-    
-    // Customer management
+
+    // 客戶管理
     CUSTOMER_READ_ALL("customer:read:all"),
     CUSTOMER_READ_OWN("customer:read:own"),
     CUSTOMER_UPDATE_OWN("customer:update:own"),
-    
-    // Order management
+
+    // 訂單管理
     ORDER_READ_ALL("order:read:all"),
     ORDER_READ_OWN("order:read:own"),
     ORDER_CREATE("order:create"),
     ORDER_CANCEL_OWN("order:cancel:own"),
-    
-    // Product management
+
+    // 產品管理
     PRODUCT_READ("product:read"),
     PRODUCT_CREATE("product:create"),
     PRODUCT_UPDATE_OWN("product:update:own"),
     PRODUCT_DELETE_OWN("product:delete:own");
-    
+
     private final String permission;
-    
+
     Permission(String permission) {
         this.permission = permission;
     }
-    
+
     public boolean implies(Permission other) {
-        // ADMIN_ALL implies all other permissions
+        // ADMIN_ALL 包含所有其他權限
         if (this == ADMIN_ALL) {
             return true;
         }
-        
-        // Check if this permission implies the other
+
+        // 檢查此權限是否包含其他權限
         String thisBase = permission.split(":")[0];
         String otherBase = other.permission.split(":")[0];
-        
+
         return thisBase.equals(otherBase) && permission.endsWith("*");
     }
 }
@@ -525,149 +505,141 @@ public enum Permission {
 
 ## Security Context
 
-### Accessing Current User
+### 存取目前使用者
 
 ```java
 @Component
 public class SecurityContextService {
-    
+
     /**
-
-     * Get current authenticated user ID
-
+     * 取得目前已 authentication 的使用者 ID
      */
     public String getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext()
             .getAuthentication();
-        
+
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new AuthenticationException("User not authenticated");
         }
-        
+
         return authentication.getName();
     }
-    
+
     /**
-
-     * Get current user details
-
+     * 取得目前使用者詳細資訊
      */
     public UserDetails getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext()
             .getAuthentication();
-        
+
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new AuthenticationException("User not authenticated");
         }
-        
+
         return (UserDetails) authentication.getPrincipal();
     }
-    
+
     /**
-
-     * Check if current user has role
-
+     * 檢查目前使用者是否具有角色
      */
     public boolean hasRole(String role) {
         Authentication authentication = SecurityContextHolder.getContext()
             .getAuthentication();
-        
+
         if (authentication == null) {
             return false;
         }
-        
+
         return authentication.getAuthorities().stream()
             .anyMatch(a -> a.getAuthority().equals("ROLE_" + role));
     }
-    
+
     /**
-
-     * Check if current user has permission
-
+     * 檢查目前使用者是否具有權限
      */
     public boolean hasPermission(String permission) {
         Authentication authentication = SecurityContextHolder.getContext()
             .getAuthentication();
-        
+
         if (authentication == null) {
             return false;
         }
-        
+
         return authentication.getAuthorities().stream()
             .anyMatch(a -> a.getAuthority().equals(permission));
     }
 }
 ```
 
-## Error Handling
+## 錯誤處理
 
-### Authorization Exceptions
+### Authorization 例外
 
 ```java
 @RestControllerAdvice
 public class AuthorizationExceptionHandler {
-    
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDenied(
             AccessDeniedException ex) {
-        
+
         ErrorResponse error = ErrorResponse.builder()
             .errorCode("ACCESS_DENIED")
             .message("You do not have permission to access this resource")
             .timestamp(Instant.now())
             .build();
-        
+
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
-    
+
     @ExceptionHandler(InsufficientAuthenticationException.class)
     public ResponseEntity<ErrorResponse> handleInsufficientAuthentication(
             InsufficientAuthenticationException ex) {
-        
+
         ErrorResponse error = ErrorResponse.builder()
             .errorCode("AUTHENTICATION_REQUIRED")
             .message("Authentication is required to access this resource")
             .timestamp(Instant.now())
             .build();
-        
+
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 }
 ```
 
-## Testing
+## 測試
 
-### Authorization Tests
+### Authorization 測試
 
 ```java
 @SpringBootTest
 @AutoConfigureMockMvc
 class AuthorizationTest {
-    
+
     @Autowired
     private MockMvc mockMvc;
-    
+
     @Test
     @WithMockUser(username = "user-123", roles = "CUSTOMER")
     void customer_can_access_own_data() throws Exception {
         mockMvc.perform(get("/api/v1/customers/user-123"))
             .andExpect(status().isOk());
     }
-    
+
     @Test
     @WithMockUser(username = "user-123", roles = "CUSTOMER")
     void customer_cannot_access_other_customer_data() throws Exception {
         mockMvc.perform(get("/api/v1/customers/user-456"))
             .andExpect(status().isForbidden());
     }
-    
+
     @Test
     @WithMockUser(username = "admin-1", roles = "ADMIN")
     void admin_can_access_any_customer_data() throws Exception {
         mockMvc.perform(get("/api/v1/customers/user-123"))
             .andExpect(status().isOk());
     }
-    
+
     @Test
     @WithMockUser(username = "user-123", roles = "CUSTOMER")
     void customer_can_create_order() throws Exception {
@@ -680,7 +652,7 @@ class AuthorizationTest {
                     """))
             .andExpect(status().isCreated());
     }
-    
+
     @Test
     @WithAnonymousUser
     void anonymous_user_cannot_create_order() throws Exception {
@@ -696,20 +668,20 @@ class AuthorizationTest {
 }
 ```
 
-## Monitoring and Logging
+## 監控和日誌記錄
 
-### Authorization Events to Log
+### 要記錄的 Authorization 事件
 
 ```java
 @Component
 public class AuthorizationEventLogger {
-    
+
     private final Logger logger = LoggerFactory.getLogger("SECURITY");
-    
+
     @EventListener
     public void handleAuthorizationFailure(
             AuthorizationFailureEvent event) {
-        
+
         logger.warn("Authorization failure",
             kv("event", "AUTHZ_FAILURE"),
             kv("userId", event.getUserId()),
@@ -718,7 +690,7 @@ public class AuthorizationEventLogger {
             kv("reason", event.getReason()),
             kv("timestamp", Instant.now()));
     }
-    
+
     @EventListener
     public void handleAccessDenied(AccessDeniedEvent event) {
         logger.warn("Access denied",
@@ -731,34 +703,34 @@ public class AuthorizationEventLogger {
 }
 ```
 
-## Best Practices
+## 最佳實踐
 
-### ✅ Do
+### ✅ 應該
 
-- Always check authorization at multiple layers (controller, service, data)
-- Use method-level security annotations for clarity
-- Implement custom permission evaluators for complex logic
-- Log all authorization failures for security monitoring
-- Test authorization rules thoroughly
-- Use least privilege principle
-- Filter data based on user permissions
+- 始終在多個層級檢查 authorization（controller、service、data）
+- 使用方法級 security 註解以提高清晰度
+- 為複雜邏輯實作自訂權限評估器
+- 記錄所有 authorization 失敗以供 security 監控
+- 徹底測試 authorization 規則
+- 使用最小權限原則
+- 根據使用者權限過濾資料
 
-### ❌ Don't
+### ❌ 不應該
 
-- Don't rely solely on client-side authorization
-- Don't expose unauthorized data in error messages
-- Don't implement authorization logic in controllers only
-- Don't forget to check authorization on all endpoints
-- Don't use hard-coded role checks everywhere
-- Don't skip authorization tests
+- 不要僅依賴客戶端 authorization
+- 不要在錯誤訊息中暴露未授權的資料
+- 不要僅在 controller 中實作 authorization 邏輯
+- 不要忘記檢查所有端點的 authorization
+- 不要到處使用硬編碼的角色檢查
+- 不要跳過 authorization 測試
 
-## Related Documentation
+## 相關文件
 
-- [Authentication](authentication.md) - Authentication mechanisms
-- [Security Overview](overview.md) - Overall security perspective
-- [Security Standards](../../.kiro/steering/security-standards.md) - Detailed security standards
+- [Authentication](authentication.md) - Authentication 機制
+- [Security Overview](overview.md) - 整體 security 觀點
+- [Security Standards](../../.kiro/steering/security-standards.md) - 詳細的 security 標準
 
-## References
+## 參考資料
 
 - Spring Security Authorization: <https://docs.spring.io/spring-security/reference/servlet/authorization/index.html>
 - OWASP Authorization Cheat Sheet: <https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html>

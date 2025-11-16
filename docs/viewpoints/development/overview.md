@@ -1,41 +1,41 @@
 # Development Viewpoint Overview
 
-> **Last Updated**: 2025-10-23  
-> **Status**: Active  
+> **Last Updated**: 2025-10-23
+> **Status**: Active
 > **Stakeholders**: Developers, Build Engineers, Architects
 
-## Purpose
+## 目的
 
-The Development Viewpoint describes how the system is structured from a developer's perspective, focusing on code organization, module structure, and development practices. This viewpoint helps developers understand:
+Development Viewpoint 從開發者角度描述系統如何結構化,著重於程式碼組織、模組結構和開發實踐。這個觀點幫助開發者理解:
 
-- How the codebase is organized
-- What architectural patterns are used
-- How modules depend on each other
-- How to navigate and contribute to the codebase
+- 程式碼庫如何組織
+- 使用哪些架構模式
+- 模組如何相互依賴
+- 如何導覽和貢獻程式碼庫
 
-## Key Concerns
+## 關鍵關注點
 
-This viewpoint addresses the following concerns:
+此觀點處理以下關注點:
 
-1. **Code Organization**: How is the code structured to support maintainability and scalability?
-2. **Module Structure**: How are modules organized and what are their responsibilities?
-3. **Dependency Management**: What are the dependency rules and how are they enforced?
-4. **Build Process**: How is the system built, tested, and packaged?
-5. **Development Environment**: What tools and setup are required for development?
-6. **Code Quality**: How is code quality maintained and enforced?
+1. **程式碼組織**: 程式碼如何結構化以支援可維護性和可擴展性?
+2. **模組結構**: 模組如何組織以及它們的責任是什麼?
+3. **依賴管理**: 依賴規則是什麼以及如何強制執行?
+4. **建置流程**: 系統如何建置、測試和打包?
+5. **開發環境**: 開發需要哪些工具和設定?
+6. **程式碼品質**: 程式碼品質如何維護和強制執行?
 
-## Architectural Approach
+## 架構方法
 
 ### Hexagonal Architecture (Ports and Adapters)
 
-The system follows **Hexagonal Architecture** (also known as Ports and Adapters pattern) combined with **Domain-Driven Design (DDD)** tactical patterns. This architecture ensures:
+系統遵循 **Hexagonal Architecture** (也稱為 Ports and Adapters pattern) 結合 **Domain-Driven Design (DDD)** tactical patterns。這種架構確保:
 
-- **Domain Independence**: Business logic is isolated from technical concerns
-- **Testability**: Core domain can be tested without infrastructure
-- **Flexibility**: Easy to swap infrastructure implementations
-- **Maintainability**: Clear separation of concerns
+- **Domain Independence**: 業務邏輯與技術關注點隔離
+- **Testability**: Core domain 可以在沒有基礎設施的情況下測試
+- **Flexibility**: 易於替換基礎設施實作
+- **Maintainability**: 清晰的關注點分離
 
-### Layer Structure
+### 層級結構
 
 ```mermaid
 graph TD
@@ -46,37 +46,37 @@ graph TD
     N3 --> N6
 ```
 
-### Dependency Rules
+### 依賴規則
 
-The architecture enforces strict dependency rules:
+架構強制執行嚴格的依賴規則:
 
-1. **Domain Layer**: Has NO dependencies on any other layer
-   - Contains pure business logic
-   - Defines repository interfaces
-   - Defines domain events
-   - No framework dependencies (except Java standard library)
+1. **Domain Layer**: 對任何其他層都沒有依賴
+   - 包含純業務邏輯
+   - 定義 repository interfaces
+   - 定義 domain events
+   - 沒有 framework 依賴 (除了 Java standard library)
 
-2. **Application Layer**: Depends ONLY on Domain Layer
-   - Orchestrates use cases
-   - Coordinates domain objects
-   - Publishes domain events
-   - Manages transactions
+2. **Application Layer**: 只依賴 Domain Layer
+   - 編排 use cases
+   - 協調 domain objects
+   - 發佈 domain events
+   - 管理 transactions
 
-3. **Infrastructure Layer**: Depends on Domain Layer
-   - Implements repository interfaces
-   - Implements external service adapters
-   - Handles persistence (JPA entities)
-   - Manages messaging (Kafka, Redis)
+3. **Infrastructure Layer**: 依賴 Domain Layer
+   - 實作 repository interfaces
+   - 實作 external service adapters
+   - 處理持久化 (JPA entities)
+   - 管理訊息傳遞 (Kafka, Redis)
 
-4. **Interfaces Layer**: Depends on Application and Domain Layers
-   - Exposes REST APIs
-   - Handles HTTP requests/responses
-   - Manages authentication/authorization
-   - Converts DTOs to domain objects
+4. **Interfaces Layer**: 依賴 Application 和 Domain Layers
+   - 暴露 REST APIs
+   - 處理 HTTP requests/responses
+   - 管理 authentication/authorization
+   - 轉換 DTOs 為 domain objects
 
-## Code Organization
+## 程式碼組織
 
-### Root Package Structure
+### Root Package 結構
 
 ```text
 solid.humank.genaidemo/
@@ -110,9 +110,9 @@ solid.humank.genaidemo/
     └── web/            # Web UI Controllers
 ```
 
-### Bounded Context Organization
+### Bounded Context 組織
 
-Each bounded context follows a consistent structure within the domain layer:
+每個 bounded context 在 domain layer 中遵循一致的結構:
 
 ```text
 domain/{context}/
@@ -127,7 +127,7 @@ domain/{context}/
 └── validation/         # Validation Logic
 ```
 
-### Example: Customer Bounded Context
+### 範例: Customer Bounded Context
 
 ```text
 domain/customer/
@@ -153,9 +153,9 @@ domain/customer/
     └── CustomerValidator.java
 ```
 
-## Module Dependencies
+## 模組依賴
 
-### Technology Stack
+### 技術堆疊
 
 #### Backend Core
 
@@ -191,9 +191,9 @@ domain/customer/
 - **AWS X-Ray**: Distributed tracing
 - **Micrometer**: Metrics collection
 
-### Dependency Management
+### 依賴管理
 
-Dependencies are managed through Gradle's version catalog:
+依賴透過 Gradle 的 version catalog 管理:
 
 ```gradle
 // gradle/libs.versions.toml
@@ -206,12 +206,12 @@ spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-start
 spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
 ```
 
-### Prohibited Dependencies
+### 禁止的依賴
 
-To maintain architectural integrity, certain dependencies are prohibited:
+為了維護架構完整性,某些依賴是禁止的:
 
 1. **Domain Layer**:
-   - ❌ No Spring Framework annotations (except `@Component` for domain services)
+   - ❌ No Spring Framework annotations (除了 domain services 的 `@Component`)
    - ❌ No JPA annotations
    - ❌ No infrastructure libraries
    - ✅ Only Java standard library and domain-specific libraries
@@ -225,11 +225,11 @@ To maintain architectural integrity, certain dependencies are prohibited:
    - ❌ No circular dependencies
    - ❌ No direct database access from domain/application layers
 
-## Development Practices
+## 開發實踐
 
 ### Domain-Driven Design (DDD)
 
-The codebase follows DDD tactical patterns:
+程式碼庫遵循 DDD tactical patterns:
 
 1. **Aggregates**: Consistency boundaries with aggregate roots
 2. **Entities**: Objects with identity
@@ -240,24 +240,24 @@ The codebase follows DDD tactical patterns:
 
 ### Event-Driven Architecture
 
-The system uses domain events for:
+系統使用 domain events 用於:
 
-- **Cross-Context Communication**: Bounded contexts communicate via events
-- **Eventual Consistency**: Asynchronous data synchronization
-- **Audit Trail**: Event sourcing for critical operations
-- **Integration**: External system integration
+- **Cross-Context Communication**: Bounded contexts 透過事件溝通
+- **Eventual Consistency**: 非同步資料同步
+- **Audit Trail**: 關鍵操作的 event sourcing
+- **Integration**: 外部系統整合
 
 ### Test-Driven Development (TDD)
 
-Development follows TDD practices:
+開發遵循 TDD 實踐:
 
-1. **Red**: Write failing test
-2. **Green**: Write minimal code to pass
-3. **Refactor**: Improve code quality
+1. **Red**: 撰寫失敗的測試
+2. **Green**: 撰寫最少程式碼以通過測試
+3. **Refactor**: 改善程式碼品質
 
 ### Behavior-Driven Development (BDD)
 
-Business requirements are captured as Gherkin scenarios:
+業務需求以 Gherkin scenarios 捕獲:
 
 ```gherkin
 Feature: Customer Registration
@@ -268,9 +268,9 @@ Feature: Customer Registration
     And their account should be created
 ```
 
-## Build System
+## 建置系統
 
-### Gradle Build Structure
+### Gradle Build 結構
 
 ```text
 project/
@@ -284,7 +284,7 @@ project/
     └── wrapper/               # Gradle wrapper
 ```
 
-### Key Gradle Tasks
+### 關鍵 Gradle 任務
 
 ```bash
 # Build and test
@@ -307,19 +307,19 @@ project/
 ./gradlew bootJar              # Create executable JAR
 ```
 
-## Code Quality Standards
+## 程式碼品質標準
 
-### Automated Quality Checks
+### 自動化品質檢查
 
-1. **Architecture Compliance**: ArchUnit tests enforce architectural rules
-2. **Code Coverage**: Minimum 80% line coverage required
-3. **Static Analysis**: PMD and SpotBugs for code quality
-4. **Style Checks**: Checkstyle for consistent formatting
+1. **Architecture Compliance**: ArchUnit tests 強制執行架構規則
+2. **Code Coverage**: 需要最少 80% line coverage
+3. **Static Analysis**: PMD 和 SpotBugs 用於程式碼品質
+4. **Style Checks**: Checkstyle 用於一致的格式化
 5. **Dependency Analysis**: Gradle dependency verification
 
-### Quality Gates
+### 品質關卡
 
-Before merging code:
+合併程式碼前:
 
 - ✅ All tests pass
 - ✅ Code coverage ≥ 80%
@@ -327,9 +327,9 @@ Before merging code:
 - ✅ No critical PMD/SpotBugs issues
 - ✅ Code review approved
 
-## Development Environment
+## 開發環境
 
-### Required Tools
+### 必要工具
 
 1. **Java Development Kit (JDK)**: Java 21
 2. **IDE**: IntelliJ IDEA (recommended) or VS Code
@@ -338,14 +338,14 @@ Before merging code:
 5. **Container Runtime**: Docker Desktop
 6. **Database Client**: DBeaver or similar
 
-### Optional Tools
+### 可選工具
 
 1. **API Testing**: Postman or Insomnia
 2. **Database**: PostgreSQL (for local testing)
 3. **Message Broker**: Kafka (via Docker)
 4. **Cache**: Redis (via Docker)
 
-### IDE Configuration
+### IDE 設定
 
 #### IntelliJ IDEA
 
@@ -365,26 +365,26 @@ Before merging code:
    - Cucumber (Gherkin) Full Support
    - PlantUML
 
-## Navigation
+## 導覽
 
-### Related Documents
+### 相關文件
 
 - [Module Organization](module-organization.md) - Detailed package structure
 - [Dependency Rules](dependency-rules.md) - Architecture constraints
 - [Build Process](build-process.md) - Build and deployment
 
-### Related Viewpoints
+### 相關 Viewpoints
 
 - [Functional Viewpoint](../functional/README.md) - Business capabilities
 - [Information Viewpoint](../information/README.md) - Data models
 - [Deployment Viewpoint](../deployment/README.md) - Infrastructure
 
-### Related Perspectives
+### 相關 Perspectives
 
 - [Evolution Perspective](../../perspectives/evolution/README.md) - Maintainability
 - [Development Resource Perspective](../../perspectives/development-resource/README.md) - Team skills
 
-### Development Guides
+### 開發指南
 
 - [Local Environment Setup](../../development/setup/local-environment.md)
 - [Coding Standards](../../development/coding-standards/java-standards.md)

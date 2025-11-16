@@ -1,36 +1,36 @@
-# Runbook: Security Incident Response
+# Runbook: 安全事件回應
 
-## Symptoms
+## 症狀
 
-- Unusual traffic patterns
-- Unauthorized access attempts
-- Data breach indicators
-- Malware detection
-- DDoS attack
-- Suspicious user activity
-- Security alerts from AWS GuardDuty
-- Failed authentication spikes
+- 異常流量模式
+- 未授權存取嘗試
+- 資料外洩指標
+- Malware 偵測
+- DDoS 攻擊
+- 可疑使用者活動
+- AWS GuardDuty 的安全警報
+- 身分驗證失敗激增
 
-## Impact
+## 影響
 
-- **Severity**: P0 - Critical
-- **Affected Users**: Potentially all users
-- **Business Impact**: Data breach, service disruption, legal liability, reputation damage
+- **嚴重性**: P0 - Critical
+- **受影響使用者**: 可能影響所有使用者
+- **業務影響**: 資料外洩、服務中斷、法律責任、聲譽損害
 
-## Detection
+## 偵測
 
-- **Alert**: `SecurityIncidentDetected`, `UnauthorizedAccess`, `DDoSAttack`
+- **Alert**: `SecurityIncidentDetected`、`UnauthorizedAccess`、`DDoSAttack`
 - **Monitoring Dashboard**: Security Dashboard
 - **Log Patterns**:
-  - Multiple failed login attempts
-  - Unusual API access patterns
-  - SQL injection attempts
-  - XSS attempts
-  - Privilege escalation attempts
+  - 多次登入失敗嘗試
+  - 異常 API 存取模式
+  - SQL injection 嘗試
+  - XSS 嘗試
+  - 權限提升嘗試
 
-## Diagnosis
+## 診斷
 
-### Step 1: Assess Incident Severity
+### 步驟 1: 評估事件嚴重性
 
 ```bash
 # Check security alerts
@@ -53,7 +53,7 @@ aws cloudtrail lookup-events \
   --max-results 50
 ```
 
-### Step 2: Identify Attack Vector
+### 步驟 2: 識別攻擊向量
 
 ```bash
 # Check application logs for attack patterns
@@ -73,7 +73,7 @@ kubectl logs deployment/ecommerce-backend -n production --tail=10000 | \
   grep -iE "download|export|dump" | grep -v "normal_operation"
 ```
 
-### Step 3: Identify Affected Systems
+### 步驟 3: 識別受影響系統
 
 ```bash
 # Check which pods/services accessed
@@ -93,7 +93,7 @@ aws s3 cp s3://ecommerce-logs/s3-access/ . --recursive
 grep ${SUSPICIOUS_IP} *.log
 ```
 
-### Step 4: Determine Data Exposure
+### 步驟 4: 判定資料暴露程度
 
 ```bash
 # Check for data access
@@ -116,11 +116,11 @@ aws cloudtrail lookup-events \
   --query 'Events[?contains(CloudTrailEvent, `${SUSPICIOUS_IP}`)]'
 ```
 
-## Resolution
+## 解決方案
 
-### Immediate Actions (First 15 Minutes)
+### 立即行動 (前 15 分鐘)
 
-1. **Activate Incident Response Team**:
+1. **啟動事件回應團隊**:
 
 ```bash
 # Page security team
@@ -130,9 +130,9 @@ aws cloudtrail lookup-events \
 # Slack: #incident-security-YYYYMMDD
 ```
 
-1. **Contain the Threat**:
+1. **控制威脅**:
 
-**Block malicious IP addresses**:
+**封鎖惡意 IP 位址**:
 
 ```bash
 # Add IP to WAF block list
@@ -148,7 +148,7 @@ aws ec2 authorize-security-group-ingress \
   --ip-permissions IpProtocol=-1,FromPort=-1,ToPort=-1,IpRanges="[{CidrIp=${MALICIOUS_IP}/32,Description='Blocked malicious IP'}]"
 ```
 
-**Revoke compromised credentials**:
+**撤銷已洩露的憑證**:
 
 ```bash
 # Disable compromised IAM user
@@ -166,7 +166,7 @@ aws iam update-login-profile \
 aws iam delete-login-profile --user-name ${USER_NAME}
 ```
 
-**Isolate affected systems**:
+**隔離受影響系統**:
 
 ```bash
 # Scale down affected pods
@@ -178,7 +178,7 @@ kubectl patch service ecommerce-backend -n production \
   -p '{"spec":{"selector":{"quarantine":"false"}}}'
 ```
 
-1. **Enable Enhanced Logging**:
+1. **啟用增強日誌記錄**:
 
 ```bash
 # Enable VPC Flow Logs
@@ -195,9 +195,9 @@ aws cloudtrail put-event-selectors \
   --event-selectors '[{"ReadWriteType":"All","IncludeManagementEvents":true,"DataResources":[{"Type":"AWS::S3::Object","Values":["arn:aws:s3:::*/*"]}]}]'
 ```
 
-### Investigation (First Hour)
+### 調查 (第一小時)
 
-1. **Collect Evidence**:
+1. **收集證據**:
 
 ```bash
 # Capture logs
@@ -217,7 +217,7 @@ aws cloudtrail lookup-events \
   --max-results 1000 > cloudtrail-events.json
 ```
 
-1. **Analyze Attack Pattern**:
+1. **分析攻擊模式**:
 
 ```bash
 # Analyze access patterns
@@ -231,7 +231,7 @@ cat incident-logs.txt | grep -iE "admin|root|sudo|privilege"
 cat incident-logs.txt | grep -iE "ssh|rdp|smb|internal"
 ```
 
-1. **Assess Data Breach**:
+1. **評估資料外洩**:
 
 ```sql
 -- Check accessed customer data
@@ -252,9 +252,9 @@ WHERE action IN ('EXPORT', 'DOWNLOAD', 'BULK_READ')
   AND created_at > NOW() - INTERVAL '24 hours';
 ```
 
-### Remediation
+### 補救措施
 
-1. **Patch Vulnerabilities**:
+1. **修補漏洞**:
 
 ```bash
 # Update dependencies
@@ -270,7 +270,7 @@ kubectl set image deployment/ecommerce-backend \
   -n production
 ```
 
-1. **Rotate Credentials**:
+1. **輪換憑證**:
 
 ```bash
 # Rotate database passwords
@@ -289,7 +289,7 @@ aws secretsmanager rotate-secret \
 kubectl rollout restart deployment/ecommerce-backend -n production
 ```
 
-1. **Strengthen Security**:
+1. **強化安全**:
 
 ```bash
 # Enable MFA for all users
@@ -313,9 +313,9 @@ aws wafv2 update-web-acl \
   --rules file://enhanced-waf-rules.json
 ```
 
-### Communication
+### 溝通
 
-1. **Internal Communication**:
+1. **內部溝通**:
 
 ```text
 Subject: Security Incident - [SEVERITY] - [DATE]
@@ -342,7 +342,7 @@ Next Steps:
 Contact: security-team@ecommerce.example.com
 ```
 
-1. **Customer Communication** (if data breach):
+1. **客戶溝通** (如果有資料外洩):
 
 ```text
 Subject: Important Security Notice
@@ -371,7 +371,7 @@ We sincerely apologize for this incident.
 Contact: support@ecommerce.example.com
 ```
 
-1. **Regulatory Notification** (if required):
+1. **監管通報** (如果需要):
 
 ```bash
 # GDPR breach notification (within 72 hours)
@@ -383,20 +383,20 @@ Contact: support@ecommerce.example.com
 # Document all notifications
 ```
 
-## Verification
+## 驗證
 
-- [ ] Threat contained
-- [ ] Malicious access blocked
-- [ ] Compromised credentials revoked
-- [ ] Vulnerabilities patched
-- [ ] No ongoing suspicious activity
-- [ ] Systems restored to normal operation
-- [ ] Evidence preserved
-- [ ] Incident documented
+- [ ] 威脅已控制
+- [ ] 惡意存取已封鎖
+- [ ] 已洩露憑證已撤銷
+- [ ] 漏洞已修補
+- [ ] 無持續可疑活動
+- [ ] 系統已恢復正常運作
+- [ ] 證據已保存
+- [ ] 事件已記錄
 
-## Prevention
+## 預防措施
 
-### 1. Security Hardening
+### 1. 安全加固
 
 ```yaml
 # Implement security best practices
@@ -410,7 +410,7 @@ Contact: support@ecommerce.example.com
 
 ```
 
-### 2. Enhanced Monitoring
+### 2. 增強監控
 
 ```yaml
 # Set up security monitoring
@@ -428,7 +428,7 @@ Contact: support@ecommerce.example.com
   expr: rate(data_export_requests[5m]) > 1
 ```
 
-### 3. Regular Security Assessments
+### 3. 定期安全評估
 
 ```bash
 # Schedule regular security scans
@@ -441,30 +441,30 @@ Contact: support@ecommerce.example.com
 ./scripts/review-access-logs.sh
 ```
 
-## Escalation
+## 升級程序
 
-- **Immediate**: Security Lead, Engineering Manager
-- **Within 1 hour**: CTO, Legal Counsel
-- **Within 4 hours**: CEO, Board (if major breach)
-- **External**: Law enforcement (if criminal activity)
+- **立即**: Security Lead、Engineering Manager
+- **1 小時內**: CTO、Legal Counsel
+- **4 小時內**: CEO、董事會 (如果是重大外洩)
+- **外部**: 執法機關 (如果有犯罪活動)
 
-## Related
+## 相關文件
 
 - [DDoS Attack Response](ddos-attack.md)
 - [Backup and Restore](backup-restore.md)
 - [Service Outage](service-outage.md)
 
-## Legal and Compliance
+## 法律與合規
 
-- Document all actions taken
-- Preserve evidence for investigation
-- Notify authorities as required by law
-- Comply with breach notification requirements
-- Consult with legal counsel
+- 記錄所有採取的行動
+- 保存證據以供調查
+- 依法通知當局
+- 遵守外洩通報要求
+- 諮詢法律顧問
 
 ---
 
-**Last Updated**: 2025-10-25  
-**Owner**: Security Team  
-**Review Cycle**: Quarterly  
+**Last Updated**: 2025-10-25
+**Owner**: Security Team
+**Review Cycle**: Quarterly
 **Classification**: CONFIDENTIAL

@@ -2,10 +2,10 @@
 
 ## Overview
 
-This document defines the design principles that guide how we write code, focusing on Extreme Programming (XP) values and Object-Oriented design principles.
+本文件定義指導我們編寫程式碼的設計原則，專注於 Extreme Programming (XP) 價值觀和物件導向設計原則。
 
-**Purpose**: Provide quick checks and rules for design decisions.
-**Detailed Examples**: See `.kiro/examples/design-patterns/` and `.kiro/examples/xp-practices/` for comprehensive guides.
+**Purpose**: 提供設計決策的快速檢查和規則。
+**Detailed Examples**: 查看 `.kiro/examples/design-patterns/` 和 `.kiro/examples/xp-practices/` 以獲取完整指南。
 
 ---
 
@@ -13,31 +13,31 @@ This document defines the design principles that guide how we write code, focusi
 
 ### Simplicity ⭐
 
-- [ ] Do the simplest thing that could possibly work
+- [ ] 做可能有效的最簡單的事情
 - [ ] YAGNI (You Aren't Gonna Need It)
-- [ ] Remove duplication
-- [ ] Minimize the number of classes and methods
+- [ ] 移除重複
+- [ ] 最小化類別和方法的數量
 
 ### Communication
 
-- [ ] Code communicates intent clearly
-- [ ] Use ubiquitous language from domain
-- [ ] Pair programming for knowledge sharing
+- [ ] 程式碼清楚傳達意圖
+- [ ] 使用領域的 ubiquitous language
+- [ ] Pair programming 以分享知識
 - [ ] Collective code ownership
 
 ### Feedback
 
 - [ ] Test-first development
 - [ ] Continuous integration
-- [ ] Short iterations
-- [ ] Customer involvement
+- [ ] 短迭代
+- [ ] 客戶參與
 
 ### Courage
 
-- [ ] Refactor when needed
-- [ ] Throw away code when necessary
-- [ ] Admit when you don't know
-- [ ] Accept feedback
+- [ ] 需要時進行 refactor
+- [ ] 必要時丟棄程式碼
+- [ ] 承認不知道的事情
+- [ ] 接受反饋
 
 **Detailed XP Practices**: #[[file:../examples/xp-practices/]]
 
@@ -45,14 +45,14 @@ This document defines the design principles that guide how we write code, focusi
 
 ## Tell, Don't Ask ⭐
 
-**Principle**: Objects should tell other objects what to do, not ask for their state and make decisions.
+**Principle**: 物件應該告訴其他物件做什麼，而不是詢問它們的狀態並做決策。
 
 ### Must Follow
 
-- [ ] Behavior should be in the object that owns the data
-- [ ] Avoid getter chains
-- [ ] Methods should do work, not just return data
-- [ ] Push decisions into the object
+- [ ] 行為應該在擁有資料的物件中
+- [ ] 避免 getter 鏈
+- [ ] 方法應該做工作，而不只是返回資料
+- [ ] 將決策推入物件中
 
 ### Quick Check
 
@@ -73,17 +73,17 @@ order.submit();  // Object handles its own state transitions
 
 ## Law of Demeter (Principle of Least Knowledge)
 
-**Principle**: Only talk to your immediate friends, don't talk to strangers.
+**Principle**: 只與你的直接朋友交談，不要與陌生人交談。
 
 ### Must Follow
 
-- [ ] Only call methods on:
-  - The object itself (this)
-  - Objects passed as parameters
-  - Objects created locally
-  - Direct component objects
-- [ ] Avoid method chaining across objects
-- [ ] One dot rule (with exceptions for fluent APIs)
+- [ ] 只呼叫以下物件的方法：
+  - 物件本身 (this)
+  - 作為參數傳遞的物件
+  - 在本地創建的物件
+  - 直接組件物件
+- [ ] 避免跨物件的方法鏈
+- [ ] One dot rule（fluent APIs 除外）
 
 ### Quick Check
 
@@ -101,14 +101,14 @@ customer.getPostalCode();  // Customer knows how to get it
 
 ## Composition Over Inheritance
 
-**Principle**: Favor object composition over class inheritance.
+**Principle**: 偏好物件組合而非類別繼承。
 
 ### Must Follow
 
-- [ ] Use composition for "has-a" relationships
-- [ ] Use inheritance only for "is-a" relationships
-- [ ] Prefer interfaces over abstract classes
-- [ ] Keep inheritance hierarchies shallow (max 2-3 levels)
+- [ ] 使用 composition 處理 "has-a" 關係
+- [ ] 只在 "is-a" 關係時使用 inheritance
+- [ ] 優先使用 interfaces 而非 abstract classes
+- [ ] 保持繼承層次結構淺（最多 2-3 層）
 
 ### Quick Check
 
@@ -121,7 +121,7 @@ class OrderWithDiscount extends Order {
 // ✅ GOOD: Composition
 class Order {
     private DiscountStrategy discountStrategy;
-    
+
     public Money calculateTotal() {
         Money subtotal = calculateSubtotal();
         return discountStrategy.apply(subtotal);
@@ -137,14 +137,14 @@ class Order {
 
 ### Single Responsibility Principle (SRP)
 
-**Principle**: A class should have only one reason to change.
+**Principle**: 一個類別應該只有一個變更的理由。
 
 #### Must Follow
 
-- [ ] Each class has one clear responsibility
-- [ ] Methods do one thing well
-- [ ] Separate business logic from infrastructure
-- [ ] Split large classes into focused ones
+- [ ] 每個類別只有一個清楚的職責
+- [ ] 方法做好一件事
+- [ ] 分離業務邏輯和基礎設施
+- [ ] 將大型類別拆分為專注的小類別
 
 #### Quick Check
 
@@ -166,40 +166,40 @@ class OrderProcessingService {
 
 ### Open/Closed Principle (OCP)
 
-**Principle**: Open for extension, closed for modification.
+**Principle**: 對擴展開放，對修改封閉。
 
 #### Must Follow
 
-- [ ] Use interfaces and abstract classes
-- [ ] Strategy pattern for varying behavior
-- [ ] Avoid modifying existing code
-- [ ] Extend through new implementations
+- [ ] 使用 interfaces 和 abstract classes
+- [ ] Strategy pattern 處理變化的行為
+- [ ] 避免修改現有程式碼
+- [ ] 透過新實作進行擴展
 
 ---
 
 ### Liskov Substitution Principle (LSP)
 
-**Principle**: Subtypes must be substitutable for their base types.
+**Principle**: 子類型必須可以替代其基礎類型。
 
 #### Must Follow
 
-- [ ] Subclasses honor parent class contracts
-- [ ] Don't strengthen preconditions
-- [ ] Don't weaken postconditions
-- [ ] Preserve invariants
+- [ ] 子類別遵守父類別的契約
+- [ ] 不要加強前置條件
+- [ ] 不要弱化後置條件
+- [ ] 保持不變量
 
 ---
 
 ### Interface Segregation Principle (ISP)
 
-**Principle**: Clients shouldn't depend on interfaces they don't use.
+**Principle**: 客戶端不應該依賴它們不使用的介面。
 
 #### Must Follow
 
-- [ ] Keep interfaces small and focused
-- [ ] Split large interfaces into smaller ones
-- [ ] Role-based interfaces
-- [ ] Avoid "fat" interfaces
+- [ ] 保持介面小而專注
+- [ ] 將大型介面拆分為較小的介面
+- [ ] 基於角色的介面
+- [ ] 避免 "fat" interfaces
 
 #### Quick Check
 
@@ -220,14 +220,14 @@ interface OrderFulfillment { void approve(); void ship(); }
 
 ### Dependency Inversion Principle (DIP)
 
-**Principle**: Depend on abstractions, not concretions.
+**Principle**: 依賴於抽象，而不是具體實作。
 
 #### Must Follow
 
-- [ ] High-level modules don't depend on low-level modules
-- [ ] Both depend on abstractions (interfaces)
-- [ ] Use dependency injection
-- [ ] Program to interfaces, not implementations
+- [ ] 高層模組不依賴低層模組
+- [ ] 兩者都依賴抽象 (interfaces)
+- [ ] 使用 dependency injection
+- [ ] 面向介面編程，而不是實作
 
 #### Quick Check
 
@@ -240,7 +240,7 @@ class OrderService {
 // ✅ GOOD: Depends on abstraction
 class OrderService {
     private final OrderRepository repository;
-    
+
     public OrderService(OrderRepository repository) {
         this.repository = repository;
     }
@@ -255,17 +255,17 @@ class OrderService {
 
 ### Priority Order
 
-1. **Passes all tests** - Code must work correctly
-2. **Reveals intention** - Code communicates clearly
+1. **Passes all tests** - 程式碼必須正確運作
+2. **Reveals intention** - 程式碼清楚溝通
 3. **No duplication** - DRY principle
-4. **Fewest elements** - Minimal classes and methods
+4. **Fewest elements** - 最少的類別和方法
 
 ### Must Follow
 
-- [ ] Tests pass (correctness first)
-- [ ] Clear naming and structure
-- [ ] Extract duplication
-- [ ] Remove unnecessary abstractions
+- [ ] 測試通過（正確性優先）
+- [ ] 清楚的命名和結構
+- [ ] 提取重複
+- [ ] 移除不必要的抽象
 
 **Detailed Guide**: #[[file:../examples/xp-practices/simple-design-examples.md]]
 
@@ -275,19 +275,19 @@ class OrderService {
 
 ### Code Smells
 
-- [ ] ❌ Long methods (> 20 lines)
-- [ ] ❌ Large classes (> 200 lines)
-- [ ] ❌ Long parameter lists (> 3 parameters)
+- [ ] ❌ 長方法 (> 20 lines)
+- [ ] ❌ 大型類別 (> 200 lines)
+- [ ] ❌ 長參數列表 (> 3 parameters)
 - [ ] ❌ Primitive obsession
 - [ ] ❌ Feature envy
 - [ ] ❌ Data clumps
 
 ### Design Smells
 
-- [ ] ❌ Rigidity (hard to change)
-- [ ] ❌ Fragility (breaks in many places)
-- [ ] ❌ Immobility (hard to reuse)
-- [ ] ❌ Viscosity (easier to do wrong thing)
+- [ ] ❌ Rigidity（難以變更）
+- [ ] ❌ Fragility（在許多地方損壞）
+- [ ] ❌ Immobility（難以重用）
+- [ ] ❌ Viscosity（做錯誤的事情更容易）
 - [ ] ❌ Needless complexity
 - [ ] ❌ Needless repetition
 
@@ -299,14 +299,14 @@ class OrderService {
 
 | Principle | Key Question | Red Flag |
 |-----------|-------------|----------|
-| Tell, Don't Ask | "Am I asking for data to make decisions?" | Getter chains, if-else on state |
-| Law of Demeter | "Am I talking to strangers?" | Multiple dots: `a.b().c().d()` |
-| SRP | "Does this class have one reason to change?" | Class does multiple things |
-| OCP | "Can I extend without modifying?" | Modifying existing code for new features |
-| LSP | "Can I substitute subclass for parent?" | Subclass breaks parent contract |
-| ISP | "Do clients use all interface methods?" | Large interfaces with unused methods |
-| DIP | "Do I depend on abstractions?" | `new ConcreteClass()` in business logic |
-| Composition | "Is this really an 'is-a' relationship?" | Inheritance for code reuse |
+| Tell, Don't Ask | "我是否正在詢問資料來做決策？" | Getter chains, if-else on state |
+| Law of Demeter | "我是否正在與陌生人交談？" | Multiple dots: `a.b().c().d()` |
+| SRP | "這個類別是否只有一個變更的理由？" | Class does multiple things |
+| OCP | "我能否在不修改的情況下擴展？" | Modifying existing code for new features |
+| LSP | "我能否用子類別替代父類別？" | Subclass breaks parent contract |
+| ISP | "客戶端是否使用所有介面方法？" | Large interfaces with unused methods |
+| DIP | "我是否依賴於抽象？" | `new ConcreteClass()` in business logic |
+| Composition | "這真的是 'is-a' 關係嗎？" | Inheritance for code reuse |
 
 ---
 
@@ -314,12 +314,12 @@ class OrderService {
 
 ### Code Review Checklist
 
-- [ ] Does code follow Tell, Don't Ask?
-- [ ] Are there any Law of Demeter violations?
-- [ ] Is composition used appropriately?
-- [ ] Do classes have single responsibility?
-- [ ] Are dependencies injected properly?
-- [ ] Are interfaces small and focused?
+- [ ] 程式碼是否遵循 Tell, Don't Ask？
+- [ ] 是否有任何 Law of Demeter 違規？
+- [ ] Composition 是否適當使用？
+- [ ] 類別是否具有單一職責？
+- [ ] 依賴是否正確注入？
+- [ ] 介面是否小而專注？
 
 ### Automated Checks
 

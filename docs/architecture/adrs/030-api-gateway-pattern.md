@@ -13,7 +13,7 @@ decision_makers: ["Architecture Team", "Backend Team", "DevOps Team"]
 
 # ADR-030: API Gateway Pattern
 
-## Status
+## 狀態
 
 **Status**: Accepted
 
@@ -21,37 +21,37 @@ decision_makers: ["Architecture Team", "Backend Team", "DevOps Team"]
 
 **Decision Makers**: Architecture Team, Backend Team, DevOps Team
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform consists of multiple microservices (13 bounded contexts) that need to be exposed to external clients (web frontends, mobile apps, third-party integrations). We need to decide on an API Gateway strategy to:
+企業電子商務平台由multiple microservices (13 bounded contexts) that 需要to be exposed to external clients (web frontends, mobile apps, third-party integrations). We need to decide on an API Gateway strategy：組成
 
-- Provide a unified entry point for all client requests
-- Handle cross-cutting concerns (authentication, rate limiting, logging)
+- 提供 a unified entry point 用於 all client requests
+- 處理 cross-cutting concerns (authentication, 速率限制, logging)
 - Route requests to appropriate backend services
 - Transform requests/responses as needed
 - Protect backend services from direct exposure
 
 This decision impacts:
 
-- API security and authentication
-- Request routing and load balancing
-- Rate limiting and throttling
-- API versioning and evolution
-- Monitoring and observability
+- API security 和 authentication
+- Request routing 和 load balancing
+- Rate limiting 和 throttling
+- API versioning 和 evolution
+- Monitoring 和 observability
 - Developer experience
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Unified API experience for frontend applications
-- Centralized security and authentication
+- Unified API experience 用於 frontend applications
+- Centralized security 和 authentication
 - Simplified client integration (single endpoint)
-- Consistent rate limiting and throttling
-- Reduced backend service complexity
-- Support for API versioning and evolution
+- Consistent 速率限制 和 throttling
+- 降低d backend service 複雜的ity
+- 支援 用於 API versioning 和 evolution
 
 **Business Constraints**:
 
@@ -59,19 +59,19 @@ This decision impacts:
 - High traffic volume (peak: 10,000 req/s)
 - Low latency requirements (< 100ms gateway overhead)
 - 99.9% availability requirement
-- Cost optimization for AWS services
-- Support for gradual migration from monolith
+- Cost optimization 用於 AWS services
+- 支援 用於 gradual migration from monolith
 
 **Business Requirements**:
 
-- Single entry point for all API requests
+- Single entry point 用於 all API requests
 - JWT-based authentication at gateway level
 - Rate limiting per client/IP/endpoint
 - Request/response transformation
-- API versioning support (v1, v2)
-- Comprehensive logging and monitoring
+- API versioning 支援 (v1, v2)
+- Comprehensive logging 和 monitoring
 
-### Technical Context
+### 技術上下文
 
 **Current Architecture**:
 
@@ -84,126 +84,126 @@ This decision impacts:
 
 **Technical Constraints**:
 
-- Must integrate with existing JWT authentication
-- Must support existing rate limiting strategy
-- Must work with AWS EKS deployment
-- Must provide low latency (< 100ms overhead)
-- Must support high throughput (10,000 req/s)
-- Must integrate with existing observability stack
+- 必須 integrate 與 existing JWT authentication
+- 必須 支援 existing 速率限制 strategy
+- 必須 work 與 AWS EKS deployment
+- 必須 提供 low latency (< 100ms overhead)
+- 必須 支援 high throughput (10,000 req/s)
+- 必須 integrate 與 existing observability stack
 
 **Dependencies**:
 
 - ADR-009: RESTful API Design (API standards)
-- ADR-023: API Rate Limiting Strategy (rate limiting implementation)
+- ADR-023: API Rate Limiting Strategy (速率限制 implementation)
 - ADR-014: JWT-Based Authentication (authentication mechanism)
-- ADR-050: API Security and Rate Limiting Strategy (security requirements)
+- ADR-050: API Security 和 Rate Limiting Strategy (security requirements)
 
-## Decision Drivers
+## 決策驅動因素
 
 - **Performance**: Low latency overhead (< 100ms)
-- **Scalability**: Support high throughput (10,000 req/s)
-- **Security**: Centralized authentication and authorization
-- **Flexibility**: Easy to configure routing and transformations
-- **Cost**: Optimize AWS service costs
-- **Maintainability**: Simple to operate and troubleshoot
-- **Integration**: Seamless integration with existing infrastructure
+- **Scalability**: 支援 high throughput (10,000 req/s)
+- **Security**: Centralized authentication 和 authorization
+- **Flexibility**: 容易configure routing 和 transformations
+- **成本**： Optimize AWS service costs
+- **維持ability**: 簡單operate 和 troubleshoot
+- **Integration**: Seamless integration 與 existing infrastructure
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: AWS API Gateway (Managed Service)
+### 選項 1： AWS API Gateway (Managed Service)
 
-**Description**:
-Use AWS API Gateway as a fully managed API gateway service with built-in features for authentication, rate limiting, caching, and monitoring.
+**描述**：
+Use AWS API Gateway as a fully managed API gateway service 與 built-in features 用於 authentication, 速率限制, caching, 和 monitoring.
 
 **Pros** ✅:
 
 - **Fully Managed**: No infrastructure to manage, automatic scaling
-- **Native AWS Integration**: Seamless integration with Lambda, Cognito, WAF, CloudWatch
-- **Built-in Features**: Authentication, rate limiting, caching, request/response transformation
+- **Native AWS Integration**: Seamless integration 與 Lambda, Cognito, WAF, CloudWatch
+- **Built-in Features**: Authentication, 速率限制, caching, request/response transformation
 - **High Availability**: Multi-AZ deployment, 99.95% SLA
 - **Security**: AWS WAF integration, API keys, usage plans
 - **Monitoring**: CloudWatch metrics, X-Ray tracing, access logs
-- **Cost-Effective for Low Traffic**: Pay-per-request pricing
-- **Easy Setup**: Quick to configure via AWS Console or CDK
+- **Cost-Effective 用於 Low Traffic**: Pay-per-request pricing
+- **Easy Setup**: Quick to configure via AWS Console 或 CDK
 
 **Cons** ❌:
 
 - **Vendor Lock-in**: Tightly coupled to AWS ecosystem
-- **Cost at Scale**: Expensive for high traffic (>10M requests/month)
-- **Limited Customization**: Restricted to AWS-provided features
+- **Cost at Scale**: Expensive 用於 high traffic (>10M requests/month)
+- **Limited Customization**: Restricted to AWS-提供d features
 - **Cold Start**: REST API has 29-second timeout, HTTP API has 30-second timeout
-- **Complexity**: Two types (REST API vs HTTP API) with different features
+- **複雜的ity**: Two types (REST API vs HTTP API) 與 different features
 - **Performance**: Additional network hop, potential latency
-- **Limited Transformation**: VTL (Velocity Template Language) for transformations
+- **Limited Transformation**: VTL (Velocity Template Language) 用於 transformations
 
-**Cost**:
+**成本**：
 
 - **REST API**: $3.50 per million requests + $0.09/GB data transfer
 - **HTTP API**: $1.00 per million requests + $0.09/GB data transfer
 - **Estimated Monthly Cost** (100M requests): $100-350 + data transfer
-- **Total Cost of Ownership (3 years)**: ~$15,000-50,000
+- **Total Cost of Ownership (3 年)**: ~$15,000-50,000
 
-**Risk**: Low
+**風險**： Low
 
-**Risk Description**: Proven AWS service with high reliability
+**Risk Description**: Proven AWS service 與 high reliability
 
 **Effort**: Low
 
-**Effort Description**: Quick setup with AWS CDK, minimal configuration
+**Effort Description**: Quick setup 與 AWS CDK, minimal configuration
 
-### Option 2: Kong Gateway (Open Source / Enterprise)
+### 選項 2： Kong Gateway (Open Source / Enterprise)
 
-**Description**:
-Deploy Kong Gateway as a self-hosted API gateway on EKS with plugins for authentication, rate limiting, logging, and transformations.
+**描述**：
+Deploy Kong Gateway as a self-hosted API gateway on EKS 與 plugins 用於 authentication, 速率限制, logging, 和 transformations.
 
 **Pros** ✅:
 
 - **Open Source**: Free community edition, no vendor lock-in
 - **Highly Customizable**: Extensive plugin ecosystem (50+ plugins)
 - **Performance**: Low latency (< 10ms overhead), high throughput
-- **Flexibility**: Custom plugins in Lua, support for any backend
+- **Flexibility**: Custom plugins in Lua, 支援 用於 any backend
 - **Multi-Cloud**: Works on any Kubernetes cluster, not AWS-specific
-- **Rich Features**: Authentication, rate limiting, caching, transformations, circuit breaker
+- **豐富的 Features**: Authentication, 速率限制, caching, transformations, circuit breaker
 - **Developer Experience**: Declarative configuration, GitOps-friendly
-- **Enterprise Option**: Kong Enterprise for advanced features (RBAC, analytics)
+- **Enterprise Option**: Kong Enterprise 用於 advanced features (RBAC, analytics)
 
 **Cons** ❌:
 
 - **Self-Hosted**: Need to manage infrastructure, scaling, updates
 - **Operational Overhead**: Monitoring, logging, troubleshooting required
-- **Database Dependency**: Requires PostgreSQL for configuration storage
-- **Learning Curve**: Need to learn Kong configuration and plugin system
+- **Database Dependency**: Requires PostgreSQL 用於 configuration storage
+- **Learning Curve**: Need to learn Kong configuration 和 plugin system
 - **High Availability**: Need to configure multi-replica deployment
-- **Cost**: Infrastructure costs (EC2, RDS) + operational overhead
-- **Enterprise Features**: Advanced features require paid license
+- **成本**： Infrastructure costs (EC2, RDS) + operational overhead
+- **Enterprise Features**: Advanced features 需要paid license
 
-**Cost**:
+**成本**：
 
 - **Infrastructure**: $500-1000/month (EKS nodes, RDS PostgreSQL)
 - **Operational Overhead**: 2 person-days/month ($2,000/month)
 - **Enterprise License** (optional): $3,000-10,000/month
-- **Total Cost of Ownership (3 years)**: ~$100,000-150,000 (community) or $200,000-400,000 (enterprise)
+- **Total Cost of Ownership (3 年)**: ~$100,000-150,000 (community) 或 $200,000-400,000 (enterprise)
 
-**Risk**: Medium
+**風險**： Medium
 
-**Risk Description**: Requires operational expertise, potential downtime during upgrades
+**Risk Description**: Requires operational expertise, potential downtime 期間 upgrades
 
 **Effort**: High
 
-**Effort Description**: Significant setup and configuration, ongoing maintenance
+**Effort Description**: Signifi可以t setup 和 configuration, ongoing maintenance
 
-### Option 3: Spring Cloud Gateway (Application-Level)
+### 選項 3： Spring Cloud Gateway (Application-Level)
 
-**Description**:
-Deploy Spring Cloud Gateway as a Spring Boot application on EKS, leveraging Spring ecosystem for routing, filtering, and integration.
+**描述**：
+Deploy Spring Cloud Gateway as a Spring Boot application on EKS, leveraging Spring ecosystem 用於 routing, filtering, 和 integration.
 
 **Pros** ✅:
 
-- **Spring Ecosystem**: Native integration with Spring Boot, Spring Security, Spring Cloud
-- **Java-Based**: Familiar technology for Java developers, easy to customize
-- **Reactive**: Built on Spring WebFlux for high performance
-- **Flexible Routing**: Powerful routing DSL, predicates, and filters
-- **Custom Filters**: Easy to write custom filters in Java
+- **Spring Ecosystem**: Native integration 與 Spring Boot, Spring Security, Spring Cloud
+- **Java-Based**: Familiar technology 用於 Java developers, easy to customize
+- **Reactive**: Built on Spring WebFlux 用於 high performance
+- **Flexible Routing**: Powerful routing DSL, predicates, 和 filters
+- **Custom Filters**: 容易write custom filters in Java
 - **Observability**: Spring Boot Actuator, Micrometer integration
 - **No Additional Infrastructure**: Runs as Spring Boot app on existing EKS
 - **Cost-Effective**: No additional service costs, only compute resources
@@ -211,80 +211,80 @@ Deploy Spring Cloud Gateway as a Spring Boot application on EKS, leveraging Spri
 **Cons** ❌:
 
 - **Self-Hosted**: Need to manage deployment, scaling, updates
-- **Limited Features**: Fewer built-in features compared to Kong or AWS API Gateway
+- **Limited Features**: Fewer built-in features compared to Kong 或 AWS API Gateway
 - **Operational Overhead**: Monitoring, logging, troubleshooting required
 - **Performance**: Higher latency than Kong (Java overhead)
 - **Scaling**: Need to configure auto-scaling, load balancing
 - **High Availability**: Need to deploy multiple replicas
 - **Learning Curve**: Need to learn Spring Cloud Gateway configuration
 
-**Cost**:
+**成本**：
 
 - **Infrastructure**: $300-500/month (EKS nodes)
 - **Operational Overhead**: 1.5 person-days/month ($1,500/month)
-- **Total Cost of Ownership (3 years)**: ~$70,000-90,000
+- **Total Cost of Ownership (3 年)**: ~$70,000-90,000
 
-**Risk**: Medium
+**風險**： Medium
 
 **Risk Description**: Requires Spring expertise, potential performance issues
 
 **Effort**: Medium
 
-**Effort Description**: Moderate setup, requires Spring Cloud Gateway knowledge
+**Effort Description**: Moderate setup, 需要Spring Cloud Gateway knowledge
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: Option 2 - Kong Gateway (Open Source)
+**選擇的選項**： Option 2 - Kong Gateway (Open Source)
 
 **Rationale**:
-We chose Kong Gateway as our API gateway solution. This decision prioritizes performance, flexibility, and long-term cost optimization over managed service convenience:
+We chose Kong Gateway as our API gateway solution. This decision prioritizes performance, flexibility, 和 long-term cost optimization over 託管服務 convenience:
 
-1. **Performance**: Kong provides < 10ms latency overhead compared to AWS API Gateway's higher latency. For high-traffic e-commerce platform (10,000 req/s peak), this translates to significant performance improvement.
+1. **Performance**: Kong 提供s < 10ms latency overhead compared to AWS API Gateway's higher latency. For high-traffic e-commerce platform (10,000 req/s peak), this translates to signifi可以t performance 改善ment.
 
-2. **Cost Optimization**: At our traffic volume (100M+ requests/month), Kong's infrastructure costs ($500-1000/month) are significantly lower than AWS API Gateway's pay-per-request pricing ($100-350/month + data transfer). Long-term savings justify operational overhead.
+2. **Cost Optimization**: At our traffic volume (100M+ requests/month), Kong's infrastructure costs ($500-1000/month) are signifi可以tly lower than AWS API Gateway's pay-per-request pricing ($100-350/month + data transfer). Long-term savings justify 營運開銷.
 
-3. **Flexibility and Customization**: Kong's extensive plugin ecosystem (50+ plugins) and ability to write custom Lua plugins provide flexibility for future requirements (custom authentication, advanced rate limiting, request transformations).
+3. **Flexibility 和 Customization**: Kong's extensive plugin ecosystem (50+ plugins) 和 ability to write custom Lua plugins 提供 flexibility 用於 future requirements (custom authentication, advanced 速率限制, request transformations).
 
-4. **Multi-Cloud Strategy**: Kong works on any Kubernetes cluster, supporting potential future multi-cloud or hybrid cloud strategy. Not locked into AWS ecosystem.
+4. **Multi-Cloud Strategy**: Kong works on any Kubernetes cluster, 支援ing potential future multi-cloud 或 hybrid cloud strategy. Not locked into AWS ecosystem.
 
-5. **Developer Experience**: Declarative configuration and GitOps-friendly approach align with our infrastructure-as-code strategy (ADR-007). Configuration stored in Git, versioned, and reviewed.
+5. **Developer Experience**: Declarative configuration 和 GitOps-friendly approach align 與 our infrastructure-as-code strategy (ADR-007). Configuration stored in Git, versioned, 和 reviewed.
 
-6. **Enterprise Readiness**: Kong Community Edition provides all essential features. Option to upgrade to Kong Enterprise for advanced features (RBAC, analytics, developer portal) if needed.
+6. **Enterprise Readiness**: Kong Community Edition 提供s all essential features. Option to upgrade to Kong Enterprise 用於 advanced features (RBAC, analytics, developer portal) if needed.
 
 7. **Kubernetes Native**: Kong runs natively on Kubernetes (EKS), leveraging existing container orchestration infrastructure (ADR-018). No additional infrastructure required.
 
-8. **Proven at Scale**: Kong is used by major companies (Nasdaq, Expedia, Samsung) handling billions of requests per day. Proven reliability and performance.
+8. **Proven at Scale**: Kong is used 透過 major companies (Nasdaq, Expedia, Samsung) handling billions of requests per 天. Proven reliability 和 performance.
 
 **Key Factors in Decision**:
 
-1. **Performance**: < 10ms latency overhead critical for user experience
-2. **Cost**: Long-term cost savings at high traffic volume
-3. **Flexibility**: Extensive plugin ecosystem for future requirements
-4. **Team Capability**: Team has Kubernetes expertise, can manage Kong deployment
+1. **Performance**: < 10ms latency overhead critical 用於 用戶體驗
+2. **成本**： Long-term cost savings at high traffic volume
+3. **Flexibility**: Extensive plugin ecosystem 用於 future requirements
+4. **Team Capability**: Team has Kubernetes expertise, 可以 manage Kong deployment
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation Strategy |
 |-------------|--------------|-------------|-------------------|
-| Backend Team | Medium | Need to configure Kong routing and plugins | Training on Kong configuration, documentation |
-| DevOps Team | High | Responsible for Kong deployment and operations | Kong training, operational runbooks, monitoring setup |
+| Backend Team | Medium | Need to configure Kong routing 和 plugins | Training on Kong configuration, documentation |
+| DevOps Team | High | Responsible 用於 Kong deployment 和 operations | Kong training, operational runbooks, monitoring setup |
 | Frontend Team | Low | Transparent change, same API endpoints | Communication about gateway deployment |
-| Security Team | Medium | Need to configure authentication and rate limiting | Security configuration review, penetration testing |
-| Operations Team | High | New component to monitor and troubleshoot | Monitoring dashboards, alerting, runbooks |
+| Security Team | Medium | Need to configure authentication 和 速率限制 | Security configuration review, penetration testing |
+| Operations Team | High | New component to monitor 和 troubleshoot | Monitoring dashboards, alerting, runbooks |
 
 ### Impact Radius Assessment
 
-**Selected Impact Radius**: System
+**選擇的影響半徑**： System
 
 **Impact Description**:
 
 - **System**: Changes affect entire API infrastructure
   - All API requests routed through Kong Gateway
-  - All services must be configured in Kong
-  - All authentication handled at gateway level
-  - All rate limiting enforced at gateway level
+  - All services 必須 be configured in Kong
+  - All authentication 處理d at gateway level
+  - All 速率限制 enforced at gateway level
   - All API monitoring includes gateway metrics
 
 ### Affected Components
@@ -296,7 +296,7 @@ We chose Kong Gateway as our API gateway solution. This decision prioritizes per
 - **Monitoring**: Kong metrics added to observability stack
 - **CI/CD**: Kong configuration deployed via CDK
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy | Owner |
 |------|-------------|--------|-------------------|-------|
@@ -307,20 +307,20 @@ We chose Kong Gateway as our API gateway solution. This decision prioritizes per
 | Learning curve | High | Low | Training sessions, documentation | Tech Lead |
 | Operational overhead | Medium | Medium | Automation, monitoring, runbooks | DevOps Team |
 
-**Overall Risk Level**: Medium
+**整體風險等級**： Medium
 
 **Risk Mitigation Plan**:
 
 - Comprehensive load testing before production deployment
-- Blue-green deployment strategy for zero-downtime migration
-- Multi-AZ RDS PostgreSQL for Kong configuration database
-- Automated monitoring and alerting for Kong health
-- Detailed operational runbooks for common issues
-- Training sessions for DevOps and Backend teams
+- Blue-green deployment strategy 用於 zero-downtime migration
+- Multi-AZ RDS PostgreSQL 用於 Kong configuration database
+- Automated monitoring 和 alerting 用於 Kong health
+- Detailed operational runbooks 用於 common issues
+- Training sessions 用於 DevOps 和 Backend teams
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Kong Setup and Configuration (Timeline: Week 1-2)
+### 第 1 階段： Kong Setup and Configuration (Timeline: Week 1-2)
 
 **Objectives**:
 
@@ -330,44 +330,44 @@ We chose Kong Gateway as our API gateway solution. This decision prioritizes per
 
 **Tasks**:
 
-- [ ] Deploy PostgreSQL RDS for Kong configuration (Multi-AZ)
+- [ ] Deploy PostgreSQL RDS 用於 Kong configuration (Multi-AZ)
 - [ ] Deploy Kong on EKS using Helm chart (2 replicas minimum)
 - [ ] Configure Kong Ingress Controller
 - [ ] Set up Kong Admin API access (secured)
-- [ ] Configure basic routing for one service (Customer API)
+- [ ] Configure basic routing 用於 one service (Customer API)
 - [ ] Test basic request routing
-- [ ] Configure health checks and readiness probes
+- [ ] Configure health checks 和 readiness probes
 
 **Deliverables**:
 
-- Kong deployed on EKS with PostgreSQL backend
-- Basic routing working for one service
+- Kong deployed on EKS 與 PostgreSQL backend
+- Basic routing working 用於 one service
 - Health checks configured
 
 **Success Criteria**:
 
-- Kong pods running and healthy
+- Kong pods running 和 healthy
 - PostgreSQL database accessible
-- Basic routing working with < 10ms latency overhead
+- Basic routing working 與 < 10ms latency overhead
 
-### Phase 2: Authentication and Security (Timeline: Week 2-3)
+### 第 2 階段： Authentication and Security (Timeline: Week 2-3)
 
 **Objectives**:
 
 - Configure JWT authentication
-- Set up rate limiting
-- Integrate with AWS WAF
+- Set up 速率限制
+- Integrate 與 AWS WAF
 
 **Tasks**:
 
-- [ ] Configure Kong JWT plugin for authentication
-- [ ] Integrate with existing JWT token validation (ADR-014)
-- [ ] Configure rate limiting plugin (ADR-023, ADR-050)
-- [ ] Set up API key authentication for third-party integrations
-- [ ] Configure CORS plugin for frontend applications
-- [ ] Integrate Kong with AWS WAF (ADR-049)
+- [ ] Configure Kong JWT plugin 用於 authentication
+- [ ] Integrate 與 existing JWT token validation (ADR-014)
+- [ ] Configure 速率限制 plugin (ADR-023, ADR-050)
+- [ ] Set up API key authentication 用於 third-party integrations
+- [ ] Configure CORS plugin 用於 frontend applications
+- [ ] Integrate Kong 與 AWS WAF (ADR-049)
 - [ ] Configure request/response logging
-- [ ] Test authentication and rate limiting
+- [ ] Test authentication 和 速率限制
 
 **Deliverables**:
 
@@ -381,17 +381,17 @@ We chose Kong Gateway as our API gateway solution. This decision prioritizes per
 - Rate limiting working per client/IP/endpoint
 - Unauthorized requests blocked
 
-### Phase 3: Service Migration (Timeline: Week 3-5)
+### 第 3 階段： Service Migration (Timeline: Week 3-5)
 
 **Objectives**:
 
 - Migrate all services to Kong
-- Configure routing for all endpoints
+- Configure routing 用於 all endpoints
 - Test end-to-end flows
 
 **Tasks**:
 
-- [ ] Configure Kong routes for all 13 bounded contexts
+- [ ] Configure Kong routes 用於 all 13 bounded contexts
 - [ ] Set up service-specific rate limits
 - [ ] Configure request/response transformations (if needed)
 - [ ] Migrate Customer API endpoints
@@ -399,12 +399,12 @@ We chose Kong Gateway as our API gateway solution. This decision prioritizes per
 - [ ] Migrate Product API endpoints
 - [ ] Migrate remaining service endpoints
 - [ ] Test all API endpoints through Kong
-- [ ] Validate performance and latency
+- [ ] Validate performance 和 latency
 
 **Deliverables**:
 
 - All services routed through Kong
-- All endpoints tested and working
+- All endpoints tested 和 working
 - Performance validated
 
 **Success Criteria**:
@@ -413,24 +413,24 @@ We chose Kong Gateway as our API gateway solution. This decision prioritizes per
 - Latency overhead < 10ms
 - No functional regressions
 
-### Phase 4: Monitoring and Operations (Timeline: Week 5-6)
+### 第 4 階段： Monitoring and Operations (Timeline: Week 5-6)
 
 **Objectives**:
 
-- Set up monitoring and alerting
+- Set up monitoring 和 alerting
 - Create operational runbooks
 - Train operations team
 
 **Tasks**:
 
-- [ ] Configure Kong Prometheus plugin for metrics
-- [ ] Create Grafana dashboards for Kong metrics
-- [ ] Set up CloudWatch alarms for Kong health
+- [ ] Configure Kong Prometheus plugin 用於 metrics
+- [ ] Create Grafana dashboards 用於 Kong metrics
+- [ ] Set up CloudWatch alarms 用於 Kong health
 - [ ] Configure X-Ray tracing through Kong
 - [ ] Create operational runbooks (deployment, troubleshooting, scaling)
-- [ ] Document Kong configuration and plugins
-- [ ] Conduct training sessions for DevOps and Backend teams
-- [ ] Perform load testing and capacity planning
+- [ ] Document Kong configuration 和 plugins
+- [ ] Conduct training sessions 用於 DevOps 和 Backend teams
+- [ ] Perform load testing 和 capacity planning
 - [ ] Create disaster recovery procedures
 
 **Deliverables**:
@@ -444,32 +444,32 @@ We chose Kong Gateway as our API gateway solution. This decision prioritizes per
 
 - All Kong metrics visible in Grafana
 - Alerts triggering correctly
-- Team comfortable with Kong operations
+- Team comfortable 與 Kong operations
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
-- Kong gateway unavailable for > 5 minutes
+- Kong gateway unavailable 用於 > 5 minutes
 - Performance degradation > 50ms latency increase
 - Critical security vulnerability discovered
 - Database failure preventing Kong operation
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. **Immediate Action**: Route traffic directly to backend services (bypass Kong)
 2. **DNS Update**: Update Route 53 to point to backend load balancers
 3. **Service Validation**: Verify backend services accessible directly
-4. **Communication**: Notify team of rollback and investigation plan
-5. **Root Cause Analysis**: Investigate Kong failure and plan remediation
+4. **Communication**: Notify team of rollback 和 investigation plan
+5. **Root Cause Analysis**: Investigate Kong failure 和 plan remediation
 
-**Rollback Time**: 5-10 minutes (DNS propagation)
+**回滾時間**： 5-10 minutes (DNS propagation)
 
-**Rollback Testing**: Test rollback procedure in staging environment monthly
+**Rollback Testing**: Test rollback procedure in staging environment 月ly
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement Method | Review Frequency |
 |--------|--------|-------------------|------------------|
@@ -477,9 +477,9 @@ We chose Kong Gateway as our API gateway solution. This decision prioritizes per
 | Gateway Availability | > 99.9% | Kong health checks | Real-time |
 | Request Success Rate | > 99.5% | Kong access logs | Daily |
 | Authentication Success Rate | > 99.9% | Kong JWT plugin metrics | Daily |
-| Rate Limit Accuracy | 100% | Kong rate limiting metrics | Weekly |
+| Rate Limit Accuracy | 100% | Kong 速率限制 metrics | Weekly |
 
-### Monitoring Plan
+### 監控計畫
 
 **Dashboards**:
 
@@ -487,7 +487,7 @@ We chose Kong Gateway as our API gateway solution. This decision prioritizes per
 - **Kong Security Dashboard**: Authentication failures, rate limit hits, blocked requests
 - **Kong Health Dashboard**: Pod health, database connections, resource usage
 
-**Alerts**:
+**告警**：
 
 - **Critical**: Kong gateway unavailable (PagerDuty)
 - **Critical**: Database connection failure (PagerDuty)
@@ -495,12 +495,12 @@ We chose Kong Gateway as our API gateway solution. This decision prioritizes per
 - **Warning**: Error rate > 1% (Slack)
 - **Info**: Rate limit threshold reached (Slack)
 
-**Review Schedule**:
+**審查時程**：
 
-- **Real-time**: Automated monitoring and alerting
-- **Daily**: Review error logs and performance metrics
-- **Weekly**: Capacity planning and optimization review
-- **Monthly**: Comprehensive performance and cost review
+- **Real-time**: Automated monitoring 和 alerting
+- **Daily**: Review error logs 和 performance metrics
+- **Weekly**: Capacity planning 和 optimization review
+- **Monthly**: Comprehensive performance 和 cost review
 
 ### Key Performance Indicators (KPIs)
 
@@ -509,108 +509,108 @@ We chose Kong Gateway as our API gateway solution. This decision prioritizes per
 - **Security KPI**: Zero unauthorized access incidents
 - **Cost KPI**: Gateway infrastructure cost < $1,000/month
 
-## Consequences
+## 後果
 
 ### Positive Consequences ✅
 
-- **Centralized Security**: Authentication and authorization at gateway level
-- **Simplified Clients**: Single entry point for all API requests
+- **Centralized Security**: Authentication 和 authorization at gateway level
+- **Simplified Clients**: Single entry point 用於 all API requests
 - **Performance**: Low latency overhead (< 10ms)
-- **Flexibility**: Extensive plugin ecosystem for future requirements
+- **Flexibility**: Extensive plugin ecosystem 用於 future requirements
 - **Cost Optimization**: Lower cost at high traffic volume
 - **Multi-Cloud Ready**: Not locked into AWS ecosystem
 - **Developer Experience**: Declarative configuration, GitOps-friendly
-- **Observability**: Centralized logging and monitoring
+- **Observability**: Centralized logging 和 monitoring
 
 ### Negative Consequences ❌
 
-- **Operational Overhead**: Need to manage Kong deployment and operations (Mitigation: Automation, monitoring, runbooks)
-- **Learning Curve**: Team needs to learn Kong configuration (Mitigation: Training and documentation)
-- **Database Dependency**: Kong requires PostgreSQL (Mitigation: Multi-AZ RDS with automated backups)
+- **Operational Overhead**: Need to manage Kong deployment 和 operations (Mitigation: Automation, monitoring, runbooks)
+- **Learning Curve**: Team needs to learn Kong configuration (Mitigation: Training 和 documentation)
+- **Database Dependency**: Kong 需要PostgreSQL (Mitigation: Multi-AZ RDS 與 automated backups)
 - **Single Point of Failure**: Gateway failure affects all services (Mitigation: Multi-replica deployment, health checks, rollback plan)
 
-### Technical Debt
+### 技術債務
 
 **Debt Introduced**:
 
-- **Kong Expertise**: Team needs to maintain Kong expertise
-- **Configuration Management**: Kong configuration needs to be versioned and managed
-- **Database Maintenance**: PostgreSQL database requires regular maintenance
+- **Kong Expertise**: Team needs to 維持 Kong expertise
+- **Configuration Management**: Kong configuration needs to be versioned 和 managed
+- **Database Maintenance**: PostgreSQL database 需要regular maintenance
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Training**: Quarterly Kong training sessions for team
-- **Documentation**: Maintain comprehensive Kong documentation
-- **Automation**: Automate Kong configuration deployment and updates
-- **Monitoring**: Continuous monitoring and optimization
+- **Training**: Quarterly Kong training sessions 用於 team
+- **Documentation**: 維持 comprehensive Kong documentation
+- **Automation**: Automate Kong configuration deployment 和 updates
+- **Monitoring**: Continuous monitoring 和 optimization
 
 ### Long-term Implications
 
-This decision establishes Kong Gateway as our API gateway for the next 3-5 years. As the platform evolves:
+This decision establishes Kong Gateway as our API gateway 用於 the next 3-5 年. As the platform evolves:
 
-- Consider Kong Enterprise for advanced features (RBAC, analytics, developer portal)
-- Evaluate Kong Mesh for service mesh capabilities
-- Monitor Kong performance and optimize configuration
-- Keep Kong and plugins updated to latest versions
-- Reassess if traffic patterns change significantly (> 100,000 req/s)
+- Consider Kong Enterprise 用於 advanced features (RBAC, analytics, developer portal)
+- Evaluate Kong Mesh 用於 service mesh capabilities
+- Monitor Kong performance 和 optimize configuration
+- Keep Kong 和 plugins updated to latest versions
+- Reassess if traffic patterns change signifi可以tly (> 100,000 req/s)
 
-Kong Gateway provides foundation for API management, enabling centralized security, rate limiting, and monitoring while maintaining high performance and flexibility.
+Kong Gateway 提供s foundation 用於 API management, enabling centralized security, 速率限制, 和 monitoring while 維持ing high performance 和 flexibility.
 
-## Related Decisions
+## 相關決策
 
 ### Related ADRs
 
 - [ADR-009: RESTful API Design](009-restful-api-design-with-openapi.md) - API design standards
 - [ADR-023: API Rate Limiting Strategy](023-api-rate-limiting-strategy.md) - Rate limiting implementation
 - [ADR-014: JWT-Based Authentication](014-jwt-based-authentication-strategy.md) - Authentication mechanism
-- [ADR-050: API Security and Rate Limiting Strategy](050-api-security-and-rate-limiting-strategy.md) - Security requirements
+- [ADR-050: API Security 和 Rate Limiting Strategy](050-api-security-and-rate-limiting-strategy.md) - Security requirements
 
 ### Affected Viewpoints
 
-- [Functional Viewpoint](../../viewpoints/functional/README.md) - API routing and functionality
+- [Functional Viewpoint](../../viewpoints/functional/README.md) - API routing 和 functionality
 - [Deployment Viewpoint](../../viewpoints/deployment/README.md) - Kong deployment on EKS
-- [Operational Viewpoint](../../viewpoints/operational/README.md) - Kong operations and monitoring
+- [Operational Viewpoint](../../viewpoints/operational/README.md) - Kong operations 和 monitoring
 
 ### Affected Perspectives
 
-- [Security Perspective](../../perspectives/security/README.md) - Centralized authentication and authorization
-- [Performance Perspective](../../perspectives/performance/README.md) - Gateway latency and throughput
-- [Evolution Perspective](../../perspectives/evolution/README.md) - API versioning and evolution
+- [Security Perspective](../../perspectives/security/README.md) - Centralized authentication 和 authorization
+- [Performance Perspective](../../perspectives/performance/README.md) - Gateway latency 和 throughput
+- [Evolution Perspective](../../perspectives/evolution/README.md) - API versioning 和 evolution
 
-## Notes
+## 備註
 
 ### Assumptions
 
 - Traffic volume: 100M+ requests/month
 - Team has Kubernetes expertise
-- PostgreSQL RDS available for Kong configuration
-- AWS EKS cluster available for Kong deployment
-- Team willing to learn Kong configuration
+- PostgreSQL RDS available 用於 Kong configuration
+- AWS EKS cluster available 用於 Kong deployment
+- Team 將ing to learn Kong configuration
 
 ### Constraints
 
-- Must integrate with existing JWT authentication (ADR-014)
-- Must support existing rate limiting strategy (ADR-023, ADR-050)
-- Must work with AWS EKS deployment (ADR-018)
-- Must provide low latency (< 100ms overhead)
-- Must support high throughput (10,000 req/s)
+- 必須 integrate 與 existing JWT authentication (ADR-014)
+- 必須 支援 existing 速率限制 strategy (ADR-023, ADR-050)
+- 必須 work 與 AWS EKS deployment (ADR-018)
+- 必須 提供 low latency (< 100ms overhead)
+- 必須 支援 high throughput (10,000 req/s)
 
 ### Open Questions
 
-- Should we use Kong Community Edition or Kong Enterprise?
-- What is optimal number of Kong replicas for high availability?
-- Should we use Kong DB-less mode or PostgreSQL mode?
-- How to handle Kong configuration versioning and rollback?
+- 應該 we use Kong Community Edition 或 Kong Enterprise?
+- What is optimal number of Kong replicas 用於 高可用性?
+- 應該 we use Kong DB-less mode 或 PostgreSQL mode?
+- How to 處理 Kong configuration versioning 和 rollback?
 
 ### Follow-up Actions
 
 - [ ] Deploy Kong on staging EKS cluster - DevOps Team
-- [ ] Configure PostgreSQL RDS for Kong - DevOps Team
+- [ ] Configure PostgreSQL RDS 用於 Kong - DevOps Team
 - [ ] Create Kong configuration templates - Backend Team
 - [ ] Develop Kong operational runbooks - DevOps Team
 - [ ] Conduct Kong training sessions - Tech Lead
-- [ ] Perform load testing and capacity planning - DevOps Team
-- [ ] Set up monitoring dashboards and alerts - DevOps Team
+- [ ] Perform load testing 和 capacity planning - DevOps Team
+- [ ] Set up monitoring dashboards 和 alerts - DevOps Team
 
 ### References
 

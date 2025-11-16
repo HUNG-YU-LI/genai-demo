@@ -1,125 +1,125 @@
-# Security Verification and Testing
+# Security 驗證和測試
 
-> **Last Updated**: 2025-10-23  
-> **Status**: ✅ Active
+> **最後更新**: 2025-10-23
+> **狀態**: ✅ 啟用中
 
-## Overview
+## 概述
 
-This document describes the security testing and verification strategies used to ensure the e-commerce platform meets security requirements. Security testing is integrated throughout the development lifecycle, from unit tests to penetration testing.
+本文件描述用於確保電子商務平台符合安全性要求的安全性測試和驗證策略。安全性測試整合於整個開發生命週期,從單元測試到滲透測試。
 
-## Security Testing Strategy
+## 安全性測試策略
 
-### Testing Pyramid for Security
+### 安全性測試金字塔
 
 ```text
         /\
-       /  \      Penetration Testing (Manual, Quarterly)
+       /  \      Penetration Testing (手動, 每季)
       /____\
-     /      \    Security Integration Tests (Automated, Daily)
+     /      \    Security Integration Tests (自動化, 每日)
     /________\
-   /          \  Security Unit Tests (Automated, Every Build)
+   /          \  Security Unit Tests (自動化, 每次建置)
   /____________\
 ```
 
-### Test Types
+### 測試類型
 
 #### Security Unit Tests
 
-- **Frequency**: Every build
-- **Scope**: Individual security functions
-- **Tools**: JUnit, Mockito
-- **Examples**: Password validation, encryption/decryption, input sanitization
+- **頻率**: 每次建置
+- **範圍**: 個別安全性功能
+- **工具**: JUnit, Mockito
+- **範例**: 密碼驗證、加密/解密、輸入清理
 
 #### Security Integration Tests
 
-- **Frequency**: Daily (CI/CD)
-- **Scope**: Security controls across components
-- **Tools**: Spring Security Test, TestContainers
-- **Examples**: Authentication flows, authorization checks, API security
+- **頻率**: 每日 (CI/CD)
+- **範圍**: 跨元件的安全性控制
+- **工具**: Spring Security Test, TestContainers
+- **範例**: 驗證流程、授權檢查、API 安全性
 
 #### Security Scanning
 
-- **Frequency**: Every commit
-- **Scope**: Code and dependencies
-- **Tools**: SpotBugs, OWASP Dependency-Check, SonarQube
-- **Examples**: Vulnerability detection, code quality issues
+- **頻率**: 每次提交
+- **範圍**: 程式碼和相依性
+- **工具**: SpotBugs, OWASP Dependency-Check, SonarQube
+- **範例**: 漏洞偵測、程式碼品質問題
 
 #### Penetration Testing
 
-- **Frequency**: Quarterly
-- **Scope**: Complete system
-- **Tools**: OWASP ZAP, Burp Suite, Manual testing
-- **Examples**: SQL injection, XSS, authentication bypass
+- **頻率**: 每季
+- **範圍**: 完整系統
+- **工具**: OWASP ZAP, Burp Suite, 手動測試
+- **範例**: SQL injection, XSS, 驗證繞過
 
-## Authentication Testing
+## 驗證測試
 
 ### Password Security Tests
 
 ```java
 @ExtendWith(MockitoExtension.class)
 class PasswordSecurityTest {
-    
+
     private PasswordEncoderService passwordEncoder;
-    
+
     @BeforeEach
     void setUp() {
         passwordEncoder = new PasswordEncoderService();
     }
-    
+
     @Test
     void should_reject_password_shorter_than_8_characters() {
         assertThatThrownBy(() -> passwordEncoder.encodePassword("Short1!"))
             .isInstanceOf(WeakPasswordException.class)
             .hasMessageContaining("at least 8 characters");
     }
-    
+
     @Test
     void should_reject_password_without_uppercase() {
         assertThatThrownBy(() -> passwordEncoder.encodePassword("lowercase123!"))
             .isInstanceOf(WeakPasswordException.class)
             .hasMessageContaining("uppercase letter");
     }
-    
+
     @Test
     void should_reject_password_without_lowercase() {
         assertThatThrownBy(() -> passwordEncoder.encodePassword("UPPERCASE123!"))
             .isInstanceOf(WeakPasswordException.class)
             .hasMessageContaining("lowercase letter");
     }
-    
+
     @Test
     void should_reject_password_without_digit() {
         assertThatThrownBy(() -> passwordEncoder.encodePassword("NoDigits!"))
             .isInstanceOf(WeakPasswordException.class)
             .hasMessageContaining("digit");
     }
-    
+
     @Test
     void should_reject_password_without_special_character() {
         assertThatThrownBy(() -> passwordEncoder.encodePassword("NoSpecial123"))
             .isInstanceOf(WeakPasswordException.class)
             .hasMessageContaining("special character");
     }
-    
+
     @Test
     void should_accept_strong_password() {
         String password = "StrongPass123!";
         String encoded = passwordEncoder.encodePassword(password);
-        
+
         assertThat(encoded).isNotEqualTo(password);
         assertThat(passwordEncoder.matches(password, encoded)).isTrue();
     }
-    
+
     @Test
     void should_produce_different_hashes_for_same_password() {
         String password = "SamePassword123!";
-        
+
         String hash1 = passwordEncoder.encodePassword(password);
         String hash2 = passwordEncoder.encodePassword(password);
-        
+
         // BCrypt uses salt, so hashes should be different
         assertThat(hash1).isNotEqualTo(hash2);
-        
+
         // But both should match the original password
         assertThat(passwordEncoder.matches(password, hash1)).isTrue();
         assertThat(passwordEncoder.matches(password, hash2)).isTrue();
@@ -132,47 +132,47 @@ class PasswordSecurityTest {
 ```java
 @SpringBootTest
 class JwtTokenTest {
-    
+
     @Autowired
     private JwtTokenProvider tokenProvider;
-    
+
     @Test
     void should_generate_valid_access_token() {
         UserDetails user = createTestUser();
-        
+
         String token = tokenProvider.generateAccessToken(user);
-        
+
         assertThat(token).isNotNull();
         assertThat(tokenProvider.validateToken(token)).isTrue();
         assertThat(tokenProvider.getUserIdFromToken(token))
             .isEqualTo(user.getUsername());
     }
-    
+
     @Test
     void should_reject_expired_token() throws Exception {
         // Create token with very short expiration
         String expiredToken = createExpiredToken();
-        
+
         assertThat(tokenProvider.validateToken(expiredToken)).isFalse();
     }
-    
+
     @Test
     void should_reject_tampered_token() {
         UserDetails user = createTestUser();
         String token = tokenProvider.generateAccessToken(user);
-        
+
         // Tamper with token
         String tamperedToken = token.substring(0, token.length() - 5) + "XXXXX";
-        
+
         assertThat(tokenProvider.validateToken(tamperedToken)).isFalse();
     }
-    
+
     @Test
     void should_reject_token_with_invalid_signature() {
         String tokenWithInvalidSignature = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
             "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ." +
             "SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-        
+
         assertThat(tokenProvider.validateToken(tokenWithInvalidSignature)).isFalse();
     }
 }
@@ -184,10 +184,10 @@ class JwtTokenTest {
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class AuthenticationFlowTest {
-    
+
     @Autowired
     private MockMvc mockMvc;
-    
+
     @Test
     void should_authenticate_with_valid_credentials() throws Exception {
         mockMvc.perform(post("/api/v1/auth/login")
@@ -203,7 +203,7 @@ class AuthenticationFlowTest {
             .andExpect(jsonPath("$.refreshToken").exists())
             .andExpect(jsonPath("$.user.email").value("customer@example.com"));
     }
-    
+
     @Test
     void should_reject_invalid_credentials() throws Exception {
         mockMvc.perform(post("/api/v1/auth/login")
@@ -217,11 +217,11 @@ class AuthenticationFlowTest {
             .andExpect(status().isUnauthorized())
             .andExpect(jsonPath("$.errorCode").value("INVALID_CREDENTIALS"));
     }
-    
+
     @Test
     void should_block_after_multiple_failed_attempts() throws Exception {
         String email = "brute-force@example.com";
-        
+
         // Attempt 5 failed logins
         for (int i = 0; i < 5; i++) {
             mockMvc.perform(post("/api/v1/auth/login")
@@ -234,7 +234,7 @@ class AuthenticationFlowTest {
                         """, email)))
                 .andExpect(status().isUnauthorized());
         }
-        
+
         // 6th attempt should be blocked
         mockMvc.perform(post("/api/v1/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -250,7 +250,7 @@ class AuthenticationFlowTest {
 }
 ```
 
-## Authorization Testing
+## 授權測試
 
 ### Role-Based Access Control Tests
 
@@ -258,17 +258,17 @@ class AuthenticationFlowTest {
 @SpringBootTest
 @AutoConfigureMockMvc
 class AuthorizationTest {
-    
+
     @Autowired
     private MockMvc mockMvc;
-    
+
     @Test
     @WithMockUser(username = "customer-123", roles = "CUSTOMER")
     void customer_can_access_own_data() throws Exception {
         mockMvc.perform(get("/api/v1/customers/customer-123"))
             .andExpect(status().isOk());
     }
-    
+
     @Test
     @WithMockUser(username = "customer-123", roles = "CUSTOMER")
     void customer_cannot_access_other_customer_data() throws Exception {
@@ -276,24 +276,24 @@ class AuthorizationTest {
             .andExpect(status().isForbidden())
             .andExpect(jsonPath("$.errorCode").value("ACCESS_DENIED"));
     }
-    
+
     @Test
     @WithMockUser(username = "admin-1", roles = "ADMIN")
     void admin_can_access_any_customer_data() throws Exception {
         mockMvc.perform(get("/api/v1/customers/customer-123"))
             .andExpect(status().isOk());
-        
+
         mockMvc.perform(get("/api/v1/customers/customer-456"))
             .andExpect(status().isOk());
     }
-    
+
     @Test
     @WithAnonymousUser
     void anonymous_user_cannot_access_protected_resources() throws Exception {
         mockMvc.perform(get("/api/v1/customers/customer-123"))
             .andExpect(status().isUnauthorized());
     }
-    
+
     @Test
     @WithMockUser(username = "seller-1", roles = "SELLER")
     void seller_can_manage_own_products() throws Exception {
@@ -307,7 +307,7 @@ class AuthorizationTest {
                     """))
             .andExpect(status().isOk());
     }
-    
+
     @Test
     @WithMockUser(username = "seller-1", roles = "SELLER")
     void seller_cannot_manage_other_seller_products() throws Exception {
@@ -324,7 +324,7 @@ class AuthorizationTest {
 }
 ```
 
-## Input Validation Testing
+## 輸入驗證測試
 
 ### SQL Injection Tests
 
@@ -332,31 +332,31 @@ class AuthorizationTest {
 @SpringBootTest
 @AutoConfigureMockMvc
 class SqlInjectionTest {
-    
+
     @Autowired
     private MockMvc mockMvc;
-    
+
     @Test
     @WithMockUser(roles = "ADMIN")
     void should_prevent_sql_injection_in_search() throws Exception {
         String maliciousInput = "'; DROP TABLE customers; --";
-        
+
         mockMvc.perform(get("/api/v1/products/search")
                 .param("query", maliciousInput))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.items").isArray())
             .andExpect(jsonPath("$.items").isEmpty());
-        
+
         // Verify table still exists
         mockMvc.perform(get("/api/v1/customers"))
             .andExpect(status().isOk());
     }
-    
+
     @Test
     @WithMockUser(roles = "CUSTOMER")
     void should_sanitize_special_characters_in_input() throws Exception {
         String inputWithSpecialChars = "test' OR '1'='1";
-        
+
         mockMvc.perform(post("/api/v1/customers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("""
@@ -378,15 +378,15 @@ class SqlInjectionTest {
 @SpringBootTest
 @AutoConfigureMockMvc
 class XSSPreventionTest {
-    
+
     @Autowired
     private MockMvc mockMvc;
-    
+
     @Test
     @WithMockUser(roles = "CUSTOMER")
     void should_sanitize_html_in_review_content() throws Exception {
         String xssPayload = "<script>alert('XSS')</script>";
-        
+
         MvcResult result = mockMvc.perform(post("/api/v1/reviews")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("""
@@ -398,15 +398,15 @@ class XSSPreventionTest {
                     """, xssPayload)))
             .andExpect(status().isCreated())
             .andReturn();
-        
+
         String reviewId = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
-        
+
         // Verify content is sanitized
         mockMvc.perform(get("/api/v1/reviews/" + reviewId))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.content").value(not(containsString("<script>"))));
     }
-    
+
     @Test
     void should_set_security_headers_to_prevent_xss() throws Exception {
         mockMvc.perform(get("/api/v1/products"))
@@ -418,20 +418,20 @@ class XSSPreventionTest {
 }
 ```
 
-## Encryption Testing
+## 加密測試
 
 ### Data Encryption Tests
 
 ```java
 @SpringBootTest
 class EncryptionTest {
-    
+
     @Autowired
     private AESEncryptionService encryptionService;
-    
+
     @Autowired
     private CustomerRepository customerRepository;
-    
+
     @Test
     void should_encrypt_sensitive_fields_in_database() {
         // Create customer with sensitive data
@@ -440,34 +440,34 @@ class EncryptionTest {
         customer.setName("John Doe");
         customer.setEmail("john@example.com");
         customer.setPhoneNumber("+1-555-123-4567");
-        
+
         customerRepository.save(customer);
-        
+
         // Verify data is encrypted in database
         String encryptedEmail = jdbcTemplate.queryForObject(
             "SELECT email FROM customers WHERE id = ?",
             String.class,
             "test-customer"
         );
-        
+
         assertThat(encryptedEmail).isNotEqualTo("john@example.com");
         assertThat(encryptedEmail).startsWith("encrypted:");
-        
+
         // Verify data is decrypted when retrieved
         Customer retrieved = customerRepository.findById("test-customer").orElseThrow();
         assertThat(retrieved.getEmail()).isEqualTo("john@example.com");
     }
-    
+
     @Test
     void should_use_different_iv_for_each_encryption() throws Exception {
         String plaintext = "sensitive-data";
-        
+
         String encrypted1 = encryptionService.encrypt(plaintext);
         String encrypted2 = encryptionService.encrypt(plaintext);
-        
+
         // Different IV should produce different ciphertext
         assertThat(encrypted1).isNotEqualTo(encrypted2);
-        
+
         // But both should decrypt to same plaintext
         assertThat(encryptionService.decrypt(encrypted1)).isEqualTo(plaintext);
         assertThat(encryptionService.decrypt(encrypted2)).isEqualTo(plaintext);
@@ -480,33 +480,33 @@ class EncryptionTest {
 ```java
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class TLSConfigurationTest {
-    
+
     @LocalServerPort
     private int port;
-    
+
     @Test
     void should_enforce_https() {
         RestTemplate restTemplate = new RestTemplate();
-        
+
         // HTTP request should be redirected to HTTPS
-        assertThatThrownBy(() -> 
+        assertThatThrownBy(() ->
             restTemplate.getForEntity(
                 "http://localhost:" + port + "/api/v1/products",
                 String.class
             )
         ).isInstanceOf(ResourceAccessException.class);
     }
-    
+
     @Test
     void should_use_tls_1_3() throws Exception {
         SSLContext sslContext = SSLContext.getInstance("TLSv1.3");
         sslContext.init(null, null, null);
-        
+
         SSLSocketFactory socketFactory = sslContext.getSocketFactory();
-        
+
         try (SSLSocket socket = (SSLSocket) socketFactory.createSocket("localhost", 8443)) {
             socket.startHandshake();
-            
+
             String protocol = socket.getSession().getProtocol();
             assertThat(protocol).isEqualTo("TLSv1.3");
         }
@@ -514,7 +514,7 @@ class TLSConfigurationTest {
 }
 ```
 
-## Automated Security Scanning
+## 自動化安全性掃描
 
 ### Dependency Vulnerability Scanning
 
@@ -528,7 +528,7 @@ dependencyCheck {
     format = 'ALL'
     failBuildOnCVSS = 7
     suppressionFile = 'config/dependency-check-suppressions.xml'
-    
+
     analyzers {
         assemblyEnabled = false
         nugetconfEnabled = false
@@ -574,34 +574,28 @@ on:
 jobs:
   security-scan:
     runs-on: ubuntu-latest
-    
+
     steps:
-
       - uses: actions/checkout@v3
-      
-      - name: Set up JDK 21
 
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
-      
+
       - name: Run OWASP Dependency Check
-
         run: ./gradlew dependencyCheckAnalyze
-      
+
       - name: Run SpotBugs
-
         run: ./gradlew spotbugsMain
-      
-      - name: SonarQube Scan
 
+      - name: SonarQube Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew sonarqube
-      
-      - name: Upload Security Reports
 
+      - name: Upload Security Reports
         uses: actions/upload-artifact@v3
         with:
           name: security-reports
@@ -610,7 +604,7 @@ jobs:
             build/reports/spotbugs/main.html
 ```
 
-## Penetration Testing
+## 滲透測試
 
 ### OWASP ZAP Integration
 
@@ -623,23 +617,16 @@ services:
     image: owasp/zap2docker-stable
     command: zap-baseline.py -t http://app:8080 -r zap-report.html
     volumes:
-
       - ./zap-reports:/zap/wrk
-
     depends_on:
-
       - app
-    
+
   app:
     image: ecommerce-platform:latest
     ports:
-
       - "8080:8080"
-
     environment:
-
       - SPRING_PROFILES_ACTIVE=test
-
 ```
 
 ### Manual Penetration Testing Checklist
@@ -685,12 +672,12 @@ services:
 - [ ] Test for price manipulation
 - [ ] Test for inventory manipulation
 
-## Security Metrics
+## 安全性指標
 
 ### Key Security Metrics
 
-| Metric | Target | Measurement | Alert Threshold |
-|--------|--------|-------------|-----------------|
+| 指標 | 目標 | 測量方式 | 警報門檻 |
+|------|------|----------|----------|
 | Critical Vulnerabilities | 0 | Dependency scan | Any critical |
 | High Vulnerabilities | 0 | Dependency scan | > 0 |
 | Failed Login Attempts | < 1% | Authentication logs | > 5% in 5 min |
@@ -706,7 +693,7 @@ services:
 @RequestMapping("/api/v1/admin/security")
 @PreAuthorize("hasRole('ADMIN')")
 public class SecurityMetricsController {
-    
+
     @GetMapping("/metrics")
     public ResponseEntity<SecurityMetrics> getSecurityMetrics() {
         SecurityMetrics metrics = SecurityMetrics.builder()
@@ -717,13 +704,13 @@ public class SecurityMetricsController {
             .lastPenetrationTest(getLastPenTestDate())
             .openSecurityIncidents(getOpenIncidentCount())
             .build();
-        
+
         return ResponseEntity.ok(metrics);
     }
 }
 ```
 
-## Continuous Security Testing
+## 持續安全性測試
 
 ### CI/CD Integration
 
@@ -736,29 +723,23 @@ on: [push, pull_request]
 jobs:
   security-tests:
     runs-on: ubuntu-latest
-    
+
     steps:
-
       - uses: actions/checkout@v3
-      
+
       - name: Run Security Unit Tests
-
         run: ./gradlew test --tests '*Security*'
-      
+
       - name: Run Security Integration Tests
-
         run: ./gradlew integrationTest --tests '*Security*'
-      
+
       - name: Dependency Vulnerability Scan
-
         run: ./gradlew dependencyCheckAnalyze
-      
+
       - name: Static Security Analysis
-
         run: ./gradlew spotbugsMain
-      
-      - name: Fail on Security Issues
 
+      - name: Fail on Security Issues
         run: |
           if [ -f build/reports/dependency-check-report.xml ]; then
             if grep -q 'severity="CRITICAL"' build/reports/dependency-check-report.xml; then
@@ -768,37 +749,37 @@ jobs:
           fi
 ```
 
-## Best Practices
+## 最佳實務
 
-### ✅ Do
+### ✅ 應該做
 
-- Write security tests for all authentication and authorization logic
-- Include security tests in CI/CD pipeline
-- Run automated security scans on every commit
-- Conduct regular penetration testing (quarterly)
-- Monitor security metrics continuously
-- Test with realistic attack scenarios
-- Keep security testing tools updated
-- Document all security test results
+- 為所有驗證和授權邏輯撰寫安全性測試
+- 將安全性測試納入 CI/CD pipeline
+- 在每次提交時執行自動化安全性掃描
+- 定期進行滲透測試 (每季)
+- 持續監控安全性指標
+- 使用真實的攻擊情境進行測試
+- 保持安全性測試工具更新
+- 記錄所有安全性測試結果
 
-### ❌ Don't
+### ❌ 不應該做
 
-- Don't skip security tests to save time
-- Don't ignore security scan warnings
-- Don't test only happy paths
-- Don't forget to test error handling
-- Don't use production data in security tests
-- Don't disable security features in tests
-- Don't forget to test third-party integrations
+- 不要為了節省時間而跳過安全性測試
+- 不要忽略安全性掃描警告
+- 不要只測試正常路徑
+- 不要忘記測試錯誤處理
+- 不要在安全性測試中使用生產資料
+- 不要在測試中停用安全性功能
+- 不要忘記測試第三方整合
 
-## Related Documentation
+## 相關文件
 
-- [Security Overview](overview.md) - Overall security perspective
-- [Authentication](authentication.md) - Authentication mechanisms
-- [Authorization](authorization.md) - Authorization model
-- [Data Protection](data-protection.md) - Data protection strategies
+- [Security Overview](overview.md) - 整體安全性視角
+- [Authentication](authentication.md) - 驗證機制
+- [Authorization](authorization.md) - 授權模型
+- [Data Protection](data-protection.md) - 資料保護策略
 
-## References
+## 參考資料
 
 - OWASP Testing Guide: <https://owasp.org/www-project-web-security-testing-guide/>
 - OWASP ZAP: <https://www.zaproxy.org/>

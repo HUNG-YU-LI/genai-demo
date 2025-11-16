@@ -1,6 +1,6 @@
 ---
 adr_number: 008
-title: "Use CloudWatch + X-Ray + Grafana for Observability"
+title: "Use CloudWatch + X-Ray + Grafana 用於 Observability"
 date: 2025-10-24
 status: "accepted"
 supersedes: []
@@ -10,86 +10,86 @@ affected_viewpoints: ["operational"]
 affected_perspectives: ["availability", "performance"]
 ---
 
-# ADR-008: Use CloudWatch + X-Ray + Grafana for Observability
+# ADR-008: Use CloudWatch + X-Ray + Grafana 用於 Observability
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-24
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires comprehensive observability to:
+The Enterprise E-Commerce Platform 需要comprehensive observability to:
 
-- Monitor system health and performance in real-time
-- Trace requests across distributed services
-- Detect and diagnose issues quickly
-- Provide business and technical metrics
-- Support SLA compliance (99.9% uptime)
-- Enable proactive alerting and incident response
+- Monitor system health 和 performance in real-time
+- Trace requests 跨 distributed services
+- Detect 和 diagnose issues quickly
+- 提供 business 和 technical metrics
+- 支援 SLA compliance (99.9% uptime)
+- 啟用 proactive alerting 和 incident response
 - Visualize metrics in intuitive dashboards
-- Support debugging and troubleshooting
+- 支援 debugging 和 troubleshooting
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - 99.9% uptime SLA requirement
-- Need for rapid incident detection and response
+- 需要 rapid incident detection 和 response
 - Regulatory compliance requiring audit trails
-- Business metrics for decision-making
+- Business metrics 用於 decision-making
 - Cost optimization through performance monitoring
 - Customer experience monitoring
 
-**Constraints**:
+**限制條件**：
 
-- AWS cloud infrastructure (ADR-007)
-- Budget: $2,000/month for observability tools
+- AWS 雲端基礎設施 (ADR-007)
+- 預算: $2,000/month 用於 observability tools
 - Team has limited observability experience
-- Need for 24/7 monitoring and alerting
-- Must integrate with existing AWS services
+- 需要 24/7 monitoring 和 alerting
+- 必須 integrate 與 existing AWS services
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- AWS cloud infrastructure
+- AWS 雲端基礎設施
 - Spring Boot microservices
-- EKS for container orchestration
+- EKS 用於 container orchestration
 - PostgreSQL, Kafka, Redis
 - Multiple bounded contexts
 - Event-driven architecture
 
-**Requirements**:
+**需求**：
 
-- Metrics collection (business and technical)
-- Distributed tracing across services
-- Log aggregation and analysis
+- Metrics collection (business 和 technical)
+- Distributed tracing 跨 services
+- Log aggregation 和 analysis
 - Real-time alerting
 - Custom dashboards
 - Performance monitoring
 - Error tracking
 - Cost monitoring
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **AWS Integration**: Native integration with AWS services
-2. **Distributed Tracing**: Trace requests across microservices
-3. **Cost**: Stay within budget constraints
-4. **Ease of Use**: Intuitive dashboards and alerting
-5. **Scalability**: Handle high metric volumes
-6. **Customization**: Create custom dashboards and metrics
+1. **AWS Integration**: Native integration 與 AWS services
+2. **Distributed Tracing**: Trace requests 跨 microservices
+3. **成本**： Stay within budget constraints
+4. **Ease of Use**: Intuitive dashboards 和 alerting
+5. **Scalability**: 處理 high metric volumes
+6. **Customization**: Create custom dashboards 和 metrics
 7. **Team Skills**: Minimize learning curve
 8. **Reliability**: High availability monitoring platform
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: CloudWatch + X-Ray + Grafana (Hybrid Approach)
+### 選項 1： CloudWatch + X-Ray + Grafana (Hybrid Approach)
 
-**Description**: Use AWS native services for collection with Grafana for visualization
+**描述**： Use AWS native services for collection with Grafana for visualization
 
-**Architecture**:
+**架構**：
 
 ```mermaid
 graph TD
@@ -105,144 +105,144 @@ graph TD
     N4 --> N5
 ```
 
-**Pros**:
+**優點**：
 
 - ✅ Native AWS integration (no agents needed)
-- ✅ X-Ray provides distributed tracing
-- ✅ CloudWatch handles metrics and logs
-- ✅ Grafana provides superior visualization
+- ✅ X-Ray 提供s distributed tracing
+- ✅ CloudWatch 處理s metrics 和 logs
+- ✅ Grafana 提供s superior visualization
 - ✅ Cost-effective (CloudWatch included, Grafana OSS free)
-- ✅ Scalable and reliable
+- ✅ Scalable 和 reliable
 - ✅ Easy AWS service monitoring
-- ✅ Supports custom metrics
+- ✅ 支援s custom metrics
 - ✅ Unified dashboard in Grafana
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Need to manage Grafana instance
 - ⚠️ Multiple tools to learn
 - ⚠️ CloudWatch query language learning curve
 
-**Cost**:
+**成本**：
 
 - CloudWatch: ~$500/month (included in AWS usage)
 - X-Ray: ~$300/month (traces)
-- Grafana: $0 (self-hosted OSS) or $200/month (Grafana Cloud)
+- Grafana: $0 (self-hosted OSS) 或 $200/month (Grafana Cloud)
 - Total: ~$800-1,000/month
 
-**Risk**: **Low** - AWS-native with proven visualization
+**風險**： **Low** - AWS-native with proven visualization
 
-### Option 2: Datadog (All-in-One)
+### 選項 2： Datadog (All-in-One)
 
-**Description**: Comprehensive observability platform
+**描述**： Comprehensive observability platform
 
-**Pros**:
+**優點**：
 
 - ✅ All-in-one solution
-- ✅ Excellent UI and dashboards
+- ✅ 優秀的 UI 和 dashboards
 - ✅ Strong APM capabilities
-- ✅ Good AWS integration
+- ✅ 良好的AWS整合
 - ✅ Machine learning anomaly detection
 
-**Cons**:
+**缺點**：
 
 - ❌ Expensive ($15-31/host/month + $5/million spans)
 - ❌ Vendor lock-in
-- ❌ Cost scales with usage
+- ❌ Cost scales 與 usage
 - ❌ Estimated $3,000-5,000/month
 
-**Cost**: $3,000-5,000/month (exceeds budget)
+**成本**： $3,000-5,000/month (exceeds budget)
 
-**Risk**: **Medium** - Cost overruns likely
+**風險**： **Medium** - Cost overruns likely
 
-### Option 3: Prometheus + Grafana + Jaeger
+### 選項 3： Prometheus + Grafana + Jaeger
 
-**Description**: Open-source observability stack
+**描述**： Open-source observability stack
 
-**Pros**:
+**優點**：
 
-- ✅ Open source and free
+- ✅ Open source 和 free
 - ✅ Powerful query language (PromQL)
-- ✅ Excellent Grafana integration
-- ✅ Jaeger for distributed tracing
-- ✅ Large community
+- ✅ 優秀的Grafana整合
+- ✅ Jaeger 用於 distributed tracing
+- ✅ 大型的 community
 
-**Cons**:
+**缺點**：
 
 - ❌ Need to manage infrastructure
 - ❌ Prometheus storage limitations
-- ❌ Complex setup and maintenance
+- ❌ 複雜的 setup 和 maintenance
 - ❌ No native AWS service metrics
-- ❌ Requires exporters for AWS services
-- ❌ High operational overhead
+- ❌ Requires exporters 用於 AWS services
+- ❌ High 營運開銷
 
-**Cost**: Infrastructure costs ~$500-800/month
+**成本**： Infrastructure costs ~$500-800/month
 
-**Risk**: **Medium** - High operational complexity
+**風險**： **Medium** - High operational complexity
 
-### Option 4: New Relic
+### 選項 4： New Relic
 
-**Description**: Commercial APM and observability platform
+**描述**： Commercial APM and observability platform
 
-**Pros**:
+**優點**：
 
 - ✅ Comprehensive APM
-- ✅ Good AWS integration
+- ✅ 良好的AWS整合
 - ✅ User-friendly interface
-- ✅ Strong support
+- ✅ Strong 支援
 
-**Cons**:
+**缺點**：
 
 - ❌ Expensive ($99-349/host/month)
 - ❌ Vendor lock-in
-- ❌ Cost scales with data ingestion
+- ❌ Cost scales 與 data ingestion
 - ❌ Estimated $2,500-4,000/month
 
-**Cost**: $2,500-4,000/month (exceeds budget)
+**成本**： $2,500-4,000/month (exceeds budget)
 
-**Risk**: **Medium** - Cost concerns
+**風險**： **Medium** - Cost concerns
 
-### Option 5: CloudWatch Only
+### 選項 5： CloudWatch Only
 
-**Description**: Use only AWS CloudWatch for all observability
+**描述**： Use only AWS CloudWatch for all observability
 
-**Pros**:
+**優點**：
 
 - ✅ Native AWS integration
 - ✅ No additional infrastructure
 - ✅ Cost-effective
 - ✅ Easy setup
 
-**Cons**:
+**缺點**：
 
 - ❌ Limited visualization capabilities
 - ❌ Poor dashboard customization
-- ❌ Expensive for high-cardinality metrics
+- ❌ Expensive 用於 high-cardinality metrics
 - ❌ Limited query capabilities
 - ❌ No distributed tracing (need X-Ray separately)
 
-**Cost**: ~$800/month
+**成本**： ~$800/month
 
-**Risk**: **Low** - But limited capabilities
+**風險**： **Low** - But limited capabilities
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **CloudWatch + X-Ray + Grafana (Hybrid Approach)**
+**選擇的選項**： **CloudWatch + X-Ray + Grafana (Hybrid Approach)**
 
-### Rationale
+### 理由
 
-The hybrid approach was selected for the following reasons:
+The hybrid approach被選擇的原因如下：
 
-1. **Cost-Effective**: Stays well within $2,000/month budget
-2. **AWS Native**: CloudWatch and X-Ray integrate seamlessly with AWS services
-3. **Superior Visualization**: Grafana provides better dashboards than CloudWatch
-4. **Distributed Tracing**: X-Ray provides request tracing across services
-5. **Scalability**: All components scale with application growth
-6. **Flexibility**: Can add custom metrics and dashboards easily
+1. **Cost-Effective**: Stays well within $2,000/month 預算
+2. **AWS Native**: CloudWatch 和 X-Ray integrate seamlessly 與 AWS services
+3. **Superior Visualization**: Grafana 提供s 更好的 dashboards than CloudWatch
+4. **Distributed Tracing**: X-Ray 提供s request tracing 跨 services
+5. **Scalability**: All components scale 與 application growth
+6. **Flexibility**: 可以 add custom metrics 和 dashboards easily
 7. **Team Skills**: Leverages AWS knowledge, Grafana is intuitive
-8. **Reliability**: AWS-managed services for collection, proven Grafana for visualization
+8. **Reliability**: AWS-託管服務s 用於 collection, proven Grafana 用於 visualization
 
-**Implementation Strategy**:
+**實作策略**：
 
 **Metrics Collection**: CloudWatch
 
@@ -253,50 +253,50 @@ The hybrid approach was selected for the following reasons:
 
 **Distributed Tracing**: X-Ray
 
-- Request tracing across services
+- Request tracing 跨 services
 - Service map visualization
 - Performance bottleneck identification
 - Error tracking
 
 **Visualization**: Grafana
 
-- Unified dashboards for all metrics
+- Unified dashboards 用於 all metrics
 - Custom business dashboards
 - Alert management
 - Team collaboration
 
-**Why Not Datadog/New Relic**: Cost exceeds budget significantly. CloudWatch + Grafana provides 80% of functionality at 30% of cost.
+**為何不選 Datadog/New Relic**： Cost exceeds 預算 signifi可以tly. CloudWatch + Grafana 提供s 80% of functionality at 30% of cost.
 
-**Why Not Prometheus Stack**: High operational overhead to manage Prometheus, Jaeger, and exporters. CloudWatch is managed service.
+**為何不選 Prometheus Stack**： High 營運開銷 to manage Prometheus, Jaeger, 和 exporters. CloudWatch is 託管服務.
 
-**Why Not CloudWatch Only**: Limited visualization and dashboard capabilities. Grafana provides much better user experience.
+**為何不選 CloudWatch Only**： Limited visualization 和 dashboard capabilities. Grafana 提供s much 更好的 用戶體驗.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Development Team | Medium | Need to instrument code with metrics | Training, examples, libraries |
+| Development Team | Medium | Need to instrument code 與 metrics | Training, examples, libraries |
 | Operations Team | High | Primary users of monitoring tools | Training, runbooks, dashboards |
 | Business Team | Positive | Access to business metrics | Custom dashboards, training |
-| On-Call Engineers | High | Use for incident response | Runbooks, alert configuration |
+| On-Call Engineers | High | Use 用於 incident response | Runbooks, alert configuration |
 | Architects | Positive | System health visibility | Architecture dashboards |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All microservices (instrumentation)
 - Infrastructure monitoring
 - Incident response procedures
-- SLA tracking and reporting
+- SLA tracking 和 reporting
 - Performance optimization
 - Cost monitoring
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
@@ -306,11 +306,11 @@ Affects:
 | Missing metrics | Medium | High | Comprehensive instrumentation checklist |
 | X-Ray sampling overhead | Low | Low | Configure appropriate sampling rates |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: CloudWatch Setup (Week 1-2)
+### 第 1 階段： CloudWatch Setup （第 1-2 週）
 
 - [x] Configure CloudWatch agent on EKS
 
@@ -333,11 +333,11 @@ Affects:
       }
   ```
 
-- [x] Set up log groups for each service
+- [x] Set up log groups 用於 each service
 - [x] Configure metric filters
 - [x] Create initial CloudWatch dashboards
 
-### Phase 2: Application Instrumentation (Week 2-3)
+### 第 2 階段： Application Instrumentation （第 2-3 週）
 
 - [ ] Add Micrometer dependencies
 
@@ -380,7 +380,7 @@ Affects:
   }
   ```
 
-### Phase 3: X-Ray Integration (Week 3-4)
+### 第 3 階段： X-Ray Integration （第 3-4 週）
 
 - [ ] Add X-Ray SDK dependencies
 
@@ -413,7 +413,7 @@ Affects:
             protocol: UDP
   ```
 
-- [ ] Instrument application with X-Ray
+- [ ] Instrument application 與 X-Ray
 
   ```java
   @Configuration
@@ -447,7 +447,7 @@ Affects:
   }
   ```
 
-### Phase 4: Grafana Setup (Week 4-5)
+### 第 4 階段： Grafana Setup （第 4-5 週）
 
 - [ ] Deploy Grafana on EKS
 
@@ -486,9 +486,9 @@ Affects:
   ```
 
 - [ ] Configure X-Ray data source
-- [ ] Set up persistent storage for dashboards
+- [ ] Set up persistent storage 用於 dashboards
 
-### Phase 5: Dashboard Creation (Week 5-6)
+### Phase 5: Dashboard Creation （第 5-6 週）
 
 - [ ] Create technical dashboards
   - System health dashboard
@@ -508,7 +508,7 @@ Affects:
   - Error rates
   - Availability metrics
 
-### Phase 6: Alerting Configuration (Week 6-7)
+### Phase 6: Alerting Configuration （第 6-7 週）
 
 - [ ] Configure CloudWatch alarms
 
@@ -530,7 +530,7 @@ Affects:
 - [ ] Create escalation policies
 - [ ] Document alert runbooks
 
-### Phase 7: Training and Documentation (Week 7-8)
+### Phase 7: Training and Documentation （第 7-8 週）
 
 - [ ] Create monitoring runbooks
 - [ ] Conduct team training
@@ -538,28 +538,28 @@ Affects:
 - [ ] Create troubleshooting guides
 - [ ] Set up on-call rotation
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Monitoring costs exceed $2,500/month
 - System performance degradation > 10%
 - Team unable to use tools effectively
 - Critical monitoring gaps
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Simplify to CloudWatch only
 2. Remove Grafana infrastructure
 3. Use CloudWatch native dashboards
-4. Reduce X-Ray sampling rate
+4. 降低 X-Ray sampling rate
 5. Re-evaluate after addressing issues
 
-**Rollback Time**: 1 week
+**回滾時間**： 1 week
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Mean Time to Detect (MTTD) < 5 minutes
 - ✅ Mean Time to Resolve (MTTR) < 30 minutes
@@ -569,64 +569,64 @@ Affects:
 - ✅ Observability costs < $1,500/month
 - ✅ Team satisfaction > 4/5
 
-### Monitoring Plan
+### 監控計畫
 
 **Observability Metrics**:
 
 - Metric collection rate
 - Trace sampling rate
 - Dashboard query performance
-- Alert response times
+- Alert 回應時間
 - Cost tracking
 
-**Review Schedule**:
+**審查時程**：
 
-- Daily: Check alert status and incidents
-- Weekly: Review dashboard usage and metrics
+- Daily: Check alert status 和 incidents
+- Weekly: Review dashboard usage 和 metrics
 - Monthly: Cost optimization review
 - Quarterly: Observability strategy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Comprehensive Visibility**: Metrics, logs, and traces in one place
-- ✅ **Cost-Effective**: Stays within budget
-- ✅ **AWS Native**: Seamless integration with AWS services
-- ✅ **Superior Visualization**: Grafana provides excellent dashboards
-- ✅ **Distributed Tracing**: X-Ray enables request flow analysis
-- ✅ **Scalable**: Handles growth without infrastructure changes
-- ✅ **Flexible**: Easy to add custom metrics and dashboards
+- ✅ **Comprehensive Visibility**: Metrics, logs, 和 traces in one place
+- ✅ **Cost-Effective**: Stays within 預算
+- ✅ **AWS Native**: Seamless integration 與 AWS services
+- ✅ **Superior Visualization**: Grafana 提供s 優秀的 dashboards
+- ✅ **Distributed Tracing**: X-Ray 啟用s request flow analysis
+- ✅ **Scalable**: 處理s growth 沒有 infrastructure changes
+- ✅ **Flexible**: 容易add custom metrics 和 dashboards
 - ✅ **Reliable**: AWS-managed collection services
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Multiple Tools**: Need to learn CloudWatch, X-Ray, and Grafana
-- ⚠️ **Grafana Management**: Need to maintain Grafana infrastructure
-- ⚠️ **Query Complexity**: CloudWatch query language has learning curve
-- ⚠️ **Alert Tuning**: Requires ongoing effort to reduce false positives
+- ⚠️ **Multiple Tools**: Need to learn CloudWatch, X-Ray, 和 Grafana
+- ⚠️ **Grafana Management**: Need to 維持 Grafana infrastructure
+- ⚠️ **Query 複雜的ity**: CloudWatch query language has learning curve
+- ⚠️ **Alert Tuning**: Requires ongoing effort to 降低 false positives
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. Grafana not yet in HA mode (acceptable for MVP)
-2. Limited custom dashboards initially (will grow)
+1. Grafana not yet in HA mode (acceptable 用於 MVP)
+2. Limited custom dashboards initially (將 grow)
 3. Alert thresholds need tuning (ongoing process)
 4. Some services not fully instrumented (gradual rollout)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q1 2026**: Deploy Grafana in HA mode
 - **Q2 2026**: Complete instrumentation of all services
-- **Q3 2026**: Implement advanced alerting with ML
+- **Q3 2026**: Implement advanced alerting 與 ML
 - **Q4 2026**: Add business intelligence dashboards
 
-## Related Decisions
+## 相關決策
 
-- [ADR-007: Use AWS CDK for Infrastructure](007-use-aws-cdk-for-infrastructure.md) - Monitoring infrastructure provisioning
+- [ADR-007: Use AWS CDK 用於 Infrastructure](007-use-aws-cdk-for-infrastructure.md) - Monitoring infrastructure provisioning
 
-## Notes
+## 備註
 
 ### Key Metrics to Monitor
 
@@ -635,7 +635,7 @@ Affects:
 - Response time (p50, p95, p99)
 - Error rate (4xx, 5xx)
 - Throughput (requests/second)
-- CPU and memory usage
+- CPU 和 memory usage
 - Database query performance
 - Cache hit rates
 - Queue depths
@@ -741,21 +741,21 @@ X-Ray automatically generates service maps showing:
 
 2. **X-Ray Sampling**:
    - Use intelligent sampling (1 request/second + 5% of additional)
-   - Increase sampling for error traces
-   - Reduce sampling for health checks
+   - Increase sampling 用於 error traces
+   - 降低 sampling 用於 health checks
 
 3. **Log Management**:
    - Set appropriate log retention periods
-   - Use log filtering to reduce volume
+   - Use log filtering to 降低 volume
    - Archive old logs to S3
 
 4. **Grafana Optimization**:
    - Use query caching
    - Optimize dashboard refresh rates
-   - Use variables for efficient queries
+   - Use variables 用於 efficient queries
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-24  
-**Next Review**: 2026-01-24 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-24  
+**下次審查**： 2026-01-24 （每季）

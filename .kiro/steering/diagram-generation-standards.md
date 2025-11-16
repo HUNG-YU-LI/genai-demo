@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document defines the standards for generating and managing diagrams in the project, with specific focus on PlantUML and Mermaid diagram formats.
+本文件定義專案中生成和管理圖表的標準，特別針對 PlantUML 和 Mermaid 圖表格式。
 
 ## PlantUML Diagram Standards
 
@@ -10,22 +10,22 @@ This document defines the standards for generating and managing diagrams in the 
 
 #### Primary Format: PNG ✅ **RECOMMENDED**
 
-- **Use Case**: All GitHub documentation references
+- **Use Case**: 所有 GitHub 文件引用
 - **Advantages**:
-  - Superior text clarity and readability
-  - Consistent rendering across browsers
-  - Optimal file size for web display
-  - Better contrast and sharpness
+  - 優越的文字清晰度和可讀性
+  - 跨瀏覽器的一致渲染
+  - Web 顯示的最佳檔案大小
+  - 更好的對比度和銳利度
 - **Generation**: `./scripts/generate-diagrams.sh --format=png`
 - **File Location**: `docs/diagrams/generated/{category}/{diagram-name}.png`
 
 #### Secondary Format: SVG 📋 **SUPPLEMENTARY**
 
-- **Use Case**: High-resolution printing, scalable displays
+- **Use Case**: 高解析度列印、可縮放顯示
 - **Advantages**:
-  - Vector format with infinite zoom
-  - Smaller file size for simple diagrams
-  - Scalable without quality loss
+  - 具有無限縮放的向量格式
+  - 簡單圖表的檔案大小較小
+  - 可縮放且不損失品質
 - **Generation**: `./scripts/generate-diagrams.sh --format=svg`
 - **File Location**: `docs/diagrams/generated/{category}/{diagram-name}.svg`
 
@@ -74,9 +74,9 @@ This document defines the standards for generating and managing diagrams in the 
 
 ```html
 <!-- For better control over image size -->
-<img src="../../diagrams/generated/functional/bounded-contexts-overview.png" 
-     alt="Bounded Contexts Overview" 
-     width="800" 
+<img src="../../diagrams/generated/functional/bounded-contexts-overview.png"
+     alt="Bounded Contexts Overview"
+     width="800"
      style="max-width: 100%; height: auto;">
 ```
 
@@ -99,26 +99,26 @@ graph TB
 
 - **File Extension**: `.mmd`
 - **Location**: `docs/diagrams/mermaid/`
-- **GitHub Rendering**: Automatic for `.mmd` files
-- **Reference**: Direct link to `.mmd` file
+- **GitHub Rendering**: `.mmd` 檔案自動渲染
+- **Reference**: 直接連結到 `.mmd` 檔案
 
 ### When to Use Each Format
 
 #### Use Mermaid When:
 
-- Simple process flows
-- Basic architecture diagrams
-- Quick conceptual diagrams
-- Need immediate GitHub rendering
-- Collaborative editing required
+- 簡單的流程圖
+- 基本架構圖
+- 快速概念圖
+- 需要立即 GitHub 渲染
+- 需要協作編輯
 
 #### Use PlantUML When:
 
-- Complex UML diagrams
-- Detailed class diagrams
-- Comprehensive system architecture
-- Need precise layout control
-- Professional documentation requirements
+- 複雜的 UML 圖表
+- 詳細的類別圖
+- 全面的系統架構
+- 需要精確的版面控制
+- 專業文件要求
 
 ## File Organization Standards
 
@@ -156,7 +156,7 @@ docs/diagrams/
 #### Mermaid Files
 
 - **Standalone**: `{concept}-{type}.mmd`
-- **In Markdown**: Use descriptive section headers
+- **In Markdown**: 使用描述性的章節標題
 
 ## Quality Standards
 
@@ -164,16 +164,16 @@ docs/diagrams/
 
 #### PNG Generation Settings
 
-- **Resolution**: High DPI for text clarity
-- **Compression**: Balanced for file size vs quality
-- **Text Rendering**: Anti-aliased for smooth appearance
+- **Resolution**: 高 DPI 以確保文字清晰度
+- **Compression**: 在檔案大小與品質之間取得平衡
+- **Text Rendering**: 抗鋸齒以獲得平滑外觀
 
 #### Layout Optimization
 
-- **Width**: Optimize for GitHub's content width (~800-1000px)
-- **Height**: Avoid excessive vertical scrolling
-- **Text Size**: Ensure readability at default zoom levels
-- **Color Scheme**: Use high contrast for accessibility
+- **Width**: 針對 GitHub 的內容寬度進行優化（~800-1000px）
+- **Height**: 避免過度垂直捲動
+- **Text Size**: 確保在預設縮放級別下的可讀性
+- **Color Scheme**: 使用高對比度以提高可訪問性
 
 ### Validation Requirements
 
@@ -191,10 +191,10 @@ docs/diagrams/
 
 #### Automated Generation
 
-- **Trigger**: On PlantUML file changes
+- **Trigger**: 當 PlantUML 檔案變更時
 - **Hook**: `.kiro/hooks/diagram-documentation-sync.kiro.hook`
-- **Output**: Both PNG and SVG formats
-- **Validation**: Syntax check before generation
+- **Output**: PNG 和 SVG 兩種格式
+- **Validation**: 生成前進行語法檢查
 
 ## Integration with Documentation
 
@@ -222,34 +222,34 @@ docs/diagrams/
 
 #### Automatic Synchronization
 
-- **Hook Trigger**: File changes in diagram directories
-- **Action**: Update documentation references
-- **Validation**: Check for broken links
-- **Cleanup**: Remove references to deleted diagrams
+- **Hook Trigger**: 圖表目錄中的檔案變更
+- **Action**: 更新文件引用
+- **Validation**: 檢查斷裂的連結
+- **Cleanup**: 移除已刪除圖表的引用
 
 ## Best Practices
 
 ### Development Workflow
 
-1. **Create PlantUML Source**: Write `.puml` file in appropriate viewpoint directory
-2. **Generate Images**: Run `./scripts/generate-diagrams.sh --format=png`
-3. **Update Documentation**: Reference PNG file in relevant markdown
-4. **Validate**: Check syntax and links before commit
-5. **Commit**: Include both source and generated files
+1. **Create PlantUML Source**: 在適當的 viewpoint 目錄中撰寫 `.puml` 檔案
+2. **Generate Images**: 執行 `./scripts/generate-diagrams.sh --format=png`
+3. **Update Documentation**: 在相關 markdown 中引用 PNG 檔案
+4. **Validate**: 提交前檢查語法和連結
+5. **Commit**: 包含來源檔案和生成的檔案
 
 ### Maintenance Guidelines
 
 #### Regular Tasks
 
-- **Weekly**: Regenerate all diagrams to ensure consistency
-- **Monthly**: Review and cleanup unused diagrams
-- **Quarterly**: Optimize diagram layouts for readability
+- **Weekly**: 重新生成所有圖表以確保一致性
+- **Monthly**: 審查和清理未使用的圖表
+- **Quarterly**: 優化圖表版面以提高可讀性
 
 #### Performance Considerations
 
-- **File Size**: Monitor PNG file sizes, optimize if >500KB
-- **Generation Time**: Batch generate for efficiency
-- **Storage**: Use Git LFS for large diagram files if needed
+- **File Size**: 監控 PNG 檔案大小，如果 >500KB 則進行優化
+- **Generation Time**: 批次生成以提高效率
+- **Storage**: 如需要，對大型圖表檔案使用 Git LFS
 
 ## Troubleshooting
 
@@ -271,9 +271,9 @@ java -version
 
 #### GitHub Display Issues
 
-- **Problem**: Diagram appears too small
-- **Solution**: Use PNG instead of SVG
-- **Alternative**: Add HTML img tag with width specification
+- **Problem**: 圖表顯示過小
+- **Solution**: 使用 PNG 而非 SVG
+- **Alternative**: 添加帶寬度規格的 HTML img 標籤
 
 #### Link Validation Failures
 
@@ -285,4 +285,4 @@ java -version
 ./scripts/fix-broken-links.py --diagrams-only
 ```
 
-This standard ensures consistent, high-quality diagram generation and integration with project documentation.
+本標準確保專案文件中一致、高品質的圖表生成和整合。

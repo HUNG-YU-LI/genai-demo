@@ -1,25 +1,25 @@
-# Disaster Recovery and High Availability Guide
+# 災難復原與高可用性指南
 
-> **Last Updated**: 2025-11-08  
-> **Status**: Active  
+> **Last Updated**: 2025-11-08
+> **Status**: Active
 > **Owner**: Operations & Database Team
 
-## Overview
+## 概述
 
-This guide provides detailed procedures for disaster recovery and high availability operations, with specific focus on RDS Multi-AZ configuration, read replica management, cross-region replication, and automated failover mechanisms.
+本指南提供災難復原和高可用性操作的詳細程序,特別聚焦於 RDS Multi-AZ 配置、read replica 管理、跨區域複寫和自動 failover 機制。
 
-For strategic DR planning, see [Disaster Recovery Perspective](../../perspectives/availability/disaster-recovery.md).
+關於策略性 DR 規劃,請參閱 [Disaster Recovery Perspective](../../perspectives/availability/disaster-recovery.md)。
 
-## Table of Contents
+## 目錄
 
-- [RDS Multi-AZ Configuration](#rds-multi-az-configuration)
-- [Read Replica Management](#read-replica-management)
-- [Cross-Region Replication](#cross-region-replication)
-- [Automated Failover Testing](#automated-failover-testing)
-- [Manual Failover Procedures](#manual-failover-procedures)
-- [Split-Brain Prevention](#split-brain-prevention)
-- [Data Consistency Verification](#data-consistency-verification)
-- [HA Monitoring and Alerting](#ha-monitoring-and-alerting)
+- [RDS Multi-AZ 配置](#rds-multi-az-configuration)
+- [Read Replica 管理](#read-replica-management)
+- [跨區域複寫](#cross-region-replication)
+- [自動 Failover 測試](#automated-failover-testing)
+- [手動 Failover 程序](#manual-failover-procedures)
+- [Split-Brain 預防](#split-brain-prevention)
+- [資料一致性驗證](#data-consistency-verification)
+- [HA 監控與告警](#ha-monitoring-and-alerting)
 
 ---
 

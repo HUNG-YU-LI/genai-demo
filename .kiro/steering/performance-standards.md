@@ -2,54 +2,54 @@
 inclusion: always
 ---
 
-# Performance Standards and Guidelines
+# 效能標準與指南
 
-## Performance Requirements
+## 效能需求
 
-### Response Time Standards
+### Response Time 標準
 
-#### API Response Time Targets
+#### API Response Time 目標
 
 - **Critical APIs** (authentication, payment): ≤ 500ms (95th percentile)
 - **Business APIs** (orders, customers): ≤ 1000ms (95th percentile)
 - **Reporting APIs** (analytics, reports): ≤ 3000ms (95th percentile)
 - **Batch APIs** (imports, exports): ≤ 30000ms (95th percentile)
 
-#### Database Query Performance
+#### Database Query 效能
 
 - **Simple queries** (single table, indexed): ≤ 10ms (95th percentile)
 - **Complex queries** (joins, aggregations): ≤ 100ms (95th percentile)
 - **Reporting queries** (large datasets): ≤ 1000ms (95th percentile)
 
-#### Frontend Performance
+#### Frontend 效能
 
 - **First Contentful Paint (FCP)**: ≤ 1.5s
 - **Largest Contentful Paint (LCP)**: ≤ 2.5s
 - **First Input Delay (FID)**: ≤ 100ms
 - **Cumulative Layout Shift (CLS)**: ≤ 0.1
 
-### Throughput Standards
+### Throughput 標準
 
-#### API Throughput Targets
+#### API Throughput 目標
 
 - **Peak load handling**: 1000 requests/second
 - **Sustained load**: 500 requests/second
 - **Database connections**: Max 20 per service instance
 - **Memory usage**: ≤ 512MB per service instance
 
-## Performance Monitoring Implementation
+## Performance Monitoring 實作
 
 ### Application Performance Monitoring
 
 ```java
 @Component
 public class PerformanceMonitor {
-    
+
     private final MeterRegistry meterRegistry;
     private final Timer responseTimeTimer;
     private final Counter requestCounter;
     private final Gauge memoryUsage;
-    
+
     public PerformanceMonitor(MeterRegistry meterRegistry) {
         this.meterRegistry = meterRegistry;
         this.responseTimeTimer = Timer.builder("http.request.duration")
@@ -62,7 +62,7 @@ public class PerformanceMonitor {
             .description("JVM memory usage")
             .register(meterRegistry, this, PerformanceMonitor::getMemoryUsage);
     }
-    
+
     @EventListener
     public void recordHttpRequest(HttpRequestEvent event) {
         responseTimeTimer.record(event.getDuration(), TimeUnit.MILLISECONDS);
@@ -74,7 +74,7 @@ public class PerformanceMonitor {
             )
         );
     }
-    
+
     private double getMemoryUsage() {
         MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
         return memoryBean.getHeapMemoryUsage().getUsed();
@@ -87,11 +87,11 @@ public class PerformanceMonitor {
 ```java
 @Component
 public class DatabasePerformanceMonitor {
-    
+
     private final Timer queryTimer;
     private final Counter slowQueryCounter;
     private final Gauge connectionPoolUsage;
-    
+
     public DatabasePerformanceMonitor(MeterRegistry meterRegistry, HikariDataSource dataSource) {
         this.queryTimer = Timer.builder("database.query.duration")
             .description("Database query duration")
@@ -103,12 +103,12 @@ public class DatabasePerformanceMonitor {
             .description("Database connection pool usage")
             .register(meterRegistry, dataSource, ds -> (double) ds.getHikariPoolMXBean().getActiveConnections() / ds.getMaximumPoolSize());
     }
-    
+
     @EventListener
     public void recordDatabaseQuery(DatabaseQueryEvent event) {
         Duration duration = event.getDuration();
         queryTimer.record(duration);
-        
+
         if (duration.toMillis() > 100) { // Slow query threshold
             slowQueryCounter.increment(
                 Tags.of(
@@ -121,43 +121,43 @@ public class DatabasePerformanceMonitor {
 }
 ```
 
-## Performance Optimization Strategies
+## 效能最佳化策略
 
-### Database Optimization
+### Database 最佳化
 
-#### Query Optimization Guidelines
+#### Query 最佳化指南
 
 ```java
 @Repository
 public class OptimizedCustomerRepository {
-    
+
     // ✅ Good: Use specific columns instead of SELECT *
     @Query("SELECT c.id, c.name, c.email FROM Customer c WHERE c.status = :status")
     List<CustomerSummary> findActiveCustomerSummaries(@Param("status") CustomerStatus status);
-    
+
     // ✅ Good: Use pagination for large result sets
     @Query("SELECT c FROM Customer c WHERE c.registrationDate >= :date ORDER BY c.registrationDate DESC")
     Page<Customer> findRecentCustomers(@Param("date") LocalDate date, Pageable pageable);
-    
+
     // ✅ Good: Use batch operations for bulk updates
     @Modifying
     @Query("UPDATE Customer c SET c.lastLoginDate = :loginDate WHERE c.id IN :customerIds")
-    int updateLastLoginDates(@Param("customerIds") List<String> customerIds, 
+    int updateLastLoginDates(@Param("customerIds") List<String> customerIds,
                            @Param("loginDate") LocalDateTime loginDate);
-    
+
     // ✅ Good: Use native queries for complex operations
     @Query(value = """
         SELECT c.segment, COUNT(*) as customer_count, AVG(o.total_amount) as avg_order_value
-        FROM customers c 
-        LEFT JOIN orders o ON c.id = o.customer_id 
-        WHERE c.created_date >= :startDate 
+        FROM customers c
+        LEFT JOIN orders o ON c.id = o.customer_id
+        WHERE c.created_date >= :startDate
         GROUP BY c.segment
         """, nativeQuery = true)
     List<CustomerSegmentStats> getCustomerSegmentStatistics(@Param("startDate") LocalDate startDate);
 }
 ```
 
-#### Index Strategy
+#### Index 策略
 
 ```sql
 -- Primary indexes for frequent queries
@@ -174,7 +174,7 @@ CREATE INDEX idx_active_customers ON customers(created_date) WHERE status = 'ACT
 CREATE INDEX idx_pending_orders ON orders(order_date) WHERE status = 'PENDING';
 ```
 
-### Caching Strategy
+### Caching 策略
 
 #### Application-Level Caching
 
@@ -182,23 +182,23 @@ CREATE INDEX idx_pending_orders ON orders(order_date) WHERE status = 'PENDING';
 @Service
 @CacheConfig(cacheNames = "customers")
 public class CustomerService {
-    
+
     @Cacheable(key = "#customerId", unless = "#result == null")
     public Customer findById(String customerId) {
         return customerRepository.findById(customerId)
             .orElseThrow(() -> new CustomerNotFoundException(customerId));
     }
-    
+
     @Cacheable(key = "'active-customers'", condition = "#pageable.pageNumber < 10")
     public Page<Customer> findActiveCustomers(Pageable pageable) {
         return customerRepository.findByStatus(CustomerStatus.ACTIVE, pageable);
     }
-    
+
     @CacheEvict(key = "#customer.id")
     public Customer updateCustomer(Customer customer) {
         return customerRepository.save(customer);
     }
-    
+
     @CacheEvict(allEntries = true)
     public void clearCustomerCache() {
         // Cache will be cleared automatically
@@ -212,14 +212,14 @@ public class CustomerService {
 @Configuration
 @EnableCaching
 public class CacheConfiguration {
-    
+
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
             .entryTtl(Duration.ofMinutes(30))
             .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
             .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
-        
+
         return RedisCacheManager.builder(connectionFactory)
             .cacheDefaults(config)
             .withCacheConfiguration("customers", config.entryTtl(Duration.ofHours(1)))
@@ -230,30 +230,30 @@ public class CacheConfiguration {
 }
 ```
 
-### Asynchronous Processing
+### 非同步處理
 
-#### Async Method Implementation
+#### Async Method 實作
 
 ```java
 @Service
 public class AsyncCustomerService {
-    
+
     @Async("taskExecutor")
     @Retryable(value = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public CompletableFuture<Void> sendWelcomeEmail(String customerId) {
         try {
             Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(customerId));
-            
+
             emailService.sendWelcomeEmail(customer.getEmail(), customer.getName());
-            
+
             return CompletableFuture.completedFuture(null);
         } catch (Exception e) {
             logger.error("Failed to send welcome email for customer: {}", customerId, e);
             throw e;
         }
     }
-    
+
     @Async("taskExecutor")
     public CompletableFuture<CustomerAnalytics> generateCustomerAnalytics(String customerId) {
         return CompletableFuture.supplyAsync(() -> {
@@ -266,7 +266,7 @@ public class AsyncCustomerService {
 @Configuration
 @EnableAsync
 public class AsyncConfiguration {
-    
+
     @Bean(name = "taskExecutor")
     public TaskExecutor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -281,11 +281,11 @@ public class AsyncConfiguration {
 }
 ```
 
-## Performance Testing Standards
+## Performance Testing 標準
 
-### Load Testing Implementation
+### Load Testing 實作
 
-#### JMeter Test Plan Structure
+#### JMeter Test Plan 結構
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -305,18 +305,18 @@ public class AsyncConfiguration {
         </collectionProp>
       </elementProp>
     </TestPlan>
-    
+
     <ThreadGroup testname="Customer Operations">
       <stringProp name="ThreadGroup.num_threads">${users}</stringProp>
       <stringProp name="ThreadGroup.ramp_time">60</stringProp>
       <stringProp name="ThreadGroup.duration">300</stringProp>
-      
+
       <HTTPSamplerProxy testname="Get Customer">
         <stringProp name="HTTPSampler.domain">${baseUrl}</stringProp>
-        <stringProp name="HTTPSampler.path">/../api/v1/customers/${customerId}</stringProp>
+        <stringProp name="HTTPSampler.path">/api/v1/customers/${customerId}</stringProp>
         <stringProp name="HTTPSampler.method">GET</stringProp>
       </HTTPSamplerProxy>
-      
+
       <ResponseAssertion testname="Response Time Assertion">
         <stringProp name="Assertion.test_field">Assertion.response_time</stringProp>
         <stringProp name="Assertion.test_type">Assertion.duration</stringProp>
@@ -327,7 +327,7 @@ public class AsyncConfiguration {
 </jmeterTestPlan>
 ```
 
-#### Automated Performance Tests
+#### 自動化 Performance Tests
 
 ```java
 // Modern performance testing with monitoring
@@ -335,13 +335,13 @@ public class AsyncConfiguration {
 @TestPerformanceExtension(maxExecutionTimeMs = 30000, maxMemoryIncreaseMB = 200)
 @TestMethodOrder(OrderAnnotation.class)
 class PerformanceTest extends BaseIntegrationTest {
-    
+
     @Autowired
     private TestRestTemplate restTemplate;
-    
+
     @LocalServerPort
     private int port;
-    
+
     @Test
     @Order(1)
     void should_handle_concurrent_customer_requests() throws InterruptedException {
@@ -349,23 +349,23 @@ class PerformanceTest extends BaseIntegrationTest {
         int requestsPerThread = 10;
         CountDownLatch latch = new CountDownLatch(numberOfThreads);
         List<Long> responseTimes = Collections.synchronizedList(new ArrayList<>());
-        
+
         ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
-        
+
         for (int i = 0; i < numberOfThreads; i++) {
             executor.submit(() -> {
                 try {
                     for (int j = 0; j < requestsPerThread; j++) {
                         long startTime = System.currentTimeMillis();
-                        
+
                         ResponseEntity<CustomerResponse> response = restTemplate.getForEntity(
-                            "http://localhost:" + port + "/../api/v1/customers/test-customer-" + j,
+                            "http://localhost:" + port + "/api/v1/customers/test-customer-" + j,
                             CustomerResponse.class
                         );
-                        
+
                         long responseTime = System.currentTimeMillis() - startTime;
                         responseTimes.add(responseTime);
-                        
+
                         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
                         assertThat(responseTime).isLessThan(1000); // 1 second max
                     }
@@ -374,30 +374,30 @@ class PerformanceTest extends BaseIntegrationTest {
                 }
             });
         }
-        
+
         latch.await(30, TimeUnit.SECONDS);
         executor.shutdown();
-        
+
         // Analyze results
         double averageResponseTime = responseTimes.stream()
             .mapToLong(Long::longValue)
             .average()
             .orElse(0.0);
-        
+
         long p95ResponseTime = responseTimes.stream()
             .sorted()
             .skip((long) (responseTimes.size() * 0.95))
             .findFirst()
             .orElse(0L);
-        
+
         assertThat(averageResponseTime).isLessThan(500);
         assertThat(p95ResponseTime).isLessThan(1000);
-        
+
         logger.info("Performance test results:");
         logger.info("Total requests: {}", responseTimes.size());
         logger.info("Average response time: {} ms", averageResponseTime);
         logger.info("95th percentile response time: {} ms", p95ResponseTime);
-        
+
         // Check resource usage after test
         if (!isMemoryUsageAcceptable()) {
             logger.warn("Memory usage exceeded acceptable limits");
@@ -407,39 +407,39 @@ class PerformanceTest extends BaseIntegrationTest {
 }
 ```
 
-### Memory and Resource Testing
+### Memory 和 Resource Testing
 
 #### Memory Leak Detection
 
 ```java
 @Component
 public class MemoryMonitor {
-    
+
     private final MeterRegistry meterRegistry;
     private final MemoryMXBean memoryBean;
-    
+
     public MemoryMonitor(MeterRegistry meterRegistry) {
         this.meterRegistry = meterRegistry;
         this.memoryBean = ManagementFactory.getMemoryMXBean();
-        
+
         Gauge.builder("jvm.memory.heap.used")
             .register(meterRegistry, this, monitor -> monitor.memoryBean.getHeapMemoryUsage().getUsed());
-        
+
         Gauge.builder("jvm.memory.heap.max")
             .register(meterRegistry, this, monitor -> monitor.memoryBean.getHeapMemoryUsage().getMax());
-        
+
         Gauge.builder("jvm.memory.non.heap.used")
             .register(meterRegistry, this, monitor -> monitor.memoryBean.getNonHeapMemoryUsage().getUsed());
     }
-    
+
     @Scheduled(fixedRate = 60000) // Every minute
     public void checkMemoryUsage() {
         MemoryUsage heapUsage = memoryBean.getHeapMemoryUsage();
         double usagePercentage = (double) heapUsage.getUsed() / heapUsage.getMax() * 100;
-        
+
         if (usagePercentage > 80) {
             logger.warn("High memory usage detected: {}%", usagePercentage);
-            
+
             // Trigger garbage collection if usage is very high
             if (usagePercentage > 90) {
                 System.gc();
@@ -452,7 +452,7 @@ public class MemoryMonitor {
 
 ## Performance Optimization Patterns
 
-### Connection Pool Optimization
+### Connection Pool 最佳化
 
 #### HikariCP Configuration
 
@@ -476,25 +476,25 @@ spring:
 ```java
 @Component
 public class ConnectionPoolMonitor {
-    
+
     private final HikariDataSource dataSource;
-    
+
     public ConnectionPoolMonitor(HikariDataSource dataSource, MeterRegistry meterRegistry) {
         this.dataSource = dataSource;
-        
+
         Gauge.builder("hikari.connections.active")
             .register(meterRegistry, dataSource, ds -> ds.getHikariPoolMXBean().getActiveConnections());
-        
+
         Gauge.builder("hikari.connections.idle")
             .register(meterRegistry, dataSource, ds -> ds.getHikariPoolMXBean().getIdleConnections());
-        
+
         Gauge.builder("hikari.connections.pending")
             .register(meterRegistry, dataSource, ds -> ds.getHikariPoolMXBean().getThreadsAwaitingConnection());
-        
+
         Gauge.builder("hikari.connections.total")
             .register(meterRegistry, dataSource, ds -> ds.getHikariPoolMXBean().getTotalConnections());
     }
-    
+
     @EventListener
     public void handleConnectionPoolEvent(ConnectionPoolEvent event) {
         if (event.getType() == ConnectionPoolEvent.Type.CONNECTION_LEAK_DETECTED) {
@@ -505,27 +505,27 @@ public class ConnectionPoolMonitor {
 }
 ```
 
-### Lazy Loading and Pagination
+### Lazy Loading 和 Pagination
 
-#### JPA Lazy Loading Best Practices
+#### JPA Lazy Loading 最佳實踐
 
 ```java
 @Entity
 public class Customer {
-    
+
     @Id
     private String id;
-    
+
     private String name;
     private String email;
-    
+
     // Lazy load expensive relationships
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     private List<Order> orders = new ArrayList<>();
-    
+
     @OneToOne(mappedBy = "customer", fetch = FetchType.LAZY)
     private CustomerProfile profile;
-    
+
     // Use @BatchSize to optimize N+1 queries
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     @BatchSize(size = 25)
@@ -534,18 +534,18 @@ public class Customer {
 
 @Repository
 public class CustomerRepository {
-    
+
     // Use JOIN FETCH for eager loading when needed
     @Query("SELECT c FROM Customer c JOIN FETCH c.profile WHERE c.id = :id")
     Optional<Customer> findByIdWithProfile(@Param("id") String id);
-    
+
     // Use pagination for large result sets
     @Query("SELECT c FROM Customer c WHERE c.registrationDate >= :date ORDER BY c.registrationDate DESC")
     Page<Customer> findRecentCustomers(@Param("date") LocalDate date, Pageable pageable);
 }
 ```
 
-## Performance Alerts and Monitoring
+## Performance Alerts 和 Monitoring
 
 ### Alert Configuration
 
@@ -567,7 +567,7 @@ groups:
         annotations:
           summary: "High response time detected"
           description: "95th percentile response time is {{ $value }} seconds"
-          
+
       - alert: HighMemoryUsage
 
         expr: (jvm_memory_used_bytes{area="heap"} / jvm_memory_max_bytes{area="heap"}) > 0.8
@@ -578,7 +578,7 @@ groups:
         annotations:
           summary: "High memory usage detected"
           description: "Memory usage is {{ $value }}%"
-          
+
       - alert: DatabaseConnectionPoolExhausted
 
         expr: hikari_connections_active / hikari_connections_max > 0.9
@@ -589,7 +589,7 @@ groups:
         annotations:
           summary: "Database connection pool nearly exhausted"
           description: "Connection pool usage is {{ $value }}%"
-          
+
       - alert: SlowDatabaseQueries
 
         expr: rate(database_slow_queries_total[5m]) > 0.1
@@ -602,7 +602,7 @@ groups:
           description: "{{ $value }} slow queries per second"
 ```
 
-### Performance Dashboard Requirements
+### Performance Dashboard 要求
 
 #### Technical Performance Dashboard
 

@@ -12,332 +12,332 @@ affected_perspectives: ["evolution", "development-resource"]
 
 # ADR-002: Adopt Hexagonal Architecture
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-24
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform needs an architecture that:
+企業電子商務平台需要一個架構能夠：
 
-- Separates business logic from technical concerns
-- Enables independent testing of domain logic
-- Allows technology changes without affecting business rules
-- Supports multiple interfaces (REST API, CLI, messaging)
-- Facilitates team collaboration and parallel development
-- Maintains clean boundaries between layers
+- 將業務邏輯與技術關注點分離
+- 支援獨立測試領域邏輯
+- 允許技術變更而不影響業務規則
+- 支援多種介面（REST API、CLI、messaging）
+- 促進團隊協作和平行開發
+- 維持層級之間清晰的邊界
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Need for rapid feature development without breaking existing functionality
-- Requirement to support multiple client types (web, mobile, API consumers)
-- Expected evolution of technology stack over 5+ year lifespan
-- Need for comprehensive testing to ensure quality
-- Team growth from 5 to 20+ developers
+- 需要快速功能開發而不破壞現有功能
+- 需要支援多種客戶端類型（web、mobile、API 消費者）
+- 預期技術堆疊在 5 年以上的生命週期內持續演進
+- 需要全面測試以確保品質
+- 團隊從 5 人成長到 20 人以上
 
-**Constraints**:
+**限制條件**：
 
-- Team has Spring Boot experience but limited DDD experience
-- 3-month timeline to MVP
-- Must integrate with existing AWS infrastructure
-- Need to maintain backward compatibility as system evolves
+- 團隊具有 Spring Boot 經驗但 DDD 經驗有限
+- 3 個月時程達成 MVP
+- 必須整合現有的 AWS 基礎設施
+- 隨著系統演進需要維持向後相容性
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- New greenfield project
+- 全新的 greenfield 專案
 - Spring Boot 3.4.5 + Java 21
-- Domain-Driven Design (DDD) tactical patterns chosen
-- Event-driven architecture for cross-context communication
+- 已選擇 Domain-Driven Design (DDD) tactical patterns
+- Event-driven architecture 用於 cross-context 通訊
 
-**Requirements**:
+**需求**：
 
-- Clear separation of concerns
-- Testable business logic
-- Technology-agnostic domain layer
-- Support for multiple adapters (REST, messaging, CLI)
-- Easy to onboard new developers
-- Maintainable over 5+ years
+- 清晰的關注點分離
+- 可測試的業務邏輯
+- 技術無關的領域層
+- 支援多種 adapters（REST、messaging、CLI）
+- 容易讓新開發人員上手
+- 5 年以上可維護性
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Testability**: Need to test business logic without infrastructure dependencies
-2. **Maintainability**: Clear boundaries reduce coupling and improve maintainability
-3. **Technology Independence**: Business logic should not depend on frameworks
-4. **Team Scalability**: Clear structure helps teams work independently
-5. **Evolution**: Easy to add new interfaces and change implementations
-6. **DDD Alignment**: Architecture should support DDD tactical patterns
-7. **Spring Boot Integration**: Must work well with Spring ecosystem
-8. **Learning Curve**: Team needs to adopt quickly
+1. **可測試性**：需要在沒有基礎設施依賴的情況下測試業務邏輯
+2. **可維護性**：清晰的邊界降低耦合並提升可維護性
+3. **技術獨立性**：業務邏輯不應依賴框架
+4. **團隊可擴展性**：清晰的結構幫助團隊獨立工作
+5. **演進性**：容易新增介面和變更實作
+6. **DDD 對齊**：架構應支援 DDD tactical patterns
+7. **Spring Boot 整合**：必須與 Spring 生態系統良好配合
+8. **學習曲線**：團隊需要快速採用
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Hexagonal Architecture (Ports and Adapters)
+### 選項 1：Hexagonal Architecture (Ports and Adapters)
 
-**Description**: Architecture pattern that separates core business logic from external concerns through ports (interfaces) and adapters (implementations)
+**描述**：透過 ports（介面）和 adapters（實作）將核心業務邏輯與外部關注點分離的架構模式
 
-**Structure**:
+**結構**：
 
 ```text
-domain/          # Core business logic (no dependencies)
-├── model/       # Aggregates, entities, value objects
+domain/          # 核心業務邏輯（無依賴）
+├── model/       # Aggregates、entities、value objects
 ├── events/      # Domain events
-├── repository/  # Repository interfaces (ports)
+├── repository/  # Repository 介面（ports）
 └── service/     # Domain services
 
-application/     # Use case orchestration
+application/     # Use case 編排
 └── {context}/   # Application services
 
-infrastructure/  # Technical implementations (adapters)
-├── persistence/ # Repository implementations
+infrastructure/  # 技術實作（adapters）
+├── persistence/ # Repository 實作
 ├── messaging/   # Event publishers
 └── external/    # External service adapters
 
-interfaces/      # External interfaces (adapters)
+interfaces/      # 外部介面（adapters）
 ├── rest/        # REST controllers
 └── messaging/   # Message consumers
 ```
 
-**Pros**:
+**優點**：
 
-- ✅ Complete separation of business logic from infrastructure
-- ✅ Domain layer has zero external dependencies
-- ✅ Easy to test domain logic in isolation
-- ✅ Technology changes don't affect business rules
-- ✅ Multiple adapters can coexist (REST, CLI, messaging)
-- ✅ Clear dependency direction (all depend on domain)
-- ✅ Excellent for DDD implementation
-- ✅ Supports event-driven architecture naturally
+- ✅ 業務邏輯與基礎設施完全分離
+- ✅ 領域層零外部依賴
+- ✅ 容易獨立測試領域邏輯
+- ✅ 技術變更不影響業務規則
+- ✅ 多個 adapters 可以共存（REST、CLI、messaging）
+- ✅ 清晰的依賴方向（全部依賴領域層）
+- ✅ 非常適合 DDD 實作
+- ✅ 自然支援 event-driven architecture
 
-**Cons**:
+**缺點**：
 
-- ⚠️ More initial setup and boilerplate
-- ⚠️ Learning curve for team
-- ⚠️ More interfaces and abstractions
-- ⚠️ Can feel over-engineered for simple CRUD
+- ⚠️ 更多初始設定和樣板代碼
+- ⚠️ 團隊學習曲線
+- ⚠️ 更多介面和抽象
+- ⚠️ 簡單 CRUD 可能感覺過度工程化
 
-**Cost**:
+**成本**：
 
-- Initial: 2 weeks additional setup time
-- Ongoing: Minimal (pays off in maintainability)
+- 初始：額外 2 週設定時間
+- 持續：最小（在可維護性上獲得回報）
 
-**Risk**: **Low** - Well-established pattern with proven benefits
+**風險**：**低** - 已建立的模式，具有驗證的效益
 
-### Option 2: Layered Architecture (Traditional N-Tier)
+### 選項 2：Layered Architecture（傳統 N-Tier）
 
-**Description**: Traditional layered architecture with presentation, business, and data layers
+**描述**：具有展示層、業務層和資料層的傳統分層架構
 
-**Structure**:
-
-```text
-presentation/    # Controllers, views
-business/        # Business logic
-data/            # Data access
-```
-
-**Pros**:
-
-- ✅ Familiar to most developers
-- ✅ Simple to understand
-- ✅ Less boilerplate
-- ✅ Quick to implement
-
-**Cons**:
-
-- ❌ Business logic often leaks into other layers
-- ❌ Tight coupling to frameworks and databases
-- ❌ Difficult to test in isolation
-- ❌ Technology changes affect business logic
-- ❌ Doesn't support DDD well
-- ❌ Single adapter type (usually REST)
-
-**Cost**: Lower initial cost, higher maintenance cost
-
-**Risk**: **Medium** - Technical debt accumulates quickly
-
-### Option 3: Clean Architecture (Uncle Bob)
-
-**Description**: Similar to Hexagonal but with more explicit layer definitions
-
-**Structure**:
+**結構**：
 
 ```text
-entities/        # Enterprise business rules
-use-cases/       # Application business rules
-interface-adapters/  # Controllers, presenters, gateways
-frameworks/      # External frameworks and tools
+presentation/    # Controllers、views
+business/        # 業務邏輯
+data/            # 資料存取
 ```
 
-**Pros**:
+**優點**：
 
-- ✅ Similar benefits to Hexagonal
-- ✅ Very explicit layer boundaries
-- ✅ Strong emphasis on dependency rule
-- ✅ Good for complex domains
+- ✅ 大多數開發人員熟悉
+- ✅ 容易理解
+- ✅ 較少樣板代碼
+- ✅ 快速實作
 
-**Cons**:
+**缺點**：
 
-- ⚠️ More layers than Hexagonal
-- ⚠️ Can be overly complex
-- ⚠️ Less Spring Boot integration examples
-- ⚠️ Steeper learning curve
+- ❌ 業務邏輯經常洩漏到其他層
+- ❌ 與框架和資料庫緊密耦合
+- ❌ 難以獨立測試
+- ❌ 技術變更影響業務邏輯
+- ❌ 不能很好地支援 DDD
+- ❌ 單一 adapter 類型（通常是 REST）
 
-**Cost**: Similar to Hexagonal, slightly higher complexity
+**成本**：較低的初始成本，較高的維護成本
 
-**Risk**: **Low** - Proven pattern, but more complex
+**風險**：**中等** - 技術債務快速累積
 
-### Option 4: Modular Monolith
+### 選項 3：Clean Architecture (Uncle Bob)
 
-**Description**: Single deployable with clear module boundaries
+**描述**：類似 Hexagonal 但具有更明確的層級定義
 
-**Pros**:
+**結構**：
 
-- ✅ Simpler deployment
-- ✅ Clear module boundaries
-- ✅ Can evolve to microservices
+```text
+entities/        # 企業業務規則
+use-cases/       # 應用程式業務規則
+interface-adapters/  # Controllers、presenters、gateways
+frameworks/      # 外部框架和工具
+```
 
-**Cons**:
+**優點**：
 
-- ❌ Doesn't address layer separation
-- ❌ Can still have tight coupling
-- ❌ Doesn't solve testability issues
-- ❌ Not mutually exclusive with Hexagonal
+- ✅ 與 Hexagonal 有類似效益
+- ✅ 非常明確的層級邊界
+- ✅ 強調依賴規則
+- ✅ 適合複雜領域
 
-**Cost**: Similar to layered architecture
+**缺點**：
 
-**Risk**: **Medium** - Boundaries can erode over time
+- ⚠️ 比 Hexagonal 更多層級
+- ⚠️ 可能過度複雜
+- ⚠️ 較少 Spring Boot 整合範例
+- ⚠️ 更陡峭的學習曲線
 
-## Decision Outcome
+**成本**：與 Hexagonal 類似，複雜度稍高
 
-**Chosen Option**: **Hexagonal Architecture (Ports and Adapters)**
+**風險**：**低** - 已驗證的模式，但更複雜
 
-### Rationale
+### 選項 4：Modular Monolith
 
-Hexagonal Architecture was selected for the following reasons:
+**描述**：具有清晰模組邊界的單一可部署單元
 
-1. **Perfect DDD Fit**: Aligns perfectly with our DDD tactical patterns (aggregates, repositories, domain events)
-2. **Testability**: Domain logic can be tested without any infrastructure dependencies
-3. **Technology Independence**: Business rules are completely isolated from Spring Boot, databases, and messaging
-4. **Multiple Adapters**: Naturally supports REST API, messaging, and future CLI/GraphQL interfaces
-5. **Clear Boundaries**: Explicit ports (interfaces) and adapters (implementations) prevent coupling
-6. **Event-Driven Support**: Domain events fit naturally into the architecture
-7. **Team Growth**: Clear structure helps new developers understand the system
-8. **Long-Term Maintainability**: Technology changes (e.g., database, messaging) don't affect business logic
+**優點**：
 
-**Why Not Layered**: Layered architecture leads to tight coupling and makes testing difficult. Business logic often leaks into controllers and repositories.
+- ✅ 更簡單的部署
+- ✅ 清晰的模組邊界
+- ✅ 可以演進為 microservices
 
-**Why Not Clean Architecture**: While similar, Hexagonal is simpler and has better Spring Boot integration examples. The additional layers in Clean Architecture add complexity without significant benefit for our use case.
+**缺點**：
 
-## Impact Analysis
+- ❌ 不處理層級分離
+- ❌ 仍可能有緊密耦合
+- ❌ 不解決可測試性問題
+- ❌ 與 Hexagonal 不互斥
 
-### Stakeholder Impact
+**成本**：與分層架構類似
+
+**風險**：**中等** - 邊界可能隨時間侵蝕
+
+## 決策結果
+
+**選擇的選項**：**Hexagonal Architecture (Ports and Adapters)**
+
+### 理由
+
+選擇 Hexagonal Architecture 的原因如下：
+
+1. **完美的 DDD 契合**：與我們的 DDD tactical patterns（aggregates、repositories、domain events）完美對齊
+2. **可測試性**：領域邏輯可以在沒有任何基礎設施依賴的情況下測試
+3. **技術獨立性**：業務規則完全與 Spring Boot、資料庫和 messaging 隔離
+4. **多個 Adapters**：自然支援 REST API、messaging 和未來的 CLI/GraphQL 介面
+5. **清晰的邊界**：明確的 ports（介面）和 adapters（實作）防止耦合
+6. **Event-Driven 支援**：Domain events 自然融入架構
+7. **團隊成長**：清晰的結構幫助新開發人員理解系統
+8. **長期可維護性**：技術變更（例如資料庫、messaging）不影響業務邏輯
+
+**為何不選 Layered**：分層架構導致緊密耦合並使測試困難。業務邏輯經常洩漏到 controllers 和 repositories。
+
+**為何不選 Clean Architecture**：雖然類似，但 Hexagonal 更簡單且有更好的 Spring Boot 整合範例。Clean Architecture 中的額外層級增加了複雜性，但對我們的使用案例沒有顯著效益。
+
+## 影響分析
+
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Development Team | High | Need to learn Hexagonal Architecture | Training sessions, code examples, pair programming |
-| Architects | Positive | Clear architecture boundaries | Architecture documentation, ADRs |
-| QA Team | Positive | Easier to test business logic | Testing guides, example tests |
-| Operations | Low | No operational impact | N/A |
-| Business | Positive | Faster feature development | N/A |
+| Development Team | High | 需要學習 Hexagonal Architecture | 培訓課程、程式碼範例、結對程式設計 |
+| Architects | Positive | 清晰的架構邊界 | 架構文檔、ADRs |
+| QA Team | Positive | 更容易測試業務邏輯 | 測試指南、範例測試 |
+| Operations | Low | 無營運影響 | N/A |
+| Business | Positive | 更快的功能開發 | N/A |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**：**System**
 
-Affects:
+影響：
 
-- All bounded contexts (package structure)
-- All layers (domain, application, infrastructure, interfaces)
-- Testing strategy (unit tests for domain)
-- Development workflow (where to put code)
-- Onboarding process (architecture training)
+- 所有 bounded contexts（套件結構）
+- 所有層級（domain、application、infrastructure、interfaces）
+- 測試策略（領域的單元測試）
+- 開發工作流程（程式碼放置位置）
+- 入職流程（架構培訓）
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
-| Team learning curve | High | Medium | Training, examples, pair programming, code reviews |
-| Over-engineering simple features | Medium | Low | Pragmatic approach, allow simpler patterns for CRUD |
-| Boilerplate code | Medium | Low | Code generators, templates, IDE snippets |
-| Inconsistent implementation | Medium | Medium | ArchUnit tests, code reviews, architecture guidelines |
-| Resistance to change | Low | Medium | Demonstrate benefits, involve team in decision |
+| 團隊學習曲線 | High | Medium | 培訓、範例、結對程式設計、程式碼審查 |
+| 過度工程化簡單功能 | Medium | Low | 務實的方法，允許 CRUD 使用更簡單的模式 |
+| 樣板代碼 | Medium | Low | 程式碼產生器、模板、IDE 片段 |
+| 實作不一致 | Medium | Medium | ArchUnit 測試、程式碼審查、架構指南 |
+| 抗拒變更 | Low | Medium | 展示效益、讓團隊參與決策 |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**：**低**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Foundation Setup (Week 1)
+### 第 1 階段：基礎設定（第 1 週）
 
-- [x] Create package structure (domain, application, infrastructure, interfaces)
-- [x] Define base interfaces (AggregateRoot, DomainEvent, Repository)
-- [x] Set up ArchUnit tests to enforce architecture rules
-- [x] Create example aggregate with full implementation
-- [x] Document architecture guidelines
+- [x] 建立套件結構（domain、application、infrastructure、interfaces）
+- [x] 定義基礎介面（AggregateRoot、DomainEvent、Repository）
+- [x] 設定 ArchUnit 測試以強制執行架構規則
+- [x] 建立完整實作的範例 aggregate
+- [x] 撰寫架構指南文檔
 
-### Phase 2: Team Training (Week 1-2)
+### 第 2 階段：團隊培訓（第 1-2 週）
 
-- [x] Conduct architecture training session
-- [x] Create code examples for common patterns
-- [x] Set up pair programming sessions
-- [x] Create architecture decision flowchart
-- [x] Document "where does this code go?" guide
+- [x] 進行架構培訓課程
+- [x] 為常見模式建立程式碼範例
+- [x] 設定結對程式設計課程
+- [x] 建立架構決策流程圖
+- [x] 撰寫「程式碼放置位置」指南
 
-### Phase 3: Implementation (Week 2-12)
+### 第 3 階段：實作（第 2-12 週）
 
-- [x] Implement Customer bounded context
-- [x] Implement Order bounded context
-- [x] Implement Product bounded context
-- [ ] Implement remaining bounded contexts
-- [ ] Continuous code reviews for architecture compliance
-- [ ] Refine patterns based on feedback
+- [x] 實作 Customer bounded context
+- [x] 實作 Order bounded context
+- [x] 實作 Product bounded context
+- [ ] 實作剩餘的 bounded contexts
+- [ ] 持續程式碼審查以確保架構合規
+- [ ] 根據回饋精煉模式
 
-### Phase 4: Validation (Ongoing)
+### 第 4 階段：驗證（持續進行）
 
-- [x] ArchUnit tests run in CI/CD
-- [x] Regular architecture reviews
-- [x] Collect team feedback
-- [x] Update guidelines based on learnings
+- [x] ArchUnit 測試在 CI/CD 中執行
+- [x] 定期架構審查
+- [x] 收集團隊回饋
+- [x] 根據學習更新指南
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
-- Team unable to adopt after 4 weeks
-- Development velocity decreases by > 30%
-- Excessive boilerplate slows development
-- Architecture violations > 50% of PRs
+- 團隊在 4 週後無法採用
+- 開發速度降低 > 30%
+- 過多的樣板代碼減慢開發
+- 架構違規 > 50% 的 PRs
 
-**Rollback Steps**:
+**回滾步驟**：
 
-1. Simplify to layered architecture
-2. Keep domain models but allow direct dependencies
-3. Merge infrastructure into application layer
-4. Update ArchUnit rules
-5. Refactor existing code gradually
+1. 簡化為分層架構
+2. 保留領域模型但允許直接依賴
+3. 將基礎設施合併到應用程式層
+4. 更新 ArchUnit 規則
+5. 逐步重構現有程式碼
 
-**Rollback Time**: 2 weeks
+**回滾時間**：2 週
 
-**Note**: Rollback is unlikely as benefits typically outweigh costs after initial learning period.
+**注意**：回滾不太可能發生，因為在初始學習期後效益通常超過成本。
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
-- ✅ 100% of domain layer has zero infrastructure dependencies (ArchUnit)
-- ✅ 80%+ unit test coverage for domain logic
-- ✅ < 5% architecture violations in code reviews
-- ✅ New developers productive within 1 week
-- ✅ Technology changes (e.g., database) take < 1 day
-- ✅ Team satisfaction score > 4/5
+- ✅ 100% 的領域層零基礎設施依賴（ArchUnit）
+- ✅ 80% 以上的領域邏輯單元測試覆蓋率
+- ✅ 程式碼審查中 < 5% 的架構違規
+- ✅ 新開發人員在 1 週內具生產力
+- ✅ 技術變更（例如資料庫）耗時 < 1 天
+- ✅ 團隊滿意度分數 > 4/5
 
-### Monitoring Plan
+### 監控計畫
 
-**ArchUnit Tests**:
+**ArchUnit Tests**：
 
 ```java
 @ArchTest
@@ -353,63 +353,63 @@ static final ArchRule repositoryRules = classes()
     .should().resideInAPackage("..domain..repository..");
 ```
 
-**Code Review Checklist**:
+**程式碼審查檢查清單**：
 
-- [ ] Domain logic in domain layer
-- [ ] No infrastructure dependencies in domain
-- [ ] Repositories are interfaces in domain
-- [ ] Adapters implement domain interfaces
-- [ ] Application services orchestrate use cases
+- [ ] 領域邏輯在領域層
+- [ ] 領域中無基礎設施依賴
+- [ ] Repositories 是領域中的介面
+- [ ] Adapters 實作領域介面
+- [ ] Application services 編排 use cases
 
-**Review Schedule**:
+**審查時程**：
 
-- Weekly: Architecture review in team meeting
-- Monthly: ArchUnit test results review
-- Quarterly: Architecture retrospective
+- 每週：團隊會議中的架構審查
+- 每月：ArchUnit 測試結果審查
+- 每季：架構回顧
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Testability**: Domain logic tested without infrastructure (fast, reliable tests)
-- ✅ **Technology Independence**: Can change databases, frameworks without affecting business logic
-- ✅ **Clear Boundaries**: Explicit ports and adapters prevent coupling
-- ✅ **Multiple Interfaces**: Easy to add REST, GraphQL, CLI, messaging adapters
-- ✅ **DDD Support**: Perfect fit for aggregates, repositories, domain events
-- ✅ **Team Scalability**: Clear structure helps teams work independently
-- ✅ **Maintainability**: Changes are localized to specific layers
-- ✅ **Onboarding**: New developers understand structure quickly
+- ✅ **可測試性**：在沒有基礎設施的情況下測試領域邏輯（快速、可靠的測試）
+- ✅ **技術獨立性**：可以變更資料庫、框架而不影響業務邏輯
+- ✅ **清晰的邊界**：明確的 ports 和 adapters 防止耦合
+- ✅ **多種介面**：容易新增 REST、GraphQL、CLI、messaging adapters
+- ✅ **DDD 支援**：完美契合 aggregates、repositories、domain events
+- ✅ **團隊可擴展性**：清晰的結構幫助團隊獨立工作
+- ✅ **可維護性**：變更局限於特定層級
+- ✅ **入職**：新開發人員快速理解結構
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Initial Overhead**: More setup time and boilerplate code
-- ⚠️ **Learning Curve**: Team needs to learn new patterns
-- ⚠️ **More Abstractions**: More interfaces and classes
-- ⚠️ **Potential Over-Engineering**: Simple CRUD might feel complex
+- ⚠️ **初始開銷**：更多設定時間和樣板代碼
+- ⚠️ **學習曲線**：團隊需要學習新模式
+- ⚠️ **更多抽象**：更多介面和類別
+- ⚠️ **潛在的過度工程化**：簡單 CRUD 可能感覺複雜
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. Some simple CRUD operations have unnecessary abstraction (acceptable trade-off)
-2. Boilerplate code for mappers between layers (can be reduced with MapStruct)
-3. Learning curve for new team members (decreases over time)
+1. 一些簡單的 CRUD 操作有不必要的抽象（可接受的權衡）
+2. 層級間 mappers 的樣板代碼（可使用 MapStruct 減少）
+3. 新團隊成員的學習曲線（隨時間降低）
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q1 2026**: Introduce MapStruct to reduce mapper boilerplate
-- **Q2 2026**: Create code generators for common patterns
-- **Q3 2026**: Refine patterns based on 6 months of experience
+- **2026 年 Q1**：引入 MapStruct 以減少 mapper 樣板代碼
+- **2026 年 Q2**：為常見模式建立程式碼產生器
+- **2026 年 Q3**：根據 6 個月經驗精煉模式
 
-## Related Decisions
+## 相關決策
 
-- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md) - Repository implementations
+- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md) - Repository 實作
 - [ADR-003: Use Domain Events for Cross-Context Communication](003-use-domain-events-for-cross-context-communication.md) - Event-driven architecture
-- [ADR-006: Environment-Specific Testing Strategy](006-environment-specific-testing-strategy.md) - Testing approach
+- [ADR-006: Environment-Specific Testing Strategy](006-environment-specific-testing-strategy.md) - 測試方法
 
-## Notes
+## 備註
 
-### Package Structure
+### 套件結構
 
 ```text
 solid.humank.genaidemo/
@@ -464,18 +464,18 @@ solid.humank.genaidemo/
                 └── CustomerDtoMapper.java
 ```
 
-### Dependency Rules
+### 依賴規則
 
-1. **Domain Layer**: No dependencies on any other layer
-2. **Application Layer**: Depends only on domain layer
-3. **Infrastructure Layer**: Depends on domain layer (implements interfaces)
-4. **Interfaces Layer**: Depends on application and domain layers
+1. **Domain Layer**：不依賴任何其他層級
+2. **Application Layer**：僅依賴領域層
+3. **Infrastructure Layer**：依賴領域層（實作介面）
+4. **Interfaces Layer**：依賴應用程式和領域層
 
-### Example: Adding a New Feature
+### 範例：新增功能
 
-**Scenario**: Add "Update Customer Email" feature
+**情境**：新增「更新客戶電子郵件」功能
 
-1. **Domain Layer**: Add method to Customer aggregate
+1. **Domain Layer**：將方法新增到 Customer aggregate
 
    ```java
    public void updateEmail(Email newEmail) {
@@ -485,7 +485,7 @@ solid.humank.genaidemo/
    }
    ```
 
-2. **Application Layer**: Create command and service method
+2. **Application Layer**：建立 command 和 service 方法
 
    ```java
    public void updateCustomerEmail(UpdateEmailCommand command) {
@@ -496,9 +496,9 @@ solid.humank.genaidemo/
    }
    ```
 
-3. **Infrastructure Layer**: No changes needed (repository already exists)
+3. **Infrastructure Layer**：無需變更（repository 已存在）
 
-4. **Interfaces Layer**: Add REST endpoint
+4. **Interfaces Layer**：新增 REST endpoint
 
    ```java
    @PutMapping("/{id}/email")
@@ -508,9 +508,9 @@ solid.humank.genaidemo/
    }
    ```
 
-### Testing Strategy
+### 測試策略
 
-**Unit Tests** (Domain Layer):
+**單元測試**（Domain Layer）：
 
 ```java
 @Test
@@ -528,7 +528,7 @@ void should_update_email_when_valid_email_provided() {
 }
 ```
 
-**Integration Tests** (Infrastructure Layer):
+**整合測試**（Infrastructure Layer）：
 
 ```java
 @DataJpaTest
@@ -536,17 +536,17 @@ void should_update_email_when_valid_email_provided() {
 void should_save_and_retrieve_customer() {
     // Given
     Customer customer = createCustomer();
-    
+
     // When
     customerRepository.save(customer);
     Customer retrieved = customerRepository.findById(customer.getId());
-    
+
     // Then
     assertThat(retrieved).isEqualTo(customer);
 }
 ```
 
-**API Tests** (Interfaces Layer):
+**API 測試**（Interfaces Layer）：
 
 ```java
 @WebMvcTest(CustomerController.class)
@@ -562,6 +562,6 @@ void should_update_customer_email() throws Exception {
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-24  
-**Next Review**: 2026-01-24 (Quarterly)
+**文檔狀態**：✅ Accepted
+**上次審查**：2025-10-24
+**下次審查**：2026-01-24（每季）

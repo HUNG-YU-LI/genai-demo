@@ -12,204 +12,204 @@ affected_perspectives: ["security", "availability"]
 
 # ADR-033: Secrets Management Strategy
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires secure management of sensitive configuration data including:
+The Enterprise E-Commerce Platform 需要secure management of sensitive configuration data including:
 
 - Database credentials (PostgreSQL, Redis)
-- API keys (payment gateways, email services, SMS providers)
+- API keys (payment gateways, email services, SMS 提供rs)
 - Encryption keys (JWT signing keys, data encryption keys)
 - Third-party service credentials
 - OAuth client secrets
 - Certificate private keys
 
-We need a secrets management solution that:
+We 需要secrets management solution：
 
-- Stores secrets securely with encryption at rest
-- Provides fine-grained access control
-- Enables automatic secret rotation
-- Supports audit logging for secret access
-- Integrates with AWS services and Kubernetes
-- Enables secrets versioning and rollback
-- Supports disaster recovery and high availability
+- Stores secrets securely 與 encryption at rest
+- 提供s fine-grained access control
+- 啟用s automatic secret rotation
+- 支援s audit logging 用於 secret access
+- Integrates 與 AWS services 和 Kubernetes
+- 啟用s secrets versioning 和 rollback
+- 支援s disaster recovery 和 高可用性
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - Security compliance (PCI-DSS, GDPR, SOC 2)
-- Prevent credential leakage and data breaches
+- Prevent credential leakage 和 data breaches
 - Regulatory audit requirements
 - Zero-trust security model
-- Expected growth from 10K to 1M+ users
+- 預期的 growth from 10K to 1M+ users
 
-**Constraints**:
+**限制條件**：
 
-- Must integrate with AWS infrastructure
-- Must support Kubernetes (EKS) workloads
+- 必須 integrate 與 AWS infrastructure
+- 必須 支援 Kubernetes (EKS) workloads
 - Performance: Secret retrieval < 100ms
-- Budget: $500/month for secrets management
-- Must support automatic rotation without downtime
+- 預算: $500/month 用於 secrets management
+- 必須 支援 automatic rotation 沒有 downtime
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- AWS EKS for container orchestration
+- AWS EKS 用於 container orchestration
 - Spring Boot microservices
-- AWS CDK for infrastructure as code
+- AWS CDK 用於 infrastructure as code
 - Multiple environments (dev, staging, production)
 
-**Requirements**:
+**需求**：
 
 - Centralized secrets storage
-- Encryption at rest and in transit
+- Encryption at rest 和 in transit
 - Fine-grained IAM-based access control
 - Automatic secret rotation
 - Audit logging (CloudTrail integration)
-- Versioning and rollback capability
+- Versioning 和 rollback capability
 - High availability (99.9%+)
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Security**: Industry-standard encryption and access control
-2. **Integration**: Seamless AWS and Kubernetes integration
-3. **Automation**: Automatic rotation without manual intervention
-4. **Auditability**: Complete audit trail for compliance
+1. **Security**: Industry-standard encryption 和 access control
+2. **Integration**: 無縫的AWS 和 Kubernetes整合
+3. **Automation**: Automatic rotation 沒有 manual intervention
+4. **Auditability**: Complete audit trail 用於 compliance
 5. **Performance**: Fast secret retrieval (< 100ms)
-6. **Cost**: Within budget constraints
-7. **Operational**: Minimal operational overhead
-8. **Reliability**: High availability and disaster recovery
+6. **成本**： Within budget constraints
+7. **Operational**: Minimal 營運開銷
+8. **Reliability**: High availability 和 disaster recovery
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: AWS Secrets Manager
+### 選項 1： AWS Secrets Manager
 
-**Description**: Fully managed secrets management service by AWS
+**描述**： Fully managed secrets management service by AWS
 
-**Pros**:
+**優點**：
 
-- ✅ Fully managed (no infrastructure to maintain)
+- ✅ Fully managed (no infrastructure to 維持)
 - ✅ Native AWS integration (RDS, EKS, Lambda)
-- ✅ Automatic rotation for RDS, Redshift, DocumentDB
-- ✅ Encryption with AWS KMS
+- ✅ Automatic rotation 用於 RDS, Redshift, DocumentDB
+- ✅ Encryption 與 AWS KMS
 - ✅ Fine-grained IAM access control
 - ✅ CloudTrail audit logging
-- ✅ Versioning and rollback
+- ✅ Versioning 和 rollback
 - ✅ Cross-region replication
 - ✅ High availability (99.99% SLA)
 - ✅ Kubernetes integration via External Secrets Operator
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Cost: $0.40 per secret per month + $0.05 per 10K API calls
+- ⚠️ Cost: $0.40 per secret per 月 + $0.05 per 10K API calls
 - ⚠️ AWS vendor lock-in
 - ⚠️ Limited to 65,536 bytes per secret
 
-**Cost**: $400/month (estimated for 1000 secrets + API calls)
+**成本**： $400/month (estimated for 1000 secrets + API calls)
 
-**Risk**: **Low** - Proven AWS service
+**風險**： **Low** - Proven AWS service
 
-### Option 2: AWS Systems Manager Parameter Store
+### 選項 2： AWS Systems Manager Parameter Store
 
-**Description**: Hierarchical storage for configuration data and secrets
+**描述**： Hierarchical storage for configuration data and secrets
 
-**Pros**:
+**優點**：
 
-- ✅ Free for standard parameters (up to 10K)
+- ✅ Free 用於 standard parameters (up to 10K)
 - ✅ Native AWS integration
-- ✅ KMS encryption for SecureString
+- ✅ KMS encryption 用於 SecureString
 - ✅ IAM access control
 - ✅ CloudTrail audit logging
-- ✅ Versioning support
+- ✅ Versioning 支援
 - ✅ Parameter hierarchies
 
-**Cons**:
+**缺點**：
 
 - ❌ No automatic rotation (manual implementation required)
-- ❌ Limited to 8KB per parameter (standard) or 4KB (advanced)
-- ❌ Advanced parameters cost $0.05 per parameter per month
+- ❌ Limited to 8KB per parameter (standard) 或 4KB (advanced)
+- ❌ Advanced parameters cost $0.05 per parameter per 月
 - ❌ Higher throughput tier costs extra
-- ❌ Less feature-rich than Secrets Manager
+- ❌ Less feature-豐富的 than Secrets Manager
 
-**Cost**: $50/month (for advanced parameters)
+**成本**： $50/month (for advanced parameters)
 
-**Risk**: **Medium** - Requires custom rotation logic
+**風險**： **Medium** - Requires custom rotation logic
 
-### Option 3: HashiCorp Vault
+### 選項 3： HashiCorp Vault
 
-**Description**: Self-managed secrets management platform
+**描述**： Self-managed secrets management platform
 
-**Pros**:
+**優點**：
 
 - ✅ Cloud-agnostic (no vendor lock-in)
 - ✅ Advanced features (dynamic secrets, PKI, encryption as a service)
 - ✅ Fine-grained policies
-- ✅ Automatic rotation support
+- ✅ Automatic rotation 支援
 - ✅ Audit logging
-- ✅ Multi-cloud support
+- ✅ Multi-cloud 支援
 - ✅ Active community
 
-**Cons**:
+**缺點**：
 
-- ❌ Self-managed infrastructure (high operational overhead)
-- ❌ High availability setup complex
-- ❌ Requires dedicated team for operations
+- ❌ Self-managed infrastructure (high 營運開銷)
+- ❌ High availability setup 複雜的
+- ❌ Requires dedicated team 用於 operations
 - ❌ Additional infrastructure costs (EC2, storage, backups)
-- ❌ Learning curve for team
+- ❌ Learning curve 用於 team
 - ❌ Maintenance burden (upgrades, patches)
 
-**Cost**: $2,000/month (infrastructure + operations)
+**成本**： $2,000/month (infrastructure + operations)
 
-**Risk**: **High** - Operational complexity
+**風險**： **High** - Operational complexity
 
-### Option 4: Kubernetes Secrets (Native)
+### 選項 4： Kubernetes Secrets (Native)
 
-**Description**: Built-in Kubernetes secrets management
+**描述**： Built-in Kubernetes secrets management
 
-**Pros**:
+**優點**：
 
 - ✅ No additional cost
 - ✅ Native Kubernetes integration
-- ✅ Simple to use
+- ✅ 簡單use
 
-**Cons**:
+**缺點**：
 
-- ❌ Base64 encoding only (not encrypted by default)
+- ❌ Base64 encoding only (not encrypted 透過 default)
 - ❌ No automatic rotation
 - ❌ Limited access control
 - ❌ No audit logging
 - ❌ Secrets stored in etcd (security concerns)
-- ❌ Not suitable for production
+- ❌ Not suitable 用於 production
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **High** - Insufficient security
+**風險**： **High** - Insufficient security
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **AWS Secrets Manager with External Secrets Operator for Kubernetes**
+**選擇的選項**： **AWS Secrets Manager with External Secrets Operator for Kubernetes**
 
-### Rationale
+### 理由
 
-AWS Secrets Manager was selected for the following reasons:
+AWS Secrets Manager被選擇的原因如下：
 
-1. **Fully Managed**: No infrastructure to maintain, reduces operational overhead
-2. **Automatic Rotation**: Built-in rotation for RDS, custom rotation via Lambda
+1. **Fully Managed**: No infrastructure to 維持, 降低s 營運開銷
+2. **Automatic Rotation**: Built-in rotation 用於 RDS, custom rotation via Lambda
 3. **Security**: KMS encryption, IAM access control, CloudTrail auditing
 4. **Integration**: Native AWS integration, Kubernetes via External Secrets Operator
 5. **Reliability**: 99.99% SLA, cross-region replication
 6. **Compliance**: Meets PCI-DSS, GDPR, SOC 2 requirements
-7. **Cost-Effective**: $400/month within budget, no infrastructure costs
-8. **Versioning**: Automatic versioning and rollback capability
+7. **Cost-Effective**: $400/month within 預算, no infrastructure costs
+8. **Versioning**: Automatic versioning 和 rollback capability
 
-**Architecture**:
+**架構**：
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -235,15 +235,15 @@ AWS Secrets Manager was selected for the following reasons:
 
 | Category | Storage | Rotation | Access Method |
 |----------|---------|----------|---------------|
-| Database Credentials | Secrets Manager | Automatic (30 days) | Spring Boot SDK |
+| Database Credentials | Secrets Manager | Automatic (30 天) | Spring Boot SDK |
 | API Keys | Secrets Manager | Manual/Lambda | Spring Boot SDK |
-| JWT Signing Keys | Secrets Manager | Manual (90 days) | Spring Boot SDK |
+| JWT Signing Keys | Secrets Manager | Manual (90 天) | Spring Boot SDK |
 | Kubernetes Secrets | Secrets Manager | Sync via External Secrets | K8s Secret |
 | Certificates | Secrets Manager | Manual/ACM | Spring Boot SDK |
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
@@ -253,69 +253,69 @@ AWS Secrets Manager was selected for the following reasons:
 | Infrastructure Team | Medium | CDK integration required | CDK constructs, documentation |
 | End Users | None | Transparent to users | N/A |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All microservices (secret retrieval)
 - Infrastructure code (CDK)
 - Kubernetes deployments (External Secrets)
 - CI/CD pipelines (secret injection)
-- Monitoring and alerting
+- Monitoring 和 alerting
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | Secret retrieval latency | Low | Medium | Caching, connection pooling, retry logic |
 | AWS Secrets Manager outage | Very Low | High | Cross-region replication, fallback to cached secrets |
-| Cost overrun | Medium | Low | Monitor API calls, implement caching, set budget alerts |
+| Cost overrun | Medium | Low | Monitor API calls, implement caching, set 預算 alerts |
 | Rotation failures | Low | High | Automated testing, rollback capability, alerts |
 | Misconfigured IAM policies | Medium | High | Least privilege, automated policy validation, regular audits |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Infrastructure Setup (Week 1)
+### 第 1 階段： Infrastructure Setup （第 1 週）
 
-- [x] Create AWS Secrets Manager secrets for each environment
+- [x] Create AWS Secrets Manager secrets 用於 each environment
 - [x] Configure KMS encryption keys
-- [x] Set up IAM roles and policies (least privilege)
-- [x] Enable CloudTrail logging for Secrets Manager
+- [x] Set up IAM roles 和 policies (least privilege)
+- [x] 啟用 CloudTrail logging 用於 Secrets Manager
 - [x] Configure cross-region replication (Tokyo backup)
-- [x] Set up budget alerts
+- [x] Set up 預算 alerts
 
-### Phase 2: Application Integration (Week 2)
+### 第 2 階段： Application Integration （第 2 週）
 
 - [x] Add AWS Secrets Manager SDK to Spring Boot
 - [x] Implement secrets retrieval service
 - [x] Add caching layer (5-minute TTL)
 - [x] Update application configuration
 - [x] Implement graceful degradation (cached secrets)
-- [x] Add health checks for secrets access
+- [x] Add health checks 用於 secrets access
 
-### Phase 3: Kubernetes Integration (Week 3)
+### 第 3 階段： Kubernetes Integration （第 3 週）
 
 - [x] Install External Secrets Operator on EKS
-- [x] Configure IRSA (IAM Roles for Service Accounts)
-- [x] Create SecretStore and ExternalSecret resources
+- [x] Configure IRSA (IAM Roles 用於 Service Accounts)
+- [x] Create SecretStore 和 ExternalSecret resources
 - [x] Migrate existing K8s secrets to Secrets Manager
 - [x] Test secret synchronization
 - [x] Update deployment manifests
 
-### Phase 4: Automatic Rotation (Week 4)
+### 第 4 階段： Automatic Rotation （第 4 週）
 
-- [x] Enable automatic rotation for RDS credentials
-- [x] Create Lambda functions for custom rotation
-- [x] Implement rotation for API keys
-- [x] Implement rotation for JWT signing keys
-- [x] Test rotation without downtime
-- [x] Set up rotation monitoring and alerts
+- [x] 啟用 automatic rotation 用於 RDS credentials
+- [x] Create Lambda functions 用於 custom rotation
+- [x] Implement rotation 用於 API keys
+- [x] Implement rotation 用於 JWT signing keys
+- [x] Test rotation 沒有 downtime
+- [x] Set up rotation monitoring 和 alerts
 
-### Phase 5: Migration and Testing (Week 5)
+### Phase 5: Migration and Testing （第 5 週）
 
 - [x] Migrate secrets from environment variables
 - [x] Migrate secrets from config files
@@ -324,36 +324,36 @@ Affects:
 - [x] Security testing (penetration testing)
 - [x] Disaster recovery testing
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Secret retrieval failures > 5%
 - Performance degradation > 200ms
 - Rotation failures causing outages
-- Cost exceeding budget by > 50%
+- Cost exceeding 預算 透過 > 50%
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Revert to environment variables (temporary)
-2. Investigate and fix Secrets Manager integration
-3. Re-deploy with fixes
+2. Investigate 和 fix Secrets Manager integration
+3. Re-deploy 與 fixes
 4. Gradually migrate back to Secrets Manager
 
-**Rollback Time**: < 1 hour
+**回滾時間**： < 1 hour
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Secret retrieval latency < 100ms (95th percentile)
 - ✅ Secret retrieval success rate > 99.9%
 - ✅ Zero secret leakage incidents
 - ✅ Automatic rotation success rate 100%
 - ✅ Audit log completeness 100%
-- ✅ Cost within budget ($500/month)
+- ✅ Cost within 預算 ($500/month)
 
-### Monitoring Plan
+### 監控計畫
 
 **CloudWatch Metrics**:
 
@@ -364,13 +364,13 @@ Affects:
 - `secrets.rotation.failure` (count)
 - `secrets.cache.hit_rate` (gauge)
 
-**Alerts**:
+**告警**：
 
-- Secret retrieval failure rate > 1% for 5 minutes
-- Secret retrieval latency > 200ms for 5 minutes
+- Secret retrieval failure rate > 1% 用於 5 minutes
+- Secret retrieval latency > 200ms 用於 5 minutes
 - Rotation failures
 - Unauthorized secret access attempts
-- Cost exceeding budget
+- Cost exceeding 預算
 
 **Security Monitoring**:
 
@@ -380,54 +380,54 @@ Affects:
 - IAM policy changes
 - Rotation failures
 
-**Review Schedule**:
+**審查時程**：
 
 - Daily: Check secret access metrics
 - Weekly: Review CloudTrail audit logs
 - Monthly: Secret rotation verification
-- Quarterly: Security audit and IAM policy review
+- Quarterly: Security audit 和 IAM policy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Enhanced Security**: KMS encryption, IAM access control
-- ✅ **Automatic Rotation**: Reduces manual effort and human error
-- ✅ **Auditability**: Complete audit trail for compliance
+- ✅ **Automatic Rotation**: 降低s manual effort 和 human error
+- ✅ **Auditability**: Complete audit trail 用於 compliance
 - ✅ **Reliability**: 99.99% SLA, cross-region replication
-- ✅ **Integration**: Seamless AWS and Kubernetes integration
+- ✅ **Integration**: 無縫的AWS 和 Kubernetes整合
 - ✅ **Versioning**: Easy rollback to previous secret versions
 - ✅ **Operational**: Fully managed, minimal overhead
 - ✅ **Compliance**: Meets PCI-DSS, GDPR, SOC 2
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Cost**: $400/month for secrets storage and API calls
+- ⚠️ **成本**： $400/month for secrets storage and API calls
 - ⚠️ **Vendor Lock-in**: AWS dependency
-- ⚠️ **Latency**: Small overhead for secret retrieval (mitigated by caching)
-- ⚠️ **Complexity**: Additional integration code required
+- ⚠️ **Latency**: Small overhead 用於 secret retrieval (mitigated 透過 caching)
+- ⚠️ **複雜的ity**: Additional integration code required
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. No multi-cloud secrets management (acceptable for AWS-only deployment)
-2. Manual rotation for some secrets (acceptable initially)
-3. No secrets scanning in CI/CD (should be added)
+1. No multi-cloud secrets management (acceptable 用於 AWS-only deployment)
+2. Manual rotation 用於 some secrets (acceptable initially)
+3. No secrets s可以ning in CI/CD (應該 be added)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q2 2026**: Implement secrets scanning in CI/CD pipeline
-- **Q3 2026**: Automate rotation for all secrets
+- **Q2 2026**: Implement secrets s可以ning in CI/CD pipeline
+- **Q3 2026**: Automate rotation 用於 all secrets
 - **Q4 2026**: Evaluate multi-cloud secrets management if needed
 
-## Related Decisions
+## 相關決策
 
 - [ADR-014: JWT-Based Authentication Strategy](014-jwt-based-authentication-strategy.md) - JWT key management
 - [ADR-016: Data Encryption Strategy](016-data-encryption-strategy.md) - Encryption key management
-- [ADR-007: Use AWS CDK for Infrastructure](007-use-aws-cdk-for-infrastructure.md) - Infrastructure provisioning
+- [ADR-007: Use AWS CDK 用於 Infrastructure](007-use-aws-cdk-for-infrastructure.md) - Infrastructure provisioning
 
-## Notes
+## 備註
 
 ### Secrets Manager Implementation
 
@@ -695,6 +695,6 @@ Examples:
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

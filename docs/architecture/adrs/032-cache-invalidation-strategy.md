@@ -12,181 +12,181 @@ affected_perspectives: ["performance", "consistency"]
 
 # ADR-032: Cache Invalidation Strategy
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform uses Redis for distributed caching (ADR-004) and needs a cache invalidation strategy to:
+The Enterprise E-Commerce Platform uses Redis 用於 分散式快取 (ADR-004) 和 需要快取失效 strategy：
 
-- Maintain data consistency between cache and database
+- 維持 資料一致性 between cache 和 database
 - Minimize stale data exposure to users
-- Balance performance (cache hits) with freshness (data accuracy)
-- Handle cache invalidation across multiple application instances
-- Support different consistency requirements for different data types
-- Prevent cache stampede during invalidation
-- Enable efficient bulk invalidation for related data
+- Balance performance (cache hits) 與 freshness (data accuracy)
+- 處理 快取失效 跨 multiple 應用程式實例
+- 支援 different consistency requirements 用於 different data types
+- Prevent cache stampede 期間 invalidation
+- 啟用 efficient bulk invalidation 用於 related data
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Product prices must be accurate (no stale pricing)
-- Inventory levels must be reasonably current (< 1 minute stale acceptable)
-- Customer profiles can tolerate some staleness (< 5 minutes acceptable)
-- Order status must be accurate for customer inquiries
-- Promotional pricing must be immediately effective
+- Product prices 必須 be accurate (no stale pricing)
+- Inventory levels 必須 be reasonably current (< 1 minute stale acceptable)
+- Customer profiles 可以 tolerate some staleness (< 5 minutes acceptable)
+- Order status 必須 be accurate 用於 customer inquiries
+- Promotional pricing 必須 be immediately effective
 
 **Business Constraints**:
 
-- Critical data (prices, inventory) must be fresh
-- Non-critical data (product descriptions) can be stale
-- Must support high cache hit rates (> 80%)
-- Cache invalidation must not impact performance
-- Must work across multiple application instances
+- Critical data (prices, inventory) 必須 be fresh
+- Non-關鍵資料 (product descriptions) 可以 be stale
+- 必須 支援 high cache hit rates (> 80%)
+- Cache invalidation 必須 not impact performance
+- 必須 work 跨 multiple 應用程式實例
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- Redis distributed caching (ADR-004)
-- Domain events for cross-context communication (ADR-003)
-- Kafka for event streaming (ADR-005)
-- Multiple application instances (horizontal scaling)
-- PostgreSQL primary database
+- Redis 分散式快取 (ADR-004)
+- Domain events 用於 cross-context communication (ADR-003)
+- Kafka 用於 event streaming (ADR-005)
+- Multiple 應用程式實例 (horizontal scaling)
+- PostgreSQL 主要資料庫
 
-**Requirements**:
+**需求**：
 
-- Consistent cache invalidation across instances
-- Support for different TTL strategies per data type
-- Event-driven invalidation for critical data
-- Bulk invalidation for related data
+- Consistent 快取失效 跨 instances
+- 支援 用於 different TTL strategies per data type
+- Event-driven invalidation 用於 關鍵資料
+- Bulk invalidation 用於 related data
 - Cache stampede prevention
 - Low latency (< 5ms invalidation overhead)
 - High availability (99.9% uptime)
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Consistency**: Balance between performance and data freshness
+1. **Consistency**: Balance between performance 和 data freshness
 2. **Performance**: Minimal impact on application performance
-3. **Scalability**: Work across multiple instances
-4. **Flexibility**: Different strategies for different data types
-5. **Reliability**: Prevent cache stampede and thundering herd
-6. **Simplicity**: Easy to implement and maintain
-7. **Cost**: Leverage existing infrastructure
+3. **Scalability**: Work 跨 multiple instances
+4. **Flexibility**: Different strategies 用於 different data types
+5. **Reliability**: Prevent cache stampede 和 thundering herd
+6. **Simplicity**: 容易implement 和 維持
+7. **成本**： Leverage existing infrastructure
 8. **Observability**: Monitor cache effectiveness
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: TTL-Based Expiration Only
+### 選項 1： TTL-Based Expiration Only
 
-**Description**: Rely solely on Time-To-Live (TTL) for cache expiration
+**描述**： Rely solely on Time-To-Live (TTL) for cache expiration
 
-**Pros**:
+**優點**：
 
-- ✅ Simple to implement
+- ✅ 簡單implement
 - ✅ No additional infrastructure
 - ✅ Automatic cleanup
 - ✅ Low overhead
 
-**Cons**:
+**缺點**：
 
 - ❌ Stale data until TTL expires
 - ❌ No immediate invalidation
-- ❌ Inefficient for frequently updated data
+- ❌ Inefficient 用於 frequently updated data
 - ❌ Cache stampede risk on expiration
 - ❌ Doesn't meet consistency requirements
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **High** - Insufficient for requirements
+**風險**： **High** - Insufficient for requirements
 
-### Option 2: Write-Through Cache
+### 選項 2： Write-Through Cache
 
-**Description**: Update cache synchronously on every write
+**描述**： Update cache synchronously on every write
 
-**Pros**:
+**優點**：
 
 - ✅ Always consistent
 - ✅ No stale data
-- ✅ Simple logic
+- ✅ 簡單的 logic
 
-**Cons**:
+**缺點**：
 
 - ❌ Increased write latency
 - ❌ Cache write failures affect writes
 - ❌ Doesn't scale well
-- ❌ Tight coupling with cache
+- ❌ Tight coupling 與 cache
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **Medium** - Performance impact
+**風險**： **Medium** - Performance impact
 
-### Option 3: Event-Driven Invalidation
+### 選項 3： Event-Driven Invalidation
 
-**Description**: Use domain events to trigger cache invalidation
+**描述**： Use domain events to trigger cache invalidation
 
-**Pros**:
+**優點**：
 
 - ✅ Near real-time consistency
 - ✅ Decoupled from business logic
-- ✅ Works across instances (pub/sub)
-- ✅ Flexible (can invalidate related data)
+- ✅ Works 跨 instances (pub/sub)
+- ✅ Flexible (可以 invalidate related data)
 - ✅ Leverages existing event infrastructure
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Eventual consistency (small lag)
 - ⚠️ Requires event infrastructure
-- ⚠️ More complex implementation
+- ⚠️ More 複雜的 implementation
 
-**Cost**: $0 (uses existing Kafka/Redis)
+**成本**： $0 (uses existing Kafka/Redis)
 
-**Risk**: **Low** - Proven pattern
+**風險**： **Low** - Proven pattern
 
-### Option 4: Hybrid Approach (TTL + Event-Driven)
+### 選項 4： Hybrid Approach (TTL + Event-Driven)
 
-**Description**: Combine TTL for baseline expiration with event-driven invalidation for critical updates
+**描述**： Combine TTL for baseline expiration with event-driven invalidation for critical updates
 
-**Pros**:
+**優點**：
 
 - ✅ Best of both worlds
 - ✅ TTL as safety net
-- ✅ Event-driven for immediate updates
+- ✅ Event-driven 用於 immediate updates
 - ✅ Flexible per data type
 - ✅ Cache stampede prevention
 - ✅ High cache hit rates
 
-**Cons**:
+**缺點**：
 
-- ⚠️ More complex implementation
+- ⚠️ More 複雜的 implementation
 - ⚠️ Requires careful configuration
 
-**Cost**: $0 (uses existing infrastructure)
+**成本**： $0 (uses existing infrastructure)
 
-**Risk**: **Low** - Industry best practice
+**風險**： **Low** - Industry best practice
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Hybrid Approach (TTL + Event-Driven Invalidation)**
+**選擇的選項**： **Hybrid Approach (TTL + Event-Driven Invalidation)**
 
-### Rationale
+### 理由
 
-The hybrid approach was selected for the following reasons:
+The hybrid approach被選擇的原因如下：
 
-1. **Flexibility**: Different strategies for different data types
-2. **Consistency**: Event-driven invalidation for critical data
+1. **Flexibility**: Different strategies 用於 different data types
+2. **Consistency**: Event-driven invalidation 用於 關鍵資料
 3. **Safety Net**: TTL prevents indefinite stale data
-4. **Performance**: High cache hit rates with timely updates
-5. **Scalability**: Works across multiple instances
+4. **Performance**: High cache hit rates 與 timely updates
+5. **Scalability**: Works 跨 multiple instances
 6. **Proven**: Industry best practice (Netflix, Amazon, Alibaba)
 7. **Cost-Effective**: Uses existing infrastructure
 8. **Reliability**: Cache stampede prevention built-in
 
-**Cache Invalidation Strategy by Data Type**:
+**Cache Invalidation Strategy 透過 Data Type**:
 
 **Critical Data (Immediate Invalidation)**:
 
@@ -211,7 +211,7 @@ The hybrid approach was selected for the following reasons:
 
 1. **Single Key**: Invalidate specific cache entry
 2. **Pattern-Based**: Invalidate all keys matching pattern
-3. **Tag-Based**: Invalidate all entries with specific tag
+3. **Tag-Based**: Invalidate all entries 與 specific tag
 4. **Bulk**: Invalidate multiple related entries
 
 **Cache Stampede Prevention**:
@@ -220,37 +220,37 @@ The hybrid approach was selected for the following reasons:
 - **Lock-Based Refresh**: Only one instance refreshes
 - **Stale-While-Revalidate**: Serve stale while refreshing
 
-**Why Not TTL Only**: Doesn't meet consistency requirements for critical data.
+**為何不選 TTL Only**： Doesn't meet consistency requirements 用於 關鍵資料.
 
-**Why Not Write-Through**: Performance impact, tight coupling.
+**為何不選 Write-Through**： Performance impact, tight coupling.
 
-**Why Not Event-Driven Only**: No safety net for missed events.
+**為何不選 Event-Driven Only**： No safety net 用於 missed events.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
 | Development Team | Medium | Implement invalidation logic | Code examples, patterns, documentation |
-| Operations Team | Low | Monitor cache metrics | Dashboards and alerts |
-| End Users | Positive | More accurate data, better UX | N/A |
+| Operations Team | Low | Monitor cache metrics | Dashboards 和 alerts |
+| End Users | Positive | More accurate data, 更好的 UX | N/A |
 | Business | Positive | Accurate pricing, inventory | N/A |
-| Database Team | Positive | Reduced database load | N/A |
+| Database Team | Positive | 降低d 資料庫負載 | N/A |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
-- All bounded contexts (cache invalidation)
+- All bounded contexts (快取失效)
 - Application services (invalidation logic)
 - Infrastructure layer (Redis pub/sub)
-- Event handlers (invalidation triggers)
-- Monitoring and alerting
+- Event 處理rs (invalidation triggers)
+- Monitoring 和 alerting
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
@@ -260,19 +260,19 @@ Affects:
 | Event lag | Low | Low | Monitor event processing lag |
 | Redis pub/sub failure | Low | Medium | Fallback to TTL, circuit breaker |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Core Implementation (Week 1-2)
+### 第 1 階段： Core Implementation （第 1-2 週）
 
-- [x] Implement cache invalidation service
-- [x] Add Redis pub/sub for invalidation
-- [x] Create invalidation event handlers
+- [x] Implement 快取失效 service
+- [x] Add Redis pub/sub 用於 invalidation
+- [x] Create invalidation event 處理rs
 - [x] Implement TTL configuration per data type
 - [x] Add cache key tagging
 
-### Phase 2: Event-Driven Invalidation (Week 3-4)
+### 第 2 階段： Event-Driven Invalidation （第 3-4 週）
 
 - [x] Implement product price invalidation
 - [x] Add inventory level invalidation
@@ -280,7 +280,7 @@ Affects:
 - [x] Add customer profile invalidation
 - [x] Implement shopping cart invalidation
 
-### Phase 3: Advanced Features (Week 5)
+### 第 3 階段： Advanced Features （第 5 週）
 
 - [x] Implement pattern-based invalidation
 - [x] Add tag-based invalidation
@@ -288,36 +288,36 @@ Affects:
 - [x] Add cache stampede prevention
 - [x] Implement stale-while-revalidate
 
-### Phase 4: Monitoring & Optimization (Week 6)
+### 第 4 階段： Monitoring & Optimization （第 6 週）
 
-- [x] Add cache invalidation metrics
+- [x] Add 快取失效 metrics
 - [x] Create invalidation dashboards
 - [x] Implement invalidation alerts
 - [x] Performance testing
-- [x] Documentation and training
+- [x] Documentation 和 training
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Cache hit rate drops > 20%
 - Invalidation errors > 5%
 - Performance degradation > 10%
 - Data consistency issues
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Disable event-driven invalidation
 2. Rely on TTL only
-3. Investigate and fix issues
-4. Re-enable gradually
+3. Investigate 和 fix issues
+4. Re-啟用 gradually
 5. Monitor metrics
 
-**Rollback Time**: < 30 minutes
+**回滾時間**： < 30 minutes
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Cache hit rate > 80%
 - ✅ Cache invalidation latency < 5ms
@@ -326,7 +326,7 @@ Affects:
 - ✅ Invalidation success rate > 99.9%
 - ✅ Event processing lag < 100ms
 
-### Monitoring Plan
+### 監控計畫
 
 **Application Metrics**:
 
@@ -347,12 +347,12 @@ public class CacheInvalidationMetrics {
 
 - Cache invalidations per second
 - Invalidation latency (p50, p95, p99)
-- Cache hit rate by data type
+- Cache hit rate 透過 data type
 - Stale data rate
 - Cache stampede incidents
 - Event processing lag
 
-**Alerts**:
+**告警**：
 
 - Cache hit rate < 70%
 - Invalidation latency > 10ms
@@ -360,54 +360,54 @@ public class CacheInvalidationMetrics {
 - Cache stampede detected
 - Event lag > 1 second
 
-**Review Schedule**:
+**審查時程**：
 
 - Daily: Check cache metrics
 - Weekly: Review invalidation patterns
-- Monthly: Optimize TTL and strategies
+- Monthly: Optimize TTL 和 strategies
 - Quarterly: Cache strategy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Consistency**: Near real-time data freshness
 - ✅ **Performance**: High cache hit rates (> 80%)
 - ✅ **Flexibility**: Different strategies per data type
 - ✅ **Reliability**: Cache stampede prevention
-- ✅ **Scalability**: Works across multiple instances
-- ✅ **Safety**: TTL as fallback for missed events
+- ✅ **Scalability**: Works 跨 multiple instances
+- ✅ **Safety**: TTL as fallback 用於 missed events
 - ✅ **Observability**: Comprehensive metrics
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Complexity**: More complex than simple TTL
+- ⚠️ **複雜的ity**: More 複雜的 than 簡單的 TTL
 - ⚠️ **Eventual Consistency**: Small lag (< 100ms)
 - ⚠️ **Monitoring**: Need to track invalidation metrics
 - ⚠️ **Configuration**: Requires careful TTL tuning
-- ⚠️ **Debugging**: Harder to trace invalidation issues
+- ⚠️ **Debugging**: 更難trace invalidation issues
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. Manual TTL configuration (can be adaptive)
-2. Simple pattern matching (can use advanced patterns)
+1. Manual TTL configuration (可以 be adaptive)
+2. 簡單的 pattern matching (可以 use advanced patterns)
 3. No automatic invalidation optimization (future enhancement)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Implement adaptive TTL based on access patterns
 - **Q3 2026**: Add ML-based invalidation optimization
 - **Q4 2026**: Implement automatic pattern optimization
 
-## Related Decisions
+## 相關決策
 
-- [ADR-003: Use Domain Events for Cross-Context Communication](003-use-domain-events-for-cross-context-communication.md) - Events trigger invalidation
-- [ADR-004: Use Redis for Distributed Caching](004-use-redis-for-distributed-caching.md) - Cache infrastructure
-- [ADR-005: Use Apache Kafka for Event Streaming](005-use-kafka-for-event-streaming.md) - Event infrastructure
+- [ADR-003: Use Domain Events 用於 Cross-Context Communication](003-use-domain-events-for-cross-context-communication.md) - Events trigger invalidation
+- [ADR-004: Use Redis 用於 Distributed Caching](004-use-redis-for-distributed-caching.md) - Cache infrastructure
+- [ADR-005: Use Apache Kafka 用於 Event Streaming](005-use-kafka-for-event-streaming.md) - Event infrastructure
 
-## Notes
+## 備註
 
 ### Cache Invalidation Service
 
@@ -663,6 +663,6 @@ cacheInvalidationService.invalidateByTag("category:electronics");
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

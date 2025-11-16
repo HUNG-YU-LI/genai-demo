@@ -1,6 +1,6 @@
 ---
 adr_number: 005
-title: "Use Apache Kafka (MSK) for Event Streaming"
+title: "Use Apache Kafka (MSK) 用於 Event Streaming"
 date: 2025-10-24
 status: "accepted"
 supersedes: []
@@ -10,89 +10,89 @@ affected_viewpoints: ["deployment", "concurrency", "information"]
 affected_perspectives: ["performance", "availability", "scalability"]
 ---
 
-# ADR-005: Use Apache Kafka (MSK) for Event Streaming
+# ADR-005: Use Apache Kafka (MSK) 用於 Event Streaming
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-24
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires a robust event streaming platform that:
+The Enterprise E-Commerce Platform 需要robust event streaming platform that:
 
-- Handles high-throughput event streaming (10,000+ events/second)
-- Provides reliable message delivery with durability guarantees
-- Supports event replay for debugging and recovery
-- Enables real-time event processing and analytics
-- Scales horizontally to handle growing event volumes
-- Provides event ordering guarantees within partitions
-- Supports multiple consumers with different processing speeds
-- Integrates with domain events architecture (ADR-003)
-- Enables event-driven microservices communication
-- Provides monitoring and operational visibility
+- 處理s high-throughput event streaming (10,000+ events/second)
+- 提供s reliable message delivery 與 durability guarantees
+- 支援s event replay 用於 debugging 和 recovery
+- 啟用s real-time event processing 和 analytics
+- Scales horizontally to 處理 growing event volumes
+- 提供s event ordering guarantees within partitions
+- 支援s multiple consumers 與 different processing speeds
+- Integrates 與 domain events architecture (ADR-003)
+- 啟用s event-driven microservices communication
+- 提供s monitoring 和 operational visibility
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Need for real-time business event processing
-- Requirement for event-driven architecture across bounded contexts
-- Support for real-time analytics and reporting
-- Enable event sourcing capabilities for audit trails
-- Scale to handle Black Friday traffic (100K+ events/second peak)
-- Support for future event-driven features (recommendations, fraud detection)
+- 需要 real-time business event processing
+- Requirement 用於 event-driven architecture 跨 bounded contexts
+- 支援 用於 real-time analytics 和 reporting
+- 啟用 event sourcing capabilities 用於 audit trails
+- Scale to 處理 Black Friday traffic (100K+ events/second peak)
+- 支援 用於 future event-driven features (recommendations, fraud detection)
 
-**Constraints**:
+**限制條件**：
 
-- AWS cloud infrastructure (ADR-007)
-- Budget: $3,000/month for messaging infrastructure
+- AWS 雲端基礎設施 (ADR-007)
+- 預算: $3,000/month 用於 messaging infrastructure
 - Team has limited Kafka experience
-- Must integrate with Spring Boot applications
-- Need for managed service to reduce operational overhead
-- Compliance requirements for event audit trails
+- 必須 integrate 與 Spring Boot applications
+- 需要 託管服務 to 降低 營運開銷
+- Compliance requirements 用於 event audit trails
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
 - Domain events implemented (ADR-003)
 - Spring Boot 3.4.5 + Java 21
 - Hexagonal Architecture (ADR-002)
 - 13 bounded contexts requiring event communication
-- Redis for caching (ADR-004)
-- PostgreSQL for primary database (ADR-001)
+- Redis 用於 caching (ADR-004)
+- PostgreSQL 用於 主要資料庫 (ADR-001)
 
-**Requirements**:
+**需求**：
 
 - Event throughput: 10,000+ events/second (normal), 100,000+ events/second (peak)
-- Event retention: 7 days minimum, 30 days for audit
+- Event retention: 7 天 minimum, 30 天 用於 audit
 - Message durability: No data loss
 - Latency: < 100ms end-to-end (95th percentile)
-- Ordering: Maintain order within partition
-- Scalability: Horizontal scaling for producers and consumers
-- Monitoring: Real-time metrics and alerting
+- Ordering: 維持 order within partition
+- Scalability: Horizontal scaling 用於 producers 和 consumers
+- Monitoring: Real-time metrics 和 alerting
 - Integration: Spring Boot Kafka integration
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Throughput**: Handle high event volumes
+1. **Throughput**: 處理 high event volumes
 2. **Durability**: Guarantee no message loss
 3. **Scalability**: Horizontal scaling capability
-4. **Ordering**: Maintain event order where needed
-5. **Replay**: Support event replay for recovery
-6. **Managed Service**: Reduce operational overhead
+4. **Ordering**: 維持 event order where needed
+5. **Replay**: 支援 event replay 用於 recovery
+6. **Managed Service**: 降低 營運開銷
 7. **AWS Integration**: Native AWS service integration
-8. **Cost**: Stay within budget constraints
+8. **成本**： Stay within budget constraints
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Amazon MSK (Managed Streaming for Apache Kafka)
+### 選項 1： Amazon MSK (Managed Streaming for Apache Kafka)
 
-**Description**: AWS managed Kafka service with full Kafka API compatibility
+**描述**： AWS managed Kafka service with full Kafka API compatibility
 
-**Architecture**:
+**架構**：
 
 ```mermaid
 graph LR
@@ -107,67 +107,67 @@ graph LR
     N4 --> N5
 ```
 
-**Pros**:
+**優點**：
 
-- ✅ Fully managed Kafka service (AWS handles operations)
+- ✅ Fully managed Kafka service (AWS 處理s operations)
 - ✅ Full Kafka API compatibility
 - ✅ High throughput (millions of messages/second)
-- ✅ Durable message storage with replication
+- ✅ Durable message storage 與 replication
 - ✅ Event replay capability
 - ✅ Horizontal scaling (add brokers)
 - ✅ AWS integration (CloudWatch, IAM, VPC)
-- ✅ Multi-AZ deployment for high availability
-- ✅ Automatic patching and upgrades
+- ✅ Multi-AZ deployment 用於 高可用性
+- ✅ Automatic patching 和 upgrades
 - ✅ Strong ordering guarantees within partitions
-- ✅ Large ecosystem and community
+- ✅ 大型的 ecosystem 和 community
 
-**Cons**:
+**缺點**：
 
-- ⚠️ More complex than SQS/SNS
+- ⚠️ More 複雜的 than SQS/SNS
 - ⚠️ Requires Kafka knowledge
 - ⚠️ Higher cost than SQS
-- ⚠️ Need to manage topics and partitions
+- ⚠️ Need to manage topics 和 partitions
 
-**Cost**:
+**成本**：
 
-- Development: $500/month (kafka.m5.large, 2 brokers)
-- Production: $2,500/month (kafka.m5.xlarge, 3 brokers, Multi-AZ)
+- Development: $500/month (kafka.m5.大型的, 2 brokers)
+- Production: $2,500/month (kafka.m5.x大型的, 3 brokers, Multi-AZ)
 - Storage: $100/month (1TB retention)
 - Total: ~$2,600/month
 
-**Risk**: **Low** - Mature technology, AWS managed
+**風險**： **Low** - Mature technology, AWS managed
 
-### Option 2: Amazon SQS + SNS
+### 選項 2： Amazon SQS + SNS
 
-**Description**: AWS managed message queue and pub/sub service
+**描述**： AWS managed message queue and pub/sub service
 
-**Pros**:
+**優點**：
 
 - ✅ Fully managed (no operations)
-- ✅ Simple to use
+- ✅ 簡單use
 - ✅ Cost-effective
 - ✅ Automatic scaling
 - ✅ AWS native integration
 
-**Cons**:
+**缺點**：
 
 - ❌ No event replay capability
 - ❌ Limited ordering guarantees (FIFO queues have throughput limits)
 - ❌ No event streaming semantics
-- ❌ Not suitable for event sourcing
-- ❌ Limited retention (14 days max)
+- ❌ Not suitable 用於 event sourcing
+- ❌ Limited retention (14 天 max)
 - ❌ No partition-based scaling
 - ❌ Higher latency than Kafka
 
-**Cost**: $800/month (estimated)
+**成本**： $800/month (estimated)
 
-**Risk**: **Medium** - Limited capabilities for event streaming
+**風險**： **Medium** - Limited capabilities for event streaming
 
-### Option 3: Amazon Kinesis Data Streams
+### 選項 3： Amazon Kinesis Data Streams
 
-**Description**: AWS managed real-time data streaming service
+**描述**： AWS managed real-time data streaming service
 
-**Pros**:
+**優點**：
 
 - ✅ Fully managed
 - ✅ Real-time streaming
@@ -175,84 +175,84 @@ graph LR
 - ✅ Automatic scaling (on-demand mode)
 - ✅ Event replay capability
 
-**Cons**:
+**缺點**：
 
 - ❌ Proprietary API (not Kafka compatible)
 - ❌ More expensive than MSK at scale
-- ❌ Limited retention (365 days max)
+- ❌ Limited retention (365 天 max)
 - ❌ Smaller ecosystem than Kafka
-- ❌ Shard management complexity
+- ❌ Shard management 複雜的ity
 - ❌ Less flexible than Kafka
 
-**Cost**: $3,500/month (estimated for similar throughput)
+**成本**： $3,500/month (estimated for similar throughput)
 
-**Risk**: **Medium** - Vendor lock-in, higher cost
+**風險**： **Medium** - Vendor lock-in, higher cost
 
-### Option 4: Self-Managed Kafka on EC2
+### 選項 4： Self-Managed Kafka on EC2
 
-**Description**: Run Kafka cluster on EC2 instances
+**描述**： Run Kafka cluster on EC2 instances
 
-**Pros**:
+**優點**：
 
 - ✅ Full control over configuration
 - ✅ Potentially lower cost
 - ✅ Full Kafka features
 
-**Cons**:
+**缺點**：
 
-- ❌ High operational overhead
+- ❌ High 營運開銷
 - ❌ Need Kafka expertise
-- ❌ Manual scaling and patching
-- ❌ Complex monitoring setup
+- ❌ Manual scaling 和 patching
+- ❌ 複雜的 monitoring setup
 - ❌ High maintenance burden
 - ❌ Team lacks Kafka operations experience
 
-**Cost**: $1,500/month (infrastructure) + operational costs
+**成本**： $1,500/month (infrastructure) + operational costs
 
-**Risk**: **High** - Operational complexity, team expertise
+**風險**： **High** - Operational complexity, team expertise
 
-### Option 5: RabbitMQ
+### 選項 5： RabbitMQ
 
-**Description**: Open-source message broker
+**描述**： Open-source message broker
 
-**Pros**:
+**優點**：
 
 - ✅ Mature message broker
-- ✅ Good Spring integration
+- ✅ 良好的Spring整合
 - ✅ Flexible routing
 
-**Cons**:
+**缺點**：
 
-- ❌ Not designed for event streaming
+- ❌ Not designed 用於 event streaming
 - ❌ Limited event replay
 - ❌ Lower throughput than Kafka
-- ❌ Not suitable for event sourcing
-- ❌ Need to self-manage or use Amazon MQ
+- ❌ Not suitable 用於 event sourcing
+- ❌ Need to self-manage 或 use Amazon MQ
 
-**Cost**: $1,000/month (Amazon MQ)
+**成本**： $1,000/month (Amazon MQ)
 
-**Risk**: **Medium** - Not optimal for event streaming
+**風險**： **Medium** - Not optimal for event streaming
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Amazon MSK (Managed Streaming for Apache Kafka)**
+**選擇的選項**： **Amazon MSK (Managed Streaming for Apache Kafka)**
 
-### Rationale
+### 理由
 
-Amazon MSK was selected for the following reasons:
+Amazon MSK被選擇的原因如下：
 
-1. **Event Streaming Semantics**: Kafka is purpose-built for event streaming with replay, ordering, and durability
-2. **High Throughput**: Handles millions of events/second, well beyond our requirements
-3. **Event Replay**: Critical for debugging, recovery, and event sourcing
-4. **Managed Service**: AWS handles operations, patching, and scaling
-5. **Kafka Ecosystem**: Large ecosystem of tools, libraries, and community support
-6. **Spring Boot Integration**: Excellent Spring Kafka integration
-7. **Cost-Effective**: Within budget while providing enterprise features
-8. **Ordering Guarantees**: Partition-based ordering for event sequences
-9. **Durability**: Replication and persistence guarantee no data loss
-10. **Scalability**: Horizontal scaling by adding brokers and partitions
+1. **Event Streaming Semantics**: Kafka is purpose-built 用於 event streaming 與 replay, ordering, 和 durability
+2. **High Throughput**: 處理s millions of events/second, well beyond our requirements
+3. **Event Replay**: Critical 用於 debugging, recovery, 和 event sourcing
+4. **Managed Service**: AWS 處理s operations, patching, 和 scaling
+5. **Kafka Ecosystem**: 大型的 ecosystem of tools, libraries, 和 community 支援
+6. **Spring Boot Integration**: 優秀的Spring Kafka整合
+7. **Cost-Effective**: Within 預算 while providing enterprise features
+8. **Ordering Guarantees**: Partition-based ordering 用於 event sequences
+9. **Durability**: Replication 和 persistence guarantee no data loss
+10. **Scalability**: Horizontal scaling 透過 adding brokers 和 partitions
 
-**Implementation Strategy**:
+**實作策略**：
 
 **MSK Cluster Configuration**:
 
@@ -352,38 +352,38 @@ public class KafkaConsumerConfiguration {
 }
 ```
 
-**Why Not SQS/SNS**: Lacks event replay, streaming semantics, and event sourcing capabilities needed for our architecture.
+**為何不選 SQS/SNS**： Lacks event replay, streaming semantics, 和 event sourcing capabilities needed 用於 our architecture.
 
-**Why Not Kinesis**: More expensive at scale, proprietary API creates vendor lock-in, smaller ecosystem.
+**為何不選 Kinesis**： More expensive at scale, proprietary API creates vendor lock-in, smaller ecosystem.
 
-**Why Not Self-Managed**: Team lacks Kafka operations expertise, high operational overhead not justified.
+**為何不選 Self-Managed**： Team lacks Kafka operations expertise, high 營運開銷 not justified.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
 | Development Team | High | Need to learn Kafka concepts | Training, documentation, examples |
 | Operations Team | Medium | Monitor Kafka metrics | CloudWatch dashboards, runbooks |
-| Architects | Positive | Event-driven architecture enabled | Architecture guidelines |
+| Architects | Positive | Event-driven architecture 啟用d | Architecture guidelines |
 | Business | Positive | Real-time event processing | Business metrics dashboards |
-| DevOps Team | Medium | Deploy and manage MSK | AWS CDK automation, monitoring |
+| DevOps Team | Medium | Deploy 和 manage MSK | AWS CDK automation, monitoring |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
-- All bounded contexts (event publishing and consuming)
+- All bounded contexts (event publishing 和 consuming)
 - Event-driven architecture implementation
 - Infrastructure deployment (ADR-007)
-- Monitoring and observability (ADR-008)
+- Monitoring 和 observability (ADR-008)
 - Application services (event publishing)
-- Event handlers (event consuming)
+- Event 處理rs (event consuming)
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
@@ -394,11 +394,11 @@ Affects:
 | Cost overruns | Low | Medium | Monitor usage, optimize retention |
 | Data loss | Low | Critical | Proper configuration (acks=all, replication) |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: MSK Cluster Setup (Week 1-2)
+### 第 1 階段： MSK Cluster Setup （第 1-2 週）
 
 - [ ] Provision MSK cluster using AWS CDK
 
@@ -454,10 +454,10 @@ Affects:
 
 - [ ] Configure security groups
 - [ ] Set up VPC endpoints
-- [ ] Enable CloudWatch monitoring
+- [ ] 啟用 CloudWatch monitoring
 - [ ] Create initial topics
 
-### Phase 2: Spring Kafka Integration (Week 2-3)
+### 第 2 階段： Spring Kafka Integration （第 2-3 週）
 
 - [ ] Add Spring Kafka dependencies
 
@@ -544,7 +544,7 @@ Affects:
   }
   ```
 
-### Phase 3: Event Consumers (Week 3-4)
+### 第 3 階段： Event Consumers （第 3-4 週）
 
 - [ ] Create Kafka event listeners
 
@@ -606,7 +606,7 @@ Affects:
   }
   ```
 
-- [ ] Implement error handling and retry
+- [ ] Implement error handling 和 retry
 
   ```java
   @Configuration
@@ -660,7 +660,7 @@ Affects:
   }
   ```
 
-### Phase 4: Monitoring and Alerting (Week 4-5)
+### 第 4 階段： Monitoring and Alerting （第 4-5 週）
 
 - [ ] Configure CloudWatch metrics
 
@@ -693,7 +693,7 @@ Affects:
 
 - [ ] Create Grafana dashboards
   - Kafka cluster health
-  - Topic throughput and lag
+  - Topic throughput 和 lag
   - Consumer group lag
   - Producer performance
   - Error rates
@@ -705,9 +705,9 @@ Affects:
   - High producer latency > 100ms
   - High consumer latency > 500ms
 
-### Phase 5: Testing (Week 5-6)
+### Phase 5: Testing （第 5-6 週）
 
-- [ ] Set up embedded Kafka for tests
+- [ ] Set up embedded Kafka 用於 tests
 
   ```java
   @SpringBootTest
@@ -787,14 +787,14 @@ Affects:
   }
   ```
 
-- [ ] Test error handling and retry
+- [ ] Test error handling 和 retry
 - [ ] Test dead letter queue
-- [ ] Load testing with high event volumes
+- [ ] Load testing 與 high event volumes
 
-### Phase 6: Production Deployment (Week 6-7)
+### Phase 6: Production Deployment （第 6-7 週）
 
 - [ ] Deploy MSK cluster to production
-- [ ] Create production topics with proper configuration
+- [ ] Create production topics 與 proper configuration
 
   ```bash
   # Create topics with replication and retention
@@ -807,13 +807,13 @@ Affects:
     --config min.insync.replicas=2
   ```
 
-- [ ] Configure monitoring and alerting
+- [ ] Configure monitoring 和 alerting
 - [ ] Deploy event publishers
 - [ ] Deploy event consumers
 - [ ] Verify end-to-end event flow
-- [ ] Monitor for 48 hours
+- [ ] Monitor 用於 48 hours
 
-### Phase 7: Documentation and Training (Week 7-8)
+### Phase 7: Documentation and Training （第 7-8 週）
 
 - [ ] Create Kafka operations runbook
   - Topic management procedures
@@ -822,19 +822,19 @@ Affects:
   - Performance tuning guide
 
 - [ ] Conduct team training
-  - Kafka concepts and architecture
+  - Kafka concepts 和 architecture
   - Producer best practices
   - Consumer best practices
-  - Monitoring and troubleshooting
+  - Monitoring 和 troubleshooting
 
 - [ ] Document event schemas
   - Create schema registry (future)
   - Document event formats
   - Version management strategy
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Message loss > 0.01%
 - Consumer lag consistently > 1 hour
@@ -842,12 +842,12 @@ Affects:
 - Team unable to manage Kafka
 - Performance issues affecting SLA
 
-**Rollback Steps**:
+**回滾步驟**：
 
-1. Switch to SQS/SNS for critical events
-2. Keep Kafka for non-critical events
+1. Switch to SQS/SNS 用於 critical events
+2. Keep Kafka 用於 non-critical events
 3. Simplify event architecture
-4. Provide additional training
+4. 提供 additional training
 5. Re-evaluate after addressing issues
 
-**Rollback Time**: 1 week for critical paths, 4 weeks for complete rollback
+**回滾時間**： 1 week for critical paths, 4 weeks for complete rollback

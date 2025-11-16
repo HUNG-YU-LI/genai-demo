@@ -2,9 +2,9 @@
 inclusion: always
 ---
 
-# Rozanski & Woods Architecture Methodology Steering Rules
+# Rozanski & Woods 架構方法論轉向規則
 
-## Mandatory Architectural Viewpoint Checks
+## 強制性架構視點檢查
 
 > **🔗 相關標準**:
 >
@@ -13,70 +13,70 @@ inclusion: always
 > - [Security Standards](security-standards.md) - 安全架構要求
 > - [Performance Standards](performance-standards.md) - 效能架構要求
 
-### Each new feature must complete the following viewpoint checks
+### 每個新功能必須完成以下視點檢查
 
 #### Functional Viewpoint
 
-- [ ] Aggregate boundaries clearly defined
-- [ ] Domain service responsibilities clarified
-- [ ] Use case implementation follows DDD tactical patterns
+- [ ] Aggregate 邊界清晰定義
+- [ ] Domain service 職責明確
+- [ ] Use case 實作遵循 DDD tactical patterns
 
-#### Information Viewpoint  
+#### Information Viewpoint
 
-- [ ] Domain event design complete
-- [ ] Data consistency strategy defined
-- [ ] Event sourcing considerations addressed
+- [ ] Domain event 設計完整
+- [ ] 資料一致性策略定義
+- [ ] Event sourcing 考量已處理
 
 #### Concurrency Viewpoint
 
-- [ ] Asynchronous processing strategy documented
-- [ ] Transaction boundaries clearly defined
-- [ ] Concurrency conflict handling mechanisms
+- [ ] 非同步處理策略已文件化
+- [ ] Transaction 邊界清晰定義
+- [ ] 並行衝突處理機制
 
 #### Development Viewpoint
 
-- [ ] Module dependencies comply with hexagonal architecture
-- [ ] Testing strategy covers all layers
-- [ ] Build scripts updated
+- [ ] 模組依賴符合 hexagonal architecture
+- [ ] 測試策略涵蓋所有層級
+- [ ] Build scripts 已更新
 
 #### Deployment Viewpoint
 
-- [ ] CDK infrastructure updated
-- [ ] Environment configuration changes recorded
-- [ ] Deployment strategy impact assessed
+- [ ] CDK 基礎設施已更新
+- [ ] 環境設定變更已記錄
+- [ ] 部署策略影響已評估
 
 #### Operational Viewpoint
 
-- [ ] Monitoring metrics defined
-- [ ] Log structure designed
-- [ ] Failure handling procedures
+- [ ] Monitoring metrics 已定義
+- [ ] Log 結構已設計
+- [ ] 失敗處理程序
 
 #### Context Viewpoint
 
-- [ ] External system integration boundaries defined
-- [ ] Stakeholder interaction models documented
-- [ ] System boundary and external dependencies mapped
-- [ ] Integration protocols and data exchange formats specified
-- [ ] External service contracts and SLAs defined
-- [ ] Organizational and regulatory constraints identified
+- [ ] 外部系統整合邊界已定義
+- [ ] Stakeholder 互動模型已文件化
+- [ ] 系統邊界和外部依賴已對應
+- [ ] 整合協定和資料交換格式已指定
+- [ ] 外部服務合約和 SLAs 已定義
+- [ ] 組織和法規約束已識別
 
-## Quality Attribute Scenario Requirements
+## Quality Attribute Scenario 要求
 
-### Each user story must include at least one quality attribute scenario
+### 每個 user story 必須包含至少一個 quality attribute scenario
 
-#### Scenario Format: Source → Stimulus → Environment → Artifact → Response → Response Measure
+#### Scenario 格式：Source → Stimulus → Environment → Artifact → Response → Response Measure
 
-### QAS Templates by Quality Attribute
+### 依 Quality Attribute 的 QAS Templates
 
 #### Performance Scenarios
 
 ```text
 Template:
 Source: [User/System/Load Generator]
-Stimulus: [Specific request/operation with load characteristics]
-Environment: [Normal/Peak/Stress conditions]
-Artifact: [System component/service]
-Response: [System processes the request]
+Stimulus: [具體請求/操作及負載特性]
+Environment: [Normal/Peak/Stress 條件]
+Artifact: [系統元件/服務]
+Response: [系統處理請求]
 Response Measure: [Response time ≤ X ms, Throughput ≥ Y req/s, CPU ≤ Z%]
 
 Example:
@@ -93,10 +93,10 @@ Response Measure: Response time ≤ 2000ms, Success rate ≥ 99.5%
 ```text
 Template:
 Source: [Attacker/Malicious user/System]
-Stimulus: [Attack type/unauthorized access attempt]
-Environment: [Network/System state]
-Artifact: [System component under attack]
-Response: [System security response]
+Stimulus: [攻擊類型/未授權存取嘗試]
+Environment: [Network/System 狀態]
+Artifact: [受攻擊的系統元件]
+Response: [系統安全回應]
 Response Measure: [Detection time, Prevention success rate, Recovery time]
 
 Example:
@@ -112,11 +112,11 @@ Response Measure: Attack blocked within 100ms, Incident logged, No data exposure
 
 ```text
 Template:
-Source: [Failure source]
-Stimulus: [Failure type]
-Environment: [System state during failure]
-Artifact: [Affected component]
-Response: [System recovery action]
+Source: [失敗來源]
+Stimulus: [失敗類型]
+Environment: [失敗期間的系統狀態]
+Artifact: [受影響的元件]
+Response: [系統恢復動作]
 Response Measure: [RTO ≤ X minutes, RPO ≤ Y minutes, Availability ≥ Z%]
 
 Example:
@@ -132,11 +132,11 @@ Response Measure: RTO ≤ 5 minutes, RPO ≤ 1 minute, Availability ≥ 99.9%
 
 ```text
 Template:
-Source: [Load source]
-Stimulus: [Load increase pattern]
-Environment: [Current system capacity]
-Artifact: [System component]
-Response: [Scaling action]
+Source: [負載來源]
+Stimulus: [負載增加模式]
+Environment: [目前系統容量]
+Artifact: [系統元件]
+Response: [擴展動作]
 Response Measure: [Capacity increase, Performance maintenance, Cost impact]
 
 Example:
@@ -152,11 +152,11 @@ Response Measure: Maintains response time ≤ 2s, Scales to handle 1000 users, C
 
 ```text
 Template:
-Source: [User type]
-Stimulus: [User task/goal]
-Environment: [Usage context]
-Artifact: [User interface/system]
-Response: [System provides interface/feedback]
+Source: [使用者類型]
+Stimulus: [使用者任務/目標]
+Environment: [使用情境]
+Artifact: [使用者介面/系統]
+Response: [系統提供介面/回饋]
 Response Measure: [Task completion time, Error rate, User satisfaction]
 
 Example:
@@ -168,7 +168,7 @@ Response: System guides user through streamlined checkout process
 Response Measure: Checkout completion ≤ 3 minutes, Error rate ≤ 2%, Abandonment rate ≤ 10%
 ```
 
-### Quantitative Metrics Requirements
+### 量化指標要求
 
 #### Performance Metrics
 
@@ -198,9 +198,9 @@ Response Measure: Checkout completion ≤ 3 minutes, Error rate ≤ 2%, Abandonm
 - **Database**: Read replicas scale automatically based on load
 - **Storage**: Auto-scaling storage with 99.999% durability
 
-## Architecture Compliance Rules
+## 架構合規規則
 
-### Mandatory ArchUnit Rules
+### 強制性 ArchUnit Rules
 
 ```java
 // Domain layer dependency restrictions
@@ -211,7 +211,7 @@ static final ArchRule domainLayerRules = classes()
     .resideInAnyPackage("..domain..", "java..", "org.springframework..");
 
 // Aggregate root rules
-@ArchTest  
+@ArchTest
 static final ArchRule aggregateRootRules = classes()
     .that().areAnnotatedWith(AggregateRoot.class)
     .should().implement(AggregateRootInterface.class);
@@ -230,9 +230,9 @@ static final ArchRule valueObjectRules = classes()
     .should().beRecords();
 ```
 
-## ADR Required Content
+## ADR 必要內容
 
-### ADR Template Structure
+### ADR Template 結構
 
 ```markdown
 # ADR-{NUMBER}: {TITLE}
@@ -242,13 +242,13 @@ static final ArchRule valueObjectRules = classes()
 
 ## Context
 ### Problem Statement
-[Describe the problem that needs to be solved]
+[描述需要解決的問題]
 
 ### Business Context
-[Business drivers, constraints, and requirements]
+[業務驅動因素、約束和需求]
 
 ### Technical Context
-[Current architecture, technical constraints, and dependencies]
+[目前架構、技術約束和依賴]
 
 ## Decision Drivers
 
@@ -282,7 +282,7 @@ static final ArchRule valueObjectRules = classes()
 **Chosen Option:** [Selected option with rationale]
 
 **Rationale:**
-[Detailed explanation of why this option was chosen]
+[詳細說明為何選擇此方案]
 
 ## Impact Analysis
 
@@ -392,41 +392,41 @@ static final ArchRule valueObjectRules = classes()
 
 ### ADR Quality Checklist
 
-Before accepting an ADR, ensure:
+在接受 ADR 之前，確保：
 
-- [ ] Problem statement is clear and specific
-- [ ] At least 3 options were considered
-- [ ] Each option includes pros, cons, costs, and risks
-- [ ] Decision rationale is well-documented
-- [ ] Stakeholder impact analysis is complete
-- [ ] Risk assessment includes mitigation strategies
-- [ ] Implementation plan has clear phases and timelines
-- [ ] Rollback strategy is detailed and testable
-- [ ] Success criteria are measurable
-- [ ] Monitoring plan is specific
+- [ ] Problem statement 清晰且具體
+- [ ] 至少考慮了 3 個選項
+- [ ] 每個選項包含優缺點、成本和風險
+- [ ] Decision rationale 已充分文件化
+- [ ] Stakeholder impact analysis 已完成
+- [ ] Risk assessment 包含緩解策略
+- [ ] Implementation plan 有清晰的階段和時間表
+- [ ] Rollback strategy 詳細且可測試
+- [ ] Success criteria 可衡量
+- [ ] Monitoring plan 具體明確
 
 ### ADR Review Process
 
-1. **Author** creates ADR in "Proposed" status
-2. **Architecture Team** reviews technical aspects
-3. **Stakeholders** review impact analysis
-4. **Team Lead** approves implementation plan
-5. **ADR** status changes to "Accepted"
-6. **Implementation** begins according to plan
-7. **Review** success criteria after implementation
+1. **Author** 建立 ADR 並設為 "Proposed" 狀態
+2. **Architecture Team** 審查技術面向
+3. **Stakeholders** 審查影響分析
+4. **Team Lead** 核准實作計畫
+5. **ADR** 狀態變更為 "Accepted"
+6. **Implementation** 依計畫開始
+7. **Review** 實作後的成功標準
 
-## Observability Requirements
+## Observability 要求
 
-### Mandatory for new features
+### 新功能強制要求
 
-- Each aggregate root must have corresponding business metrics
-- Each use case must have execution tracing and performance metrics
-- Each domain event must have publication and processing metrics
-- Critical paths must have monitoring and alerting
+- 每個 aggregate root 必須有對應的業務指標
+- 每個 use case 必須有執行追蹤和效能指標
+- 每個 domain event 必須有發布和處理指標
+- 關鍵路徑必須有監控和告警
 
-### Monitoring Implementation Standards
+### Monitoring 實作標準
 
-#### Business Metrics (Required for each Aggregate Root)
+#### Business Metrics (每個 Aggregate Root 必要)
 
 ```java
 @Component
@@ -435,7 +435,7 @@ public class CustomerMetrics {
     private final Counter customersCreated;
     private final Timer customerCreationTime;
     private final Gauge activeCustomers;
-    
+
     public CustomerMetrics(MeterRegistry meterRegistry) {
         this.meterRegistry = meterRegistry;
         this.customersCreated = Counter.builder("customers.created")
@@ -448,15 +448,15 @@ public class CustomerMetrics {
             .description("Number of active customers")
             .register(meterRegistry, this, CustomerMetrics::getActiveCustomerCount);
     }
-    
+
     public void recordCustomerCreated() {
         customersCreated.increment();
     }
-    
+
     public Timer.Sample startCustomerCreation() {
         return Timer.start(meterRegistry);
     }
-    
+
     private double getActiveCustomerCount() {
         // Implementation to get active customer count
         return customerRepository.countActiveCustomers();
@@ -464,13 +464,13 @@ public class CustomerMetrics {
 }
 ```
 
-#### Use Case Tracing (Required for each Application Service)
+#### Use Case Tracing (每個 Application Service 必要)
 
 ```java
 @Service
 @Transactional
 public class CustomerApplicationService {
-    
+
     @TraceAsync
     @Timed(name = "customer.creation", description = "Time taken to create customer")
     public void createCustomer(CreateCustomerCommand command) {
@@ -479,19 +479,19 @@ public class CustomerApplicationService {
             .tag("customer.type", command.getType())
             .tag("customer.source", command.getSource())
             .start();
-            
+
         try (Tracer.SpanInScope ws = tracer.withSpanInScope(span)) {
             // Business logic implementation
             Customer customer = customerFactory.create(command);
             customerRepository.save(customer);
-            
+
             // Add business context to trace
             span.tag("customer.id", customer.getId())
                 .tag("customer.segment", customer.getSegment())
                 .event("customer.created");
-                
+
             domainEventService.publishEventsFromAggregate(customer);
-            
+
         } catch (Exception e) {
             span.tag("error", e.getMessage());
             throw e;
@@ -502,12 +502,12 @@ public class CustomerApplicationService {
 }
 ```
 
-#### Domain Event Metrics (Required for each Event Type)
+#### Domain Event Metrics (每個 Event Type 必要)
 
 ```java
 @Component
 public class DomainEventMetrics {
-    
+
     @EventListener
     public void recordEventPublished(DomainEventPublishedEvent event) {
         Counter.builder("domain.events.published")
@@ -516,7 +516,7 @@ public class DomainEventMetrics {
             .register(meterRegistry)
             .increment();
     }
-    
+
     @EventListener
     public void recordEventProcessed(DomainEventProcessedEvent event) {
         Timer.builder("domain.events.processing.time")
@@ -525,7 +525,7 @@ public class DomainEventMetrics {
             .register(meterRegistry)
             .record(event.getProcessingTime(), TimeUnit.MILLISECONDS);
     }
-    
+
     @EventListener
     public void recordEventFailed(DomainEventFailedEvent event) {
         Counter.builder("domain.events.failed")
@@ -537,7 +537,7 @@ public class DomainEventMetrics {
 }
 ```
 
-### Logging Structure Standards
+### Logging 結構標準
 
 #### Structured Logging Format
 
@@ -545,15 +545,15 @@ public class DomainEventMetrics {
 // Use consistent structured logging
 public class StructuredLogger {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
     public void logBusinessEvent(String event, Object... keyValues) {
-        logger.info("Business event: {}", event, 
+        logger.info("Business event: {}", event,
             StructuredArguments.kv("timestamp", Instant.now()),
             StructuredArguments.kv("traceId", getCurrentTraceId()),
             StructuredArguments.kv("userId", getCurrentUserId()),
             keyValues);
     }
-    
+
     public void logError(String message, Exception e, Object... keyValues) {
         logger.error("Error occurred: {}", message,
             StructuredArguments.kv("timestamp", Instant.now()),
@@ -576,16 +576,16 @@ structuredLogger.logBusinessEvent("Customer created",
 ```java
 @Component
 public class TraceContextFilter implements Filter {
-    
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
         String traceId = extractOrGenerateTraceId(request);
         String sessionId = extractSessionId(request);
-        
+
         try (MDCCloseable mdcCloseable = MDC.putCloseable("traceId", traceId)) {
             MDC.put("sessionId", sessionId);
             MDC.put("userId", getCurrentUserId());
-            
+
             chain.doFilter(request, response);
         }
     }
@@ -594,7 +594,7 @@ public class TraceContextFilter implements Filter {
 
 ### Alert Configuration Standards
 
-#### Critical Path Alerts (Required)
+#### Critical Path Alerts (必要)
 
 ```yaml
 # Prometheus Alert Rules
@@ -614,7 +614,7 @@ groups:
         annotations:
           summary: "High error rate detected"
           description: "Error rate is {{ $value }} errors per second"
-          
+
       - alert: HighResponseTime
 
         expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
@@ -625,7 +625,7 @@ groups:
         annotations:
           summary: "High response time detected"
           description: "95th percentile response time is {{ $value }} seconds"
-          
+
       - alert: DatabaseConnectionPoolExhausted
 
         expr: hikaricp_connections_active / hikaricp_connections_max > 0.9
@@ -655,7 +655,7 @@ groups:
           team: product
         annotations:
           summary: "Customer creation rate has dropped significantly"
-          
+
       - alert: HighCustomerChurnRate
 
         expr: rate(customers_churned_total[1h]) / rate(customers_created_total[1h]) > 0.1
@@ -667,9 +667,9 @@ groups:
           summary: "Customer churn rate is unusually high"
 ```
 
-### Dashboard Requirements
+### Dashboard 要求
 
-#### Technical Dashboard (Required for each service)
+#### Technical Dashboard (每個服務必要)
 
 - **Response Time**: 95th percentile over time
 - **Error Rate**: 4xx and 5xx errors per minute
@@ -677,7 +677,7 @@ groups:
 - **Resource Usage**: CPU, Memory, Database connections
 - **Dependency Health**: External service response times
 
-#### Business Dashboard (Required for each bounded context)
+#### Business Dashboard (每個 bounded context 必要)
 
 - **Key Business Metrics**: Orders, customers, revenue
 - **Conversion Rates**: Funnel analysis
@@ -691,25 +691,25 @@ groups:
 ```java
 @Component
 public class CustomerServiceHealthIndicator implements HealthIndicator {
-    
+
     @Override
     public Health health() {
         try {
             // Check database connectivity
             customerRepository.count();
-            
+
             // Check external dependencies
             paymentService.healthCheck();
-            
+
             // Check business logic health
             validateBusinessRules();
-            
+
             return Health.up()
                 .withDetail("database", "UP")
                 .withDetail("payment-service", "UP")
                 .withDetail("business-rules", "VALID")
                 .build();
-                
+
         } catch (Exception e) {
             return Health.down()
                 .withDetail("error", e.getMessage())
@@ -747,73 +747,73 @@ readinessProbe:
 ### Security Perspective
 
 - [ ] API endpoints pass CDK Nag checks
-- [ ] Sensitive data encrypted in storage and transit
-- [ ] Authentication and authorization mechanisms
-- [ ] Security event logging and monitoring
+- [ ] 敏感資料在儲存和傳輸中加密
+- [ ] Authentication 和 authorization 機制
+- [ ] Security event logging 和 monitoring
 
 ### Performance & Scalability Perspective
 
-- [ ] Critical path performance benchmarks (< 2s)
-- [ ] Database query optimization and indexing strategy
-- [ ] Caching strategy implementation
-- [ ] Horizontal scaling capability verification
+- [ ] 關鍵路徑效能基準 (< 2s)
+- [ ] Database query 最佳化和索引策略
+- [ ] Caching 策略實作
+- [ ] Horizontal scaling 能力驗證
 
 ### Availability & Resilience Perspective
 
-- [ ] Health check endpoints implemented
-- [ ] Failure recovery and retry mechanisms
-- [ ] Circuit breaker pattern implementation
-- [ ] Disaster recovery plan and testing
+- [ ] Health check endpoints 已實作
+- [ ] 失敗恢復和重試機制
+- [ ] Circuit breaker pattern 實作
+- [ ] Disaster recovery 計畫和測試
 
 ### Evolution Perspective
 
-- [ ] Interface backward compatibility guaranteed
-- [ ] Version management strategy implemented
-- [ ] Modular and loosely coupled design
-- [ ] Refactoring safety guaranteed (test coverage)
+- [ ] Interface 向後相容性保證
+- [ ] Version 管理策略實作
+- [ ] 模組化和鬆散耦合設計
+- [ ] Refactoring 安全性保證（測試覆蓋率）
 
-## Concurrency Strategy Requirements
+## Concurrency Strategy 要求
 
-### Asynchronous processing design must specify
+### 非同步處理設計必須指定
 
-- Event processing order dependencies
-- Transaction boundaries and consistency guarantees
-- Concurrency conflict detection and handling mechanisms
-- Deadlock prevention and detection strategies
+- Event 處理順序依賴
+- Transaction 邊界和一致性保證
+- 並行衝突偵測和處理機制
+- Deadlock 預防和偵測策略
 
-## Mandatory Resilience Patterns
+## 強制性 Resilience Patterns
 
-### External service calls must implement
+### 外部服務呼叫必須實作
 
 - Circuit breaker pattern
-- Retry mechanism (max 3 attempts, exponential backoff)
-- Fallback strategy
-- Dead letter queue handling
+- Retry 機制（最多 3 次嘗試，exponential backoff）
+- Fallback 策略
+- Dead letter queue 處理
 
-### Critical business processes must have
+### 關鍵業務流程必須具備
 
-- Failure recovery time testing
-- Monitoring and alerting configuration
-- Operations manual updates
+- 失敗恢復時間測試
+- Monitoring 和 alerting 設定
+- Operations manual 更新
 
 ## Technology Evolution Standards
 
-### New technology introduction must satisfy
+### 新技術引入必須滿足
 
-- [ ] Technology maturity reaches "Growth" stage or above
-- [ ] Complete documentation and community support
-- [ ] Team learning and maintenance capability
-- [ ] Migration risk controllable with rollback plan
+- [ ] 技術成熟度達到 "Growth" 階段或以上
+- [ ] 完整文件和社群支援
+- [ ] 團隊學習和維護能力
+- [ ] Migration 風險可控且有 rollback plan
 
-### Version upgrade requirements
+### Version 升級要求
 
-- Critical dependency upgrades must have automated test coverage
-- Major version upgrades must be verified in test environment
-- Legacy technology retirement must have clear timeline
+- Critical dependency 升級必須有自動化測試覆蓋
+- Major version 升級必須在測試環境驗證
+- Legacy technology 淘汰必須有明確時間表
 
 ## Compliance Monitoring Metrics
 
-- Viewpoint coverage rate: 100%
-- Quality attribute scenario coverage rate: 100%
-- ArchUnit test pass rate: 100%
-- Architecture debt trend: Continuously decreasing
+- Viewpoint 覆蓋率：100%
+- Quality attribute scenario 覆蓋率：100%
+- ArchUnit test 通過率：100%
+- Architecture debt 趨勢：持續下降

@@ -1,30 +1,30 @@
-# Domain Events Design and Implementation Guidelines
+# Domain Events 設計與實作指南
 
-This document provides comprehensive guidelines for Domain Event design and implementation in our DDD + Hexagonal Architecture project.
+本文件提供我們 DDD + Hexagonal Architecture 專案中 Domain Event 設計與實作的完整指南。
 
-## Core Principles
+## 核心原則
 
-### 1. Event Publishing Responsibility
+### 1. Event Publishing 職責
 
-- **Aggregate Roots** are responsible for collecting domain events during business operations
-- **Application Services** are responsible for publishing collected events
-- **Infrastructure Layer** handles the technical aspects of event delivery
+- **Aggregate Roots** 負責在業務操作期間收集 domain events
+- **Application Services** 負責發布收集的 events
+- **Infrastructure Layer** 處理 event delivery 的技術面向
 
-### 2. Transaction Boundary Management
+### 2. Transaction Boundary 管理
 
-- Events are collected during business logic execution but not immediately published
-- Events are published within transaction boundaries using `@TransactionalEventListener`
-- Events are marked as committed only after successful publication
+- Events 在業務邏輯執行期間收集，但不會立即發布
+- Events 使用 `@TransactionalEventListener` 在 transaction 邊界內發布
+- Events 僅在成功發布後標記為已提交
 
-### 3. Event Immutability
+### 3. Event 不可變性
 
-- All domain events must be implemented as immutable Java Records
-- Events should contain all necessary data for event handlers to process them independently
-- Events should not contain references to mutable objects
+- 所有 domain events 必須實作為不可變的 Java Records
+- Events 應包含所有 event handlers 獨立處理所需的資料
+- Events 不應包含可變物件的參考
 
-## Implementation Standards
+## 實作標準
 
-### Event Definition
+### Event 定義
 
 ```java
 // Domain Event as Record - following project style
@@ -36,15 +36,13 @@ public record CustomerCreatedEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     /**
-
      * Factory method with automatic eventId and occurredOn generation
-
      */
     public static CustomerCreatedEvent create(
-        CustomerId customerId, 
-        CustomerName customerName, 
+        CustomerId customerId,
+        CustomerName customerName,
         Email email,
         MembershipLevel membershipLevel
     ) {
@@ -54,42 +52,42 @@ public record CustomerCreatedEvent(
             metadata.eventId(), metadata.occurredOn()
         );
     }
-    
+
     @Override
     public UUID getEventId() { return eventId; }
-    
+
     @Override
     public LocalDateTime getOccurredOn() { return occurredOn; }
-    
+
     @Override
     public String getEventType() {
         return DomainEvent.getEventTypeFromClass(this.getClass());
     }
-    
+
     @Override
     public String getAggregateId() { return customerId.getValue(); }
 }
 ```
 
-### Event Collection in Aggregate Roots
+### Aggregate Roots 中的 Event 收集
 
 ```java
 @AggregateRoot(name = "Customer", description = "客戶聚合根", boundedContext = "Customer", version = "2.0")
 public class Customer implements AggregateRootInterface {
-    
+
     public void updateProfile(CustomerName newName, Email newEmail, Phone newPhone) {
         // 1. Execute business logic first
         validateProfileUpdate(newName, newEmail, newPhone);
-        
+
         // 2. Update state
         this.name = newName;
         this.email = newEmail;
         this.phone = newPhone;
-        
+
         // 3. Collect domain event
         collectEvent(CustomerProfileUpdatedEvent.create(this.id, newName, newEmail, newPhone));
     }
-    
+
     // Event management methods are provided by AggregateRootInterface:
     // - collectEvent(DomainEvent event)
     // - getUncommittedEvents()
@@ -98,7 +96,7 @@ public class Customer implements AggregateRootInterface {
 }
 ```
 
-### Event Publishing in Application Services
+### Application Services 中的 Event 發布
 
 ```java
 @Service
@@ -106,30 +104,30 @@ public class Customer implements AggregateRootInterface {
 public class CustomerApplicationService {
     private final CustomerRepository customerRepository;
     private final DomainEventApplicationService domainEventService;
-    
+
     public void updateCustomerProfile(UpdateProfileCommand command) {
         // 1. Load aggregate
         Customer customer = customerRepository.findById(command.customerId())
             .orElseThrow(() -> new CustomerNotFoundException(command.customerId()));
-        
+
         // 2. Execute business operation (events are collected)
         customer.updateProfile(command.name(), command.email(), command.phone());
-        
+
         // 3. Save aggregate
         customerRepository.save(customer);
-        
+
         // 4. Publish collected events
         domainEventService.publishEventsFromAggregate(customer);
     }
 }
 ```
 
-### Event Handling
+### Event 處理
 
 ```java
 @Component
 public class CustomerProfileUpdatedEventHandler extends AbstractDomainEventHandler<CustomerProfileUpdatedEvent> {
-    
+
     @Override
     @Transactional
     public void handle(CustomerProfileUpdatedEvent event) {
@@ -137,32 +135,32 @@ public class CustomerProfileUpdatedEventHandler extends AbstractDomainEventHandl
         if (isEventAlreadyProcessed(event.getEventId())) {
             return;
         }
-        
+
         try {
             // Execute cross-aggregate business logic
             updateCustomerSearchIndex(event);
             sendProfileUpdateNotification(event);
-            
+
             // Mark event as processed
             markEventAsProcessed(event.getEventId());
-            
+
         } catch (Exception e) {
             // Log error and potentially retry
             logEventProcessingError(event, e);
             throw new DomainEventProcessingException("Failed to process profile update", e);
         }
     }
-    
+
     @Override
     public Class<CustomerProfileUpdatedEvent> getSupportedEventType() {
         return CustomerProfileUpdatedEvent.class;
     }
-    
+
     private boolean isEventAlreadyProcessed(UUID eventId) {
         // Check if event was already processed (idempotency)
         return processedEventRepository.existsByEventId(eventId);
     }
-    
+
     private void markEventAsProcessed(UUID eventId) {
         // Mark event as processed for idempotency
         processedEventRepository.save(new ProcessedEvent(eventId, Instant.now()));
@@ -170,50 +168,50 @@ public class CustomerProfileUpdatedEventHandler extends AbstractDomainEventHandl
 }
 ```
 
-## Best Practices
+## 最佳實踐
 
-### 1. Event Naming Conventions
+### 1. Event 命名慣例
 
-- Use past tense verbs: `CustomerCreated`, `OrderSubmitted`, `PaymentCompleted`
-- Include the aggregate name: `Customer*Event`, `Order*Event`
-- Be specific about what happened: `CustomerProfileUpdated` not `CustomerChanged`
+- 使用過去式動詞：`CustomerCreated`、`OrderSubmitted`、`PaymentCompleted`
+- 包含 aggregate 名稱：`Customer*Event`、`Order*Event`
+- 明確說明發生的事情：`CustomerProfileUpdated` 而非 `CustomerChanged`
 
-### 2. Event Content Guidelines
+### 2. Event 內容指南
 
-- Include aggregate ID for event routing
-- Include all data needed by event handlers
-- Avoid including sensitive information that shouldn't be shared
-- Include event metadata (eventId, occurredOn, eventType)
+- 包含 aggregate ID 用於 event routing
+- 包含 event handlers 所需的所有資料
+- 避免包含不應分享的敏感資訊
+- 包含 event metadata (eventId, occurredOn, eventType)
 
-### 3. Event Handler Design
+### 3. Event Handler 設計
 
-- **Single Responsibility**: Each handler should handle one specific event type
-- **Idempotency**: Handlers should be safe to run multiple times
-- **Error Handling**: Implement proper error handling and logging
-- **Transaction Management**: Use appropriate transaction boundaries
+- **Single Responsibility**：每個 handler 應處理一個特定的 event type
+- **Idempotency**：Handlers 應可安全地多次執行
+- **Error Handling**：實作適當的錯誤處理和日誌記錄
+- **Transaction Management**：使用適當的 transaction 邊界
 
-### 4. Cross-Aggregate Communication
+### 4. Cross-Aggregate 通訊
 
 ```java
 // Good: Use events for cross-aggregate communication
 @Component
 public class OrderCreatedEventHandler extends AbstractDomainEventHandler<OrderCreatedEvent> {
-    
+
     @Override
     public void handle(OrderCreatedEvent event) {
         // Update customer statistics
         customerStatisticsService.updateOrderCount(event.customerId());
-        
+
         // Reserve inventory
         inventoryService.reserveItems(event.orderItems());
-        
+
         // Send confirmation email
         notificationService.sendOrderConfirmation(event);
     }
 }
 ```
 
-### 5. Event Ordering and Dependencies
+### 5. Event 排序和依賴
 
 ```java
 // Use @Order annotation for event handler precedence
@@ -230,7 +228,7 @@ public class OrderConfirmationHandler extends AbstractDomainEventHandler<OrderCr
 }
 ```
 
-## Advanced Patterns
+## 進階模式
 
 ### 1. Event Versioning (Schema Evolution Pattern)
 
@@ -247,11 +245,11 @@ public record CustomerCreatedEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     // Primary factory method - latest version
     public static CustomerCreatedEvent create(
-        CustomerId customerId, 
-        CustomerName customerName, 
+        CustomerId customerId,
+        CustomerName customerName,
         Email email,
         MembershipLevel membershipLevel,
         LocalDate birthDate,
@@ -265,11 +263,11 @@ public record CustomerCreatedEvent(
             metadata.eventId(), metadata.occurredOn()
         );
     }
-    
+
     // Backward compatible factory method
     public static CustomerCreatedEvent createLegacy(
-        CustomerId customerId, 
-        CustomerName customerName, 
+        CustomerId customerId,
+        CustomerName customerName,
         Email email,
         MembershipLevel membershipLevel
     ) {
@@ -281,12 +279,12 @@ public record CustomerCreatedEvent(
             metadata.eventId(), metadata.occurredOn()
         );
     }
-    
+
     @Override
     public String getEventType() {
         return "CustomerCreated"; // Keep same event type across versions
     }
-    
+
     @Override
     public String getAggregateId() { return customerId.getValue(); }
 }
@@ -297,11 +295,11 @@ public record CustomerCreatedEvent(
 ```java
 public interface DomainEvent extends Serializable {
     // Existing methods...
-    
+
     default EventSchema getSchema() {
         return EventSchemaRegistry.getSchema(this.getClass());
     }
-    
+
     default int getSchemaVersion() {
         return getSchema().getVersion();
     }
@@ -310,7 +308,7 @@ public interface DomainEvent extends Serializable {
 @Component
 public class EventSchemaRegistry {
     private static final Map<Class<? extends DomainEvent>, EventSchema> schemas = new ConcurrentHashMap<>();
-    
+
     static {
         // Register event schemas
         register(CustomerCreatedEvent.class, EventSchema.builder()
@@ -318,11 +316,11 @@ public class EventSchemaRegistry {
             .compatibleWith(1) // Compatible with version 1
             .build());
     }
-    
+
     public static EventSchema getSchema(Class<? extends DomainEvent> eventClass) {
         return schemas.get(eventClass);
     }
-    
+
     private static void register(Class<? extends DomainEvent> eventClass, EventSchema schema) {
         schemas.put(eventClass, schema);
     }
@@ -332,23 +330,23 @@ public record EventSchema(int version, Set<Integer> compatibleVersions) {
     public static Builder builder() {
         return new Builder();
     }
-    
+
     public static class Builder {
         private int version;
         private Set<Integer> compatibleVersions = new HashSet<>();
-        
+
         public Builder version(int version) {
             this.version = version;
             return this;
         }
-        
+
         public Builder compatibleWith(int... versions) {
             for (int v : versions) {
                 compatibleVersions.add(v);
             }
             return this;
         }
-        
+
         public EventSchema build() {
             return new EventSchema(version, compatibleVersions);
         }
@@ -361,32 +359,32 @@ public record EventSchema(int version, Set<Integer> compatibleVersions) {
 ```java
 @Component
 public class EventUpcaster {
-    
+
     public DomainEvent upcast(StoredEvent storedEvent) {
         return switch (storedEvent.eventType()) {
             case "CustomerCreated" -> upcastCustomerCreatedEvent(storedEvent);
             default -> deserializeEvent(storedEvent);
         };
     }
-    
+
     private CustomerCreatedEvent upcastCustomerCreatedEvent(StoredEvent storedEvent) {
         JsonNode eventData = parseJson(storedEvent.eventData());
-        
+
         // Extract existing fields
         CustomerId customerId = new CustomerId(eventData.get("customerId").asText());
         CustomerName customerName = new CustomerName(eventData.get("customerName").asText());
         Email email = new Email(eventData.get("email").asText());
         MembershipLevel membershipLevel = MembershipLevel.valueOf(eventData.get("membershipLevel").asText());
-        
+
         // V2 fields with defaults for legacy events
-        Optional<LocalDate> birthDate = eventData.has("birthDate") 
+        Optional<LocalDate> birthDate = eventData.has("birthDate")
             ? Optional.of(LocalDate.parse(eventData.get("birthDate").asText()))
             : Optional.empty();
-            
+
         Optional<Address> address = eventData.has("address")
             ? Optional.of(deserializeAddress(eventData.get("address")))
             : Optional.empty();
-        
+
         return new CustomerCreatedEvent(
             customerId, customerName, email, membershipLevel,
             birthDate, address,
@@ -397,16 +395,16 @@ public class EventUpcaster {
 }
 ```
 
-### 2. Event Categories and Priorities
+### 2. Event Categories 和 Priorities
 
 ```java
 public interface DomainEvent extends Serializable {
     // Existing methods...
-    
+
     default EventCategory getCategory() {
         return EventCategory.BUSINESS; // BUSINESS, INTEGRATION, AUDIT
     }
-    
+
     default EventPriority getPriority() {
         return EventPriority.NORMAL; // HIGH, NORMAL, LOW
     }
@@ -418,21 +416,21 @@ public interface DomainEvent extends Serializable {
 ```java
 @Component
 public class OrderProcessingSaga {
-    
+
     @TransactionalEventListener
     @Order(1)
     public void on(OrderCreatedEvent event) {
         // Step 1: Reserve inventory
         inventoryService.reserveItems(event.orderItems());
     }
-    
+
     @TransactionalEventListener
     @Order(2)
     public void on(InventoryReservedEvent event) {
         // Step 2: Process payment
         paymentService.processPayment(event.orderId(), event.amount());
     }
-    
+
     @TransactionalEventListener
     @Order(3)
     public void on(PaymentProcessedEvent event) {
@@ -465,7 +463,6 @@ services:
     image: eventstore/eventstore:23.10.0-bookworm-slim
     container_name: eventstore
     environment:
-
       - EVENTSTORE_CLUSTER_SIZE=1
       - EVENTSTORE_RUN_PROJECTIONS=All
       - EVENTSTORE_START_STANDARD_PROJECTIONS=true
@@ -474,14 +471,10 @@ services:
       - EVENTSTORE_INSECURE=true
       - EVENTSTORE_ENABLE_EXTERNAL_TCP=true
       - EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP=true
-
     ports:
-
       - "1113:1113"
       - "2113:2113"
-
     volumes:
-
       - eventstore-volume-data:/var/lib/eventstore
       - eventstore-volume-logs:/var/log/eventstore
 
@@ -495,32 +488,32 @@ volumes:
 @Profile("production")
 public class EventStoreDbAdapter implements EventStore {
     private final EventStoreDBClient client;
-    
+
     public EventStoreDbAdapter() {
         EventStoreDBConnectionString connectionString = EventStoreDBConnectionString
             .parseOrThrow("esdb://localhost:2113?tls=false");
         this.client = EventStoreDBClient.create(connectionString);
     }
-    
+
     @Override
     public void store(DomainEvent event) {
         String streamName = "aggregate-" + event.getAggregateId();
-        
+
         EventData eventData = EventData.builderAsJson(
             event.getEventId(),
             event.getEventType(),
             serializeEvent(event)
         ).build();
-        
+
         client.appendToStream(streamName, eventData).join();
     }
-    
+
     @Override
     public List<DomainEvent> getEventsForAggregate(String aggregateId) {
         String streamName = "aggregate-" + aggregateId;
-        
+
         ReadResult result = client.readStream(streamName).join();
-        
+
         return result.getEvents().stream()
             .map(this::deserializeEvent)
             .toList();
@@ -536,25 +529,25 @@ public class EventStoreDbAdapter implements EventStore {
 public class StoredEvent {
     @Id
     private String eventId;
-    
+
     @Column(name = "event_type")
     private String eventType;
-    
+
     @Column(name = "aggregate_id")
     private String aggregateId;
-    
+
     @Column(name = "aggregate_type")
     private String aggregateType;
-    
+
     @Column(name = "event_data", columnDefinition = "TEXT")
     private String eventData;
-    
+
     @Column(name = "occurred_on")
     private LocalDateTime occurredOn;
-    
+
     @Column(name = "version")
     private Long version;
-    
+
     // constructors, getters, setters
 }
 
@@ -569,7 +562,7 @@ public interface StoredEventRepository extends JpaRepository<StoredEvent, String
 public class JpaEventStore implements EventStore {
     private final StoredEventRepository repository;
     private final ObjectMapper objectMapper;
-    
+
     @Override
     @Transactional
     public void store(DomainEvent event) {
@@ -582,10 +575,10 @@ public class JpaEventStore implements EventStore {
             event.getOccurredOn(),
             getNextVersion(event.getAggregateId())
         );
-        
+
         repository.save(storedEvent);
     }
-    
+
     @Override
     public List<DomainEvent> getEventsForAggregate(String aggregateId) {
         return repository.findByAggregateIdOrderByVersionAsc(aggregateId)
@@ -593,7 +586,7 @@ public class JpaEventStore implements EventStore {
             .map(this::deserializeEvent)
             .toList();
     }
-    
+
     @Override
     public List<DomainEvent> getEventsByType(String eventType) {
         return repository.findByEventTypeOrderByOccurredOnAsc(eventType)
@@ -601,7 +594,7 @@ public class JpaEventStore implements EventStore {
             .map(this::deserializeEvent)
             .toList();
     }
-    
+
     private String serializeEvent(DomainEvent event) {
         try {
             return objectMapper.writeValueAsString(event);
@@ -609,7 +602,7 @@ public class JpaEventStore implements EventStore {
             throw new EventSerializationException("Failed to serialize event", e);
         }
     }
-    
+
     private DomainEvent deserializeEvent(StoredEvent storedEvent) {
         try {
             Class<?> eventClass = Class.forName(getEventClassName(storedEvent.getEventType()));
@@ -630,33 +623,33 @@ public class InMemoryEventStore implements EventStore {
     private final Map<String, List<DomainEvent>> eventsByAggregate = new ConcurrentHashMap<>();
     private final Map<String, List<DomainEvent>> eventsByType = new ConcurrentHashMap<>();
     private final List<DomainEvent> allEvents = new CopyOnWriteArrayList<>();
-    
+
     @Override
     public void store(DomainEvent event) {
         allEvents.add(event);
-        
+
         eventsByAggregate.computeIfAbsent(event.getAggregateId(), k -> new ArrayList<>())
             .add(event);
-            
+
         eventsByType.computeIfAbsent(event.getEventType(), k -> new ArrayList<>())
             .add(event);
     }
-    
+
     @Override
     public List<DomainEvent> getEventsForAggregate(String aggregateId) {
         return new ArrayList<>(eventsByAggregate.getOrDefault(aggregateId, List.of()));
     }
-    
+
     @Override
     public List<DomainEvent> getEventsByType(String eventType) {
         return new ArrayList<>(eventsByType.getOrDefault(eventType, List.of()));
     }
-    
+
     @Override
     public List<DomainEvent> getAllEvents() {
         return new ArrayList<>(allEvents);
     }
-    
+
     public void clear() {
         eventsByAggregate.clear();
         eventsByType.clear();
@@ -670,19 +663,19 @@ public class InMemoryEventStore implements EventStore {
 ```java
 @Configuration
 public class EventStoreConfiguration {
-    
+
     @Bean
     @Profile("development")
     public EventStore developmentEventStore(StoredEventRepository repository, ObjectMapper objectMapper) {
         return new JpaEventStore(repository, objectMapper);
     }
-    
+
     @Bean
     @Profile("test")
     public EventStore testEventStore() {
         return new InMemoryEventStore();
     }
-    
+
     @Bean
     @Profile("production")
     public EventStore productionEventStore() {
@@ -697,7 +690,7 @@ public class EventStoreConfiguration {
 @Component
 public class EventStoreIntegration {
     private final EventStore eventStore;
-    
+
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void storeEvent(DomainEventPublisherAdapter.DomainEventWrapper wrapper) {
         DomainEvent event = wrapper.getSource();
@@ -706,14 +699,14 @@ public class EventStoreIntegration {
 }
 ```
 
-## Error Handling and Resilience
+## 錯誤處理和韌性
 
-### 1. Retry Mechanism
+### 1. Retry 機制
 
 ```java
 @Component
 public class ResilientEventHandler extends AbstractDomainEventHandler<CustomerCreatedEvent> {
-    
+
     @Retryable(
         value = {TransientException.class},
         maxAttempts = 3,
@@ -723,7 +716,7 @@ public class ResilientEventHandler extends AbstractDomainEventHandler<CustomerCr
     public void handle(CustomerCreatedEvent event) {
         // Event processing logic with retry capability
     }
-    
+
     @Recover
     public void recover(TransientException ex, CustomerCreatedEvent event) {
         // Handle final failure after all retries
@@ -737,7 +730,7 @@ public class ResilientEventHandler extends AbstractDomainEventHandler<CustomerCr
 ```java
 @Component
 public class DeadLetterService {
-    
+
     public void send(DomainEvent event, Exception cause) {
         DeadLetterEvent deadLetter = new DeadLetterEvent(
             event.getEventId(),
@@ -746,18 +739,18 @@ public class DeadLetterService {
             cause.getMessage(),
             Instant.now()
         );
-        
+
         deadLetterRepository.save(deadLetter);
-        
+
         // Optionally send to external dead letter queue
         messageQueue.send("dead-letter-queue", deadLetter);
     }
 }
 ```
 
-## Testing Guidelines
+## 測試指南
 
-### 1. Event Collection Testing
+### 1. Event 收集測試
 
 ```java
 @Test
@@ -766,16 +759,16 @@ void should_collect_customer_created_event_when_customer_is_created() {
     CustomerId customerId = CustomerId.generate();
     CustomerName name = new CustomerName("John Doe");
     Email email = new Email("john@example.com");
-    
+
     // When
     Customer customer = new Customer(customerId, name, email, MembershipLevel.STANDARD);
-    
+
     // Then
     assertThat(customer.hasUncommittedEvents()).isTrue();
     List<DomainEvent> events = customer.getUncommittedEvents();
     assertThat(events).hasSize(1);
     assertThat(events.get(0)).isInstanceOf(CustomerCreatedEvent.class);
-    
+
     CustomerCreatedEvent event = (CustomerCreatedEvent) events.get(0);
     assertThat(event.customerId()).isEqualTo(customerId);
     assertThat(event.customerName()).isEqualTo(name);
@@ -783,35 +776,35 @@ void should_collect_customer_created_event_when_customer_is_created() {
 }
 ```
 
-### Event Store Testing
+### Event Store 測試
 
 ```java
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
 public abstract class EventStoreTestBase {
-    
+
     @Autowired
     protected EventStore eventStore;
-    
+
     @BeforeEach
     void setUp() {
         if (eventStore instanceof InMemoryEventStore inMemoryStore) {
             inMemoryStore.clear();
         }
     }
-    
+
     protected void givenEvents(DomainEvent... events) {
         for (DomainEvent event : events) {
             eventStore.store(event);
         }
     }
-    
+
     protected void assertEventStored(Class<? extends DomainEvent> eventType, String aggregateId) {
         List<DomainEvent> events = eventStore.getEventsForAggregate(aggregateId);
         assertThat(events).anyMatch(event -> eventType.isInstance(event));
     }
-    
+
     protected void assertEventCount(String aggregateId, int expectedCount) {
         List<DomainEvent> events = eventStore.getEventsForAggregate(aggregateId);
         assertThat(events).hasSize(expectedCount);
@@ -830,15 +823,15 @@ void should_store_and_retrieve_events_by_aggregate() {
         LocalDate.of(1990, 1, 1),
         new Address("123 Main St", "City", "12345")
     );
-    
+
     // When
     eventStore.store(event);
-    
+
     // Then
     List<DomainEvent> retrievedEvents = eventStore.getEventsForAggregate(customerId.getValue());
     assertThat(retrievedEvents).hasSize(1);
     assertThat(retrievedEvents.get(0)).isInstanceOf(CustomerCreatedEvent.class);
-    
+
     CustomerCreatedEvent retrievedEvent = (CustomerCreatedEvent) retrievedEvents.get(0);
     assertThat(retrievedEvent.customerId()).isEqualTo(customerId);
     assertThat(retrievedEvent.birthDate()).isPresent();
@@ -846,7 +839,7 @@ void should_store_and_retrieve_events_by_aggregate() {
 }
 ```
 
-### 2. Event Handler Testing
+### 2. Event Handler 測試
 
 ```java
 @Test
@@ -858,42 +851,42 @@ void should_send_welcome_email_when_customer_created() {
         new Email("john@example.com"),
         MembershipLevel.STANDARD
     );
-    
+
     // When
     customerCreatedEventHandler.handle(event);
-    
+
     // Then
     verify(emailService).sendWelcomeEmail(event.email(), event.customerName());
     verify(customerStatsService).createStatsRecord(event.customerId());
 }
 ```
 
-## Architecture Rules
+## 架構規則
 
-### 1. Event Publishing Rules
+### 1. Event Publishing 規則
 
-- Only Aggregate Roots can collect domain events using `collectEvent()`
-- Application Services are responsible for publishing events via `DomainEventApplicationService`
-- Event handlers must be in Infrastructure Layer
-- Events must be published within transaction boundaries
+- 只有 Aggregate Roots 可以使用 `collectEvent()` 收集 domain events
+- Application Services 負責透過 `DomainEventApplicationService` 發布 events
+- Event handlers 必須在 Infrastructure Layer
+- Events 必須在 transaction 邊界內發布
 
-### 2. Event Handler Rules
+### 2. Event Handler 規則
 
-- Event handlers must extend `AbstractDomainEventHandler<T>`
-- Event handlers must be annotated with `@Component`
-- Event handlers must implement idempotency checks
-- Event handlers must use `@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)`
+- Event handlers 必須繼承 `AbstractDomainEventHandler<T>`
+- Event handlers 必須標註 `@Component`
+- Event handlers 必須實作 idempotency checks
+- Event handlers 必須使用 `@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)`
 
-### 3. Event Design Rules
+### 3. Event 設計規則
 
-- Events must be implemented as immutable Java Records
-- Events must implement the `DomainEvent` interface
-- Events must include eventId, occurredOn, eventType, and aggregateId
-- Events must use static factory methods for creation
-- Event versioning must use Schema Evolution pattern with Optional fields for backward compatibility
-- Avoid explicit version methods (createV1, createV2) - use descriptive factory methods instead
+- Events 必須實作為不可變的 Java Records
+- Events 必須實作 `DomainEvent` interface
+- Events 必須包含 eventId、occurredOn、eventType 和 aggregateId
+- Events 必須使用 static factory methods 建立
+- Event versioning 必須使用 Schema Evolution pattern，對於向後相容使用 Optional fields
+- 避免使用明確的 version methods (createV1, createV2) - 使用描述性的 factory methods
 
-## Monitoring and Observability
+## Monitoring 和 Observability
 
 ### 1. Event Metrics
 
@@ -901,11 +894,11 @@ void should_send_welcome_email_when_customer_created() {
 @Component
 public class EventMetricsCollector {
     private final MeterRegistry meterRegistry;
-    
+
     @TransactionalEventListener
     public void collectMetrics(DomainEventPublisherAdapter.DomainEventWrapper wrapper) {
         DomainEvent event = wrapper.getSource();
-        
+
         // Count events by type
         Counter.builder("domain.events.published")
             .tag("event.type", event.getEventType())
@@ -921,18 +914,18 @@ public class EventMetricsCollector {
 ```java
 @Component
 public class EventTracingHandler {
-    
+
     @TransactionalEventListener
     public void trace(DomainEventPublisherAdapter.DomainEventWrapper wrapper) {
         DomainEvent event = wrapper.getSource();
-        
+
         Span span = tracer.nextSpan()
             .name("domain-event-processing")
             .tag("event.type", event.getEventType())
             .tag("event.id", event.getEventId().toString())
             .tag("aggregate.id", event.getAggregateId())
             .start();
-            
+
         try (Tracer.SpanInScope ws = tracer.withSpanInScope(span)) {
             // Event processing is traced
         } finally {
@@ -942,11 +935,9 @@ public class EventTracingHandler {
 }
 ```
 
-This comprehensive guide ensures consistent, reliable, and maintainable domain event implementation across the entire project.
+這份完整指南確保整個專案中一致、可靠且可維護的 domain event 實作。
 
-## Enviro
-
-nment-Specific Configuration
+## 環境特定設定
 
 ### Development Configuration
 
@@ -965,7 +956,7 @@ spring:
 
 event-store:
   type: jpa
-  
+
 logging:
   level:
     solid.humank.genaidemo.infrastructure.event: DEBUG
@@ -1000,13 +991,13 @@ spring:
 event-store:
   type: eventstore-db
   connection-string: "esdb://eventstore:2113?tls=false"
-  
+
 logging:
   level:
     solid.humank.genaidemo.infrastructure.event: INFO
 ```
 
-## Event Store Recommendations by Environment
+## Event Store 環境建議
 
 ### Development Stage
 
@@ -1014,7 +1005,7 @@ logging:
 - **Benefits**: Persistent across restarts, easy to inspect data, SQL queries for debugging
 - **Setup**: No additional containers needed
 
-### Testing Stage  
+### Testing Stage
 
 - **Recommended**: In-Memory Event Store
 - **Benefits**: Fast, clean state between tests, no external dependencies
@@ -1026,7 +1017,7 @@ logging:
 - **Benefits**: Purpose-built for event sourcing, high performance, built-in projections
 - **Alternative**: Axon Framework Event Store for Java ecosystem integration
 
-## Migration Strategy
+## Migration 策略
 
 When moving between event store implementations:
 
@@ -1034,4 +1025,4 @@ When moving between event store implementations:
 2. **Schema Changes**: Use Event Upcasting to handle version differences
 3. **Testing**: Always test migration with realistic data volumes
 
-This comprehensive approach ensures reliable event handling across all development stages while maintaining flexibility for future changes.
+這個綜合性的方法確保在所有開發階段都能可靠地處理 events，同時保持未來變更的彈性。

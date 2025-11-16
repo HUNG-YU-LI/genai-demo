@@ -2,10 +2,10 @@
 
 ## Overview
 
-This document provides a comprehensive checklist for code quality standards. Use this as a quick reference during development and code reviews.
+本文件提供程式碼品質標準的完整檢查清單。在開發和程式碼審查期間將此作為快速參考使用。
 
-**Purpose**: Quick checklist for daily development and code reviews.
-**Detailed Examples**: See `.kiro/examples/code-patterns/` for comprehensive guides.
+**Purpose**: 日常開發和程式碼審查的快速檢查清單。
+**Detailed Examples**: 查看 `.kiro/examples/code-patterns/` 以獲取完整指南。
 
 ---
 
@@ -22,10 +22,10 @@ This document provides a comprehensive checklist for code quality standards. Use
 
 ### Must Avoid
 
-- [ ] ❌ Abbreviations (e.g., `cust` instead of `customer`)
-- [ ] ❌ Single letter variables (except loop counters)
+- [ ] ❌ 縮寫 (e.g., `cust` instead of `customer`)
+- [ ] ❌ 單字母變數（迴圈計數器除外）
 - [ ] ❌ Hungarian notation (e.g., `strName`, `intCount`)
-- [ ] ❌ Meaningless names (e.g., `data`, `info`, `manager`)
+- [ ] ❌ 無意義的名稱 (e.g., `data`, `info`, `manager`)
 
 ---
 
@@ -33,18 +33,18 @@ This document provides a comprehensive checklist for code quality standards. Use
 
 ### Must Follow
 
-- [ ] Use specific exception types
-- [ ] Include error context in exceptions
-- [ ] Log errors with structured data
-- [ ] Use try-with-resources for closeable resources
-- [ ] Handle errors at appropriate level
+- [ ] 使用特定的 exception types
+- [ ] 在 exceptions 中包含錯誤上下文
+- [ ] 使用結構化資料記錄錯誤
+- [ ] 對 closeable resources 使用 try-with-resources
+- [ ] 在適當層級處理錯誤
 
 ### Must Avoid
 
-- [ ] ❌ Empty catch blocks
-- [ ] ❌ Generic `catch (Exception e)`
-- [ ] ❌ Swallowing exceptions
-- [ ] ❌ Using exceptions for control flow
+- [ ] ❌ 空的 catch blocks
+- [ ] ❌ 通用的 `catch (Exception e)`
+- [ ] ❌ 吞沒 exceptions
+- [ ] ❌ 將 exceptions 用於控制流
 
 ### Quick Check
 
@@ -69,8 +69,8 @@ throw new RuntimeException("Error");
 
 - [ ] RESTful URL conventions (`/api/v1/customers`)
 - [ ] Proper HTTP methods (GET, POST, PUT, DELETE)
-- [ ] Consistent response format
-- [ ] Input validation with `@Valid`
+- [ ] 一致的回應格式
+- [ ] 使用 `@Valid` 進行輸入驗證
 - [ ] Proper HTTP status codes
 
 ### HTTP Status Codes
@@ -91,19 +91,19 @@ throw new RuntimeException("Error");
 
 ### Must Follow
 
-- [ ] Input validation on all endpoints
-- [ ] Parameterized queries (no string concatenation)
-- [ ] Output encoding to prevent XSS
-- [ ] Authentication on protected endpoints
-- [ ] Authorization checks
-- [ ] Sensitive data encryption
+- [ ] 所有端點的輸入驗證
+- [ ] Parameterized queries（無字串串接）
+- [ ] 輸出編碼以防止 XSS
+- [ ] 受保護端點的身份驗證
+- [ ] 授權檢查
+- [ ] 敏感資料加密
 
 ### Must Avoid
 
-- [ ] ❌ SQL injection vulnerabilities
-- [ ] ❌ XSS vulnerabilities
-- [ ] ❌ Hardcoded credentials
-- [ ] ❌ Sensitive data in logs
+- [ ] ❌ SQL injection 漏洞
+- [ ] ❌ XSS 漏洞
+- [ ] ❌ 硬編碼的憑證
+- [ ] ❌ 日誌中的敏感資料
 
 ### Quick Check
 
@@ -124,12 +124,12 @@ String query = "SELECT * FROM customers WHERE email = '" + email + "'";
 
 ### Must Follow
 
-- [ ] Database query optimization
-- [ ] Proper indexing on frequently queried fields
-- [ ] Use pagination for large result sets
-- [ ] Implement caching for frequently accessed data
-- [ ] Async processing for long-running operations
-- [ ] Avoid N+1 query problems
+- [ ] 資料庫查詢優化
+- [ ] 對頻繁查詢的欄位進行適當索引
+- [ ] 對大型結果集使用分頁
+- [ ] 對頻繁訪問的資料實作快取
+- [ ] 對長時間運行的操作使用非同步處理
+- [ ] 避免 N+1 query 問題
 
 ### Quick Check
 
@@ -151,21 +151,21 @@ orders.forEach(order -> order.getItems().size()); // N+1!
 
 ### Method Length
 
-- [ ] Methods < 20 lines
-- [ ] Single level of abstraction per method
-- [ ] Extract complex logic into separate methods
+- [ ] 方法 < 20 lines
+- [ ] 每個方法一個抽象層級
+- [ ] 將複雜邏輯提取到單獨的方法中
 
 ### Class Size
 
-- [ ] Classes < 200 lines
-- [ ] Single responsibility per class
-- [ ] Split large classes into focused ones
+- [ ] 類別 < 200 lines
+- [ ] 每個類別一個職責
+- [ ] 將大型類別拆分為專注的小類別
 
 ### Parameter Lists
 
-- [ ] Methods with ≤ 3 parameters
-- [ ] Use parameter objects for > 3 parameters
-- [ ] Use builder pattern for complex objects
+- [ ] 方法有 ≤ 3 個參數
+- [ ] 對於 > 3 個參數使用 parameter objects
+- [ ] 對複雜物件使用 builder pattern
 
 ---
 
@@ -173,10 +173,10 @@ orders.forEach(order -> order.getItems().size()); // N+1!
 
 ### Must Follow
 
-- [ ] Public APIs have Javadoc
-- [ ] Complex logic has inline comments
-- [ ] README updated for significant changes
-- [ ] API documentation updated
+- [ ] Public APIs 有 Javadoc
+- [ ] 複雜邏輯有行內註解
+- [ ] 重大變更時更新 README
+- [ ] API 文件已更新
 
 ### Javadoc Standards
 
@@ -184,7 +184,7 @@ orders.forEach(order -> order.getItems().size()); // N+1!
 /**
 
  * Submits an order for processing.
- * 
+ *
  * @param command the order submission command
  * @return the submitted order
  * @throws OrderNotFoundException if order not found
@@ -202,45 +202,45 @@ public Order submitOrder(SubmitOrderCommand command) {
 
 ### Functionality
 
-- [ ] Code correctly implements requirements
-- [ ] Edge cases handled properly
-- [ ] Error conditions handled
-- [ ] Business rules validated
+- [ ] 程式碼正確實作需求
+- [ ] 邊界情況處理得當
+- [ ] 錯誤條件已處理
+- [ ] 業務規則已驗證
 
 ### Design
 
-- [ ] Follows SOLID principles
-- [ ] Follows Tell, Don't Ask
-- [ ] No Law of Demeter violations
-- [ ] Appropriate use of design patterns
+- [ ] 遵循 SOLID principles
+- [ ] 遵循 Tell, Don't Ask
+- [ ] 無 Law of Demeter 違規
+- [ ] 適當使用 design patterns
 
 ### Testing
 
-- [ ] Unit tests for business logic
-- [ ] Integration tests for infrastructure
-- [ ] Test coverage > 80%
-- [ ] Tests are clear and maintainable
+- [ ] 業務邏輯的 unit tests
+- [ ] 基礎設施的 integration tests
+- [ ] 測試覆蓋率 > 80%
+- [ ] 測試清楚且可維護
 
 ### Security
 
-- [ ] Input validation implemented
-- [ ] No security vulnerabilities
-- [ ] Sensitive data protected
-- [ ] Authentication/authorization correct
+- [ ] 已實作輸入驗證
+- [ ] 無安全漏洞
+- [ ] 敏感資料受保護
+- [ ] 身份驗證/授權正確
 
 ### Performance
 
-- [ ] No obvious performance issues
-- [ ] Database queries optimized
-- [ ] Caching used appropriately
-- [ ] No memory leaks
+- [ ] 無明顯的效能問題
+- [ ] 資料庫查詢已優化
+- [ ] 適當使用快取
+- [ ] 無記憶體洩漏
 
 ### Maintainability
 
-- [ ] Code is readable and clear
-- [ ] Naming is descriptive
-- [ ] No code duplication
-- [ ] Documentation updated
+- [ ] 程式碼可讀且清楚
+- [ ] 命名具描述性
+- [ ] 無程式碼重複
+- [ ] 文件已更新
 
 **Detailed Review Guide**: #[[file:../examples/process/code-review-guide.md]]
 
@@ -275,8 +275,8 @@ public Order submitOrder(SubmitOrderCommand command) {
 
 | Category | Key Check | Tool |
 |----------|-----------|------|
-| Naming | Descriptive, consistent | Code review |
-| Error Handling | Specific exceptions with context | PMD |
+| Naming | 描述性、一致性 | Code review |
+| Error Handling | 具上下文的特定 exceptions | PMD |
 | API Design | RESTful, proper status codes | Code review |
 | Security | Input validation, no SQL injection | SpotBugs |
 | Performance | No N+1, proper indexing | Code review |

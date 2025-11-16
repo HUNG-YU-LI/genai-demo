@@ -1,6 +1,6 @@
 ---
 adr_number: 021
-title: "Event Sourcing for Critical Aggregates (Optional Pattern)"
+title: "Event Sourcing 用於 Critical Aggregates (Optional Pattern)"
 date: 2025-10-25
 status: "proposed"
 supersedes: []
@@ -10,17 +10,17 @@ affected_viewpoints: ["information", "functional"]
 affected_perspectives: ["availability", "evolution", "performance"]
 ---
 
-# ADR-021: Event Sourcing for Critical Aggregates (Optional Pattern)
+# ADR-021: Event Sourcing 用於 Critical Aggregates (Optional Pattern)
 
-## Status
+## 狀態
 
 **Proposed** - 2025-10-25
 
-*Note: This is an optional pattern for future consideration. Not required for initial implementation.*
+*Note: This is an optional pattern 用於 future consideration. Not required 用於 initial implementation.*
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
 Certain critical aggregates in the E-Commerce Platform could benefit from event sourcing to:
 
@@ -28,21 +28,21 @@ Certain critical aggregates in the E-Commerce Platform could benefit from event 
 
 - **Complete Audit Trail**: Full history of all state changes
 - **Temporal Queries**: Query state at any point in time
-- **Regulatory Compliance**: Meet audit and compliance requirements
-- **Debugging**: Reproduce issues by replaying events
+- **Regulatory Compliance**: Meet audit 和 compliance requirements
+- **Debugging**: Reproduce issues 透過 replaying events
 - **Analytics**: Analyze business patterns from event history
-- **Undo/Redo**: Support complex business workflows
+- **Undo/Redo**: 支援 複雜的 business workflows
 
 **Technical Challenges**:
 
 - Current state-based persistence loses history
-- Difficult to audit changes
-- Cannot replay past states
+- 難以audit changes
+- 可以not replay past states
 - Limited debugging capabilities
-- Complex temporal queries
-- Compliance requirements for financial data
+- 複雜的 temporal queries
+- Compliance requirements 用於 financial data
 
-**Candidate Aggregates**:
+**可以didate Aggregates**:
 
 - **Order**: Complete order lifecycle tracking
 - **Payment**: Financial transaction history
@@ -50,57 +50,57 @@ Certain critical aggregates in the E-Commerce Platform could benefit from event 
 - **Pricing**: Price change history
 - **Customer**: Account activity history
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - Regulatory compliance (financial auditing)
 - Customer dispute resolution
-- Business intelligence and analytics
-- Fraud detection and prevention
-- Customer service improvements
+- Business intelligence 和 analytics
+- Fraud detection 和 prevention
+- Customer service 改善ments
 
-**Constraints**:
+**限制條件**：
 
-- Budget: $80,000 for implementation
-- Timeline: 3 months
+- 預算: $80,000 用於 implementation
+- Timeline: 3 個月
 - Team: 2 senior developers
-- Must coexist with existing CRUD approach
-- Cannot impact current performance
+- 必須 coexist 與 existing CRUD approach
+- 可以not impact current performance
 - Gradual adoption strategy
 
-### Technical Context
+### 技術上下文
 
 **Current Approach**:
 
-- Traditional CRUD with JPA
-- Domain events for integration
+- Traditional CRUD 與 JPA
+- Domain events 用於 integration
 - Limited audit logging
 - No event history
 
 **Target Approach**:
 
-- Event sourcing for critical aggregates
-- Event store for persistence
-- Projections for read models
+- Event sourcing 用於 critical aggregates
+- Event store 用於 persistence
+- Projections 用於 read models
 - Hybrid approach (not all aggregates)
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Auditability**: Complete audit trail for compliance
+1. **Auditability**: Complete audit trail 用於 compliance
 2. **Temporal Queries**: Query historical states
 3. **Debugging**: Reproduce issues from events
-4. **Analytics**: Rich event data for analysis
-5. **Complexity**: Manage additional complexity
-6. **Performance**: Maintain acceptable performance
+4. **Analytics**: 豐富的 event data 用於 analysis
+5. **複雜的ity**: Manage additional 複雜的ity
+6. **Performance**: 維持 acceptable performance
 7. **Team Skills**: Team capability to implement
 8. **Gradual Adoption**: Start small, expand if successful
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Selective Event Sourcing (Recommended)
+### 選項 1： Selective Event Sourcing (Recommended)
 
-**Description**: Apply event sourcing only to critical aggregates that benefit most
+**描述**： Apply event sourcing only to critical aggregates that benefit most
 
 **Event Sourcing Architecture**:
 
@@ -342,7 +342,7 @@ public class PostgresEventStore implements EventStore {
 }
 ```
 
-**Aggregate Repository with Event Sourcing**:
+**Aggregate Repository 與 Event Sourcing**:
 
 ```java
 @Repository
@@ -422,7 +422,7 @@ public class EventSourcedOrderRepository implements OrderRepository {
 }
 ```
 
-**Projection for Read Model**:
+**Projection 用於 Read Model**:
 
 ```java
 @Component
@@ -541,85 +541,85 @@ public class OrderHistoryService {
 }
 ```
 
-**Pros**:
+**優點**：
 
-- ✅ Complete audit trail for critical aggregates
-- ✅ Temporal queries and time travel
-- ✅ Excellent debugging capabilities
-- ✅ Natural fit for event-driven architecture
-- ✅ Supports complex business workflows
+- ✅ Complete audit trail 用於 critical aggregates
+- ✅ Temporal queries 和 time travel
+- ✅ 優秀的 debugging capabilities
+- ✅ Natural fit 用於 event-driven architecture
+- ✅ 支援s 複雜的 business workflows
 - ✅ Regulatory compliance
-- ✅ Can coexist with CRUD approach
+- ✅ 可以 coexist 與 CRUD approach
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Increased complexity
-- ⚠️ Learning curve for team
+- ⚠️ Increased 複雜的ity
+- ⚠️ Learning curve 用於 team
 - ⚠️ More storage required
-- ⚠️ Eventual consistency for read models
+- ⚠️ Eventual consistency 用於 read models
 - ⚠️ Snapshot management needed
 - ⚠️ Event versioning challenges
 
-**Cost**: $80,000 implementation + $10,000/year operational
+**成本**： $80,000 implementation + $10,000/year operational
 
-**Risk**: **Medium** - Significant complexity increase
+**風險**： **Medium** - Significant complexity increase
 
-### Option 2: Full Event Sourcing
+### 選項 2： Full Event Sourcing
 
-**Description**: Apply event sourcing to all aggregates
+**描述**： Apply event sourcing to all aggregates
 
-**Pros**:
+**優點**：
 
-- ✅ Consistent approach across system
+- ✅ Consistent approach 跨 system
 - ✅ Maximum auditability
 - ✅ Simplified architecture (one pattern)
 
-**Cons**:
+**缺點**：
 
-- ❌ Very high complexity
-- ❌ Significant performance overhead
-- ❌ Large storage requirements
+- ❌ Very high 複雜的ity
+- ❌ Signifi可以t performance overhead
+- ❌ 大型的 storage requirements
 - ❌ Steep learning curve
-- ❌ Overkill for simple aggregates
+- ❌ Overkill 用於 簡單的 aggregates
 
-**Cost**: $200,000 implementation + $30,000/year
+**成本**： $200,000 implementation + $30,000/year
 
-**Risk**: **High** - Too complex for current needs
+**風險**： **High** - Too complex for current needs
 
-### Option 3: Enhanced Audit Logging
+### 選項 3： Enhanced Audit Logging
 
-**Description**: Keep CRUD but add comprehensive audit logging
+**描述**： Keep CRUD but add comprehensive audit logging
 
-**Pros**:
+**優點**：
 
-- ✅ Simple to implement
-- ✅ Low complexity
+- ✅ 簡單implement
+- ✅ Low 複雜的ity
 - ✅ Familiar to team
 
-**Cons**:
+**缺點**：
 
 - ❌ Limited temporal queries
-- ❌ Cannot replay state
-- ❌ Less powerful for debugging
+- ❌ 可以not replay state
+- ❌ Less powerful 用於 debugging
 - ❌ Not true event sourcing
 
-**Cost**: $20,000 implementation
+**成本**： $20,000 implementation
 
-**Risk**: **Low** - But limited capabilities
+**風險**： **Low** - But limited capabilities
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Selective Event Sourcing (Option 1)** - Proposed for future implementation
+**選擇的選項**： **Selective Event Sourcing (Option 1)** - Proposed for future implementation
 
-### Rationale
+### 理由
 
-Selective event sourcing for critical aggregates (Order, Payment) provides the best balance of benefits and complexity, allowing gradual adoption and learning while delivering value for compliance and debugging.
+Selective event sourcing 用於 critical aggregates (Order, Payment) 提供s the best balance of benefits 和 複雜的ity, allowing gradual adoption 和 learning while delivering value 用於 compliance 和 debugging.
 
-**Implementation Recommendation**: Start with Order aggregate as pilot, expand to Payment if successful.
+**Implementation Recommendation**: Start 與 Order aggregate as pilot, expand to Payment if successful.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
@@ -627,13 +627,13 @@ Selective event sourcing for critical aggregates (Order, Payment) provides the b
 | Database Team | Medium | New storage patterns | Training, monitoring tools |
 | QA Team | Medium | New testing approaches | Test frameworks, examples |
 | Operations Team | Medium | New monitoring needs | Dashboards, runbooks |
-| Compliance Team | Low | Better audit capabilities | Documentation, reports |
+| Compliance Team | Low | 更好的 audit capabilities | Documentation, reports |
 
 ### Impact Radius Assessment
 
-**Selected Impact Radius**: **Bounded Context**
+**選擇的影響半徑**： **Bounded Context**
 
-Affects:
+影響：
 
 - Order bounded context (initially)
 - Payment bounded context (future)
@@ -641,27 +641,27 @@ Affects:
 - Read model projections
 - Reporting systems
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
-| Complexity overwhelms team | Medium | High | Start small, extensive training |
+| 複雜的ity overwhelms team | Medium | High | Start small, extensive training |
 | Performance issues | Low | Medium | Snapshots, caching, monitoring |
 | Event versioning problems | Medium | Medium | Upcasting strategy, testing |
 | Storage growth | Low | Low | Archiving strategy, compression |
 | Eventual consistency issues | Medium | Medium | Clear documentation, monitoring |
 
-**Overall Risk Level**: **Medium**
+**整體風險等級**： **Medium**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Proof of Concept (Month 1)
+### 第 1 階段： Proof of Concept (Month 1)
 
 **Tasks**:
 
 - [ ] Implement event store
-- [ ] Create Order aggregate with event sourcing
-- [ ] Build simple projection
+- [ ] Create Order aggregate 與 event sourcing
+- [ ] Build 簡單的 projection
 - [ ] Test temporal queries
 - [ ] Measure performance
 - [ ] Document learnings
@@ -672,7 +672,7 @@ Affects:
 - Performance acceptable
 - Team understands approach
 
-### Phase 2: Production Implementation (Month 2)
+### 第 2 階段： Production Implementation (Month 2)
 
 **Tasks**:
 
@@ -680,7 +680,7 @@ Affects:
 - [ ] Snapshot mechanism
 - [ ] Complete Order projections
 - [ ] Migration strategy
-- [ ] Monitoring and alerting
+- [ ] Monitoring 和 alerting
 - [ ] Documentation
 
 **Success Criteria**:
@@ -689,7 +689,7 @@ Affects:
 - All features working
 - Monitoring in place
 
-### Phase 3: Rollout and Validation (Month 3)
+### 第 3 階段： Rollout and Validation (Month 3)
 
 **Tasks**:
 
@@ -705,26 +705,26 @@ Affects:
 - Benefits realized
 - Team comfortable
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Unacceptable performance
-- Team cannot maintain
+- Team 可以not 維持
 - Benefits not realized
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Stop using event-sourced aggregates
 2. Migrate to CRUD approach
 3. Archive event store
 4. Update documentation
 
-**Rollback Time**: 2 weeks
+**回滾時間**： 2 weeks
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
@@ -736,72 +736,72 @@ Affects:
 
 ### Review Schedule
 
-- **Monthly**: Performance and usage review
+- **Monthly**: Performance 和 usage review
 - **Quarterly**: Value assessment
 - **Annually**: Expansion decision
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Complete Audit Trail**: Full history for compliance
+- ✅ **Complete Audit Trail**: Full history 用於 compliance
 - ✅ **Temporal Queries**: Query any historical state
 - ✅ **Debugging**: Replay events to reproduce issues
-- ✅ **Analytics**: Rich event data for analysis
+- ✅ **Analytics**: 豐富的 event data 用於 analysis
 - ✅ **Compliance**: Meet regulatory requirements
-- ✅ **Flexibility**: Support complex workflows
+- ✅ **Flexibility**: 支援 複雜的 workflows
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Complexity**: Significant increase in complexity
+- ⚠️ **複雜的ity**: Signifi可以t increase in 複雜的ity
 - ⚠️ **Learning Curve**: Team needs training
 - ⚠️ **Storage**: More storage required
 - ⚠️ **Eventual Consistency**: Read models lag behind
-- ⚠️ **Maintenance**: More code to maintain
+- ⚠️ **Maintenance**: More code to 維持
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Event versioning strategy needed
 2. Snapshot optimization required
 3. Projection rebuild mechanism
 4. Event archiving strategy
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Event versioning framework
 - **Q3 2026**: Snapshot optimization
 - **Q4 2026**: Projection rebuild tools
 - **Q1 2027**: Event archiving
 
-## Related Decisions
+## 相關決策
 
-- [ADR-020: Database Migration Strategy with Flyway](020-database-migration-strategy-flyway.md)
-- [ADR-025: Saga Pattern for Distributed Transactions](025-saga-pattern-distributed-transactions.md)
-- [ADR-026: CQRS Pattern for Read/Write Separation](026-cqrs-pattern-read-write-separation.md)
+- [ADR-020: Database Migration Strategy 與 Flyway](020-database-migration-strategy-flyway.md)
+- [ADR-025: Saga Pattern 用於 Distributed Transactions](025-saga-pattern-distributed-transactions.md)
+- [ADR-026: CQRS Pattern 用於 Read/Write Separation](026-cqrs-pattern-read-write-separation.md)
 
 ---
 
-**Document Status**: 📋 Proposed (Optional Pattern)  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-04-25 (After evaluation period)
+**文檔狀態**： 📋 Proposed (Optional Pattern)  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-04-25 (After evaluation period)
 
-## Notes
+## 備註
 
 ### When to Use Event Sourcing
 
-**Good Candidates**:
+**良好的 可以didates**:
 
 - ✅ Aggregates requiring complete audit trail
 - ✅ Financial transactions
 - ✅ Regulatory compliance requirements
-- ✅ Complex business workflows
+- ✅ 複雜的 business workflows
 - ✅ Temporal queries needed
 
-**Poor Candidates**:
+**Poor 可以didates**:
 
-- ❌ Simple CRUD entities
+- ❌ 簡單的 CRUD entities
 - ❌ Reference data
 - ❌ High-volume, low-value data
 - ❌ Frequently changing schemas
@@ -810,17 +810,17 @@ Affects:
 
 **DO**:
 
-- ✅ Start with one aggregate
-- ✅ Use snapshots for performance
+- ✅ Start 與 one aggregate
+- ✅ Use snapshots 用於 performance
 - ✅ Version events properly
 - ✅ Keep events immutable
-- ✅ Use projections for queries
+- ✅ Use projections 用於 queries
 - ✅ Monitor projection lag
 
 **DON'T**:
 
 - ❌ Apply to all aggregates
-- ❌ Store large payloads in events
+- ❌ Store 大型的 payloads in events
 - ❌ Modify past events
 - ❌ Query event store directly
 - ❌ Ignore event versioning

@@ -8,59 +8,57 @@ version: "1.0"
 status: "active"
 owner: "Architecture Team"
 related_docs:
-
   - "viewpoints/functional/overview.md"
   - "viewpoints/information/overview.md"
   - "perspectives/evolution/overview.md"
-
 tags: ["ddd", "bounded-contexts", "domain-model", "context-map"]
 ---
 
 # Bounded Contexts
 
-> **Status**: ✅ Active  
-> **Last Updated**: 2025-10-22  
+> **Status**: ✅ Active
+> **Last Updated**: 2025-10-22
 > **Owner**: Architecture Team
 
-## Overview
+## 概述
 
-This document describes all 13 bounded contexts in the Enterprise E-Commerce Platform. Each bounded context represents a distinct business capability with clear boundaries, its own domain model, and specific responsibilities.
+本文件描述企業電子商務平台中的所有 13 個 bounded contexts。每個 bounded context 代表一個獨特的業務能力，具有明確的邊界、自己的 domain model 和特定的職責。
 
-The contexts are organized following **Domain-Driven Design (DDD)** strategic design principles, with each context being independently deployable and maintainable.
+這些 contexts 遵循 **Domain-Driven Design (DDD)** 策略設計原則組織，每個 context 都可以獨立部署和維護。
 
 ## Context Map
 
 ![Bounded Contexts Overview](../../diagrams/generated/functional/bounded-contexts-overview.png)
 
-### Context Relationships
+### Context 關係
 
-- **Customer ↔ Order**: Customer places orders (via events)
-- **Order ↔ Inventory**: Order reserves inventory (via events)
-- **Order ↔ Payment**: Order triggers payment processing (via events)
-- **Order ↔ Delivery**: Order initiates delivery (via events)
-- **Order ↔ Pricing**: Order calculates prices (via service call)
-- **Product ↔ Inventory**: Product stock managed by inventory (via events)
-- **Shopping Cart ↔ Product**: Cart contains products (via service call)
-- **Promotion ↔ Pricing**: Promotions affect pricing (via events)
-- **Review ↔ Product**: Reviews associated with products (via events)
-- **Notification**: Listens to events from all contexts
+- **Customer ↔ Order**: Customer 下訂單（透過 events）
+- **Order ↔ Inventory**: Order 預留庫存（透過 events）
+- **Order ↔ Payment**: Order 觸發付款處理（透過 events）
+- **Order ↔ Delivery**: Order 啟動配送（透過 events）
+- **Order ↔ Pricing**: Order 計算價格（透過 service call）
+- **Product ↔ Inventory**: Product 庫存由 inventory 管理（透過 events）
+- **Shopping Cart ↔ Product**: Cart 包含 products（透過 service call）
+- **Promotion ↔ Pricing**: Promotions 影響定價（透過 events）
+- **Review ↔ Product**: Reviews 與 products 關聯（透過 events）
+- **Notification**: 監聽所有 contexts 的 events
 
 ## Bounded Contexts
 
 ### 1. Customer Context
 
-**Responsibility**: Manage customer lifecycle, profiles, preferences, and membership
+**職責**：管理客戶生命週期、個人檔案、偏好設定和會員資格
 
-**Core Aggregate**: `Customer`
+**核心 Aggregate**：`Customer`
 
-**Key Entities**:
+**關鍵 Entities**：
 
 - `Customer` (Aggregate Root)
 - `CustomerPreferences`
 - `DeliveryAddress`
 - `PaymentMethod`
 
-**Key Value Objects**:
+**關鍵 Value Objects**：
 
 - `CustomerId`
 - `CustomerName`
@@ -72,7 +70,7 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `RewardPoints`
 - `NotificationPreferences`
 
-**Domain Events Published**:
+**發布的 Domain Events**：
 
 - `CustomerCreatedEvent`
 - `CustomerProfileUpdatedEvent`
@@ -86,42 +84,42 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `RewardPointsRedeemedEvent`
 - `CustomerSpendingUpdatedEvent`
 
-**Domain Events Consumed**:
+**消費的 Domain Events**：
 
-- `OrderCompletedEvent` (from Order Context) → Update spending, reward points
-- `PaymentCompletedEvent` (from Payment Context) → Update customer statistics
+- `OrderCompletedEvent` (from Order Context) → 更新消費、獎勵點數
+- `PaymentCompletedEvent` (from Payment Context) → 更新客戶統計資料
 
-**REST API Endpoints**:
+**REST API Endpoints**：
 
-- `POST /api/v1/customers` - Register new customer
-- `GET /api/v1/customers/{id}` - Get customer details
-- `PUT /api/v1/customers/{id}` - Update customer profile
-- `POST /api/v1/customers/{id}/addresses` - Add delivery address
-- `PUT /api/v1/customers/{id}/preferences` - Update preferences
-- `GET /api/v1/customers/{id}/reward-points` - Get reward points balance
+- `POST /api/v1/customers` - 註冊新客戶
+- `GET /api/v1/customers/{id}` - 取得客戶詳細資訊
+- `PUT /api/v1/customers/{id}` - 更新客戶個人檔案
+- `POST /api/v1/customers/{id}/addresses` - 新增配送地址
+- `PUT /api/v1/customers/{id}/preferences` - 更新偏好設定
+- `GET /api/v1/customers/{id}/reward-points` - 取得獎勵點數餘額
 
-**Business Rules**:
+**業務規則**：
 
-- Email must be unique across all customers
-- Membership level upgrades based on spending thresholds
-- Reward points earned: 1 point per $10 spent
-- VIP status requires PLATINUM membership + $10,000 annual spending
+- Email 在所有客戶中必須唯一
+- 會員等級升級基於消費門檻
+- 獎勵點數賺取：每消費 $10 獲得 1 點
+- VIP 狀態需要 PLATINUM 會員資格 + $10,000 年度消費
 
 ---
 
 ### 2. Order Context
 
-**Responsibility**: Manage order lifecycle from creation to completion
+**職責**：管理訂單生命週期，從建立到完成
 
-**Core Aggregate**: `Order`
+**核心 Aggregate**：`Order`
 
-**Key Entities**:
+**關鍵 Entities**：
 
 - `Order` (Aggregate Root)
 - `OrderItem`
 - `OrderHistory`
 
-**Key Value Objects**:
+**關鍵 Value Objects**：
 
 - `OrderId`
 - `OrderStatus` (CREATED, PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED)
@@ -130,7 +128,7 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `Money`
 - `Quantity`
 
-**Domain Events Published**:
+**發布的 Domain Events**：
 
 - `OrderCreatedEvent`
 - `OrderSubmittedEvent`
@@ -142,44 +140,44 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `OrderItemAddedEvent`
 - `OrderItemRemovedEvent`
 
-**Domain Events Consumed**:
+**消費的 Domain Events**：
 
-- `InventoryReservedEvent` (from Inventory Context) → Confirm order
-- `PaymentCompletedEvent` (from Payment Context) → Proceed with fulfillment
-- `PaymentFailedEvent` (from Payment Context) → Cancel order
-- `DeliveryScheduledEvent` (from Delivery Context) → Update order status
+- `InventoryReservedEvent` (from Inventory Context) → 確認訂單
+- `PaymentCompletedEvent` (from Payment Context) → 繼續履行
+- `PaymentFailedEvent` (from Payment Context) → 取消訂單
+- `DeliveryScheduledEvent` (from Delivery Context) → 更新訂單狀態
 
-**REST API Endpoints**:
+**REST API Endpoints**：
 
-- `POST /api/v1/orders` - Create new order
-- `GET /api/v1/orders/{id}` - Get order details
-- `POST /api/v1/orders/{id}/submit` - Submit order for processing
-- `POST /api/v1/orders/{id}/cancel` - Cancel order
-- `GET /api/v1/orders?customerId={id}` - List customer orders
-- `GET /api/v1/orders/{id}/history` - Get order history
+- `POST /api/v1/orders` - 建立新訂單
+- `GET /api/v1/orders/{id}` - 取得訂單詳細資訊
+- `POST /api/v1/orders/{id}/submit` - 提交訂單進行處理
+- `POST /api/v1/orders/{id}/cancel` - 取消訂單
+- `GET /api/v1/orders?customerId={id}` - 列出客戶訂單
+- `GET /api/v1/orders/{id}/history` - 取得訂單歷史記錄
 
-**Business Rules**:
+**業務規則**：
 
-- Order must have at least one item
-- Order can only be cancelled if status is CREATED or PENDING
-- Total amount must match sum of item prices plus shipping
-- Order confirmation requires successful inventory reservation and payment
+- 訂單必須至少有一個項目
+- 只有狀態為 CREATED 或 PENDING 的訂單才能取消
+- 總金額必須符合項目價格總和加上運費
+- 訂單確認需要成功的庫存預留和付款
 
 ---
 
 ### 3. Product Context
 
-**Responsibility**: Manage product catalog, categories, and product information
+**職責**：管理產品目錄、類別和產品資訊
 
-**Core Aggregate**: `Product`
+**核心 Aggregate**：`Product`
 
-**Key Entities**:
+**關鍵 Entities**：
 
 - `Product` (Aggregate Root)
 - `ProductCategory`
 - `ProductSpecification`
 
-**Key Value Objects**:
+**關鍵 Value Objects**：
 
 - `ProductId`
 - `ProductName`
@@ -189,7 +187,7 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `ProductStatus` (ACTIVE, INACTIVE, DISCONTINUED)
 - `CategoryId`
 
-**Domain Events Published**:
+**發布的 Domain Events**：
 
 - `ProductCreatedEvent`
 - `ProductUpdatedEvent`
@@ -197,42 +195,42 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `ProductStatusChangedEvent`
 - `ProductDiscontinuedEvent`
 
-**Domain Events Consumed**:
+**消費的 Domain Events**：
 
-- `ReviewSubmittedEvent` (from Review Context) → Update product rating
-- `InventoryDepletedEvent` (from Inventory Context) → Mark as out of stock
+- `ReviewSubmittedEvent` (from Review Context) → 更新產品評分
+- `InventoryDepletedEvent` (from Inventory Context) → 標記為缺貨
 
-**REST API Endpoints**:
+**REST API Endpoints**：
 
-- `GET /api/v1/products` - List products with filtering
-- `GET /api/v1/products/{id}` - Get product details
-- `POST /api/v1/products` - Create new product (admin)
-- `PUT /api/v1/products/{id}` - Update product (admin)
-- `GET /api/v1/products/search?q={query}` - Search products
-- `GET /api/v1/products/categories` - List categories
+- `GET /api/v1/products` - 列出產品並篩選
+- `GET /api/v1/products/{id}` - 取得產品詳細資訊
+- `POST /api/v1/products` - 建立新產品（admin）
+- `PUT /api/v1/products/{id}` - 更新產品（admin）
+- `GET /api/v1/products/search?q={query}` - 搜尋產品
+- `GET /api/v1/products/categories` - 列出類別
 
-**Business Rules**:
+**業務規則**：
 
-- SKU must be unique across all products
-- Price must be positive
-- Product cannot be deleted if referenced in active orders
-- Discontinued products cannot be added to new orders
+- SKU 在所有產品中必須唯一
+- 價格必須為正數
+- 如果在有效訂單中被引用，產品不能被刪除
+- 已停產的產品不能加入新訂單
 
 ---
 
 ### 4. Inventory Context
 
-**Responsibility**: Manage product stock levels and inventory operations
+**職責**：管理產品庫存水平和庫存操作
 
-**Core Aggregate**: `InventoryItem`
+**核心 Aggregate**：`InventoryItem`
 
-**Key Entities**:
+**關鍵 Entities**：
 
 - `InventoryItem` (Aggregate Root)
 - `StockMovement`
 - `Reservation`
 
-**Key Value Objects**:
+**關鍵 Value Objects**：
 
 - `InventoryItemId`
 - `ProductId`
@@ -240,7 +238,7 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `ReservationId`
 - `WarehouseLocation`
 
-**Domain Events Published**:
+**發布的 Domain Events**：
 
 - `InventoryReservedEvent`
 - `InventoryReleasedEvent`
@@ -248,40 +246,40 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `InventoryDepletedEvent`
 - `StockLevelChangedEvent`
 
-**Domain Events Consumed**:
+**消費的 Domain Events**：
 
-- `OrderSubmittedEvent` (from Order Context) → Reserve inventory
-- `OrderCancelledEvent` (from Order Context) → Release reservation
-- `OrderDeliveredEvent` (from Order Context) → Commit reservation
+- `OrderSubmittedEvent` (from Order Context) → 預留庫存
+- `OrderCancelledEvent` (from Order Context) → 釋放預留
+- `OrderDeliveredEvent` (from Order Context) → 提交預留
 
-**REST API Endpoints**:
+**REST API Endpoints**：
 
-- `GET /api/v1/inventory/{productId}` - Get stock level
-- `POST /api/v1/inventory/{productId}/replenish` - Add stock (admin)
-- `GET /api/v1/inventory/low-stock` - List low stock items (admin)
+- `GET /api/v1/inventory/{productId}` - 取得庫存水平
+- `POST /api/v1/inventory/{productId}/replenish` - 新增庫存（admin）
+- `GET /api/v1/inventory/low-stock` - 列出低庫存項目（admin）
 
-**Business Rules**:
+**業務規則**：
 
-- Stock level cannot be negative
-- Reservations expire after 15 minutes if order not confirmed
-- Low stock alert when quantity < 10
-- Automatic reorder when quantity < 5
+- 庫存水平不能為負數
+- 如果訂單未確認，預留在 15 分鐘後過期
+- 數量 < 10 時低庫存警示
+- 數量 < 5 時自動重新訂購
 
 ---
 
 ### 5. Payment Context
 
-**Responsibility**: Process payments and manage payment transactions
+**職責**：處理付款和管理付款交易
 
-**Core Aggregate**: `Payment`
+**核心 Aggregate**：`Payment`
 
-**Key Entities**:
+**關鍵 Entities**：
 
 - `Payment` (Aggregate Root)
 - `PaymentTransaction`
 - `Refund`
 
-**Key Value Objects**:
+**關鍵 Value Objects**：
 
 - `PaymentId`
 - `OrderId`
@@ -290,46 +288,46 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `PaymentStatus` (PENDING, COMPLETED, FAILED, REFUNDED)
 - `TransactionId`
 
-**Domain Events Published**:
+**發布的 Domain Events**：
 
 - `PaymentInitiatedEvent`
 - `PaymentCompletedEvent`
 - `PaymentFailedEvent`
 - `RefundProcessedEvent`
 
-**Domain Events Consumed**:
+**消費的 Domain Events**：
 
-- `OrderSubmittedEvent` (from Order Context) → Initiate payment
-- `OrderCancelledEvent` (from Order Context) → Process refund
+- `OrderSubmittedEvent` (from Order Context) → 啟動付款
+- `OrderCancelledEvent` (from Order Context) → 處理退款
 
-**REST API Endpoints**:
+**REST API Endpoints**：
 
-- `POST /api/v1/payments` - Initiate payment
-- `GET /api/v1/payments/{id}` - Get payment status
-- `POST /api/v1/payments/{id}/refund` - Process refund (admin)
+- `POST /api/v1/payments` - 啟動付款
+- `GET /api/v1/payments/{id}` - 取得付款狀態
+- `POST /api/v1/payments/{id}/refund` - 處理退款（admin）
 
-**Business Rules**:
+**業務規則**：
 
-- Payment amount must match order total
-- Failed payments trigger automatic retry (max 3 attempts)
-- Refunds can only be processed for completed payments
-- Partial refunds allowed for order cancellations
+- 付款金額必須符合訂單總額
+- 失敗的付款觸發自動重試（最多 3 次嘗試）
+- 退款只能對已完成的付款進行處理
+- 允許對訂單取消進行部分退款
 
 ---
 
 ### 6. Delivery Context
 
-**Responsibility**: Manage order delivery and logistics
+**職責**：管理訂單配送和物流
 
-**Core Aggregate**: `Delivery`
+**核心 Aggregate**：`Delivery`
 
-**Key Entities**:
+**關鍵 Entities**：
 
 - `Delivery` (Aggregate Root)
 - `DeliveryRoute`
 - `TrackingEvent`
 
-**Key Value Objects**:
+**關鍵 Value Objects**：
 
 - `DeliveryId`
 - `OrderId`
@@ -338,7 +336,7 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `DeliveryAddress`
 - `EstimatedDeliveryDate`
 
-**Domain Events Published**:
+**發布的 Domain Events**：
 
 - `DeliveryScheduledEvent`
 - `DeliveryDispatchedEvent`
@@ -346,39 +344,39 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `DeliveryDeliveredEvent`
 - `DeliveryFailedEvent`
 
-**Domain Events Consumed**:
+**消費的 Domain Events**：
 
-- `OrderConfirmedEvent` (from Order Context) → Schedule delivery
-- `PaymentCompletedEvent` (from Payment Context) → Confirm delivery
+- `OrderConfirmedEvent` (from Order Context) → 安排配送
+- `PaymentCompletedEvent` (from Payment Context) → 確認配送
 
-**REST API Endpoints**:
+**REST API Endpoints**：
 
-- `GET /api/v1/deliveries/{orderId}` - Get delivery status
-- `GET /api/v1/deliveries/track/{trackingNumber}` - Track delivery
-- `POST /api/v1/deliveries/{id}/update-status` - Update status (logistics)
+- `GET /api/v1/deliveries/{orderId}` - 取得配送狀態
+- `GET /api/v1/deliveries/track/{trackingNumber}` - 追蹤配送
+- `POST /api/v1/deliveries/{id}/update-status` - 更新狀態（logistics）
 
-**Business Rules**:
+**業務規則**：
 
-- Delivery can only be scheduled for confirmed orders
-- Tracking number must be unique
-- Estimated delivery: 3-5 business days for standard shipping
-- Failed deliveries trigger customer notification
+- 配送只能為已確認的訂單安排
+- 追蹤編號必須唯一
+- 預計配送時間：標準運送 3-5 個工作天
+- 配送失敗觸發客戶通知
 
 ---
 
 ### 7. Promotion Context
 
-**Responsibility**: Manage promotional campaigns and discount rules
+**職責**：管理促銷活動和折扣規則
 
-**Core Aggregate**: `Promotion`
+**核心 Aggregate**：`Promotion`
 
-**Key Entities**:
+**關鍵 Entities**：
 
 - `Promotion` (Aggregate Root)
 - `PromotionRule`
 - `DiscountCoupon`
 
-**Key Value Objects**:
+**關鍵 Value Objects**：
 
 - `PromotionId`
 - `PromotionType` (PERCENTAGE, FIXED_AMOUNT, BUY_X_GET_Y)
@@ -386,7 +384,7 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `ValidityPeriod`
 - `CouponCode`
 
-**Domain Events Published**:
+**發布的 Domain Events**：
 
 - `PromotionCreatedEvent`
 - `PromotionActivatedEvent`
@@ -394,82 +392,82 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `CouponAppliedEvent`
 - `CouponRedeemedEvent`
 
-**Domain Events Consumed**:
+**消費的 Domain Events**：
 
-- `OrderSubmittedEvent` (from Order Context) → Apply promotions
+- `OrderSubmittedEvent` (from Order Context) → 應用促銷
 
-**REST API Endpoints**:
+**REST API Endpoints**：
 
-- `GET /api/v1/promotions/active` - List active promotions
-- `POST /api/v1/promotions/validate-coupon` - Validate coupon code
-- `POST /api/v1/promotions` - Create promotion (admin)
+- `GET /api/v1/promotions/active` - 列出有效促銷
+- `POST /api/v1/promotions/validate-coupon` - 驗證優惠券代碼
+- `POST /api/v1/promotions` - 建立促銷（admin）
 
-**Business Rules**:
+**業務規則**：
 
-- Promotions have start and end dates
-- Coupons can have usage limits (per customer or total)
-- Multiple promotions can be combined unless explicitly restricted
-- Expired promotions cannot be applied
+- 促銷有開始和結束日期
+- 優惠券可以有使用限制（每位客戶或總計）
+- 除非明確限制，否則可以合併多個促銷
+- 過期的促銷不能應用
 
 ---
 
 ### 8. Notification Context
 
-**Responsibility**: Send notifications to customers via multiple channels
+**職責**：透過多個管道向客戶發送通知
 
-**Core Aggregate**: `Notification`
+**核心 Aggregate**：`Notification`
 
-**Key Entities**:
+**關鍵 Entities**：
 
 - `Notification` (Aggregate Root)
 - `NotificationTemplate`
 
-**Key Value Objects**:
+**關鍵 Value Objects**：
 
 - `NotificationId`
 - `NotificationType` (EMAIL, SMS, PUSH)
 - `NotificationStatus` (PENDING, SENT, FAILED)
 - `RecipientId`
 
-**Domain Events Published**:
+**發布的 Domain Events**：
 
 - `NotificationSentEvent`
 - `NotificationFailedEvent`
 
-**Domain Events Consumed**:
+**消費的 Domain Events**：
 
-- `CustomerCreatedEvent` → Send welcome email
-- `OrderConfirmedEvent` → Send order confirmation
-- `OrderShippedEvent` → Send shipping notification
-- `PaymentCompletedEvent` → Send payment receipt
-- `DeliveryDeliveredEvent` → Send delivery confirmation
+- `CustomerCreatedEvent` → 發送歡迎郵件
+- `OrderConfirmedEvent` → 發送訂單確認
+- `OrderShippedEvent` → 發送運送通知
+- `PaymentCompletedEvent` → 發送付款收據
+- `DeliveryDeliveredEvent` → 發送配送確認
 
-**REST API Endpoints**:
+**REST API Endpoints**：
 
-- `GET /api/v1/notifications/{customerId}` - Get customer notifications
-- `POST /api/v1/notifications/send` - Send notification (internal)
+- `GET /api/v1/notifications/{customerId}` - 取得客戶通知
+- `POST /api/v1/notifications/send` - 發送通知（內部）
 
-**Business Rules**:
+**業務規則**：
 
-- Respect customer notification preferences
-- Failed notifications retry up to 3 times
-- Email notifications include unsubscribe link
-- Critical notifications (payment, security) cannot be disabled
+- 尊重客戶通知偏好設定
+- 失敗的通知重試最多 3 次
+- 郵件通知包含取消訂閱連結
+- 關鍵通知（付款、安全）不能停用
 
 ---
 
 ### 9. Review Context
 
-**Responsibility**: Manage product reviews and ratings
+**職責**：管理產品評論和評分
 
-**Core Aggregate**: `Review`
+**核心 Aggregate**：`Review`
 
-**Key Entities**:
+**關鍵 Entities**：
 
 - `Review` (Aggregate Root)
 - `ReviewComment`
 
-**Key Value Objects**:
+**關鍵 Value Objects**：
 
 - `ReviewId`
 - `ProductId`
@@ -477,45 +475,45 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `Rating` (1-5 stars)
 - `ReviewStatus` (PENDING, APPROVED, REJECTED)
 
-**Domain Events Published**:
+**發布的 Domain Events**：
 
 - `ReviewSubmittedEvent`
 - `ReviewApprovedEvent`
 - `ReviewRejectedEvent`
 - `ReviewUpdatedEvent`
 
-**Domain Events Consumed**:
+**消費的 Domain Events**：
 
-- `OrderDeliveredEvent` (from Order Context) → Enable review submission
+- `OrderDeliveredEvent` (from Order Context) → 啟用評論提交
 
-**REST API Endpoints**:
+**REST API Endpoints**：
 
-- `GET /api/v1/reviews?productId={id}` - Get product reviews
-- `POST /api/v1/reviews` - Submit review
-- `PUT /api/v1/reviews/{id}` - Update review
-- `POST /api/v1/reviews/{id}/approve` - Approve review (admin)
+- `GET /api/v1/reviews?productId={id}` - 取得產品評論
+- `POST /api/v1/reviews` - 提交評論
+- `PUT /api/v1/reviews/{id}` - 更新評論
+- `POST /api/v1/reviews/{id}/approve` - 批准評論（admin）
 
-**Business Rules**:
+**業務規則**：
 
-- Customer can only review products they purchased
-- One review per customer per product
-- Reviews require moderation before publication
-- Rating must be between 1 and 5 stars
+- 客戶只能評論他們購買的產品
+- 每位客戶每個產品一個評論
+- 評論在發布前需要審核
+- 評分必須在 1 到 5 星之間
 
 ---
 
 ### 10. Shopping Cart Context
 
-**Responsibility**: Manage customer shopping carts and cart operations
+**職責**：管理客戶購物車和購物車操作
 
-**Core Aggregate**: `ShoppingCart`
+**核心 Aggregate**：`ShoppingCart`
 
-**Key Entities**:
+**關鍵 Entities**：
 
 - `ShoppingCart` (Aggregate Root)
 - `CartItem`
 
-**Key Value Objects**:
+**關鍵 Value Objects**：
 
 - `CartId`
 - `CustomerId`
@@ -523,7 +521,7 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `Quantity`
 - `CartStatus` (ACTIVE, ABANDONED, CONVERTED)
 
-**Domain Events Published**:
+**發布的 Domain Events**：
 
 - `CartCreatedEvent`
 - `ItemAddedToCartEvent`
@@ -531,40 +529,40 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `CartAbandonedEvent`
 - `CartConvertedToOrderEvent`
 
-**Domain Events Consumed**:
+**消費的 Domain Events**：
 
-- `ProductPriceChangedEvent` (from Product Context) → Update cart prices
-- `InventoryDepletedEvent` (from Inventory Context) → Remove unavailable items
+- `ProductPriceChangedEvent` (from Product Context) → 更新購物車價格
+- `InventoryDepletedEvent` (from Inventory Context) → 移除不可用項目
 
-**REST API Endpoints**:
+**REST API Endpoints**：
 
-- `GET /api/v1/carts/{customerId}` - Get customer cart
-- `POST /api/v1/carts/{customerId}/items` - Add item to cart
-- `DELETE /api/v1/carts/{customerId}/items/{productId}` - Remove item
-- `PUT /api/v1/carts/{customerId}/items/{productId}` - Update quantity
-- `POST /api/v1/carts/{customerId}/checkout` - Convert cart to order
+- `GET /api/v1/carts/{customerId}` - 取得客戶購物車
+- `POST /api/v1/carts/{customerId}/items` - 將項目加入購物車
+- `DELETE /api/v1/carts/{customerId}/items/{productId}` - 移除項目
+- `PUT /api/v1/carts/{customerId}/items/{productId}` - 更新數量
+- `POST /api/v1/carts/{customerId}/checkout` - 將購物車轉換為訂單
 
-**Business Rules**:
+**業務規則**：
 
-- Cart items expire after 24 hours
-- Quantity cannot exceed available inventory
-- Cart total recalculated when prices change
-- Abandoned carts trigger reminder email after 1 hour
+- 購物車項目在 24 小時後過期
+- 數量不能超過可用庫存
+- 價格變更時重新計算購物車總額
+- 放棄的購物車在 1 小時後觸發提醒郵件
 
 ---
 
 ### 11. Pricing Context
 
-**Responsibility**: Calculate prices with discounts, taxes, and shipping
+**職責**：計算包含折扣、稅金和運費的價格
 
-**Core Aggregate**: `PriceCalculation`
+**核心 Aggregate**：`PriceCalculation`
 
-**Key Entities**:
+**關鍵 Entities**：
 
 - `PriceCalculation` (Aggregate Root)
 - `PricingRule`
 
-**Key Value Objects**:
+**關鍵 Value Objects**：
 
 - `BasePrice`
 - `DiscountAmount`
@@ -573,90 +571,90 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `FinalPrice`
 - `PricingStrategy`
 
-**Domain Events Published**:
+**發布的 Domain Events**：
 
 - `PriceCalculatedEvent`
 - `PricingRuleAppliedEvent`
 
-**Domain Events Consumed**:
+**消費的 Domain Events**：
 
-- `PromotionActivatedEvent` (from Promotion Context) → Update pricing rules
-- `OrderSubmittedEvent` (from Order Context) → Calculate final price
+- `PromotionActivatedEvent` (from Promotion Context) → 更新定價規則
+- `OrderSubmittedEvent` (from Order Context) → 計算最終價格
 
-**REST API Endpoints**:
+**REST API Endpoints**：
 
-- `POST /api/v1/pricing/calculate` - Calculate price for order
-- `GET /api/v1/pricing/shipping-cost` - Get shipping cost estimate
+- `POST /api/v1/pricing/calculate` - 計算訂單價格
+- `GET /api/v1/pricing/shipping-cost` - 取得運費估算
 
-**Business Rules**:
+**業務規則**：
 
-- Tax rate varies by delivery location
-- Free shipping for orders > $100
-- Volume discounts for bulk purchases
-- Member discounts based on membership level
+- 稅率因配送地點而異
+- 訂單 > $100 免運費
+- 大量購買的數量折扣
+- 基於會員等級的會員折扣
 
 ---
 
 ### 12. Seller Context
 
-**Responsibility**: Manage seller accounts and seller operations
+**職責**：管理賣家帳戶和賣家操作
 
-**Core Aggregate**: `Seller`
+**核心 Aggregate**：`Seller`
 
-**Key Entities**:
+**關鍵 Entities**：
 
 - `Seller` (Aggregate Root)
 - `SellerProfile`
 - `SellerRating`
 
-**Key Value Objects**:
+**關鍵 Value Objects**：
 
 - `SellerId`
 - `SellerName`
 - `SellerStatus` (ACTIVE, SUSPENDED, INACTIVE)
 - `CommissionRate`
 
-**Domain Events Published**:
+**發布的 Domain Events**：
 
 - `SellerRegisteredEvent`
 - `SellerApprovedEvent`
 - `SellerSuspendedEvent`
 - `SellerRatingUpdatedEvent`
 
-**Domain Events Consumed**:
+**消費的 Domain Events**：
 
-- `OrderCompletedEvent` (from Order Context) → Update seller statistics
-- `ReviewSubmittedEvent` (from Review Context) → Update seller rating
+- `OrderCompletedEvent` (from Order Context) → 更新賣家統計資料
+- `ReviewSubmittedEvent` (from Review Context) → 更新賣家評分
 
-**REST API Endpoints**:
+**REST API Endpoints**：
 
-- `POST /api/v1/sellers` - Register seller
-- `GET /api/v1/sellers/{id}` - Get seller profile
-- `PUT /api/v1/sellers/{id}` - Update seller profile
-- `GET /api/v1/sellers/{id}/products` - List seller products
+- `POST /api/v1/sellers` - 註冊賣家
+- `GET /api/v1/sellers/{id}` - 取得賣家個人檔案
+- `PUT /api/v1/sellers/{id}` - 更新賣家個人檔案
+- `GET /api/v1/sellers/{id}/products` - 列出賣家產品
 
-**Business Rules**:
+**業務規則**：
 
-- Sellers must be approved before listing products
-- Commission rate: 10-20% based on seller tier
-- Suspended sellers cannot list new products
-- Seller rating based on customer reviews and order fulfillment
+- 賣家必須在列出產品前獲得批准
+- 佣金率：基於賣家等級 10-20%
+- 暫停的賣家不能列出新產品
+- 賣家評分基於客戶評論和訂單履行
 
 ---
 
 ### 13. Observability Context (Cross-Cutting)
 
-**Responsibility**: Collect and aggregate system metrics, logs, and traces
+**職責**：收集和彙總系統指標、日誌和追蹤
 
-**Core Aggregate**: `MetricRecord`
+**核心 Aggregate**：`MetricRecord`
 
-**Key Entities**:
+**關鍵 Entities**：
 
 - `MetricRecord` (Aggregate Root)
 - `LogEntry`
 - `TraceSpan`
 
-**Key Value Objects**:
+**關鍵 Value Objects**：
 
 - `MetricName`
 - `MetricValue`
@@ -664,112 +662,112 @@ The contexts are organized following **Domain-Driven Design (DDD)** strategic de
 - `TraceId`
 - `SpanId`
 
-**Domain Events Published**:
+**發布的 Domain Events**：
 
 - `MetricRecordedEvent`
 - `AlertTriggeredEvent`
 
-**Domain Events Consumed**:
+**消費的 Domain Events**：
 
-- All domain events from all contexts → Record metrics
+- 所有 contexts 的所有 domain events → 記錄指標
 
-**REST API Endpoints**:
+**REST API Endpoints**：
 
-- `GET /api/v1/metrics` - Get system metrics (admin)
+- `GET /api/v1/metrics` - 取得系統指標（admin）
 - `GET /api/v1/health` - Health check endpoint
 
-**Business Rules**:
+**業務規則**：
 
-- Metrics retained for 90 days
-- Logs retained for 30 days
-- Traces retained for 7 days
-- Alerts triggered based on threshold rules
+- 指標保留 90 天
+- 日誌保留 30 天
+- 追蹤保留 7 天
+- 警示基於閾值規則觸發
 
 ---
 
-## Context Integration Patterns
+## Context 整合模式
 
-### Synchronous Communication (REST API)
+### 同步通訊 (REST API)
 
-Used for real-time queries where immediate response is required:
+用於需要立即回應的即時查詢：
 
-- Shopping Cart → Product (get product details)
-- Order → Pricing (calculate order total)
-- Customer → Order (query order status)
+- Shopping Cart → Product（取得產品詳細資訊）
+- Order → Pricing（計算訂單總額）
+- Customer → Order（查詢訂單狀態）
 
-### Asynchronous Communication (Domain Events)
+### 非同步通訊 (Domain Events)
 
-Used for cross-context workflows and eventual consistency:
+用於跨 context 工作流程和最終一致性：
 
-- Order → Inventory (reserve stock)
-- Order → Payment (process payment)
-- Order → Delivery (schedule delivery)
-- All contexts → Notification (send notifications)
+- Order → Inventory（預留庫存）
+- Order → Payment（處理付款）
+- Order → Delivery（安排配送）
+- 所有 contexts → Notification（發送通知）
 
 ### Shared Kernel
 
-Minimal shared value objects in `domain/shared/`:
+`domain/shared/` 中的最小共享 value objects：
 
 - `Money`
 - `CustomerId`
 - `ProductId`
 - `OrderId`
 
-## Context Boundaries
+## Context 邊界
 
-### Clear Ownership
+### 明確所有權
 
-- Each context owns its data exclusively
-- No direct database access between contexts
-- Each context has its own database schema/tables
+- 每個 context 專屬擁有其資料
+- Contexts 之間不直接存取資料庫
+- 每個 context 都有自己的資料庫 schema/tables
 
 ### Anti-Corruption Layer
 
-- Each context translates external data to its own domain model
-- External IDs are wrapped in context-specific value objects
-- External events are transformed to internal domain events
+- 每個 context 將外部資料轉換為自己的 domain model
+- 外部 IDs 包裝在 context 特定的 value objects 中
+- 外部 events 轉換為內部 domain events
 
-## Evolution Strategy
+## 演進策略
 
-### Adding New Contexts
+### 新增新 Contexts
 
-1. Identify new business capability
-2. Define context boundaries and responsibilities
-3. Design domain model and events
-4. Implement infrastructure
-5. Integrate with existing contexts via events
+1. 識別新業務能力
+2. 定義 context 邊界和職責
+3. 設計 domain model 和 events
+4. 實作基礎設施
+5. 透過 events 與現有 contexts 整合
 
-### Splitting Contexts
+### 拆分 Contexts
 
-1. Identify subdomain within existing context
-2. Extract domain model and events
-3. Create new bounded context
-4. Migrate data and update integrations
-5. Deprecate old context gradually
+1. 識別現有 context 中的子領域
+2. 提取 domain model 和 events
+3. 建立新的 bounded context
+4. 遷移資料並更新整合
+5. 逐步棄用舊 context
 
-### Merging Contexts
+### 合併 Contexts
 
-1. Identify overlapping responsibilities
-2. Design unified domain model
-3. Merge events and APIs
-4. Migrate data from both contexts
-5. Update all integrations
+1. 識別重疊的職責
+2. 設計統一的 domain model
+3. 合併 events 和 APIs
+4. 從兩個 contexts 遷移資料
+5. 更新所有整合
 
-## Quick Links
+## 快速連結
 
-- [Back to Functional Viewpoint](overview.md)
+- [回到 Functional Viewpoint](overview.md)
 - [Use Cases](use-cases.md)
 - [Functional Interfaces](interfaces.md)
 - [Information Viewpoint](../information/overview.md)
-- [Main Documentation](../../README.md)
+- [主文件](../../README.md)
 
-## Change History
+## 變更歷史
 
-| Date | Version | Author | Changes |
+| 日期 | 版本 | 作者 | 變更 |
 |------|---------|--------|---------|
-| 2025-10-22 | 1.0 | Architecture Team | Initial version with all 13 bounded contexts |
+| 2025-10-22 | 1.0 | Architecture Team | 包含所有 13 個 bounded contexts 的初始版本 |
 
 ---
 
-**Document Version**: 1.0  
+**Document Version**: 1.0
 **Last Updated**: 2025-10-22

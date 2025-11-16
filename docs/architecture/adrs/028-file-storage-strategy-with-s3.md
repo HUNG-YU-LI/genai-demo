@@ -1,6 +1,6 @@
 ---
 adr_number: 028
-title: "File Storage Strategy with S3"
+title: "File Storage Strategy 與 S3"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,116 +10,116 @@ affected_viewpoints: ["deployment", "information", "operational"]
 affected_perspectives: ["performance", "scalability", "cost", "security"]
 ---
 
-# ADR-028: File Storage Strategy with S3
+# ADR-028: File Storage Strategy 與 S3
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires file storage for:
+The Enterprise E-Commerce Platform 需要file storage for:
 
 - Product images (thumbnails, full-size, zoom images)
-- User-generated content (product reviews with photos, profile pictures)
+- User-generated content (product reviews 與 photos, profile pictures)
 - Order documents (invoices, receipts, shipping labels)
 - Marketing assets (banners, promotional images, videos)
 - Static assets (CSS, JavaScript, fonts)
 - File uploads from admin panel (bulk imports, reports)
 - Backup files (database backups, log archives)
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Support high-quality product images (critical for conversion)
-- Enable user-generated content (reviews with photos increase trust)
-- Store order documents for compliance (7-year retention)
-- Deliver static assets globally with low latency
-- Handle file uploads from multiple sources (web, mobile, admin)
+- 支援 high-quality product images (critical 用於 conversion)
+- 啟用 user-generated content (reviews 與 photos increase trust)
+- Store order documents 用於 compliance (7-year retention)
+- Deliver static assets globally 與 low latency
+- 處理 file uploads from multiple sources (web, mobile, admin)
 - Scale to millions of files (100K+ products, 1M+ orders)
-- Cost-effective storage with automatic lifecycle management
+- Cost-effective storage 與 automatic lifecycle management
 
 **Business Constraints**:
 
-- Budget: $500/month for file storage
+- 預算: $500/month 用於 file storage
 - Image delivery latency < 200ms globally
-- Support for multiple file types (images, PDFs, videos)
+- 支援 用於 multiple file types (images, PDFs, videos)
 - Secure access control (public, private, signed URLs)
-- Compliance with data retention policies
+- Compliance 與 data retention policies
 - High availability (99.99% uptime)
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- PostgreSQL primary database (ADR-001)
-- AWS cloud infrastructure (ADR-011)
+- PostgreSQL 主要資料庫 (ADR-001)
+- AWS 雲端基礎設施 (ADR-011)
 - Spring Boot 3.4.5 application
-- Multiple application instances (horizontal scaling)
+- Multiple 應用程式實例 (horizontal scaling)
 - No dedicated file storage solution
 
-**Requirements**:
+**需求**：
 
 - Scalable storage (petabytes if needed)
-- High availability and durability (99.999999999%)
+- High availability 和 durability (99.999999999%)
 - Global content delivery (CDN integration)
 - Secure access control (IAM, signed URLs)
-- Automatic image optimization and resizing
+- Automatic image optimization 和 resizing
 - Lifecycle management (archival, deletion)
-- Versioning for critical files
-- Integration with Spring Boot
+- Versioning 用於 critical files
+- Integration 與 Spring Boot
 - Cost-effective storage tiers
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Scalability**: Handle millions of files, petabytes of data
+1. **Scalability**: 處理 millions of files, petabytes of data
 2. **Performance**: Fast upload/download, global delivery
-3. **Cost**: Within $500/month budget, pay-as-you-go
+3. **成本**： Within $500/month budget, pay-as-you-go
 4. **Durability**: 99.999999999% (11 nines)
 5. **Availability**: 99.99% uptime
 6. **Security**: Access control, encryption, signed URLs
 7. **Integration**: Spring Boot, AWS ecosystem
 8. **Features**: Versioning, lifecycle, CDN, image processing
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Amazon S3 with CloudFront CDN (Recommended)
+### 選項 1： Amazon S3 with CloudFront CDN (Recommended)
 
-**Description**: Use S3 for storage with CloudFront for global content delivery
+**描述**： Use S3 for storage with CloudFront for global content delivery
 
-**Pros**:
+**優點**：
 
 - ✅ Unlimited scalability (petabytes)
 - ✅ 99.999999999% durability
 - ✅ 99.99% availability
 - ✅ Multiple storage tiers (Standard, IA, Glacier)
 - ✅ Automatic lifecycle management
-- ✅ Versioning support
+- ✅ Versioning 支援
 - ✅ CloudFront CDN integration
 - ✅ Image optimization (Lambda@Edge)
-- ✅ Signed URLs for secure access
+- ✅ Signed URLs 用於 secure access
 - ✅ Event notifications (S3 → Lambda)
-- ✅ Excellent Spring Boot integration
+- ✅ 優秀的Spring Boot整合
 - ✅ Pay-as-you-go pricing
 - ✅ AWS native integration
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Data transfer costs (egress)
-- ⚠️ CloudFront costs for high traffic
-- ⚠️ Learning curve for optimization
+- ⚠️ CloudFront costs 用於 high traffic
+- ⚠️ Learning curve 用於 optimization
 
-**Cost**:
+**成本**：
 
 - S3 Storage: $23/TB/month (Standard)
 - S3 Requests: $0.005/1000 PUT, $0.0004/1000 GET
 - CloudFront: $0.085/GB (first 10TB)
 - Total Estimate: $300-500/month (100TB storage, 10TB transfer)
 
-**Risk**: **Low** - Industry-standard solution
+**風險**： **Low** - Industry-standard solution
 
 **Performance**:
 
@@ -127,107 +127,107 @@ The Enterprise E-Commerce Platform requires file storage for:
 - Download (CDN): 50-200ms globally
 - Throughput: 3,500 PUT/s, 5,500 GET/s per prefix
 
-### Option 2: Local File System Storage
+### 選項 2： Local File System Storage
 
-**Description**: Store files on application server file system
+**描述**： Store files on application server file system
 
-**Pros**:
+**優點**：
 
-- ✅ Simple to implement
+- ✅ 簡單implement
 - ✅ No additional cost
 - ✅ Fast local access
 - ✅ No network latency
 
-**Cons**:
+**缺點**：
 
 - ❌ Not scalable (limited disk space)
 - ❌ No redundancy (single point of failure)
-- ❌ Difficult to share across instances
+- ❌ 難以share 跨 instances
 - ❌ No CDN integration
 - ❌ Manual backup required
 - ❌ No lifecycle management
-- ❌ Doesn't work with horizontal scaling
+- ❌ Doesn't work 與 horizontal scaling
 - ❌ No global delivery
 
-**Cost**: $0 (included in server cost)
+**成本**： $0 (included in server cost)
 
-**Risk**: **High** - Insufficient for production
+**風險**： **High** - Insufficient for production
 
 **Performance**: Fast locally, slow globally
 
-### Option 3: Database BLOB Storage (PostgreSQL)
+### 選項 3： Database BLOB Storage (PostgreSQL)
 
-**Description**: Store files as BLOBs in PostgreSQL database
+**描述**： Store files as BLOBs in PostgreSQL database
 
-**Pros**:
+**優點**：
 
-- ✅ ACID transactions with files
-- ✅ Simple to implement
+- ✅ ACID transactions 與 files
+- ✅ 簡單implement
 - ✅ No additional infrastructure
-- ✅ Backup included with database
+- ✅ Backup included 與 database
 
-**Cons**:
+**缺點**：
 
-- ❌ Poor performance for large files
-- ❌ Increases database size and cost
-- ❌ Slow queries with large BLOBs
+- ❌ Poor performance 用於 大型的 files
+- ❌ Increases database size 和 cost
+- ❌ Slow queries 與 大型的 BLOBs
 - ❌ No CDN integration
 - ❌ Limited to database size
 - ❌ Expensive storage ($0.115/GB vs $0.023/GB)
 - ❌ No image optimization
 - ❌ Increases backup time
 
-**Cost**: $115/TB/month (5x more than S3)
+**成本**： $115/TB/month (5x more than S3)
 
-**Risk**: **High** - Performance and cost issues
+**風險**： **High** - Performance and cost issues
 
-**Performance**: 500-2000ms for large files
+**Performance**: 500-2000ms 用於 大型的 files
 
-### Option 4: Self-Hosted Object Storage (MinIO)
+### 選項 4： Self-Hosted Object Storage (MinIO)
 
-**Description**: Deploy MinIO on EC2 instances for S3-compatible storage
+**描述**： Deploy MinIO on EC2 instances for S3-compatible storage
 
-**Pros**:
+**優點**：
 
 - ✅ S3-compatible API
 - ✅ Open-source
 - ✅ Full control
 - ✅ No data transfer costs
 
-**Cons**:
+**缺點**：
 
 - ❌ Operational overhead (manage servers)
-- ❌ Need to handle redundancy
+- ❌ Need to 處理 redundancy
 - ❌ No built-in CDN
 - ❌ Manual scaling
 - ❌ Higher total cost (EC2 + EBS)
 - ❌ Need to manage backups
 - ❌ Lower durability than S3
 
-**Cost**: $400-600/month (EC2 + EBS + bandwidth)
+**成本**： $400-600/month (EC2 + EBS + bandwidth)
 
-**Risk**: **Medium** - Operational complexity
+**風險**： **Medium** - Operational complexity
 
-**Performance**: Similar to S3, but no CDN
+**Performance**: Similar to S3, 但 no CDN
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Amazon S3 with CloudFront CDN**
+**選擇的選項**： **Amazon S3 with CloudFront CDN**
 
-### Rationale
+### 理由
 
-S3 with CloudFront was selected for the following reasons:
+S3 與 CloudFront被選擇的原因如下：
 
-1. **Scalability**: Unlimited storage, handles millions of files
+1. **Scalability**: Unlimited storage, 處理s millions of files
 2. **Durability**: 99.999999999% (11 nines) - industry-leading
-3. **Availability**: 99.99% uptime with automatic failover
+3. **Availability**: 99.99% uptime 與 自動容錯移轉
 4. **Cost-Effective**: Pay-as-you-go, multiple storage tiers
-5. **Performance**: CloudFront CDN for global delivery (< 200ms)
+5. **Performance**: CloudFront CDN 用於 global delivery (< 200ms)
 6. **Features**: Versioning, lifecycle, events, image optimization
 7. **Security**: IAM, encryption, signed URLs, bucket policies
-8. **Integration**: Excellent Spring Boot support, AWS ecosystem
-9. **Managed Service**: No operational overhead
-10. **Proven**: Used by Netflix, Airbnb, and millions of applications
+8. **Integration**: 優秀的 Spring Boot 支援, AWS ecosystem
+9. **Managed Service**: No 營運開銷
+10. **Proven**: Used 透過 Netflix, Airbnb, 和 millions of applications
 
 **Storage Strategy**:
 
@@ -237,7 +237,7 @@ S3 with CloudFront was selected for the following reasons:
 - `ecommerce-user-content-{env}`: User uploads (private, signed URLs)
 - `ecommerce-documents-{env}`: Order documents (private, encrypted)
 - `ecommerce-static-{env}`: Static assets (public via CloudFront)
-- `ecommerce-backups-{env}`: Backups and archives (Glacier)
+- `ecommerce-backups-{env}`: Backups 和 archives (Glacier)
 
 **Storage Tiers**:
 
@@ -253,33 +253,33 @@ S3 with CloudFront was selected for the following reasons:
 
 **Image Optimization**:
 
-- Lambda@Edge for on-the-fly resizing
-- WebP format conversion for modern browsers
-- Lazy loading and progressive images
+- Lambda@Edge 用於 on-the-fly resizing
+- WebP format conversion 用於 modern browsers
+- Lazy loading 和 progressive images
 
-**Why Not Local File System**: Not scalable, no redundancy, doesn't work with horizontal scaling.
+**為何不選 Local File System**： Not scalable, no redundancy, doesn't work 與 horizontal scaling.
 
-**Why Not Database BLOBs**: Poor performance, expensive, increases database load.
+**為何不選 Database BLOBs**： Poor performance, expensive, increases 資料庫負載.
 
-**Why Not MinIO**: Operational overhead, higher total cost, no built-in CDN.
+**為何不選 MinIO**： Operational overhead, higher total cost, no built-in CDN.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Development Team | Medium | Learn S3 SDK and best practices | Training, code examples, documentation |
-| Operations Team | Low | Monitor S3 and CloudFront | AWS managed service, CloudWatch dashboards |
-| End Users | Positive | Faster image loading, better UX | N/A |
+| Development Team | Medium | Learn S3 SDK 和 best practices | Training, code examples, documentation |
+| Operations Team | Low | Monitor S3 和 CloudFront | AWS 託管服務, CloudWatch dashboards |
+| End Users | Positive | Faster image loading, 更好的 UX | N/A |
 | Business | Positive | Cost-effective, scalable storage | N/A |
 | Security Team | Low | Review access policies | IAM policies, encryption |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - Product bounded context (product images)
 - Order bounded context (invoices, receipts)
@@ -289,7 +289,7 @@ Affects:
 - Infrastructure layer (S3 client, CloudFront)
 - Frontend applications (image URLs, CDN)
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
@@ -299,37 +299,37 @@ Affects:
 | Slow uploads | Low | Medium | Multipart upload, transfer acceleration |
 | CDN cache issues | Low | Low | Cache invalidation, versioned URLs |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Setup (Week 1)
+### 第 1 階段： Setup （第 1 週）
 
-- [x] Create S3 buckets with proper naming
-- [x] Configure bucket policies and IAM roles
-- [x] Enable versioning for critical buckets
+- [x] Create S3 buckets 與 proper naming
+- [x] Configure bucket policies 和 IAM roles
+- [x] 啟用 versioning 用於 critical buckets
 - [x] Set up lifecycle policies
 - [x] Configure encryption (SSE-S3)
 - [x] Create CloudFront distributions
 
-### Phase 2: Integration (Week 2-3)
+### 第 2 階段： Integration （第 2-3 週）
 
-- [x] Integrate Spring Boot with AWS S3 SDK
+- [x] Integrate Spring Boot 與 AWS S3 SDK
 - [x] Implement file upload service
 - [x] Implement file download service
 - [x] Add signed URL generation
-- [x] Implement multipart upload for large files
+- [x] Implement multipart upload 用於 大型的 files
 - [x] Add file metadata tracking
 
-### Phase 3: Image Optimization (Week 4)
+### 第 3 階段： Image Optimization （第 4 週）
 
-- [x] Set up Lambda@Edge for image resizing
+- [x] Set up Lambda@Edge 用於 image resizing
 - [x] Implement WebP conversion
-- [x] Add responsive image support
+- [x] Add responsive image 支援
 - [x] Configure CloudFront caching
 - [x] Implement lazy loading
 
-### Phase 4: Migration & Testing (Week 5-6)
+### 第 4 階段： Migration & Testing （第 5-6 週）
 
 - [x] Migrate existing files to S3
 - [x] Update application to use S3 URLs
@@ -337,37 +337,37 @@ Affects:
 - [x] Performance testing (CDN latency)
 - [x] Security testing (access control)
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - S3 availability < 99%
 - Upload failure rate > 5%
-- Cost exceeds budget by > 50%
+- Cost exceeds 預算 透過 > 50%
 - Performance degradation > 20%
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Disable S3 uploads
 2. Fall back to local storage temporarily
-3. Investigate and fix issues
-4. Re-enable S3 gradually
+3. Investigate 和 fix issues
+4. Re-啟用 S3 gradually
 5. Monitor performance
 
-**Rollback Time**: < 2 hours
+**回滾時間**： < 2 hours
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ File upload success rate > 99%
 - ✅ File download latency < 200ms (95th percentile)
 - ✅ S3 availability > 99.99%
 - ✅ CloudFront cache hit rate > 80%
-- ✅ Cost within budget ($500/month)
+- ✅ Cost within 預算 ($500/month)
 - ✅ Zero data loss incidents
 
-### Monitoring Plan
+### 監控計畫
 
 **CloudWatch Metrics**:
 
@@ -394,7 +394,7 @@ public class FileStorageMetrics {
 }
 ```
 
-**Alerts**:
+**告警**：
 
 - S3 error rate > 1%
 - Upload failure rate > 5%
@@ -403,16 +403,16 @@ public class FileStorageMetrics {
 - Storage cost > $600/month
 - Data transfer > 20TB/month
 
-**Review Schedule**:
+**審查時程**：
 
 - Daily: Check storage metrics
-- Weekly: Review cost and usage
-- Monthly: Optimize storage and CDN
+- Weekly: Review cost 和 usage
+- Monthly: Optimize storage 和 CDN
 - Quarterly: Storage strategy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Scalability**: Unlimited storage capacity
 - ✅ **Durability**: 99.999999999% (11 nines)
@@ -421,37 +421,37 @@ public class FileStorageMetrics {
 - ✅ **Reliability**: 99.99% availability
 - ✅ **Security**: Encryption, access control, signed URLs
 - ✅ **Features**: Versioning, lifecycle, events
-- ✅ **Managed Service**: No operational overhead
+- ✅ **Managed Service**: No 營運開銷
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Complexity**: Additional AWS service to manage
-- ⚠️ **Cost**: Data transfer costs can add up
-- ⚠️ **Latency**: Network latency for uploads
+- ⚠️ **複雜的ity**: Additional AWS service to manage
+- ⚠️ **成本**： Data transfer costs can add up
+- ⚠️ **Latency**: Network latency 用於 uploads
 - ⚠️ **Dependency**: Relies on AWS availability
 - ⚠️ **Learning Curve**: Team needs to learn S3 best practices
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. Manual image optimization (can automate with Lambda)
-2. Simple lifecycle policies (can optimize based on usage)
+1. Manual image optimization (可以 automate 與 Lambda)
+2. 簡單的 lifecycle policies (可以 optimize based on usage)
 3. No automatic cost optimization (future enhancement)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Implement automated image optimization pipeline
 - **Q3 2026**: Add ML-based lifecycle optimization
 - **Q4 2026**: Implement cost optimization recommendations
 
-## Related Decisions
+## 相關決策
 
-- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md) - Database stores file metadata
+- [ADR-001: Use PostgreSQL 用於 Primary Database](001-use-postgresql-for-primary-database.md) - Database stores file metadata
 - [ADR-011: AWS Cloud Infrastructure](011-aws-cloud-infrastructure.md) - S3 is part of AWS ecosystem
-- [ADR-029: Background Job Processing Strategy](029-background-job-processing-strategy.md) - Background jobs for file processing
+- [ADR-029: Background Job Processing Strategy](029-background-job-processing-strategy.md) - Background jobs 用於 file processing
 
-## Notes
+## 備註
 
 ### S3 Bucket Configuration
 
@@ -784,6 +784,6 @@ Examples:
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

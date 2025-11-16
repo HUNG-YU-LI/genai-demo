@@ -1,6 +1,6 @@
 ---
 adr_number: 004
-title: "Use Redis for Distributed Caching"
+title: "Use Redis 用於 Distributed Caching"
 date: 2025-10-24
 status: "accepted"
 supersedes: []
@@ -10,253 +10,253 @@ affected_viewpoints: ["deployment", "concurrency"]
 affected_perspectives: ["performance", "availability", "scalability"]
 ---
 
-# ADR-004: Use Redis for Distributed Caching
+# ADR-004: Use Redis 用於 Distributed Caching
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-24
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform needs a caching solution to:
+企業電子商務平台需要caching solution來：
 
-- Reduce database load and improve response times
-- Support distributed caching across multiple application instances
-- Handle high read volumes (5000+ reads/second)
-- Provide sub-millisecond response times for cached data
-- Support cache invalidation and TTL management
-- Enable session management for stateless applications
-- Support rate limiting and distributed locking
+- 降低 資料庫負載 和 改善 回應時間
+- 支援 分散式快取 跨 multiple 應用程式實例
+- 處理 高讀取量 (5000+ reads/second)
+- 提供 sub-millisecond 回應時間 用於 cached data
+- 支援 快取失效 和 TTL management
+- 啟用 會話管理 用於 無狀態應用程式
+- 支援 速率限制 和 分散式鎖定
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Need for sub-second API response times (< 500ms target)
-- Expected traffic spikes during promotions (10x normal load)
-- Cost optimization by reducing database queries
-- Improved user experience with faster page loads
-- Support for 10K → 1M users growth
+- 需要 sub-second API 回應時間 (< 500ms target)
+- 預期的 流量尖峰 期間 promotions (10x normal load)
+- Cost optimization 透過 reducing database queries
+- 改善d 用戶體驗 與 faster 頁面載入
+- 支援 用於 10K → 1M 用戶增長
 
-**Constraints**:
+**限制條件**：
 
-- Budget: $500/month for caching infrastructure
-- Must integrate with AWS infrastructure
-- Need for high availability (99.9% uptime)
-- Data consistency requirements vary by use case
+- 預算: $500/month 用於 快取基礎設施
+- 必須 integrate 與 AWS infrastructure
+- 需要 高可用性 (99.9% uptime)
+- Data consistency 需求各異 透過 使用案例
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- PostgreSQL primary database (ADR-001)
+- PostgreSQL 主要資料庫 (ADR-001)
 - Hexagonal Architecture (ADR-002)
-- Spring Boot 3.4.5 with Spring Cache abstraction
-- AWS cloud infrastructure
+- Spring Boot 3.4.5 與 Spring Cache abstraction
+- AWS 雲端基礎設施
 
-**Requirements**:
+**需求**：
 
-- Distributed caching across multiple instances
-- Sub-millisecond read latency
-- Support for complex data structures (lists, sets, sorted sets)
-- Pub/sub capabilities for cache invalidation
-- Persistence options for critical data
-- Cluster mode for high availability
+- Distributed caching 跨 multiple instances
+- Sub-millisecond 讀取延遲
+- 支援 用於 複雜資料結構 (lists, sets, sorted sets)
+- Pub/sub capabilities 用於 快取失效
+- Persistence options 用於 關鍵資料
+- Cluster mode 用於 高可用性
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Performance**: Sub-millisecond response times
-2. **Scalability**: Handle 5000+ reads/second
-3. **Availability**: 99.9% uptime with automatic failover
-4. **Cost**: Within $500/month budget
-5. **Spring Integration**: Seamless Spring Boot integration
-6. **Data Structures**: Support for complex data types
-7. **Persistence**: Optional persistence for critical data
-8. **Operations**: Managed service to reduce operational overhead
+1. **Performance**: Sub-millisecond 回應時間
+2. **Scalability**: 處理 5000+ reads/second
+3. **Availability**: 99.9% uptime 與 自動容錯移轉
+4. **成本**： Within $500/month budget
+5. **Spring Integration**: 無縫的Spring Boot整合
+6. **Data Structures**: 支援 用於 複雜的 data types
+7. **Persistence**: Optional persistence 用於 關鍵資料
+8. **Operations**: Managed service to 降低 營運開銷
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Redis (AWS ElastiCache)
+### 選項 1： Redis (AWS ElastiCache)
 
-**Description**: In-memory data store with optional persistence, managed by AWS ElastiCache
+**描述**： In-memory data store with optional persistence, managed by AWS ElastiCache
 
-**Pros**:
+**優點**：
 
 - ✅ Sub-millisecond latency (< 1ms)
-- ✅ Rich data structures (strings, lists, sets, sorted sets, hashes)
-- ✅ Excellent Spring Boot integration (Spring Data Redis)
-- ✅ Pub/sub for cache invalidation
-- ✅ Cluster mode for high availability
+- ✅ 豐富的 data structures (strings, lists, sets, sorted sets, hashes)
+- ✅ 優秀的Spring Boot整合 (Spring Data Redis)
+- ✅ Pub/sub 用於 快取失效
+- ✅ Cluster mode 用於 高可用性
 - ✅ Optional persistence (RDB, AOF)
-- ✅ AWS ElastiCache managed service
-- ✅ Supports distributed locking
-- ✅ Large community and ecosystem
+- ✅ AWS ElastiCache 託管服務
+- ✅ 支援s 分散式鎖定
+- ✅ 大型的 社群和生態系統
 
-**Cons**:
+**缺點**：
 
-- ⚠️ In-memory only (requires sufficient RAM)
-- ⚠️ Persistence has performance trade-offs
-- ⚠️ Cluster mode adds complexity
+- ⚠️ In-memory only (需要sufficient RAM)
+- ⚠️ Persistence has 效能權衡
+- ⚠️ Cluster mode 增加複雜性
 
-**Cost**:
+**成本**：
 
 - Development: $200/month (cache.t3.medium)
-- Production: $500/month (cache.r6g.large with replica)
+- Production: $500/month (cache.r6g.大型的 與 replica)
 
-**Risk**: **Low** - Industry-standard solution
+**風險**： **Low** - Industry-standard solution
 
-### Option 2: Memcached (AWS ElastiCache)
+### 選項 2： Memcached (AWS ElastiCache)
 
-**Description**: Simple in-memory key-value store
+**描述**： Simple in-memory key-value store
 
-**Pros**:
+**優點**：
 
 - ✅ Very fast (sub-millisecond)
-- ✅ Simple to use
+- ✅ 簡單use
 - ✅ Multi-threaded architecture
-- ✅ AWS ElastiCache managed service
+- ✅ AWS ElastiCache 託管服務
 - ✅ Lower memory overhead
 
-**Cons**:
+**缺點**：
 
-- ❌ Only supports simple key-value pairs
+- ❌ Only 支援s 簡單的 key-value pairs
 - ❌ No persistence
 - ❌ No pub/sub
-- ❌ No complex data structures
+- ❌ No 複雜資料結構
 - ❌ Limited Spring Boot integration
-- ❌ No distributed locking
+- ❌ No 分散式鎖定
 
-**Cost**: Similar to Redis
+**成本**： Similar to Redis
 
-**Risk**: **Low** - But limited features
+**風險**： **Low** - But limited features
 
-### Option 3: Hazelcast
+### 選項 3： Hazelcast
 
-**Description**: In-memory data grid with distributed caching
+**描述**： In-memory data grid with distributed caching
 
-**Pros**:
+**優點**：
 
 - ✅ Distributed caching built-in
-- ✅ Rich data structures
+- ✅ 豐富的 data structures
 - ✅ Strong consistency options
-- ✅ Good Spring Boot integration
+- ✅ 良好的Spring Boot整合
 
-**Cons**:
+**缺點**：
 
 - ❌ Higher memory usage
-- ❌ More complex setup
-- ❌ No AWS managed service
+- ❌ More 複雜的 setup
+- ❌ No AWS 託管服務
 - ❌ Smaller community than Redis
-- ❌ Higher operational overhead
+- ❌ Higher 營運開銷
 
-**Cost**: $800/month (self-managed on EC2)
+**成本**： $800/month (self-managed on EC2)
 
-**Risk**: **Medium** - More operational complexity
+**風險**： **Medium** - More operational complexity
 
-### Option 4: Application-Level Caching (Caffeine)
+### 選項 4： Application-Level Caching (Caffeine)
 
-**Description**: In-process caching with Caffeine library
+**描述**： In-process caching with Caffeine library
 
-**Pros**:
+**優點**：
 
 - ✅ Zero network latency
-- ✅ Simple to implement
+- ✅ 簡單implement
 - ✅ No additional infrastructure
-- ✅ Excellent Spring Boot integration
+- ✅ 優秀的Spring Boot整合
 
-**Cons**:
+**缺點**：
 
 - ❌ Not distributed (each instance has own cache)
-- ❌ Cache invalidation across instances is complex
-- ❌ Limited by JVM heap size
+- ❌ Cache invalidation 跨 instances is 複雜的
+- ❌ Limited 透過 JVM heap size
 - ❌ No session sharing
-- ❌ No distributed locking
+- ❌ No 分散式鎖定
 
-**Cost**: $0 (included in application)
+**成本**： $0 (included in application)
 
-**Risk**: **Medium** - Doesn't scale well
+**風險**： **Medium** - Doesn't scale well
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Redis (AWS ElastiCache)**
+**選擇的選項**： **Redis (AWS ElastiCache)**
 
-### Rationale
+### 理由
 
-Redis was selected for the following reasons:
+Redis被選擇的原因如下：
 
 1. **Performance**: Sub-millisecond latency meets our < 500ms API response target
-2. **Rich Features**: Complex data structures support various caching patterns
-3. **Spring Integration**: Excellent Spring Data Redis and Spring Cache support
-4. **Distributed**: Works across multiple application instances
-5. **Pub/Sub**: Enables cache invalidation across instances
-6. **Managed Service**: AWS ElastiCache reduces operational overhead
-7. **High Availability**: Cluster mode with automatic failover
-8. **Cost-Effective**: Meets requirements within budget
-9. **Proven**: Industry-standard solution with large community
+2. **豐富的 Features**: 複雜的 data structures 支援 various caching patterns
+3. **Spring Integration**: 優秀的 Spring Data Redis 和 Spring Cache 支援
+4. **Distributed**: Works 跨 multiple 應用程式實例
+5. **Pub/Sub**: 啟用s 快取失效 跨 instances
+6. **Managed Service**: AWS ElastiCache 降低s 營運開銷
+7. **High Availability**: Cluster mode 與 自動容錯移轉
+8. **Cost-Effective**: Meets requirements within 預算
+9. **Proven**: Industry-standard solution 與 大型的 community
 
-**Caching Strategy**:
+**快取策略**：
 
 - **Read-Through**: Cache customer profiles, product catalog
 - **Write-Through**: Update cache on data changes
-- **Cache-Aside**: For complex queries and aggregations
-- **TTL-Based**: Automatic expiration for time-sensitive data
-- **Pub/Sub**: Cache invalidation across instances
+- **Cache-Aside**: For 複雜的 queries 和 aggregations
+- **TTL-Based**: Automatic expiration 用於 time-sensitive data
+- **Pub/Sub**: Cache invalidation 跨 instances
 
-**Why Not Memcached**: Lacks complex data structures, pub/sub, and persistence needed for our use cases.
+**為何不選 Memcached**： Lacks 複雜資料結構, pub/sub, 和 persistence needed 用於 our 使用案例s.
 
-**Why Not Hazelcast**: Higher operational overhead and cost without significant benefits over Redis.
+**為何不選 Hazelcast**： Higher 營運開銷 和 cost 沒有 signifi可以t benefits over Redis.
 
-**Why Not Caffeine**: Doesn't support distributed caching needed for multiple instances.
+**為何不選 Caffeine**： Doesn't 支援 分散式快取 needed 用於 multiple instances.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
 | Development Team | Medium | Need to learn Redis patterns | Training, examples, documentation |
-| Operations Team | Low | Managed service reduces overhead | ElastiCache runbooks |
-| End Users | Positive | Faster response times | N/A |
-| Business | Positive | Cost savings, better UX | N/A |
-| Database Team | Positive | Reduced database load | Monitor cache hit rates |
+| Operations Team | Low | Managed service 降低s overhead | ElastiCache runbooks |
+| End Users | Positive | Faster 回應時間 | N/A |
+| Business | Positive | Cost savings, 更好的 UX | N/A |
+| Database Team | Positive | 降低d 資料庫負載 | Monitor cache hit rates |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All bounded contexts (caching layer)
 - Application services (cache annotations)
 - Infrastructure layer (Redis configuration)
 - Performance characteristics
-- Monitoring and alerting
+- Monitoring 和 alerting
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | Cache stampede | Medium | High | Use locking, staggered TTLs |
-| Stale data | Medium | Medium | Proper cache invalidation, short TTLs |
+| Stale data | Medium | Medium | Proper 快取失效, short TTLs |
 | Memory exhaustion | Low | High | Eviction policies, monitoring |
 | Cache unavailability | Low | Medium | Fallback to database, circuit breaker |
 | Cost overrun | Low | Low | Monitor usage, set alarms |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Setup (Week 1)
+### 第 1 階段： Setup （第 1 週）
 
-- [x] Provision ElastiCache Redis cluster (cache.r6g.large)
-- [x] Configure security groups and VPC
-- [x] Set up Redis cluster mode with replica
+- [x] Provision ElastiCache Redis cluster (cache.r6g.大型的)
+- [x] Configure security groups 和 VPC
+- [x] Set up Redis cluster mode 與 replica
 - [x] Configure CloudWatch monitoring
 - [x] Set up backup schedule
 
-### Phase 2: Integration (Week 2-3)
+### 第 2 階段： Integration （第 2-3 週）
 
 - [x] Add Spring Data Redis dependencies
 - [x] Configure Redis connection (Lettuce client)
@@ -264,52 +264,52 @@ Affects:
 - [x] Add cache annotations to services
 - [x] Implement cache key strategies
 
-### Phase 3: Caching Patterns (Week 4-5)
+### 第 3 階段： Caching Patterns （第 4-5 週）
 
-- [x] Implement read-through caching for customer profiles
-- [x] Implement cache-aside for product catalog
-- [x] Add cache invalidation on updates
-- [x] Implement distributed locking for critical sections
-- [x] Add session management with Redis
+- [x] Implement read-through caching 用於 customer profiles
+- [x] Implement cache-aside 用於 product catalog
+- [x] Add 快取失效 on updates
+- [x] Implement 分散式鎖定 用於 critical sections
+- [x] Add 會話管理 與 Redis
 
-### Phase 4: Optimization (Week 6)
+### 第 4 階段： Optimization （第 6 週）
 
 - [x] Tune cache TTLs based on usage patterns
-- [x] Implement cache warming for critical data
-- [x] Add cache metrics and monitoring
-- [x] Load testing and performance tuning
+- [x] Implement cache warming 用於 關鍵資料
+- [x] Add cache metrics 和 monitoring
+- [x] Load testing 和 performance tuning
 - [x] Document caching patterns
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Cache hit rate < 50%
 - Cache-related errors > 1%
-- Cost exceeds budget by > 50%
-- Performance degradation with cache
+- Cost exceeds 預算 透過 > 50%
+- Performance degradation 與 cache
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Disable caching annotations
 2. Route all requests to database
 3. Investigate root cause
-4. Fix issues and re-enable gradually
+4. Fix issues 和 re-啟用 gradually
 
-**Rollback Time**: < 1 hour
+**回滾時間**： < 1 hour
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Cache hit rate > 80%
-- ✅ Cache response time < 1ms (95th percentile)
+- ✅ Cache 回應時間 < 1ms (95th percentile)
 - ✅ Database query reduction > 60%
-- ✅ API response time improvement > 40%
+- ✅ API 回應時間 改善ment > 40%
 - ✅ Cache availability > 99.9%
-- ✅ Cost within budget ($500/month)
+- ✅ Cost within 預算 ($500/month)
 
-### Monitoring Plan
+### 監控計畫
 
 **CloudWatch Metrics**:
 
@@ -333,7 +333,7 @@ public class CacheMetrics {
 }
 ```
 
-**Alerts**:
+**告警**：
 
 - Cache hit rate < 70%
 - CPU utilization > 80%
@@ -341,54 +341,54 @@ public class CacheMetrics {
 - Replication lag > 5 seconds
 - Connection count > 80% of max
 
-**Review Schedule**:
+**審查時程**：
 
 - Daily: Check cache hit rates
-- Weekly: Review cache patterns and TTLs
+- Weekly: Review cache patterns 和 TTLs
 - Monthly: Cost optimization review
 - Quarterly: Caching strategy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Performance**: 40-60% reduction in API response times
-- ✅ **Scalability**: Handles 10x traffic with same database capacity
-- ✅ **Cost Savings**: Reduced database instance size needs
-- ✅ **User Experience**: Faster page loads and API responses
-- ✅ **Database Health**: Reduced load on PostgreSQL
-- ✅ **Flexibility**: Rich data structures support various patterns
-- ✅ **Reliability**: High availability with automatic failover
+- ✅ **Performance**: 40-60% reduction in API 回應時間
+- ✅ **Scalability**: 處理s 10x traffic 與 same database capacity
+- ✅ **Cost Savings**: 降低d database instance size needs
+- ✅ **User Experience**: Faster 頁面載入 和 API responses
+- ✅ **Database Health**: 降低d load on PostgreSQL
+- ✅ **Flexibility**: 豐富的 data structures 支援 various patterns
+- ✅ **Reliability**: High availability 與 自動容錯移轉
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Complexity**: Additional layer to manage
-- ⚠️ **Consistency**: Potential for stale data
-- ⚠️ **Cost**: Additional infrastructure cost ($500/month)
-- ⚠️ **Debugging**: Harder to trace cache-related issues
-- ⚠️ **Memory Management**: Need to monitor and tune
+- ⚠️ **複雜的ity**: Additional layer to manage
+- ⚠️ **Consistency**: Potential 用於 stale data
+- ⚠️ **成本**： Additional infrastructure cost ($500/month)
+- ⚠️ **Debugging**: 更難trace cache-related issues
+- ⚠️ **Memory Management**: Need to monitor 和 tune
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. Manual cache invalidation (can be improved with CDC)
+1. Manual 快取失效 (可以 be 改善d 與 CDC)
 2. No cache warming on deployment (future enhancement)
-3. Simple TTL-based expiration (can add smarter policies)
+3. 簡單的 TTL-based expiration (可以 add smarter policies)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q2 2026**: Implement CDC-based cache invalidation
+- **Q2 2026**: Implement CDC-based 快取失效
 - **Q3 2026**: Add cache warming on deployment
 - **Q4 2026**: Implement adaptive TTL based on access patterns
 
-## Related Decisions
+## 相關決策
 
-- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md) - Cache reduces database load
+- [ADR-001: Use PostgreSQL 用於 Primary Database](001-use-postgresql-for-primary-database.md) - Cache 降低s 資料庫負載
 - [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - Cache in infrastructure layer
-- [ADR-005: Use Apache Kafka for Event Streaming](005-use-kafka-for-event-streaming.md) - Event-based cache invalidation
+- [ADR-005: Use Apache Kafka 用於 Event Streaming](005-use-kafka-for-event-streaming.md) - Event-based 快取失效
 
-## Notes
+## 備註
 
 ### Cache Configuration
 
@@ -495,6 +495,6 @@ Maintenance Window: Sun 03:00-04:00 UTC
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-24  
-**Next Review**: 2026-01-24 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-24  
+**下次審查**： 2026-01-24 （每季）

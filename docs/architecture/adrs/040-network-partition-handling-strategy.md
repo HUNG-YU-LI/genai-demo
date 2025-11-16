@@ -12,15 +12,15 @@ affected_perspectives: ["availability", "performance"]
 
 # ADR-040: Network Partition Handling Strategy
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-Active-active multi-region architecture faces the risk of network partitions where regions cannot communicate:
+Active-active multi-region architecture faces the risk of network partitions where regions 可以not communicate:
 
 **Network Partition Scenarios**:
 
@@ -31,7 +31,7 @@ Active-active multi-region architecture faces the risk of network partitions whe
 - **Geopolitical Event**: Deliberate network isolation
 
 **Split-Brain Problem**:
-When regions cannot communicate but both remain operational, they may:
+When regions 可以not communicate 但 both remain operational, they may:
 
 - Accept conflicting writes
 - Diverge in data state
@@ -41,35 +41,35 @@ When regions cannot communicate but both remain operational, they may:
 
 **Business Impact**:
 
-- Data inconsistency and conflicts
-- Duplicate orders or payments
+- Data inconsistency 和 conflicts
+- Duplicate orders 或 payments
 - Inventory overselling
 - Customer confusion
 - Financial losses
 - Regulatory violations
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - Prevent split-brain scenarios
-- Maintain data consistency
-- Ensure availability during partitions
+- 維持 資料一致性
+- Ensure availability 期間 partitions
 - Minimize data conflicts
 - Quick recovery after partition heals
 - Clear operational procedures
 
-**Constraints**:
+**限制條件**：
 
-- CAP theorem: Cannot have all three (Consistency, Availability, Partition tolerance)
+- CAP theorem: 可以not have all three (Consistency, Availability, Partition tolerance)
 - Network latency: 40-60ms between Taiwan-Tokyo
-- Budget: $50,000/year for partition handling infrastructure
-- Must support different consistency levels per bounded context
-- Recovery must be automated
+- 預算: $50,000/year 用於 partition handling infrastructure
+- 必須 支援 different consistency levels per bounded context
+- Recovery 必須 be automated
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
 - Active-active multi-region deployed
 - Basic health checks in place
@@ -77,39 +77,39 @@ When regions cannot communicate but both remain operational, they may:
 - No split-brain prevention
 - No partition recovery procedures
 
-**Requirements**:
+**需求**：
 
 - Detect network partitions quickly (< 30 seconds)
 - Prevent split-brain scenarios
-- Maintain availability where possible
+- 維持 availability where possible
 - Minimize data conflicts
 - Automated partition recovery
 - Clear consistency guarantees per bounded context
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Consistency**: Prevent data corruption and conflicts
-2. **Availability**: Maintain service during partitions
+1. **Consistency**: Prevent data corruption 和 conflicts
+2. **Availability**: 維持 service 期間 partitions
 3. **Detection**: Quickly detect network partitions
 4. **Prevention**: Prevent split-brain scenarios
 5. **Recovery**: Automated recovery when partition heals
 6. **Flexibility**: Different strategies per bounded context
-7. **Cost**: Optimize infrastructure costs
-8. **Simplicity**: Manageable operational complexity
+7. **成本**： Optimize infrastructure costs
+8. **Simplicity**: Manageable operational 複雜的ity
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Quorum-Based Consensus with Context-Specific CAP Trade-offs (Recommended)
+### 選項 1： Quorum-Based Consensus with Context-Specific CAP Trade-offs (Recommended)
 
-**Description**: Use quorum-based consensus for critical data (CP), allow partition tolerance for non-critical data (AP)
+**描述**： Use quorum-based consensus for critical data (CP), allow partition tolerance for non-critical data (AP)
 
-**CAP Trade-offs by Bounded Context**:
+**CAP Trade-offs 透過 Bounded Context**:
 
 **CP (Consistency + Partition Tolerance) - Sacrifice Availability**:
 
-- **Orders**: Require quorum (majority) for writes
-- **Payments**: Require quorum for writes
-- **Inventory**: Require quorum for writes
+- **Orders**: Require quorum (majority) 用於 writes
+- **Payments**: Require quorum 用於 writes
+- **Inventory**: Require quorum 用於 writes
 - **Strategy**: During partition, minority partition becomes read-only
 
 **AP (Availability + Partition Tolerance) - Sacrifice Consistency**:
@@ -129,84 +129,84 @@ When regions cannot communicate but both remain operational, they may:
 
 **Split-Brain Prevention**:
 
-- Quorum requirement for critical operations
+- Quorum requirement 用於 critical operations
 - Fencing mechanism (disable minority partition)
 - Third-party arbitrator (AWS service in neutral region)
-- Automatic read-only mode for minority
+- Automatic read-only mode 用於 minority
 
-**Pros**:
+**優點**：
 
-- ✅ Prevents split-brain for critical data
-- ✅ Maintains availability for non-critical data
+- ✅ Prevents split-brain 用於 關鍵資料
+- ✅ 維持s availability 用於 non-關鍵資料
 - ✅ Clear consistency guarantees per context
 - ✅ Automated partition handling
-- ✅ Flexible and pragmatic
-- ✅ Balances consistency and availability
+- ✅ Flexible 和 pragmatic
+- ✅ Balances consistency 和 availability
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Complexity in managing different strategies
+- ⚠️ 複雜的ity in managing different strategies
 - ⚠️ Minority partition becomes read-only (CP contexts)
 - ⚠️ Conflict resolution needed (AP contexts)
 
-**Cost**: $50,000/year
+**成本**： $50,000/year
 
-**Risk**: **Low** - Industry best practice
+**風險**： **Low** - Industry best practice
 
-### Option 2: Full CP (Consistency + Partition Tolerance)
+### 選項 2： Full CP (Consistency + Partition Tolerance)
 
-**Description**: All data requires quorum, minority partition becomes fully read-only
+**描述**： All data requires quorum, minority partition becomes fully read-only
 
-**Pros**:
+**優點**：
 
 - ✅ Strong consistency everywhere
 - ✅ No data conflicts
-- ✅ Simple to understand
+- ✅ 簡單understand
 
-**Cons**:
+**缺點**：
 
-- ❌ Minority partition completely unavailable for writes
-- ❌ Poor user experience during partitions
-- ❌ Unnecessary for non-critical data
+- ❌ Minority partition completely unavailable 用於 writes
+- ❌ Poor 用戶體驗 期間 partitions
+- ❌ Unnecessary 用於 non-關鍵資料
 
-**Cost**: $40,000/year
+**成本**： $40,000/year
 
-**Risk**: **Medium** - Availability impact
+**風險**： **Medium** - Availability impact
 
-### Option 3: Full AP (Availability + Partition Tolerance)
+### 選項 3： Full AP (Availability + Partition Tolerance)
 
-**Description**: All partitions accept writes, resolve conflicts later
+**描述**： All partitions accept writes, resolve conflicts later
 
-**Pros**:
+**優點**：
 
-- ✅ Full availability during partitions
-- ✅ Good user experience
+- ✅ Full availability 期間 partitions
+- ✅ 良好的 用戶體驗
 
-**Cons**:
+**缺點**：
 
-- ❌ Data conflicts for critical data
-- ❌ Complex conflict resolution
+- ❌ Data conflicts 用於 關鍵資料
+- ❌ 複雜的 conflict resolution
 - ❌ Risk of data corruption
-- ❌ Unacceptable for orders/payments
+- ❌ Unacceptable 用於 orders/payments
 
-**Cost**: $45,000/year
+**成本**： $45,000/year
 
-**Risk**: **High** - Data consistency issues
+**風險**： **High** - Data consistency issues
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Quorum-Based Consensus with Context-Specific CAP Trade-offs (Option 1)**
+**選擇的選項**： **Quorum-Based Consensus with Context-Specific CAP Trade-offs (Option 1)**
 
-### Rationale
+### 理由
 
-Context-specific CAP trade-offs provide optimal balance:
+Context-specific CAP trade-offs 提供 optimal balance:
 
-1. **Critical Data Protection**: CP for orders, payments, inventory prevents financial errors
-2. **Availability**: AP for product catalog, profiles maintains user experience
+1. **Critical Data Protection**: CP 用於 orders, payments, inventory prevents financial errors
+2. **Availability**: AP 用於 product catalog, profiles 維持s 用戶體驗
 3. **Pragmatic**: Different contexts have different consistency needs
 4. **Proven**: Industry-standard approach (Cassandra, DynamoDB)
-5. **Flexible**: Easy to adjust per context
-6. **Automated**: Partition detection and handling automated
+5. **Flexible**: 容易adjust per context
+6. **Automated**: Partition detection 和 handling automated
 
 ### CAP Trade-off Matrix
 
@@ -557,7 +557,7 @@ class ThirdPartyArbitrator {
 }
 ```
 
-### Conflict Resolution for AP Contexts
+### Conflict Resolution 用於 AP Contexts
 
 **Conflict Detection**:
 
@@ -753,9 +753,9 @@ public class PartitionRecoveryService {
 }
 ```
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
@@ -765,20 +765,20 @@ public class PartitionRecoveryService {
 | End Users (AP contexts) | Low | Transparent operation | Conflict resolution |
 | Business | Medium | Potential write unavailability | Clear SLAs, monitoring |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **Enterprise**
+**選擇的影響半徑**： **Enterprise**
 
-Affects:
+影響：
 
 - All application services
-- All data stores
+- All 資料儲存s
 - Write operations (CP contexts)
 - Conflict resolution (AP contexts)
-- Monitoring and alerting
+- Monitoring 和 alerting
 - Operational procedures
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
@@ -788,11 +788,11 @@ Affects:
 | Write unavailability (CP) | Medium | High | Clear error messages, retry logic |
 | Recovery failure | Low | High | Automated recovery, manual procedures |
 
-**Overall Risk Level**: **Medium**
+**整體風險等級**： **Medium**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Partition Detection (Month 1)
+### 第 1 階段： Partition Detection (Month 1)
 
 **Objectives**:
 
@@ -814,7 +814,7 @@ Affects:
 - False positive rate < 1%
 - Monitoring operational
 
-### Phase 2: Split-Brain Prevention (Month 2)
+### 第 2 階段： Split-Brain Prevention (Month 2)
 
 **Objectives**:
 
@@ -836,7 +836,7 @@ Affects:
 - Fencing mechanism operational
 - No split-brain in tests
 
-### Phase 3: Conflict Resolution (Month 3)
+### 第 3 階段： Conflict Resolution (Month 3)
 
 **Objectives**:
 
@@ -858,7 +858,7 @@ Affects:
 - Resolution automated
 - AP contexts operational
 
-### Phase 4: Partition Recovery (Month 4)
+### 第 4 階段： Partition Recovery (Month 4)
 
 **Objectives**:
 
@@ -894,7 +894,7 @@ Affects:
 - [ ] Train operations team
 - [ ] Update monitoring
 - [ ] Deploy to production
-- [ ] Monitor for 30 days
+- [ ] Monitor 用於 30 天
 
 **Success Criteria**:
 
@@ -902,27 +902,27 @@ Affects:
 - Team trained
 - Production stable
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Excessive false positives
 - Split-brain scenarios
 - Data corruption
 - Operational issues
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. **Immediate**: Disable partition detection
 2. **Revert**: Return to basic health checks
 3. **Manual**: Manual partition handling
 4. **Investigation**: Root cause analysis
 
-**Rollback Time**: < 1 hour
+**回滾時間**： < 1 hour
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
@@ -984,55 +984,55 @@ const partitionMetrics = {
 - **Monthly**: Partition drill
 - **Quarterly**: Comprehensive review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Prevents Split-Brain**: Quorum and fencing prevent data corruption
-- ✅ **Maintains Availability**: AP contexts remain available
-- ✅ **Automated**: Detection and recovery automated
+- ✅ **Prevents Split-Brain**: Quorum 和 fencing prevent data corruption
+- ✅ **維持s Availability**: AP contexts remain available
+- ✅ **Automated**: Detection 和 recovery automated
 - ✅ **Flexible**: Different strategies per context
 - ✅ **Clear Guarantees**: Well-defined consistency per context
 - ✅ **Quick Detection**: < 30 second partition detection
 - ✅ **Quick Recovery**: < 5 minute automated recovery
 
-### Negative Consequences
+### 負面後果
 
 - ⚠️ **Write Unavailability**: CP contexts unavailable in minority partition
-- ⚠️ **Complexity**: Complex partition handling logic
-- ⚠️ **Conflicts**: AP contexts require conflict resolution
-- ⚠️ **Cost**: $50,000/year for infrastructure
+- ⚠️ **複雜的ity**: 複雜的 partition handling logic
+- ⚠️ **Conflicts**: AP contexts 需要conflict resolution
+- ⚠️ **成本**： $50,000/year for infrastructure
 - ⚠️ **Monitoring**: Comprehensive monitoring required
 - ⚠️ **Training**: Team needs CAP theorem understanding
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Basic conflict resolution (Last-Write-Wins only)
-2. Manual intervention for complex conflicts
+2. Manual intervention 用於 複雜的 conflicts
 3. Limited partition simulation testing
 4. Basic arbitrator (DynamoDB only)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Advanced conflict resolution (CRDTs, vector clocks)
-- **Q3 2026**: Automated complex conflict resolution
-- **Q4 2026**: Chaos engineering for partition testing
+- **Q3 2026**: Automated 複雜的 conflict resolution
+- **Q4 2026**: Chaos engineering 用於 partition testing
 - **2027**: Multi-arbitrator consensus (Raft/Paxos)
 
-## Related Decisions
+## 相關決策
 
 - [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md) - Multi-region foundation
-- [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md) - Replication during partitions
-- [ADR-039: Regional Failover and Failback Strategy](039-regional-failover-failback-strategy.md) - Failover vs partition handling
-- [ADR-041: Data Residency and Sovereignty Strategy](041-data-residency-sovereignty-strategy.md) - Compliance during partitions
+- [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md) - Replication 期間 partitions
+- [ADR-039: Regional Failover 和 Failback Strategy](039-regional-failover-failback-strategy.md) - Failover vs partition handling
+- [ADR-041: Data Residency 和 Sovereignty Strategy](041-data-residency-sovereignty-strategy.md) - Compliance 期間 partitions
 
-## Notes
+## 備註
 
 ### CAP Theorem Refresher
 
-**CAP Theorem**: In a distributed system, you can only guarantee 2 out of 3:
+**CAP Theorem**: In a distributed system, you 可以 only guarantee 2 out of 3:
 
 - **C**onsistency: All nodes see the same data
 - **A**vailability: Every request receives a response
@@ -1040,15 +1040,15 @@ const partitionMetrics = {
 
 **Our Choices**:
 
-- **CP (Orders, Payments, Inventory)**: Sacrifice availability for consistency
-- **AP (Catalog, Profiles, Reviews)**: Sacrifice consistency for availability
+- **CP (Orders, Payments, Inventory)**: Sacrifice availability 用於 consistency
+- **AP (Catalog, Profiles, Reviews)**: Sacrifice consistency 用於 availability
 
 ### Partition vs Failover
 
 **Network Partition**:
 
 - Both regions operational
-- Cannot communicate
+- 可以not communicate
 - Risk of split-brain
 - Requires quorum/fencing
 
@@ -1108,6 +1108,6 @@ sudo iptables -D INPUT -s tokyo-region-ip -j DROP
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

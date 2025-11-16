@@ -1,21 +1,21 @@
 # Inventory Context Events
 
-## Overview
+## 概述
 
-Domain events for inventory management and stock control.
+庫存管理和庫存控制的 domain events。
 
-**Last Updated**: 2025-10-25
+**最後更新**: 2025-10-25
 
 ---
 
-## Event List
+## 事件列表
 
-| Event Name | Trigger | Priority |
+| 事件名稱 | 觸發條件 | 優先級 |
 |------------|---------|----------|
-| `InventoryReservedEvent` | Order submission | P0 |
-| `InventoryReleasedEvent` | Order cancellation | P0 |
-| `InventoryAdjustedEvent` | Stock adjustment | P1 |
-| `InventoryLowStockAlertEvent` | Low stock detection | P1 |
+| `InventoryReservedEvent` | 提交訂單 | P0 |
+| `InventoryReleasedEvent` | 取消訂單 | P0 |
+| `InventoryAdjustedEvent` | 調整庫存 | P1 |
+| `InventoryLowStockAlertEvent` | 偵測到低庫存 | P1 |
 
 ---
 
@@ -31,7 +31,7 @@ public record InventoryReservedEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -65,7 +65,7 @@ public record InventoryLowStockAlertEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -81,6 +81,6 @@ public record InventoryLowStockAlertEvent(
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2025-10-25  
-**Owner**: Inventory Domain Team
+**文件版本**: 1.0
+**最後更新**: 2025-10-25
+**負責人**: Inventory Domain Team

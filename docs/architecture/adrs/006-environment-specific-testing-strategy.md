@@ -12,79 +12,79 @@ affected_perspectives: ["development-resource", "evolution"]
 
 # ADR-006: Environment-Specific Testing Strategy
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-24
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires a comprehensive testing strategy that:
+The Enterprise E-Commerce Platform 需要comprehensive testing strategy that:
 
-- Ensures high code quality and reliability
-- Provides fast feedback during development
-- Supports Test-Driven Development (TDD) and Behavior-Driven Development (BDD)
-- Balances test coverage with execution speed
-- Works effectively with Hexagonal Architecture (ADR-002)
-- Handles different testing needs across environments
-- Maintains test performance standards
-- Supports continuous integration and deployment
+- Ensures high code quality 和 reliability
+- 提供s fast feedback 期間 development
+- 支援s Test-Driven Development (TDD) 和 Behavior-Driven Development (BDD)
+- Balances test coverage 與 execution speed
+- Works effectively 與 Hexagonal Architecture (ADR-002)
+- 處理s different testing needs 跨 environments
+- 維持s test performance standards
+- 支援s continuous integration 和 deployment
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Need for high-quality, reliable software (99.9% uptime SLA)
-- Rapid feature development without breaking existing functionality
+- 需要 high-quality, reliable software (99.9% uptime SLA)
+- Rapid feature development 沒有 breaking existing functionality
 - Regulatory compliance requiring thorough testing
 - Team growth from 5 to 20+ developers
-- Need for fast feedback loops (< 5 minutes for pre-commit tests)
+- 需要 fast feedback loops (< 5 minutes 用於 pre-commit tests)
 
-**Constraints**:
+**限制條件**：
 
 - Development team has strong Java/JUnit experience
-- Limited experience with BDD/Cucumber
-- CI/CD pipeline must complete in < 15 minutes
-- Test execution must not slow down development
-- Budget: No additional testing infrastructure costs
+- Limited experience 與 BDD/Cucumber
+- CI/CD pipeline 必須 complete in < 15 minutes
+- Test execution 必須 not slow down development
+- 預算: No additional testing infrastructure costs
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
 - Spring Boot 3.4.5 + Java 21
-- Hexagonal Architecture with clear layer boundaries (ADR-002)
+- Hexagonal Architecture 與 clear layer boundaries (ADR-002)
 - Domain-Driven Design tactical patterns
 - Event-driven architecture (ADR-003)
 - PostgreSQL database (ADR-001)
 
-**Requirements**:
+**需求**：
 
 - Test pyramid approach (80% unit, 15% integration, 5% E2E)
 - Fast unit tests (< 50ms, < 5MB per test)
 - Moderate integration tests (< 500ms, < 50MB per test)
 - Comprehensive E2E tests (< 3s, < 500MB per test)
-- BDD support for business scenarios
+- BDD 支援 用於 business scenarios
 - Test performance monitoring
 - Environment-specific test configurations
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **Fast Feedback**: Developers need quick feedback (< 5 minutes)
-2. **Test Pyramid**: Majority of tests should be fast unit tests
-3. **Architecture Alignment**: Tests should respect layer boundaries
-4. **BDD Support**: Business scenarios need executable specifications
-5. **Performance Standards**: Tests must meet performance requirements
-6. **CI/CD Integration**: Tests must run efficiently in pipeline
-7. **Developer Experience**: Easy to write and maintain tests
+2. **Test Pyramid**: Majority of tests 應該 be fast unit tests
+3. **Architecture Alignment**: Tests 應該 respect layer boundaries
+4. **BDD 支援**: Business scenarios need executable specifications
+5. **Performance Standards**: Tests 必須 meet performance requirements
+6. **CI/CD Integration**: Tests 必須 run efficiently in pipeline
+7. **Developer Experience**: 容易write 和 維持 tests
 8. **Cost Efficiency**: No expensive testing infrastructure
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Environment-Specific Testing Strategy with Test Pyramid
+### 選項 1： Environment-Specific Testing Strategy with Test Pyramid
 
-**Description**: Layered testing approach with different test types optimized for different purposes
+**描述**： Layered testing approach with different test types optimized for different purposes
 
 **Test Types**:
 
@@ -118,159 +118,159 @@ BDD Tests:
 
 ```
 
-**Pros**:
+**優點**：
 
 - ✅ Fast feedback (unit tests run in seconds)
 - ✅ Comprehensive coverage at all levels
-- ✅ Aligns with test pyramid best practices
-- ✅ Supports TDD and BDD workflows
+- ✅ Aligns 與 test pyramid best practices
+- ✅ 支援s TDD 和 BDD workflows
 - ✅ Clear separation of test types
 - ✅ Performance standards enforced
 - ✅ Cost-effective (no additional infrastructure)
-- ✅ Works well with Hexagonal Architecture
+- ✅ Works well 與 Hexagonal Architecture
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Multiple test frameworks to learn
-- ⚠️ Need to maintain test performance standards
-- ⚠️ BDD learning curve for team
+- ⚠️ Need to 維持 test performance standards
+- ⚠️ BDD learning curve 用於 team
 
-**Cost**: $0 (uses existing tools)
+**成本**： $0 (uses existing tools)
 
-**Risk**: **Low** - Industry-standard approach
+**風險**： **Low** - Industry-standard approach
 
-### Option 2: Integration Tests Only
+### 選項 2： Integration Tests Only
 
-**Description**: Focus primarily on integration tests with full Spring context
+**描述**： Focus primarily on integration tests with full Spring context
 
-**Pros**:
+**優點**：
 
 - ✅ Tests real system behavior
-- ✅ Simpler test setup
+- ✅ 簡單的r test setup
 - ✅ Catches integration issues
 
-**Cons**:
+**缺點**：
 
 - ❌ Slow feedback (minutes instead of seconds)
-- ❌ Difficult to isolate failures
+- ❌ 難以isolate failures
 - ❌ High resource usage
 - ❌ Violates test pyramid principles
 - ❌ Poor developer experience
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **High** - Slow tests hurt productivity
+**風險**： **High** - Slow tests hurt productivity
 
-### Option 3: E2E Tests Only
+### 選項 3： E2E Tests Only
 
-**Description**: Focus on end-to-end tests through UI/API
+**描述**： Focus on end-to-end tests through UI/API
 
-**Pros**:
+**優點**：
 
 - ✅ Tests complete user journeys
 - ✅ High confidence in system behavior
 
-**Cons**:
+**缺點**：
 
 - ❌ Very slow feedback (minutes to hours)
-- ❌ Brittle and hard to maintain
-- ❌ Difficult to debug failures
+- ❌ Brittle 和 hard to 維持
+- ❌ 難以debug failures
 - ❌ Expensive to run
 - ❌ Poor test coverage
 
-**Cost**: High (requires test infrastructure)
+**成本**： High (requires test infrastructure)
 
-**Risk**: **Critical** - Unsustainable for development
+**風險**： **Critical** - Unsustainable for development
 
-### Option 4: Manual Testing Only
+### 選項 4： Manual Testing Only
 
-**Description**: Rely primarily on manual QA testing
+**描述**： Rely primarily on manual QA testing
 
-**Pros**:
+**優點**：
 
 - ✅ No test automation effort
 - ✅ Flexible exploratory testing
 
-**Cons**:
+**缺點**：
 
 - ❌ No fast feedback
 - ❌ Not repeatable
-- ❌ Expensive and slow
-- ❌ Cannot support CI/CD
+- ❌ Expensive 和 slow
+- ❌ 可以not 支援 CI/CD
 - ❌ High risk of regressions
 
-**Cost**: High (QA team costs)
+**成本**： High (QA team costs)
 
-**Risk**: **Critical** - Unacceptable for modern development
+**風險**： **Critical** - Unacceptable for modern development
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Environment-Specific Testing Strategy with Test Pyramid**
+**選擇的選項**： **Environment-Specific Testing Strategy with Test Pyramid**
 
-### Rationale
+### 理由
 
-The environment-specific testing strategy with test pyramid was selected for the following reasons:
+The environment-specific testing strategy 與 test pyramid被選擇的原因如下：
 
-1. **Fast Feedback**: Unit tests provide feedback in seconds, enabling TDD workflow
+1. **Fast Feedback**: Unit tests 提供 feedback in seconds, enabling TDD workflow
 2. **Comprehensive Coverage**: All layers tested appropriately (domain, infrastructure, API)
 3. **Architecture Alignment**: Tests respect Hexagonal Architecture boundaries
 4. **Performance Standards**: Clear performance requirements prevent slow tests
-5. **BDD Support**: Cucumber enables business-readable specifications
-6. **Cost-Effective**: Uses existing tools and infrastructure
-7. **Scalable**: Test suite scales with codebase without slowing down
-8. **CI/CD Ready**: Fast enough for continuous integration pipeline
+5. **BDD 支援**: Cucumber 啟用s business-readable specifications
+6. **Cost-Effective**: Uses existing tools 和 infrastructure
+7. **Scalable**: Test suite scales 與 codebase 沒有 slowing down
+8. **CI/CD Ready**: Fast enough 用於 continuous integration pipeline
 
-**Implementation Strategy**:
+**實作策略**：
 
 **Unit Tests (80% of tests)**:
 
-- Test domain logic without any infrastructure
-- Use Mockito for dependencies
+- Test domain logic 沒有 any infrastructure
+- Use Mockito 用於 dependencies
 - Run in milliseconds
 - No Spring context overhead
 
 **Integration Tests (15% of tests)**:
 
-- Test repository implementations with @DataJpaTest
-- Test REST controllers with @WebMvcTest
-- Test JSON serialization with @JsonTest
-- Use partial Spring context for efficiency
+- Test repository implementations 與 @DataJpaTest
+- Test REST controllers 與 @WebMvcTest
+- Test JSON serialization 與 @JsonTest
+- Use partial Spring context 用於 efficiency
 
 **E2E Tests (5% of tests)**:
 
 - Test critical user journeys
 - Use full Spring context
-- Focus on smoke tests and happy paths
+- Focus on smoke tests 和 happy paths
 - Run less frequently (pre-release)
 
 **BDD Tests (Cross-cutting)**:
 
-- Cucumber scenarios for business requirements
+- Cucumber scenarios 用於 business requirements
 - Executable specifications
 - Living documentation
 - Run as part of integration test suite
 
-**Why Not Integration-Only**: Slow feedback kills productivity. Unit tests provide instant feedback for TDD.
+**為何不選 Integration-Only**： Slow feedback kills productivity. Unit tests 提供 instant feedback 用於 TDD.
 
-**Why Not E2E-Only**: E2E tests are too slow and brittle for primary testing strategy.
+**為何不選 E2E-Only**： E2E tests are too slow 和 brittle 用於 primary testing strategy.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Development Team | High | Need to learn test pyramid and BDD | Training, examples, pair programming |
-| QA Team | Medium | Shift from manual to automated testing | Training, collaboration with developers |
+| Development Team | High | Need to learn test pyramid 和 BDD | Training, examples, pair programming |
+| QA Team | Medium | Shift from manual to automated testing | Training, collaboration 與 developers |
 | Architects | Positive | Clear testing standards | Architecture documentation |
-| Operations | Low | Automated tests reduce production issues | N/A |
+| Operations | Low | Automated tests 降低 production issues | N/A |
 | Business | Positive | Faster, more reliable releases | N/A |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All bounded contexts (testing approach)
 - Development workflow (TDD/BDD)
@@ -278,21 +278,21 @@ Affects:
 - Code review process (test coverage requirements)
 - Onboarding (testing training)
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | Team learning curve | High | Medium | Training, examples, pair programming |
 | Test performance degradation | Medium | High | Automated performance monitoring, strict standards |
-| BDD adoption resistance | Medium | Low | Demonstrate value, start with critical scenarios |
-| Test maintenance overhead | Medium | Medium | Good test design, regular refactoring |
+| BDD adoption resistance | Medium | Low | Demonstrate value, start 與 critical scenarios |
+| Test maintenance overhead | Medium | Medium | 良好的 test design, regular refactoring |
 | Flaky tests | Low | High | Strict isolation, proper cleanup, retry mechanisms |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Foundation and Training (Week 1-2)
+### 第 1 階段： Foundation and Training （第 1-2 週）
 
 - [x] Set up test performance monitoring framework
   - Implement @TestPerformanceExtension
@@ -300,7 +300,7 @@ Affects:
   - Configure performance thresholds
 
 - [x] Create base test classes
-  - BaseIntegrationTest with common setup
+  - BaseIntegrationTest 與 common setup
   - Test data builders
   - Test utilities
 
@@ -315,12 +315,12 @@ Affects:
 - [x] Conduct team training
   - Test pyramid principles
   - TDD workflow
-  - BDD with Cucumber
+  - BDD 與 Cucumber
   - Test performance standards
 
-### Phase 2: Unit Testing Implementation (Week 2-4)
+### 第 2 階段： Unit Testing Implementation （第 2-4 週）
 
-- [x] Implement unit tests for domain layer
+- [x] Implement unit tests 用於 domain layer
   - Aggregate root tests
   - Value object tests
   - Domain service tests
@@ -328,31 +328,31 @@ Affects:
 
 - [x] Achieve 80%+ unit test coverage
 - [x] Enforce performance standards (< 50ms, < 5MB)
-- [x] Set up ArchUnit tests for architecture compliance
+- [x] Set up ArchUnit tests 用於 architecture compliance
 
-### Phase 3: Integration Testing Implementation (Week 4-6)
+### 第 3 階段： Integration Testing Implementation （第 4-6 週）
 
 - [x] Implement repository integration tests
-  - @DataJpaTest for JPA repositories
+  - @DataJpaTest 用於 JPA repositories
   - Test database queries
   - Test data mapping
 
 - [x] Implement API integration tests
-  - @WebMvcTest for controllers
+  - @WebMvcTest 用於 controllers
   - Test request/response handling
   - Test validation
 
 - [x] Enforce performance standards (< 500ms, < 50MB)
 
-### Phase 4: E2E and BDD Testing (Week 6-8)
+### 第 4 階段： E2E and BDD Testing （第 6-8 週）
 
 - [ ] Set up Cucumber framework
-  - Configure Cucumber with Spring Boot
+  - Configure Cucumber 與 Spring Boot
   - Create step definition base classes
   - Set up test data management
 
 - [ ] Implement BDD scenarios
-  - Write Gherkin scenarios for key features
+  - Write Gherkin scenarios 用於 key features
   - Implement step definitions
   - Link to requirements
 
@@ -361,7 +361,7 @@ Affects:
   - Smoke tests
   - Happy path scenarios
 
-### Phase 5: CI/CD Integration (Week 8)
+### Phase 5: CI/CD Integration （第 8 週）
 
 - [x] Configure GitHub Actions workflows
   - Run quickTest on every push
@@ -375,42 +375,42 @@ Affects:
 
 - [x] Configure quality gates
   - Minimum 80% coverage
-  - All tests must pass
+  - All tests 必須 pass
   - Performance standards met
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Test execution time > 15 minutes
 - Developer productivity decreases > 30%
 - Test maintenance overhead > 20% of development time
-- Team unable to adopt after 8 weeks
+- Team unable to adopt after 8 週
 
-**Rollback Steps**:
+**回滾步驟**：
 
-1. Simplify to integration tests only for critical paths
-2. Reduce BDD scope to essential scenarios
+1. Simplify to integration tests only 用於 critical paths
+2. 降低 BDD scope to essential scenarios
 3. Relax performance standards temporarily
-4. Provide additional training and support
+4. 提供 additional training 和 支援
 5. Re-evaluate strategy after addressing issues
 
-**Rollback Time**: 1 week
+**回滾時間**： 1 week
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Unit test coverage > 80%
 - ✅ Integration test coverage > 60%
-- ✅ E2E test coverage for critical paths
+- ✅ E2E test coverage 用於 critical paths
 - ✅ Test execution time: quickTest < 2 min, preCommitTest < 5 min
 - ✅ Test performance standards met (100% compliance)
 - ✅ Zero flaky tests
-- ✅ BDD scenarios for all user stories
+- ✅ BDD scenarios 用於 all user stories
 - ✅ Developer satisfaction > 4/5
 
-### Monitoring Plan
+### 監控計畫
 
 **Test Performance Monitoring**:
 
@@ -430,62 +430,62 @@ class CustomerUnitTest {
 - Coverage percentages
 - Flaky test detection
 
-**Alerts**:
+**告警**：
 
 - Test execution time exceeds threshold
 - Coverage drops below 80%
 - Flaky tests detected
 - Performance regression detected
 
-**Review Schedule**:
+**審查時程**：
 
 - Daily: Check test execution times in CI/CD
 - Weekly: Review test coverage reports
 - Monthly: Test strategy retrospective
 - Quarterly: Performance optimization review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Fast Feedback**: Unit tests provide instant feedback for TDD
+- ✅ **Fast Feedback**: Unit tests 提供 instant feedback 用於 TDD
 - ✅ **High Coverage**: Comprehensive testing at all levels
-- ✅ **Maintainable**: Clear test organization and standards
+- ✅ **維持able**: Clear test organization 和 standards
 - ✅ **Architecture Compliance**: Tests enforce layer boundaries
-- ✅ **BDD Support**: Business-readable specifications
+- ✅ **BDD 支援**: Business-readable specifications
 - ✅ **Performance Standards**: Tests remain fast as codebase grows
-- ✅ **CI/CD Ready**: Fast enough for continuous integration
+- ✅ **CI/CD Ready**: Fast enough 用於 continuous integration
 - ✅ **Cost-Effective**: No additional infrastructure needed
 
-### Negative Consequences
+### 負面後果
 
 - ⚠️ **Learning Curve**: Team needs to learn multiple testing approaches
 - ⚠️ **Initial Overhead**: Setting up test infrastructure takes time
-- ⚠️ **Maintenance**: Need to maintain tests alongside code
-- ⚠️ **Discipline Required**: Must enforce test pyramid and performance standards
+- ⚠️ **Maintenance**: Need to 維持 tests alongside code
+- ⚠️ **Discipline Required**: 必須 enforce test pyramid 和 performance standards
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. Some legacy code lacks unit tests (acceptable during migration)
-2. BDD scenarios not yet complete for all features (ongoing work)
+1. Some legacy code lacks unit tests (acceptable 期間 migration)
+2. BDD scenarios not yet complete 用於 all features (ongoing work)
 3. E2E test coverage limited to critical paths (acceptable trade-off)
-4. Test data management could be improved (future enhancement)
+4. Test data management could be 改善d (future enhancement)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q1 2026**: Achieve 90%+ unit test coverage
-- **Q2 2026**: Complete BDD scenarios for all user stories
-- **Q3 2026**: Improve test data management with builders
-- **Q4 2026**: Add E2E tests for additional user journeys
+- **Q2 2026**: Complete BDD scenarios 用於 all user stories
+- **Q3 2026**: 改善 test data management 與 builders
+- **Q4 2026**: Add E2E tests 用於 additional user journeys
 
-## Related Decisions
+## 相關決策
 
-- [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - Testing strategy aligns with architecture
-- [ADR-004: Event Store Implementation](004-event-store-implementation.md) - In-memory event store for testing
+- [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - Testing strategy aligns 與 architecture
+- [ADR-004: Event Store Implementation](004-event-store-implementation.md) - In-memory event store 用於 testing
 
-## Notes
+## 備註
 
 ### Test Classification
 
@@ -748,6 +748,6 @@ jobs:
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-24  
-**Next Review**: 2026-01-24 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-24  
+**下次審查**： 2026-01-24 （每季）

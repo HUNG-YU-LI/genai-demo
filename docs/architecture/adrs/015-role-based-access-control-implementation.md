@@ -12,176 +12,176 @@ affected_perspectives: ["security", "evolution"]
 
 # ADR-015: Role-Based Access Control (RBAC) Implementation
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires a flexible, scalable authorization system that can:
+The Enterprise E-Commerce Platform 需要flexible, scalable authorization system that 可以:
 
 - Control access to resources based on user roles
-- Support fine-grained permissions for different operations
-- Enable hierarchical role structures
-- Allow dynamic permission assignment without code changes
-- Support multi-tenant scenarios (customers, sellers, admins)
-- Integrate seamlessly with JWT authentication
-- Provide audit trails for authorization decisions
+- 支援 fine-grained permissions 用於 different operations
+- 啟用 hierarchical role structures
+- Allow dynamic permission assignment 沒有 code changes
+- 支援 multi-tenant scenarios (customers, sellers, admins)
+- Integrate seamlessly 與 JWT authentication
+- 提供 audit trails 用於 authorization decisions
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Multiple user types with different access levels (customers, sellers, admins, support)
-- Need for granular control over sensitive operations (refunds, price changes)
+- Multiple user types 與 different access levels (customers, sellers, admins, 支援)
+- 需要 granular control over sensitive operations (refunds, price changes)
 - Regulatory compliance (data access controls, audit trails)
-- Business flexibility (add new roles without code deployment)
-- Expected growth from 10K to 1M+ users
+- Business flexibility (add new roles 沒有 code deployment)
+- 預期的 growth from 10K to 1M+ users
 
-**Constraints**:
+**限制條件**：
 
-- Must integrate with existing JWT authentication (ADR-014)
+- 必須 integrate 與 existing JWT authentication (ADR-014)
 - Performance: Authorization check < 5ms
-- Must support role hierarchy (admin inherits all permissions)
-- Budget: No additional licensing costs
+- 必須 支援 role hierarchy (admin inherits all permissions)
+- 預算: No additional licensing costs
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- Spring Boot 3.4.5 with Spring Security
+- Spring Boot 3.4.5 與 Spring Security
 - JWT-based authentication implemented (ADR-014)
 - Microservices architecture
 - PostgreSQL database
 
-**Requirements**:
+**需求**：
 
-- Role-based access control with permissions
-- Support for role hierarchy
-- Dynamic role and permission management
+- Role-based access control 與 permissions
+- 支援 用於 role hierarchy
+- Dynamic role 和 permission management
 - Method-level security annotations
 - URL-based access control
-- Audit logging for authorization decisions
+- Audit logging 用於 authorization decisions
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Flexibility**: Easy to add new roles and permissions
+1. **Flexibility**: 容易add new roles 和 permissions
 2. **Performance**: Fast authorization checks (< 5ms)
-3. **Granularity**: Support both coarse and fine-grained permissions
-4. **Maintainability**: Centralized permission management
+3. **Granularity**: 支援 both coarse 和 fine-grained permissions
+4. **維持ability**: Centralized permission management
 5. **Security**: Principle of least privilege
-6. **Scalability**: Support millions of users
+6. **Scalability**: 支援 millions of users
 7. **Standards**: Use industry-standard patterns
-8. **Cost**: No licensing fees
+8. **成本**： No licensing fees
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: RBAC with Permission-Based Model
+### 選項 1： RBAC with Permission-Based Model
 
-**Description**: Roles contain permissions, permissions grant access to resources
+**描述**： Roles contain permissions, permissions grant access to resources
 
-**Pros**:
+**優點**：
 
-- ✅ Flexible and granular control
-- ✅ Easy to understand and maintain
-- ✅ Supports role hierarchy
+- ✅ Flexible 和 granular control
+- ✅ 容易understand 和 維持
+- ✅ 支援s role hierarchy
 - ✅ Dynamic permission assignment
-- ✅ Excellent Spring Security integration
+- ✅ 優秀的Spring Security整合
 - ✅ Scales well (permissions in JWT)
 - ✅ Industry standard pattern
 - ✅ No additional costs
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Requires careful permission design
-- ⚠️ JWT token size increases with permissions
-- ⚠️ Permission changes require token refresh
+- ⚠️ JWT token size increases 與 permissions
+- ⚠️ Permission changes 需要token refresh
 
-**Cost**: $0 (built into Spring Security)
+**成本**： $0 (built into Spring Security)
 
-**Risk**: **Low** - Proven pattern
+**風險**： **Low** - Proven pattern
 
-### Option 2: Attribute-Based Access Control (ABAC)
+### 選項 2： Attribute-Based Access Control (ABAC)
 
-**Description**: Access based on attributes (user, resource, environment)
+**描述**： Access based on attributes (user, resource, environment)
 
-**Pros**:
+**優點**：
 
-- ✅ Very flexible and dynamic
+- ✅ Very flexible 和 dynamic
 - ✅ Context-aware decisions
 - ✅ Fine-grained control
 
-**Cons**:
+**缺點**：
 
-- ❌ Complex to implement and maintain
+- ❌ 複雜的 to implement 和 維持
 - ❌ Performance overhead (policy evaluation)
-- ❌ Harder to understand and debug
+- ❌ 更難understand 和 debug
 - ❌ Requires policy engine
-- ❌ Overkill for our requirements
+- ❌ Overkill 用於 our requirements
 
-**Cost**: $2,000/month (policy engine like OPA)
+**成本**： $2,000/month (policy engine like OPA)
 
-**Risk**: **High** - Complexity, performance
+**風險**： **High** - Complexity, performance
 
-### Option 3: Simple Role-Only Model
+### 選項 3： Simple Role-Only Model
 
-**Description**: Access control based only on roles, no separate permissions
+**描述**： Access control based only on roles, no separate permissions
 
-**Pros**:
+**優點**：
 
-- ✅ Very simple to implement
+- ✅ Very 簡單的 to implement
 - ✅ Fast performance
-- ✅ Easy to understand
+- ✅ 容易understand
 
-**Cons**:
+**缺點**：
 
 - ❌ Not flexible enough
 - ❌ Role explosion (need many roles)
-- ❌ Hard to maintain
-- ❌ Cannot handle fine-grained permissions
+- ❌ Hard to 維持
+- ❌ 可以not 處理 fine-grained permissions
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **Medium** - Inflexibility
+**風險**： **Medium** - Inflexibility
 
-### Option 4: External Authorization Service (Authz)
+### 選項 4： External Authorization Service (Authz)
 
-**Description**: Delegate authorization to external service
+**描述**： Delegate authorization to external service
 
-**Pros**:
+**優點**：
 
 - ✅ Centralized authorization
 - ✅ Advanced features
 
-**Cons**:
+**缺點**：
 
 - ❌ Network latency on every request
 - ❌ Additional infrastructure
 - ❌ Single point of failure
 - ❌ Licensing costs
 
-**Cost**: $1,000/month
+**成本**： $1,000/month
 
-**Risk**: **Medium** - Dependency, latency
+**風險**： **Medium** - Dependency, latency
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **RBAC with Permission-Based Model**
+**選擇的選項**： **RBAC with Permission-Based Model**
 
-### Rationale
+### 理由
 
-RBAC with permissions was selected for the following reasons:
+RBAC 與 permissions被選擇的原因如下：
 
-1. **Flexibility**: Roles can be composed of permissions, easy to add new permissions
+1. **Flexibility**: Roles 可以 be composed of permissions, easy to add new permissions
 2. **Performance**: Permissions included in JWT, no database lookup needed
-3. **Granularity**: Supports both coarse (roles) and fine-grained (permissions) control
+3. **Granularity**: 支援s both coarse (roles) 和 fine-grained (permissions) control
 4. **Standards-Based**: Industry-standard pattern, well-understood
-5. **Spring Security**: Excellent integration with @PreAuthorize, @Secured
+5. **Spring Security**: 優秀的 integration 與 @PreAuthorize, @Secured
 6. **Scalability**: Permissions cached in JWT, scales horizontally
-7. **Cost-Effective**: No additional licensing or infrastructure
-8. **Maintainability**: Clear separation of roles and permissions
+7. **Cost-Effective**: No additional licensing 或 infrastructure
+8. **維持ability**: Clear separation of roles 和 permissions
 
 **Authorization Model**:
 
@@ -206,9 +206,9 @@ SUPER_ADMIN (all permissions)
       └── GUEST (browse products only)
 ```
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
@@ -216,92 +216,92 @@ SUPER_ADMIN (all permissions)
 | Security Team | Positive | Fine-grained access control | Regular permission audits |
 | Operations Team | Low | Monitor authorization failures | Dashboards, alerts |
 | End Users | None | Transparent to users | N/A |
-| Business | Positive | Flexible role management | Admin UI for role management |
+| Business | Positive | Flexible role management | Admin UI 用於 role management |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All API endpoints (authorization required)
 - All microservices (permission checks)
-- Database schema (roles and permissions tables)
+- Database schema (roles 和 permissions tables)
 - JWT tokens (include permissions)
 - Admin UI (role management)
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | Permission explosion | Medium | Medium | Regular permission review, consolidation |
 | JWT token size | Medium | Low | Limit permissions per role, use permission groups |
-| Permission changes delay | Medium | Low | Short token expiration (15 min), force refresh for critical changes |
+| Permission changes delay | Medium | Low | Short token expiration (15 min), force refresh 用於 critical changes |
 | Misconfigured permissions | Low | High | Automated tests, permission audits, principle of least privilege |
 | Performance degradation | Low | Medium | Cache permission checks, optimize queries |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Database Schema and Core Model (Week 1)
+### 第 1 階段： Database Schema and Core Model （第 1 週）
 
 - [x] Create `roles` table (id, name, description, hierarchy_level)
 - [x] Create `permissions` table (id, name, resource, action, description)
 - [x] Create `role_permissions` junction table
 - [x] Create `user_roles` junction table
-- [x] Implement Role and Permission entities
-- [x] Implement RoleRepository and PermissionRepository
-- [x] Seed initial roles and permissions
+- [x] Implement Role 和 Permission entities
+- [x] Implement RoleRepository 和 PermissionRepository
+- [x] Seed initial roles 和 permissions
 
-### Phase 2: Spring Security Integration (Week 2)
+### 第 2 階段： Spring Security Integration （第 2 週）
 
-- [x] Implement custom UserDetailsService with roles/permissions
+- [x] Implement custom UserDetailsService 與 roles/permissions
 - [x] Include permissions in JWT claims
 - [x] Implement permission-based authorization
 - [x] Add @PreAuthorize annotations to endpoints
 - [x] Implement custom PermissionEvaluator
 - [x] Add method-level security
 
-### Phase 3: Role Management API (Week 3)
+### 第 3 階段： Role Management API （第 3 週）
 
 - [x] Implement Role CRUD endpoints (admin only)
 - [x] Implement Permission CRUD endpoints (admin only)
 - [x] Implement assign/revoke role to user
 - [x] Implement assign/revoke permission to role
 - [x] Add role hierarchy management
-- [x] Add audit logging for role changes
+- [x] Add audit logging 用於 role changes
 
-### Phase 4: Testing and Documentation (Week 4)
+### 第 4 階段： Testing and Documentation （第 4 週）
 
-- [x] Unit tests for authorization logic
-- [x] Integration tests for RBAC
+- [x] Unit tests 用於 authorization logic
+- [x] Integration tests 用於 RBAC
 - [x] Security tests (unauthorized access attempts)
 - [x] Performance tests (authorization overhead)
-- [x] Documentation and examples
-- [x] Admin UI for role management
+- [x] Documentation 和 examples
+- [x] Admin UI 用於 role management
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Authorization failures > 5%
 - Performance degradation > 10ms per request
 - Security vulnerabilities discovered
 - Data corruption in roles/permissions
 
-**Rollback Steps**:
+**回滾步驟**：
 
-1. Revert to simple role-only authorization
-2. Investigate and fix RBAC implementation
-3. Re-deploy with fixes
-4. Gradually re-enable permission-based authorization
+1. Revert to 簡單的 role-only authorization
+2. Investigate 和 fix RBAC implementation
+3. Re-deploy 與 fixes
+4. Gradually re-啟用 permission-based authorization
 
-**Rollback Time**: < 1 hour
+**回滾時間**： < 1 hour
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Authorization check latency < 5ms (95th percentile)
 - ✅ Zero unauthorized access incidents
@@ -309,21 +309,21 @@ Affects:
 - ✅ Role management operations < 100ms
 - ✅ Permission audit trail 100% complete
 
-### Monitoring Plan
+### 監控計畫
 
 **CloudWatch Metrics**:
 
 - `authz.check.time` (histogram)
-- `authz.denied` (count, by permission)
-- `authz.granted` (count, by permission)
+- `authz.denied` (count, 透過 permission)
+- `authz.granted` (count, 透過 permission)
 - `authz.error` (count)
 - `role.assigned` (count)
 - `role.revoked` (count)
 
-**Alerts**:
+**告警**：
 
-- Authorization check latency > 10ms for 5 minutes
-- Authorization error rate > 1% for 5 minutes
+- Authorization check latency > 10ms 用於 5 minutes
+- Authorization error rate > 1% 用於 5 minutes
 - Suspicious authorization patterns (privilege escalation attempts)
 - Role changes outside business hours
 
@@ -334,54 +334,54 @@ Affects:
 - Role assignment changes
 - Privilege escalation attempts
 
-**Review Schedule**:
+**審查時程**：
 
 - Daily: Check authorization metrics
 - Weekly: Review denied access logs
-- Monthly: Permission audit and cleanup
+- Monthly: Permission audit 和 cleanup
 - Quarterly: Role hierarchy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Flexible Access Control**: Easy to add new roles and permissions
-- ✅ **Fine-Grained Security**: Control access at resource and action level
+- ✅ **Flexible Access Control**: 容易add new roles 和 permissions
+- ✅ **Fine-Grained Security**: Control access at resource 和 action level
 - ✅ **Performance**: Fast authorization (< 5ms)
 - ✅ **Scalability**: Permissions in JWT, no database lookup
-- ✅ **Maintainability**: Clear separation of roles and permissions
+- ✅ **維持ability**: Clear separation of roles 和 permissions
 - ✅ **Audit Trail**: Complete history of authorization decisions
 - ✅ **Standards-Based**: Industry-standard RBAC pattern
 - ✅ **Cost-Effective**: No additional licensing
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **JWT Token Size**: Permissions increase token size (mitigated by permission groups)
-- ⚠️ **Permission Management**: Requires careful design and maintenance
+- ⚠️ **JWT Token Size**: Permissions increase token size (mitigated 透過 permission groups)
+- ⚠️ **Permission Management**: Requires careful design 和 maintenance
 - ⚠️ **Permission Changes**: Require token refresh (15-min delay)
-- ⚠️ **Complexity**: More complex than simple role-only model
+- ⚠️ **複雜的ity**: More 複雜的 than 簡單的 role-only model
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. No permission groups implemented (acceptable initially)
-2. Manual permission audit process (acceptable for now)
-3. No dynamic permission loading (acceptable with short token expiration)
+2. Manual permission audit process (acceptable 用於 now)
+3. No dynamic permission loading (acceptable 與 short token expiration)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q2 2026**: Implement permission groups to reduce JWT size
-- **Q3 2026**: Automate permission audit and cleanup
-- **Q4 2026**: Implement dynamic permission loading for long-lived sessions
+- **Q2 2026**: Implement permission groups to 降低 JWT size
+- **Q3 2026**: Automate permission audit 和 cleanup
+- **Q4 2026**: Implement dynamic permission loading 用於 long-lived sessions
 
-## Related Decisions
+## 相關決策
 
 - [ADR-014: JWT-Based Authentication Strategy](014-jwt-based-authentication-strategy.md) - Authentication integration
 - [ADR-054: Data Loss Prevention (DLP) Strategy](054-data-loss-prevention-strategy.md) - Access control integration
-- [ADR-009: RESTful API Design with OpenAPI 3.0](009-restful-api-design-with-openapi.md) - API authorization
+- [ADR-009: RESTful API Design 與 OpenAPI 3.0](009-restful-api-design-with-openapi.md) - API authorization
 
-## Notes
+## 備註
 
 ### Permission Naming Convention
 
@@ -532,6 +532,6 @@ CREATE INDEX idx_role_permissions_role_id ON role_permissions(role_id);
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

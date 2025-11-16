@@ -1,117 +1,117 @@
-# AWS Pricing MCP Server Timeout Fix
+# AWS Pricing MCP Server Timeout 修復
 
-> **Date**: 2025-11-07 12:15  
-> **Issue**: `aws-pricing` server in project config also experiencing timeout  
-> **Status**: ✅ Fixed
-
----
-
-## 🔴 Issue
-
-After disabling the global AWS MCP servers, the `aws-pricing` server in project config was also experiencing connection timeouts.
+> **日期**: 2025-11-07 12:15
+> **問題**: 專案配置中的 `aws-pricing` server 也發生 timeout
+> **狀態**: ✅ 已修復
 
 ---
 
-## 🔧 Action Taken
+## 🔴 問題
 
-### Backup Created
+在停用全域 AWS MCP servers 後，專案配置中的 `aws-pricing` server 也發生連線 timeout。
+
+---
+
+## 🔧 採取的行動
+
+### 已建立備份
 
 ```bash
 .kiro/settings/mcp.json.backup.20251107_121500
 ```
 
-### Server Disabled
+### 已停用 Server
 
 ```bash
-# Disabled aws-pricing in project config
+# 停用專案配置中的 aws-pricing
 jq '.mcpServers["aws-pricing"].disabled = true' .kiro/settings/mcp.json
 ```
 
 ---
 
-## ✅ Current Status
+## ✅ 目前狀態
 
-### Active Servers (Project Config)
+### 啟用的 Servers (專案配置)
 
-| Server | Status | Purpose |
+| Server | 狀態 | 用途 |
 |--------|--------|---------|
-| `time` | ✅ Active | Time operations |
-| `aws-docs` | ✅ Active | AWS documentation |
-| `aws-cdk` | ✅ Active | CDK operations |
-| `excalidraw` | ✅ Active | Diagram creation |
+| `time` | ✅ 啟用中 | 時間操作 |
+| `aws-docs` | ✅ 啟用中 | AWS documentation |
+| `aws-cdk` | ✅ 啟用中 | CDK 操作 |
+| `excalidraw` | ✅ 啟用中 | 圖表建立 |
 
-### Disabled Servers (Project Config)
+### 已停用的 Servers (專案配置)
 
-| Server | Reason |
+| Server | 原因 |
 |--------|--------|
-| `aws-pricing` | Connection timeout |
+| `aws-pricing` | 連線 timeout |
 
 ---
 
-## 📊 Summary
+## 📊 摘要
 
-**Total Active Servers**: 6
+**啟用中的 Servers 總數**: 6
 
-- Global: 2 (`github`, `awslabs.cdk-mcp-server`)
-- Project: 4 (`time`, `aws-docs`, `aws-cdk`, `excalidraw`)
+- 全域: 2 (`github`, `awslabs.cdk-mcp-server`)
+- 專案: 4 (`time`, `aws-docs`, `aws-cdk`, `excalidraw`)
 
-**Total Disabled Due to Timeout**: 4
+**因 Timeout 停用的總數**: 4
 
-- Global: 3 (`lambda`, `iam`, `aws-pricing-mcp-server`)
-- Project: 1 (`aws-pricing`)
-
----
-
-## 🎯 Root Cause Analysis
-
-### Why AWS Pricing Servers Timeout
-
-The AWS Pricing API servers (both global and project versions) are experiencing timeouts likely due to:
-
-1. **Slow API Response**: AWS Pricing API can be slow to respond
-2. **Large Data Sets**: Pricing data is extensive and takes time to load
-3. **Network Latency**: Additional latency to AWS services
-4. **First-Time Initialization**: Package download and initialization overhead
-
-### Why Other AWS Servers Work
-
-- **aws-docs**: Uses cached documentation, faster response
-- **aws-cdk**: Local CDK guidance, no API calls needed
-- **awslabs.cdk-mcp-server**: Similar to aws-cdk, local operations
+- 全域: 3 (`lambda`, `iam`, `aws-pricing-mcp-server`)
+- 專案: 1 (`aws-pricing`)
 
 ---
 
-## 💡 Recommendations
+## 🎯 根本原因分析
 
-### Short Term (Current)
+### 為何 AWS Pricing Servers Timeout
 
-✅ Keep pricing servers disabled for stable operation
+AWS Pricing API servers (全域和專案版本) 發生 timeout 可能是由於：
 
-### Long Term (Optional)
+1. **API 回應緩慢**: AWS Pricing API 回應速度可能很慢
+2. **大型資料集**: Pricing 資料龐大且載入需要時間
+3. **網路延遲**: 連線到 AWS 服務的額外延遲
+4. **首次初始化**: Package 下載和初始化的開銷
 
-If you need pricing functionality:
+### 為何其他 AWS Servers 正常運作
 
-1. **Pre-install the package**:
+- **aws-docs**: 使用快取的 documentation，回應較快
+- **aws-cdk**: 本機 CDK 指引，不需要 API 呼叫
+- **awslabs.cdk-mcp-server**: 類似 aws-cdk，本機操作
+
+---
+
+## 💡 建議
+
+### 短期 (目前)
+
+✅ 保持 pricing servers 停用以維持穩定運作
+
+### 長期 (選擇性)
+
+如果您需要 pricing 功能：
+
+1. **預先安裝 package**：
 
    ```bash
    uvx awslabs.aws-pricing-mcp-server@latest --help
    ```
 
-2. **Test manually**:
+2. **手動測試**：
 
    ```bash
    AWS_PROFILE=kim-sso AWS_REGION=ap-northeast-1 \
      uvx awslabs.aws-pricing-mcp-server@latest
    ```
 
-3. **Increase timeout** (if Kiro supports it):
-   - Check Kiro settings for MCP timeout configuration
-   - Increase to 60-90 seconds for pricing servers
+3. **增加 timeout** (如果 Kiro 支援)：
+   - 檢查 Kiro 設定的 MCP timeout 配置
+   - 將 pricing servers 的 timeout 增加到 60-90 秒
 
-4. **Use AWS CLI instead**:
+4. **改用 AWS CLI**：
 
    ```bash
-   # Get pricing via CLI
+   # 透過 CLI 取得 pricing
    aws pricing get-products \
      --service-code AmazonEC2 \
      --filters Type=TERM_MATCH,Field=location,Value="Asia Pacific (Tokyo)" \
@@ -120,54 +120,54 @@ If you need pricing functionality:
 
 ---
 
-## 🔄 Alternative Solutions
+## 🔄 替代解決方案
 
-### Option 1: Use AWS Cost Explorer
+### 選項 1: 使用 AWS Cost Explorer
 
-- More reliable for cost analysis
-- Web-based interface
-- Historical cost data
+- 成本分析更可靠
+- 網頁介面
+- 歷史成本資料
 
-### Option 2: Use AWS Pricing Calculator
+### 選項 2: 使用 AWS Pricing Calculator
 
 - <https://calculator.aws/>
-- Comprehensive pricing estimates
-- No API timeouts
+- 全面的 pricing 估算
+- 無 API timeout
 
-### Option 3: Use Infracost (for CDK)
+### 選項 3: 使用 Infracost (用於 CDK)
 
 ```bash
-# Install Infracost
+# 安裝 Infracost
 brew install infracost
 
-# Generate cost estimate from CDK
+# 從 CDK 生成成本估算
 cdk synth > template.yaml
 infracost breakdown --path template.yaml
 ```
 
 ---
 
-## 📋 Testing Checklist
+## 📋 測試檢查清單
 
-After restart, verify these work:
+重新啟動後，驗證這些功能正常運作：
 
 - [ ] "What time is it?" (time)
 - [ ] "Search AWS docs for Lambda" (aws-docs)
 - [ ] "Explain CDK Nag rule AwsSolutions-IAM4" (aws-cdk)
 - [ ] "Create a simple diagram" (excalidraw)
-- [ ] "List my GitHub repos" (github - if token valid)
+- [ ] "List my GitHub repos" (github - 如果 token 有效)
 
 ---
 
-## 🎉 Conclusion
+## 🎉 結論
 
-All timeout issues have been resolved by disabling the problematic pricing servers. Your MCP configuration is now stable and fast.
+所有 timeout 問題已透過停用有問題的 pricing servers 解決。您的 MCP 配置現在穩定且快速。
 
-**Next Step**: Restart Kiro and enjoy the improved performance! 🚀
+**下一步**: 重新啟動 Kiro 並享受改善的效能！ 🚀
 
 ---
 
-**Related Documentation**:
+**相關 Documentation**：
 
 - [MCP Final Status](./mcp-final-status.md)
 - [AWS Servers Troubleshooting](./mcp-aws-servers-troubleshooting.md)

@@ -1,179 +1,179 @@
-# Kubernetes Troubleshooting Guide
+# Kubernetes 疑難排解指南
 
-## Overview
+## 概述
 
-This document provides comprehensive troubleshooting procedures for Kubernetes-specific issues in the Enterprise E-Commerce Platform. It covers pod scheduling, persistent volumes, ConfigMaps, Secrets, service discovery, autoscaling, node issues, and etcd health.
+本文件提供 Enterprise E-Commerce Platform 中 Kubernetes 特定問題的全面疑難排解程序。涵蓋 pod scheduling、persistent volumes、ConfigMaps、Secrets、service discovery、autoscaling、node 問題和 etcd 健康狀態。
 
-**Target Audience**: DevOps engineers, SREs, Kubernetes administrators  
-**Prerequisites**: Access to Kubernetes cluster, kubectl, cluster admin permissions  
-**Related Documents**:
+**目標讀者**：DevOps 工程師、SRE、Kubernetes 管理員
+**先決條件**：Kubernetes cluster 存取權限、kubectl、cluster admin 權限
+**相關文件**：
 
-- [Common Issues](common-issues.md)
-- [Application Debugging Guide](application-debugging.md)
-- [Network and Connectivity Guide](network-connectivity.md)
-
----
-
-## Table of Contents
-
-1. [Pod Scheduling Failures](#pod-scheduling-failures)
-2. [Persistent Volume Claim Issues](#persistent-volume-claim-issues)
-3. [ConfigMap and Secret Mounting Problems](#configmap-and-secret-mounting-problems)
-4. [Service Discovery Failures](#service-discovery-failures)
-5. [Horizontal Pod Autoscaler Troubleshooting](#horizontal-pod-autoscaler-troubleshooting)
-6. [Cluster Autoscaler Issues](#cluster-autoscaler-issues)
-7. [Node NotReady Troubleshooting](#node-notready-troubleshooting)
-8. [etcd Performance and Health Issues](#etcd-performance-and-health-issues)
+- [常見問題](common-issues.md)
+- [Application Debugging 指南](application-debugging.md)
+- [Network 和 Connectivity 指南](network-connectivity.md)
 
 ---
 
-## Pod Scheduling Failures
+## 目錄
 
-### Overview
+1. [Pod Scheduling 失敗](#pod-scheduling-失敗)
+2. [Persistent Volume Claim 問題](#persistent-volume-claim-問題)
+3. [ConfigMap 和 Secret 掛載問題](#configmap-和-secret-掛載問題)
+4. [Service Discovery 失敗](#service-discovery-失敗)
+5. [Horizontal Pod Autoscaler 疑難排解](#horizontal-pod-autoscaler-疑難排解)
+6. [Cluster Autoscaler 問題](#cluster-autoscaler-問題)
+7. [Node NotReady 疑難排解](#node-notready-疑難排解)
+8. [etcd Performance 和 Health 問題](#etcd-performance-和-health-問題)
 
-Pod scheduling failures occur when the Kubernetes scheduler cannot find a suitable node to run a pod. This can be due to resource constraints, node affinity rules, taints/tolerations, or other scheduling policies.
+---
 
-### Symptoms
+## Pod Scheduling 失敗
 
-- Pods stuck in `Pending` state
-- Events showing "FailedScheduling"
-- "Insufficient cpu/memory" messages
-- "No nodes available" errors
-- Pods not starting after deployment
+### 概述
 
-### Diagnostic Procedures
+Pod scheduling 失敗發生在 Kubernetes scheduler 無法找到合適的 node 來執行 pod 時。這可能是由於資源限制、node affinity 規則、taints/tolerations 或其他 scheduling 策略。
 
-#### Step 1: Check Pod Status and Events
+### 症狀
+
+- Pod 卡在 `Pending` 狀態
+- Events 顯示 "FailedScheduling"
+- "Insufficient cpu/memory" 訊息
+- "No nodes available" 錯誤
+- Deployment 後 Pod 無法啟動
+
+### 診斷程序
+
+#### 步驟 1：檢查 Pod Status 和 Events
 
 ```bash
-# Get pod status
+# 取得 pod status
 kubectl get pods -n production -l app=ecommerce-backend
 
-# Describe pod to see events
+# Describe pod 以查看 events
 kubectl describe pod ${POD_NAME} -n production
 
-# Get scheduling events
+# 取得 scheduling events
 kubectl get events -n production --field-selector involvedObject.name=${POD_NAME} --sort-by='.lastTimestamp'
 
-# Filter for scheduling failures
+# 篩選 scheduling 失敗
 kubectl get events -n production --field-selector reason=FailedScheduling
 ```
 
-**Common Event Messages**:
+**常見 Event 訊息**：
 
 - `0/3 nodes are available: 3 Insufficient cpu.`
 - `0/3 nodes are available: 3 node(s) didn't match node selector.`
 - `0/3 nodes are available: 3 node(s) had taint {key: value}, that the pod didn't tolerate.`
 - `0/3 nodes are available: 3 node(s) didn't match pod affinity rules.`
 
-#### Step 2: Check Resource Requests and Limits
+#### 步驟 2：檢查 Resource Requests 和 Limits
 
 ```bash
-# Check pod resource requests
+# 檢查 pod resource requests
 kubectl get pod ${POD_NAME} -n production -o jsonpath='{.spec.containers[*].resources}'
 
-# Check node available resources
+# 檢查 node 可用資源
 kubectl describe nodes | grep -A 5 "Allocated resources"
 
-# Get node capacity and allocatable resources
+# 取得 node capacity 和 allocatable 資源
 kubectl get nodes -o custom-columns=NAME:.metadata.name,CPU-CAPACITY:.status.capacity.cpu,CPU-ALLOCATABLE:.status.allocatable.cpu,MEMORY-CAPACITY:.status.capacity.memory,MEMORY-ALLOCATABLE:.status.allocatable.memory
 ```
 
-#### Step 3: Check Node Affinity and Selectors
+#### 步驟 3：檢查 Node Affinity 和 Selectors
 
 ```bash
-# Check pod node selector
+# 檢查 pod node selector
 kubectl get pod ${POD_NAME} -n production -o jsonpath='{.spec.nodeSelector}'
 
-# Check pod affinity rules
+# 檢查 pod affinity 規則
 kubectl get pod ${POD_NAME} -n production -o jsonpath='{.spec.affinity}'
 
-# List nodes with labels
+# 列出帶有 labels 的 nodes
 kubectl get nodes --show-labels
 
-# Check if nodes match selector
+# 檢查 nodes 是否符合 selector
 kubectl get nodes -l environment=production
 ```
 
-#### Step 4: Check Taints and Tolerations
+#### 步驟 4：檢查 Taints 和 Tolerations
 
 ```bash
-# Check node taints
+# 檢查 node taints
 kubectl describe nodes | grep -A 3 "Taints:"
 
-# Check pod tolerations
+# 檢查 pod tolerations
 kubectl get pod ${POD_NAME} -n production -o jsonpath='{.spec.tolerations}'
 
-# List all node taints
+# 列出所有 node taints
 kubectl get nodes -o custom-columns=NAME:.metadata.name,TAINTS:.spec.taints
 ```
 
-#### Step 5: Check Pod Priority and Preemption
+#### 步驟 5：檢查 Pod Priority 和 Preemption
 
 ```bash
-# Check pod priority class
+# 檢查 pod priority class
 kubectl get pod ${POD_NAME} -n production -o jsonpath='{.spec.priorityClassName}'
 
-# List priority classes
+# 列出 priority classes
 kubectl get priorityclasses
 
-# Check if pod was preempted
+# 檢查 pod 是否被 preempt
 kubectl get events -n production --field-selector reason=Preempted
 ```
 
-### Common Scheduling Issues and Solutions
+### 常見 Scheduling 問題和解決方案
 
-#### Issue 1: Insufficient CPU/Memory
+#### 問題 1：CPU/Memory 不足
 
-**Problem**: Nodes don't have enough resources to schedule the pod
+**問題**：Nodes 沒有足夠資源來 schedule pod
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check total cluster resources
+# 檢查 cluster 總資源
 kubectl top nodes
 
-# Check pod resource requests
+# 檢查 pod resource requests
 kubectl describe pod ${POD_NAME} -n production | grep -A 5 "Requests:"
 
-# Calculate total requested resources
+# 計算總 requested 資源
 kubectl describe nodes | grep -A 5 "Allocated resources:" | grep -E "cpu|memory"
 ```
 
-**Solutions**:
+**解決方案**：
 
-**Option 1: Reduce Resource Requests**
+**選項 1：減少 Resource Requests**
 
 ```yaml
 # deployment.yaml
 resources:
   requests:
-    cpu: 500m      # Reduced from 1000m
-    memory: 512Mi  # Reduced from 1Gi
+    cpu: 500m      # 從 1000m 減少
+    memory: 512Mi  # 從 1Gi 減少
   limits:
     cpu: 1000m
     memory: 1Gi
 ```
 
-**Option 2: Add More Nodes**
+**選項 2：新增更多 Nodes**
 
 ```bash
-# For EKS with cluster autoscaler
-# Increase max size in node group configuration
+# 對於 EKS 與 cluster autoscaler
+# 在 node group 配置中增加 max size
 aws eks update-nodegroup-config \
   --cluster-name ecommerce-cluster \
   --nodegroup-name ecommerce-nodes \
   --scaling-config minSize=3,maxSize=10,desiredSize=5
 
-# For manual scaling
+# 手動 scaling
 kubectl scale deployment cluster-autoscaler \
   --replicas=1 -n kube-system
 ```
 
-**Option 3: Use Cluster Autoscaler**
+**選項 3：使用 Cluster Autoscaler**
 
 ```yaml
-# Enable cluster autoscaler
+# 啟用 cluster autoscaler
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -183,61 +183,55 @@ spec:
   template:
     spec:
       containers:
-
       - name: cluster-autoscaler
-
         image: k8s.gcr.io/autoscaling/cluster-autoscaler:v1.27.0
         command:
-
           - ./cluster-autoscaler
           - --cloud-provider=aws
           - --namespace=kube-system
           - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/ecommerce-cluster
-
 ```
 
-#### Issue 2: Node Selector Mismatch
+#### 問題 2：Node Selector 不匹配
 
-**Problem**: Pod requires specific node labels that don't exist
+**問題**：Pod 需要不存在的特定 node labels
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check pod node selector
+# 檢查 pod node selector
 kubectl get pod ${POD_NAME} -n production -o yaml | grep -A 5 nodeSelector
 
-# Check available node labels
+# 檢查可用的 node labels
 kubectl get nodes --show-labels | grep -i "environment\|workload"
 ```
 
-**Solutions**:
+**解決方案**：
 
-**Option 1: Add Labels to Nodes**
+**選項 1：新增 Labels 到 Nodes**
 
 ```bash
-# Add missing label to node
+# 新增缺少的 label 到 node
 kubectl label nodes ${NODE_NAME} environment=production
 
-# Add multiple labels
+# 新增多個 labels
 kubectl label nodes ${NODE_NAME} workload-type=compute-intensive tier=backend
 ```
 
-**Option 2: Remove or Modify Node Selector**
+**選項 2：移除或修改 Node Selector**
 
 ```yaml
-# deployment.yaml - Remove node selector
+# deployment.yaml - 移除 node selector
 spec:
   template:
     spec:
-      # nodeSelector:  # Commented out
+      # nodeSelector:  # 註解掉
       #   environment: production
       containers:
-
       - name: app
-
 ```
 
-**Option 3: Use Node Affinity (More Flexible)**
+**選項 3：使用 Node Affinity（更靈活）**
 
 ```yaml
 spec:
@@ -246,38 +240,32 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:  # Soft requirement
-
           - weight: 100
-
             preference:
               matchExpressions:
-
               - key: environment
-
                 operator: In
                 values:
-
                 - production
-
 ```
 
-#### Issue 3: Taint/Toleration Mismatch
+#### 問題 3：Taint/Toleration 不匹配
 
-**Problem**: Nodes have taints that pods don't tolerate
+**問題**：Nodes 有 pod 不容忍的 taints
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check node taints
+# 檢查 node taints
 kubectl describe node ${NODE_NAME} | grep -A 3 "Taints:"
 
-# Check pod tolerations
+# 檢查 pod tolerations
 kubectl get pod ${POD_NAME} -n production -o yaml | grep -A 10 tolerations
 ```
 
-**Solutions**:
+**解決方案**：
 
-**Option 1: Add Toleration to Pod**
+**選項 1：新增 Toleration 到 Pod**
 
 ```yaml
 # deployment.yaml
@@ -285,124 +273,104 @@ spec:
   template:
     spec:
       tolerations:
-
       - key: "dedicated"
-
         operator: "Equal"
         value: "backend"
         effect: "NoSchedule"
-
       - key: "node.kubernetes.io/not-ready"
-
         operator: "Exists"
         effect: "NoExecute"
         tolerationSeconds: 300
 ```
 
-**Option 2: Remove Taint from Node**
+**選項 2：從 Node 移除 Taint**
 
 ```bash
-# Remove specific taint
+# 移除特定 taint
 kubectl taint nodes ${NODE_NAME} dedicated=backend:NoSchedule-
 
-# Remove all taints
+# 移除所有 taints
 kubectl taint nodes ${NODE_NAME} dedicated-
 ```
 
-**Option 3: Use Taint-Based Eviction**
+**選項 3：使用 Taint-Based Eviction**
 
 ```yaml
-# For temporary taints during maintenance
+# 用於 maintenance 期間的暫時性 taints
 tolerations:
-
 - key: "node.kubernetes.io/unreachable"
-
   operator: "Exists"
   effect: "NoExecute"
   tolerationSeconds: 30
 ```
 
-#### Issue 4: Pod Affinity/Anti-Affinity Rules
+#### 問題 4：Pod Affinity/Anti-Affinity 規則
 
-**Problem**: Pod affinity rules prevent scheduling
+**問題**：Pod affinity 規則阻止 scheduling
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check pod affinity rules
+# 檢查 pod affinity 規則
 kubectl get pod ${POD_NAME} -n production -o yaml | grep -A 20 affinity
 
-# Check existing pod distribution
+# 檢查現有 pod 分佈
 kubectl get pods -n production -o wide --show-labels
 ```
 
-**Solutions**:
+**解決方案**：
 
-**Option 1: Use Preferred Instead of Required**
+**選項 1：使用 Preferred 而非 Required**
 
 ```yaml
-# Change from required to preferred
+# 從 required 改為 preferred
 spec:
   template:
     spec:
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:  # Soft rule
-
           - weight: 100
-
             podAffinityTerm:
               labelSelector:
                 matchExpressions:
-
                 - key: app
-
                   operator: In
                   values:
-
                   - ecommerce-backend
-
               topologyKey: kubernetes.io/hostname
 ```
 
-**Option 2: Adjust Topology Key**
+**選項 2：調整 Topology Key**
 
 ```yaml
-# Use zone instead of hostname for more flexibility
+# 使用 zone 而非 hostname 以獲得更多靈活性
 affinity:
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
-
     - labelSelector:
-
         matchExpressions:
-
         - key: app
-
           operator: In
           values:
-
           - ecommerce-backend
-
-      topologyKey: topology.kubernetes.io/zone  # More flexible
+      topologyKey: topology.kubernetes.io/zone  # 更靈活
 ```
 
-**Option 3: Increase Replica Count**
+**選項 3：增加 Replica Count**
 
 ```bash
-# If anti-affinity requires more nodes than available
+# 如果 anti-affinity 需要比可用更多的 nodes
 kubectl scale deployment ecommerce-backend --replicas=3 -n production
 ```
 
-### Prevention and Monitoring
+### 預防和監控
 
-**Set up Scheduling Alerts**:
+**設定 Scheduling Alerts**：
 
 ```yaml
 # Prometheus alert rule
-
 - alert: PodsPendingTooLong
-
   expr: kube_pod_status_phase{phase="Pending"} > 0
   for: 5m
   labels:
@@ -412,7 +380,6 @@ kubectl scale deployment ecommerce-backend --replicas=3 -n production
     description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has been pending for more than 5 minutes"
 
 - alert: FailedScheduling
-
   expr: increase(kube_pod_failed_scheduling_total[5m]) > 0
   labels:
     severity: critical
@@ -420,148 +387,146 @@ kubectl scale deployment ecommerce-backend --replicas=3 -n production
     summary: "Pod scheduling failures detected"
 ```
 
-**Resource Quota Monitoring**:
+**Resource Quota 監控**：
 
 ```bash
-# Check namespace resource quotas
+# 檢查 namespace resource quotas
 kubectl get resourcequota -n production
 
-# Check limit ranges
+# 檢查 limit ranges
 kubectl get limitrange -n production
 
-# Monitor resource usage
+# 監控資源使用情況
 kubectl top pods -n production --sort-by=memory
 ```
 
 ---
 
-## Persistent Volume Claim Issues
+## Persistent Volume Claim 問題
 
-### Overview
+### 概述
 
-PersistentVolumeClaim (PVC) issues prevent pods from accessing persistent storage, causing application failures or data loss.
+PersistentVolumeClaim (PVC) 問題阻止 pods 存取 persistent storage，導致 application 失敗或資料遺失。
 
-### Symptoms
+### 症狀
 
-- Pods stuck in `ContainerCreating` or `Pending` state
-- Events showing "FailedMount" or "FailedAttachVolume"
-- "Volume not found" errors
-- "Multi-Attach error" for volumes
-- Slow pod startup times
+- Pods 卡在 `ContainerCreating` 或 `Pending` 狀態
+- Events 顯示 "FailedMount" 或 "FailedAttachVolume"
+- "Volume not found" 錯誤
+- Volumes 的 "Multi-Attach error"
+- Pod 啟動時間緩慢
 
-### Diagnostic Procedures
+### 診斷程序
 
-#### Step 1: Check PVC Status
+#### 步驟 1：檢查 PVC Status
 
 ```bash
-# List PVCs
+# 列出 PVCs
 kubectl get pvc -n production
 
 # Describe PVC
 kubectl describe pvc ${PVC_NAME} -n production
 
-# Check PVC events
+# 檢查 PVC events
 kubectl get events -n production --field-selector involvedObject.name=${PVC_NAME}
 
-# Check bound PV
+# 檢查綁定的 PV
 kubectl get pv | grep ${PVC_NAME}
 ```
 
-**PVC Status States**:
+**PVC Status 狀態**：
 
-- `Pending`: Waiting for PV to be created or bound
-- `Bound`: Successfully bound to a PV
-- `Lost`: PV no longer exists
+- `Pending`：等待 PV 被創建或綁定
+- `Bound`：成功綁定到 PV
+- `Lost`：PV 不再存在
 
-#### Step 2: Check Storage Class
+#### 步驟 2：檢查 Storage Class
 
 ```bash
-# List storage classes
+# 列出 storage classes
 kubectl get storageclass
 
 # Describe storage class
 kubectl describe storageclass ${STORAGE_CLASS_NAME}
 
-# Check default storage class
+# 檢查預設 storage class
 kubectl get storageclass -o jsonpath='{.items[?(@.metadata.annotations.storageclass\.kubernetes\.io/is-default-class=="true")].metadata.name}'
 
-# Check provisioner
+# 檢查 provisioner
 kubectl get storageclass ${STORAGE_CLASS_NAME} -o jsonpath='{.provisioner}'
 ```
 
-#### Step 3: Check Volume Attachment
+#### 步驟 3：檢查 Volume Attachment
 
 ```bash
-# Check volume attachments
+# 檢查 volume attachments
 kubectl get volumeattachment
 
 # Describe volume attachment
 kubectl describe volumeattachment ${ATTACHMENT_NAME}
 
-# Check CSI driver
+# 檢查 CSI driver
 kubectl get csidrivers
 
-# Check CSI nodes
+# 檢查 CSI nodes
 kubectl get csinodes
 ```
 
-#### Step 4: Check Pod Volume Mounts
+#### 步驟 4：檢查 Pod Volume Mounts
 
 ```bash
-# Check pod volume mounts
+# 檢查 pod volume mounts
 kubectl get pod ${POD_NAME} -n production -o jsonpath='{.spec.volumes}'
 
-# Check volume mount status
+# 檢查 volume mount status
 kubectl describe pod ${POD_NAME} -n production | grep -A 10 "Volumes:"
 
-# Check mount errors
+# 檢查 mount errors
 kubectl get events -n production --field-selector involvedObject.name=${POD_NAME},reason=FailedMount
 ```
 
-### Common PVC Issues and Solutions
+### 常見 PVC 問題和解決方案
 
-#### Issue 1: PVC Stuck in Pending
+#### 問題 1：PVC 卡在 Pending
 
-**Problem**: PVC cannot find or create a suitable PV
+**問題**：PVC 無法找到或創建合適的 PV
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check PVC status
+# 檢查 PVC status
 kubectl describe pvc ${PVC_NAME} -n production
 
-# Check available PVs
+# 檢查可用的 PVs
 kubectl get pv
 
-# Check storage class
+# 檢查 storage class
 kubectl get storageclass
 ```
 
-**Common Causes and Solutions**:
+**常見原因和解決方案**：
 
-**Cause 1: No Storage Class**
+**原因 1：沒有 Storage Class**
 
 ```yaml
-# Add storage class to PVC
+# 新增 storage class 到 PVC
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-pvc
 spec:
   accessModes:
-
     - ReadWriteOnce
-
-  storageClassName: gp3  # Add this
+  storageClassName: gp3  # 新增此項
   resources:
     requests:
       storage: 10Gi
 ```
 
-**Cause 2: No Matching PV**
+**原因 2：沒有匹配的 PV**
 
 ```bash
-# Create PV manually (if not using dynamic provisioning)
+# 手動創建 PV（如果不使用 dynamic provisioning）
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: PersistentVolume
@@ -571,9 +536,7 @@ spec:
   capacity:
     storage: 10Gi
   accessModes:
-
     - ReadWriteOnce
-
   persistentVolumeReclaimPolicy: Retain
   storageClassName: manual
   hostPath:
@@ -581,114 +544,106 @@ spec:
 EOF
 ```
 
-**Cause 3: Insufficient Storage**
+**原因 3：Storage 不足**
 
 ```bash
-# Check available storage
+# 檢查可用 storage
 kubectl get pv -o custom-columns=NAME:.metadata.name,CAPACITY:.spec.capacity.storage,STATUS:.status.phase
 
-# Increase PVC size (if storage class supports expansion)
+# 增加 PVC 大小（如果 storage class 支援 expansion）
 kubectl patch pvc ${PVC_NAME} -n production -p '{"spec":{"resources":{"requests":{"storage":"20Gi"}}}}'
 ```
 
-#### Issue 2: Multi-Attach Error
+#### 問題 2：Multi-Attach Error
 
-**Problem**: Volume cannot be attached to multiple nodes (ReadWriteOnce)
+**問題**：Volume 無法 attach 到多個 nodes（ReadWriteOnce）
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check volume attachment
+# 檢查 volume attachment
 kubectl get volumeattachment | grep ${PV_NAME}
 
-# Check which node has the volume
+# 檢查哪個 node 有 volume
 kubectl get volumeattachment -o jsonpath='{.items[?(@.spec.source.persistentVolumeName=="'${PV_NAME}'")].spec.nodeName}'
 
-# Check pod node placement
+# 檢查 pod node placement
 kubectl get pod ${POD_NAME} -n production -o jsonpath='{.spec.nodeName}'
 ```
 
-**Solutions**:
+**解決方案**：
 
-**Option 1: Use ReadWriteMany (if supported)**
+**選項 1：使用 ReadWriteMany（如果支援）**
 
 ```yaml
-# Change access mode
+# 更改 access mode
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: shared-data
 spec:
   accessModes:
-
-    - ReadWriteMany  # Changed from ReadWriteOnce
-
-  storageClassName: efs  # Use EFS for RWX
+    - ReadWriteMany  # 從 ReadWriteOnce 更改
+  storageClassName: efs  # 使用 EFS 以支援 RWX
   resources:
     requests:
       storage: 10Gi
 ```
 
-**Option 2: Force Detach and Reattach**
+**選項 2：強制 Detach 和 Reattach**
 
 ```bash
-# Delete the pod to force detach
+# 刪除 pod 以強制 detach
 kubectl delete pod ${POD_NAME} -n production --grace-period=0 --force
 
-# Wait for volume to detach
+# 等待 volume detach
 kubectl get volumeattachment --watch
 
-# Pod will be recreated by deployment
+# Pod 將被 deployment 重新創建
 ```
 
-**Option 3: Use Pod Affinity to Same Node**
+**選項 3：使用 Pod Affinity 到相同 Node**
 
 ```yaml
-# Ensure pods using same volume run on same node
+# 確保使用相同 volume 的 pods 在同一個 node 上執行
 spec:
   template:
     spec:
       affinity:
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-
           - labelSelector:
-
               matchExpressions:
-
               - key: app
-
                 operator: In
                 values:
-
                 - ecommerce-backend
-
             topologyKey: kubernetes.io/hostname
 ```
 
-#### Issue 3: Volume Mount Failures
+#### 問題 3：Volume Mount 失敗
 
-**Problem**: Volume cannot be mounted to pod
+**問題**：Volume 無法 mount 到 pod
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check mount errors
+# 檢查 mount errors
 kubectl describe pod ${POD_NAME} -n production | grep -A 20 "Events:"
 
-# Check volume plugin
+# 檢查 volume plugin
 kubectl get pod ${POD_NAME} -n production -o jsonpath='{.spec.volumes[*].persistentVolumeClaim}'
 
-# Check CSI driver logs
+# 檢查 CSI driver logs
 kubectl logs -n kube-system -l app=ebs-csi-controller
 ```
 
-**Solutions**:
+**解決方案**：
 
-**Option 1: Fix Permissions**
+**選項 1：修復權限**
 
 ```yaml
-# Add security context
+# 新增 security context
 spec:
   template:
     spec:
@@ -696,337 +651,321 @@ spec:
         fsGroup: 1000
         runAsUser: 1000
       containers:
-
       - name: app
-
         volumeMounts:
-
         - name: data
-
           mountPath: /data
 ```
 
-**Option 2: Recreate PVC**
+**選項 2：重新創建 PVC**
 
 ```bash
-# Backup data if needed
+# 如需要備份資料
 kubectl exec ${POD_NAME} -n production -- tar czf /tmp/backup.tar.gz /data
 
-# Delete and recreate PVC
+# 刪除並重新創建 PVC
 kubectl delete pvc ${PVC_NAME} -n production
 kubectl apply -f pvc.yaml
 
-# Restore data
+# 還原資料
 kubectl exec ${POD_NAME} -n production -- tar xzf /tmp/backup.tar.gz -C /
 ```
 
-**Option 3: Check Node Kubelet**
+**選項 3：檢查 Node Kubelet**
 
 ```bash
-# Check kubelet logs on node
+# 檢查 node 上的 kubelet logs
 ssh ${NODE_IP}
 journalctl -u kubelet -f | grep -i volume
 
-# Restart kubelet if needed
+# 如需要重啟 kubelet
 systemctl restart kubelet
 ```
 
 ### Volume Expansion
 
-**Enable Volume Expansion**:
+**啟用 Volume Expansion**：
 
 ```yaml
-# Storage class with expansion enabled
+# 啟用 expansion 的 Storage class
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: gp3-expandable
 provisioner: ebs.csi.aws.com
-allowVolumeExpansion: true  # Enable expansion
+allowVolumeExpansion: true  # 啟用 expansion
 parameters:
   type: gp3
   iops: "3000"
   throughput: "125"
 ```
 
-**Expand PVC**:
+**擴充 PVC**：
 
 ```bash
-# Edit PVC to increase size
+# 編輯 PVC 以增加大小
 kubectl patch pvc ${PVC_NAME} -n production -p '{"spec":{"resources":{"requests":{"storage":"20Gi"}}}}'
 
-# Check expansion status
+# 檢查 expansion status
 kubectl describe pvc ${PVC_NAME} -n production | grep -A 5 "Conditions:"
 
-# For file system expansion, restart pod
+# 對於 file system expansion，重啟 pod
 kubectl rollout restart deployment/${DEPLOYMENT_NAME} -n production
 ```
 
 ---
 
-## ConfigMap and Secret Mounting Problems
+## ConfigMap 和 Secret 掛載問題
 
-### Overview
+### 概述
 
-ConfigMaps and Secrets provide configuration and sensitive data to pods. Mounting issues can cause application failures or security vulnerabilities.
+ConfigMaps 和 Secrets 為 pods 提供配置和敏感資料。掛載問題可能導致 application 失敗或安全漏洞。
 
-### Symptoms
+### 症狀
 
-- Pods stuck in `ContainerCreating` state
-- "ConfigMap not found" or "Secret not found" errors
-- Application configuration not loading
-- Environment variables missing
-- File mounts empty or incorrect
+- Pods 卡在 `ContainerCreating` 狀態
+- "ConfigMap not found" 或 "Secret not found" 錯誤
+- Application 配置未載入
+- 環境變數缺失
+- 檔案掛載為空或不正確
 
-### Diagnostic Procedures
+### 診斷程序
 
-#### Step 1: Check ConfigMap/Secret Existence
+#### 步驟 1：檢查 ConfigMap/Secret 存在性
 
 ```bash
-# List ConfigMaps
+# 列出 ConfigMaps
 kubectl get configmap -n production
 
 # Describe ConfigMap
 kubectl describe configmap ${CONFIGMAP_NAME} -n production
 
-# View ConfigMap data
+# 查看 ConfigMap 資料
 kubectl get configmap ${CONFIGMAP_NAME} -n production -o yaml
 
-# List Secrets
+# 列出 Secrets
 kubectl get secret -n production
 
-# Describe Secret (data is base64 encoded)
+# Describe Secret（資料為 base64 編碼）
 kubectl describe secret ${SECRET_NAME} -n production
 
-# Decode Secret data
+# 解碼 Secret 資料
 kubectl get secret ${SECRET_NAME} -n production -o jsonpath='{.data.password}' | base64 -d
 ```
 
-#### Step 2: Check Pod Configuration
+#### 步驟 2：檢查 Pod 配置
 
 ```bash
-# Check ConfigMap references in pod
+# 檢查 pod 中的 ConfigMap 引用
 kubectl get pod ${POD_NAME} -n production -o yaml | grep -A 10 configMapRef
 
-# Check Secret references
+# 檢查 Secret 引用
 kubectl get pod ${POD_NAME} -n production -o yaml | grep -A 10 secretRef
 
-# Check volume mounts
+# 檢查 volume mounts
 kubectl get pod ${POD_NAME} -n production -o yaml | grep -A 20 volumeMounts
 
-# Check environment variables
+# 檢查環境變數
 kubectl exec ${POD_NAME} -n production -- env | grep -i config
 ```
 
-#### Step 3: Check Mount Status
+#### 步驟 3：檢查 Mount Status
 
 ```bash
-# Check if files are mounted
+# 檢查檔案是否已掛載
 kubectl exec ${POD_NAME} -n production -- ls -la /etc/config
 
-# Check file contents
+# 檢查檔案內容
 kubectl exec ${POD_NAME} -n production -- cat /etc/config/application.yml
 
-# Check environment variables
+# 檢查環境變數
 kubectl exec ${POD_NAME} -n production -- printenv | sort
 ```
 
-### Common ConfigMap/Secret Issues and Solutions
+### 常見 ConfigMap/Secret 問題和解決方案
 
-#### Issue 1: ConfigMap/Secret Not Found
+#### 問題 1：ConfigMap/Secret 未找到
 
-**Problem**: Referenced ConfigMap or Secret doesn't exist
+**問題**：引用的 ConfigMap 或 Secret 不存在
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check if ConfigMap exists
+# 檢查 ConfigMap 是否存在
 kubectl get configmap ${CONFIGMAP_NAME} -n production
 
-# Check pod events
+# 檢查 pod events
 kubectl describe pod ${POD_NAME} -n production | grep -i "configmap\|secret"
 ```
 
-**Solutions**:
+**解決方案**：
 
-**Option 1: Create Missing ConfigMap**
+**選項 1：創建缺少的 ConfigMap**
 
 ```bash
-# Create from literal values
+# 從 literal values 創建
 kubectl create configmap app-config -n production \
   --from-literal=database.host=postgres.production.svc.cluster.local \
   --from-literal=database.port=5432
 
-# Create from file
+# 從檔案創建
 kubectl create configmap app-config -n production \
   --from-file=application.yml
 
-# Create from directory
+# 從目錄創建
 kubectl create configmap app-config -n production \
   --from-file=config/
 ```
 
-**Option 2: Create Missing Secret**
+**選項 2：創建缺少的 Secret**
 
 ```bash
-# Create from literal values
+# 從 literal values 創建
 kubectl create secret generic db-credentials -n production \
   --from-literal=username=admin \
   --from-literal=password=secretpassword
 
-# Create from file
+# 從檔案創建
 kubectl create secret generic tls-cert -n production \
   --from-file=tls.crt=cert.pem \
   --from-file=tls.key=key.pem
 
-# Create docker registry secret
+# 創建 docker registry secret
 kubectl create secret docker-registry ecr-secret -n production \
   --docker-server=${ECR_REGISTRY} \
   --docker-username=AWS \
   --docker-password=$(aws ecr get-login-password)
 ```
 
-**Option 3: Fix Reference in Deployment**
+**選項 3：修復 Deployment 中的引用**
 
 ```yaml
-# Correct the ConfigMap name
+# 修正 ConfigMap 名稱
 spec:
   template:
     spec:
       containers:
-
       - name: app
-
         envFrom:
-
         - configMapRef:
-
-            name: app-config  # Ensure this matches actual ConfigMap name
+            name: app-config  # 確保這與實際 ConfigMap 名稱匹配
 ```
 
-#### Issue 2: ConfigMap/Secret Not Updating
+#### 問題 2：ConfigMap/Secret 未更新
 
-**Problem**: Changes to ConfigMap/Secret not reflected in running pods
+**問題**：ConfigMap/Secret 的變更未反映在運行中的 pods
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check ConfigMap version
+# 檢查 ConfigMap 版本
 kubectl get configmap ${CONFIGMAP_NAME} -n production -o yaml | grep resourceVersion
 
-# Check when pod was started
+# 檢查 pod 啟動時間
 kubectl get pod ${POD_NAME} -n production -o jsonpath='{.status.startTime}'
 
-# Check if using subPath (prevents updates)
+# 檢查是否使用 subPath（阻止更新）
 kubectl get pod ${POD_NAME} -n production -o yaml | grep subPath
 ```
 
-**Solutions**:
+**解決方案**：
 
-**Option 1: Restart Pods**
+**選項 1：重啟 Pods**
 
 ```bash
 # Rolling restart
 kubectl rollout restart deployment/${DEPLOYMENT_NAME} -n production
 
-# Force delete pods
+# 強制刪除 pods
 kubectl delete pod -l app=ecommerce-backend -n production
 
-# Scale down and up
+# Scale down 和 up
 kubectl scale deployment/${DEPLOYMENT_NAME} --replicas=0 -n production
 kubectl scale deployment/${DEPLOYMENT_NAME} --replicas=3 -n production
 ```
 
-**Option 2: Use Reloader (Automatic Restart)**
+**選項 2：使用 Reloader（自動重啟）**
 
 ```bash
-# Install Reloader
+# 安裝 Reloader
 kubectl apply -f https://raw.githubusercontent.com/stakater/Reloader/master/deployments/kubernetes/reloader.yaml
 
-# Add annotation to deployment
+# 新增 annotation 到 deployment
 kubectl annotate deployment ${DEPLOYMENT_NAME} -n production \
   reloader.stakater.com/auto="true"
 ```
 
-**Option 3: Avoid subPath**
+**選項 3：避免 subPath**
 
 ```yaml
-# Instead of subPath, mount entire ConfigMap
+# 不使用 subPath，掛載整個 ConfigMap
 volumeMounts:
-
 - name: config
-
   mountPath: /etc/config
-  # Don't use subPath - it prevents updates
+  # 不使用 subPath - 它會阻止更新
 ```
 
-**Option 4: Use Immutable ConfigMaps**
+**選項 4：使用 Immutable ConfigMaps**
 
 ```yaml
-# Create new ConfigMap with version
+# 創建帶有版本的新 ConfigMap
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: app-config-v2  # Versioned name
+  name: app-config-v2  # 版本化名稱
 immutable: true
 data:
   application.yml: |
     ...
 
-# Update deployment to use new version
+# 更新 deployment 使用新版本
 spec:
   template:
     spec:
       volumes:
-
       - name: config
-
         configMap:
-          name: app-config-v2  # Updated reference
+          name: app-config-v2  # 更新引用
 ```
 
-#### Issue 3: Permission Denied on Mounted Files
+#### 問題 3：掛載檔案權限被拒絕
 
-**Problem**: Application cannot read mounted ConfigMap/Secret files
+**問題**：Application 無法讀取掛載的 ConfigMap/Secret 檔案
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check file permissions
+# 檢查檔案權限
 kubectl exec ${POD_NAME} -n production -- ls -la /etc/config
 
-# Check pod security context
+# 檢查 pod security context
 kubectl get pod ${POD_NAME} -n production -o jsonpath='{.spec.securityContext}'
 
-# Check container user
+# 檢查 container user
 kubectl exec ${POD_NAME} -n production -- id
 ```
 
-**Solutions**:
+**解決方案**：
 
-**Option 1: Set Default Mode**
+**選項 1：設定 Default Mode**
 
 ```yaml
-# Set file permissions
+# 設定檔案權限
 volumes:
-
 - name: config
-
   configMap:
     name: app-config
     defaultMode: 0644  # rw-r--r--
-
 - name: secret
-
   secret:
     secretName: db-credentials
     defaultMode: 0400  # r--------
 ```
 
-**Option 2: Set Security Context**
+**選項 2：設定 Security Context**
 
 ```yaml
-# Run as specific user
+# 以特定 user 執行
 spec:
   template:
     spec:
@@ -1035,38 +974,30 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
       containers:
-
       - name: app
-
 ```
 
-**Option 3: Use Init Container to Fix Permissions**
+**選項 3：使用 Init Container 修復權限**
 
 ```yaml
-# Copy and fix permissions
+# 複製並修復權限
 initContainers:
-
 - name: fix-permissions
-
   image: busybox
   command: ['sh', '-c', 'cp /tmp/config/* /etc/config/ && chmod 644 /etc/config/*']
   volumeMounts:
-
   - name: config-source
-
     mountPath: /tmp/config
-
   - name: config-writable
-
     mountPath: /etc/config
 ```
 
-### Best Practices
+### 最佳實踐
 
-**ConfigMap Management**:
+**ConfigMap 管理**：
 
 ```yaml
-# Use labels for versioning
+# 使用 labels 進行版本控制
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -1080,14 +1011,14 @@ data:
     ...
 ```
 
-**Secret Management**:
+**Secret 管理**：
 
 ```bash
-# Use external secret management
-# Install External Secrets Operator
+# 使用外部 secret 管理
+# 安裝 External Secrets Operator
 kubectl apply -f https://raw.githubusercontent.com/external-secrets/external-secrets/main/deploy/crds/bundle.yaml
 
-# Create SecretStore
+# 創建 SecretStore
 kubectl apply -f - <<EOF
 apiVersion: external-secrets.io/v1beta1
 kind: SecretStore
@@ -1101,7 +1032,7 @@ spec:
       region: us-east-1
 EOF
 
-# Create ExternalSecret
+# 創建 ExternalSecret
 kubectl apply -f - <<EOF
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
@@ -1116,9 +1047,7 @@ spec:
   target:
     name: db-credentials
   data:
-
   - secretKey: password
-
     remoteRef:
       key: prod/database/password
 EOF
@@ -1126,161 +1055,159 @@ EOF
 
 ---
 
-## Service Discovery Failures
+## Service Discovery 失敗
 
-### Overview
+### 概述
 
-Service discovery issues prevent pods from communicating with each other through Kubernetes Services, causing application failures and network connectivity problems.
+Service discovery 問題阻止 pods 透過 Kubernetes Services 相互通訊，導致 application 失敗和網路連線問題。
 
-### Symptoms
+### 症狀
 
-- "Connection refused" errors between services
-- DNS resolution failures
-- "Service not found" errors
-- Intermittent connectivity issues
-- Load balancing not working
+- Services 之間「Connection refused」錯誤
+- DNS 解析失敗
+- "Service not found" 錯誤
+- 間歇性連線問題
+- Load balancing 無法運作
 
-### Diagnostic Procedures
+### 診斷程序
 
-#### Step 1: Check Service Configuration
+#### 步驟 1：檢查 Service 配置
 
 ```bash
-# List services
+# 列出 services
 kubectl get svc -n production
 
 # Describe service
 kubectl describe svc ${SERVICE_NAME} -n production
 
-# Check service endpoints
+# 檢查 service endpoints
 kubectl get endpoints ${SERVICE_NAME} -n production
 
-# Check service selector
+# 檢查 service selector
 kubectl get svc ${SERVICE_NAME} -n production -o jsonpath='{.spec.selector}'
 ```
 
-#### Step 2: Verify Pod Labels Match Service Selector
+#### 步驟 2：驗證 Pod Labels 匹配 Service Selector
 
 ```bash
-# Check pod labels
+# 檢查 pod labels
 kubectl get pods -n production --show-labels
 
-# Check if pods match service selector
+# 檢查 pods 是否匹配 service selector
 kubectl get pods -n production -l app=ecommerce-backend
 
-# Compare with service selector
+# 與 service selector 比較
 kubectl get svc ecommerce-backend -n production -o jsonpath='{.spec.selector}'
 ```
 
-#### Step 3: Test DNS Resolution
+#### 步驟 3：測試 DNS 解析
 
 ```bash
-# Test DNS from within cluster
+# 從 cluster 內測試 DNS
 kubectl run -it --rm debug --image=busybox --restart=Never -- nslookup ${SERVICE_NAME}.production.svc.cluster.local
 
-# Test service connectivity
+# 測試 service 連線
 kubectl run -it --rm debug --image=curlimages/curl --restart=Never -- curl http://${SERVICE_NAME}.production.svc.cluster.local:8080/actuator/health
 
-# Check CoreDNS
+# 檢查 CoreDNS
 kubectl get pods -n kube-system -l k8s-app=kube-dns
 kubectl logs -n kube-system -l k8s-app=kube-dns
 ```
 
-### Common Service Discovery Issues
+### 常見 Service Discovery 問題
 
-#### Issue 1: No Endpoints
+#### 問題 1：沒有 Endpoints
 
-**Problem**: Service has no endpoints (no pods match selector)
+**問題**：Service 沒有 endpoints（沒有 pods 匹配 selector）
 
-**Solution**:
+**解決方案**：
 
 ```bash
-# Fix pod labels to match service selector
+# 修復 pod labels 以匹配 service selector
 kubectl label pods -l app=backend app=ecommerce-backend -n production --overwrite
 
-# Or update service selector
+# 或更新 service selector
 kubectl patch svc ${SERVICE_NAME} -n production -p '{"spec":{"selector":{"app":"backend"}}}'
 ```
 
-#### Issue 2: DNS Resolution Failures
+#### 問題 2：DNS 解析失敗
 
-**Problem**: Cannot resolve service names
+**問題**：無法解析 service 名稱
 
-**Solution**:
+**解決方案**：
 
 ```bash
-# Restart CoreDNS
+# 重啟 CoreDNS
 kubectl rollout restart deployment/coredns -n kube-system
 
-# Check CoreDNS ConfigMap
+# 檢查 CoreDNS ConfigMap
 kubectl get configmap coredns -n kube-system -o yaml
 
-# Test DNS
+# 測試 DNS
 kubectl exec ${POD_NAME} -n production -- nslookup kubernetes.default
 ```
 
 ---
 
-## Horizontal Pod Autoscaler Troubleshooting
+## Horizontal Pod Autoscaler 疑難排解
 
-### Overview
+### 概述
 
-HPA automatically scales pods based on metrics. Issues can cause under or over-provisioning.
+HPA 根據 metrics 自動 scale pods。問題可能導致 under 或 over-provisioning。
 
-### Symptoms
+### 症狀
 
-- Pods not scaling despite high load
-- Excessive scaling (flapping)
-- "unable to get metrics" errors
-- HPA showing "unknown" status
+- 儘管負載高但 Pods 未 scaling
+- 過度 scaling（flapping）
+- "unable to get metrics" 錯誤
+- HPA 顯示「unknown」狀態
 
-### Diagnostic Procedures
+### 診斷程序
 
 ```bash
-# Check HPA status
+# 檢查 HPA status
 kubectl get hpa -n production
 
 # Describe HPA
 kubectl describe hpa ${HPA_NAME} -n production
 
-# Check metrics server
+# 檢查 metrics server
 kubectl get deployment metrics-server -n kube-system
 kubectl logs -n kube-system -l k8s-app=metrics-server
 
-# Check current metrics
+# 檢查當前 metrics
 kubectl top pods -n production
 kubectl top nodes
 
-# Check HPA events
+# 檢查 HPA events
 kubectl get events -n production --field-selector involvedObject.name=${HPA_NAME}
 ```
 
-### Common HPA Issues
+### 常見 HPA 問題
 
-#### Issue 1: Metrics Server Not Available
+#### 問題 1：Metrics Server 不可用
 
-**Solution**:
+**解決方案**：
 
 ```bash
-# Install metrics server
+# 安裝 metrics server
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
-# For development (insecure)
+# 用於開發（insecure）
 kubectl patch deployment metrics-server -n kube-system --type='json' -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]'
 ```
 
-#### Issue 2: Resource Requests Not Set
+#### 問題 2：Resource Requests 未設定
 
-**Solution**:
+**解決方案**：
 
 ```yaml
-# Add resource requests (required for HPA)
+# 新增 resource requests（HPA 所需）
 spec:
   template:
     spec:
       containers:
-
       - name: app
-
         resources:
           requests:
             cpu: 500m
@@ -1290,12 +1217,12 @@ spec:
             memory: 1Gi
 ```
 
-#### Issue 3: HPA Flapping
+#### 問題 3：HPA Flapping
 
-**Solution**:
+**解決方案**：
 
 ```yaml
-# Adjust HPA behavior
+# 調整 HPA behavior
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -1308,9 +1235,7 @@ spec:
   minReplicas: 3
   maxReplicas: 10
   metrics:
-
   - type: Resource
-
     resource:
       name: cpu
       target:
@@ -1318,103 +1243,99 @@ spec:
         averageUtilization: 70
   behavior:
     scaleDown:
-      stabilizationWindowSeconds: 300  # Wait 5 min before scaling down
+      stabilizationWindowSeconds: 300  # 在 scale down 前等待 5 分鐘
       policies:
-
       - type: Percent
-
         value: 50
         periodSeconds: 60
     scaleUp:
       stabilizationWindowSeconds: 0
       policies:
-
       - type: Percent
-
         value: 100
         periodSeconds: 15
 ```
 
 ---
 
-## Cluster Autoscaler Issues
+## Cluster Autoscaler 問題
 
-### Overview
+### 概述
 
-Cluster Autoscaler automatically adjusts the number of nodes. Issues can cause resource shortages or waste.
+Cluster Autoscaler 自動調整 nodes 數量。問題可能導致資源短缺或浪費。
 
-### Symptoms
+### 症狀
 
-- Pods pending despite autoscaler enabled
-- Nodes not scaling up
-- Empty nodes not scaling down
-- "scale up failed" errors
+- 儘管啟用 autoscaler，pods 仍 pending
+- Nodes 未 scale up
+- 空 nodes 未 scale down
+- "scale up failed" 錯誤
 
-### Diagnostic Procedures
+### 診斷程序
 
 ```bash
-# Check cluster autoscaler status
+# 檢查 cluster autoscaler status
 kubectl get deployment cluster-autoscaler -n kube-system
 
-# Check logs
+# 檢查 logs
 kubectl logs -n kube-system -l app=cluster-autoscaler --tail=100
 
-# Check autoscaler ConfigMap
+# 檢查 autoscaler ConfigMap
 kubectl get configmap cluster-autoscaler-status -n kube-system -o yaml
 
-# Check node groups
+# 檢查 node groups
 kubectl get nodes -o custom-columns=NAME:.metadata.name,INSTANCE-TYPE:.metadata.labels.node\\.kubernetes\\.io/instance-type,ZONE:.metadata.labels.topology\\.kubernetes\\.io/zone
 ```
 
-### Common Cluster Autoscaler Issues
+### 常見 Cluster Autoscaler 問題
 
-#### Issue 1: Autoscaler Not Scaling Up
+#### 問題 1：Autoscaler 未 Scale Up
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check autoscaler logs for scale-up decisions
+# 檢查 autoscaler logs 以查看 scale-up 決策
 kubectl logs -n kube-system -l app=cluster-autoscaler | grep -i "scale up"
 
-# Check node group limits
+# 檢查 node group 限制
 aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names ${ASG_NAME}
 ```
 
-**Solutions**:
+**解決方案**：
 
 ```bash
-# Increase max size
+# 增加 max size
 aws autoscaling update-auto-scaling-group \
   --auto-scaling-group-name ${ASG_NAME} \
   --max-size 20
 
-# Check autoscaler configuration
+# 檢查 autoscaler 配置
 kubectl edit deployment cluster-autoscaler -n kube-system
-# Ensure --max-nodes-total is sufficient
+# 確保 --max-nodes-total 足夠
 ```
 
-#### Issue 2: Nodes Not Scaling Down
+#### 問題 2：Nodes 未 Scale Down
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check why nodes aren't scaling down
+# 檢查 nodes 為何未 scale down
 kubectl logs -n kube-system -l app=cluster-autoscaler | grep -i "scale down"
 
-# Check node annotations
+# 檢查 node annotations
 kubectl describe node ${NODE_NAME} | grep -i "scale-down"
 ```
 
-**Solutions**:
+**解決方案**：
 
 ```bash
-# Remove scale-down prevention annotation
+# 移除 scale-down 預防 annotation
 kubectl annotate node ${NODE_NAME} cluster-autoscaler.kubernetes.io/scale-down-disabled-
 
-# Check for pods preventing scale-down
+# 檢查阻止 scale-down 的 pods
 kubectl get pods --all-namespaces -o wide --field-selector spec.nodeName=${NODE_NAME}
 
-# Add PodDisruptionBudget to allow eviction
+# 新增 PodDisruptionBudget 以允許 eviction
 kubectl apply -f - <<EOF
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -1431,152 +1352,152 @@ EOF
 
 ---
 
-## Node NotReady Troubleshooting
+## Node NotReady 疑難排解
 
-### Overview
+### 概述
 
-Nodes in NotReady state cannot run pods, reducing cluster capacity and potentially causing outages.
+NotReady 狀態的 Nodes 無法執行 pods，減少 cluster 容量並可能導致中斷。
 
-### Symptoms
+### 症狀
 
-- Nodes showing NotReady status
-- Pods evicted from nodes
-- "node not found" errors
-- Kubelet not responding
+- Nodes 顯示 NotReady 狀態
+- Pods 從 nodes 被 evicted
+- "node not found" 錯誤
+- Kubelet 無回應
 
-### Diagnostic Procedures
+### 診斷程序
 
 ```bash
-# Check node status
+# 檢查 node status
 kubectl get nodes
 
 # Describe node
 kubectl describe node ${NODE_NAME}
 
-# Check node conditions
+# 檢查 node conditions
 kubectl get node ${NODE_NAME} -o jsonpath='{.status.conditions[*].type}{"\n"}{.status.conditions[*].status}'
 
-# Check kubelet status (SSH to node)
+# 檢查 kubelet status（SSH 到 node）
 ssh ${NODE_IP}
 systemctl status kubelet
 journalctl -u kubelet -f
 
-# Check node resources
+# 檢查 node 資源
 kubectl top node ${NODE_NAME}
 ```
 
-### Common Node Issues
+### 常見 Node 問題
 
-#### Issue 1: Disk Pressure
+#### 問題 1：Disk Pressure
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check disk usage on node
+# 檢查 node 上的 disk 使用情況
 ssh ${NODE_IP}
 df -h
 du -sh /var/lib/docker/* | sort -rh | head -10
 du -sh /var/lib/kubelet/* | sort -rh | head -10
 ```
 
-**Solutions**:
+**解決方案**：
 
 ```bash
-# Clean up Docker images
+# 清理 Docker images
 docker system prune -a -f
 
-# Clean up unused volumes
+# 清理未使用的 volumes
 docker volume prune -f
 
-# Clean up kubelet
+# 清理 kubelet
 kubectl delete pod --field-selector=status.phase==Succeeded -A
 kubectl delete pod --field-selector=status.phase==Failed -A
 
-# Increase disk size (AWS EBS)
+# 增加 disk 大小（AWS EBS）
 aws ec2 modify-volume --volume-id ${VOLUME_ID} --size 100
 ```
 
-#### Issue 2: Memory Pressure
+#### 問題 2：Memory Pressure
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check memory usage
+# 檢查 memory 使用情況
 ssh ${NODE_IP}
 free -h
 top -o %MEM
 
-# Check for OOM kills
+# 檢查 OOM kills
 dmesg | grep -i "out of memory"
 ```
 
-**Solutions**:
+**解決方案**：
 
 ```bash
-# Add more nodes
+# 新增更多 nodes
 kubectl scale deployment cluster-autoscaler --replicas=1 -n kube-system
 
-# Reduce pod resource requests
+# 減少 pod resource requests
 kubectl set resources deployment/${DEPLOYMENT_NAME} -n production --requests=memory=256Mi
 
-# Evict pods from node
+# 從 node evict pods
 kubectl drain ${NODE_NAME} --ignore-daemonsets --delete-emptydir-data
 ```
 
-#### Issue 3: Kubelet Not Running
+#### 問題 3：Kubelet 未執行
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check kubelet status
+# 檢查 kubelet status
 ssh ${NODE_IP}
 systemctl status kubelet
 journalctl -u kubelet --no-pager | tail -100
 ```
 
-**Solutions**:
+**解決方案**：
 
 ```bash
-# Restart kubelet
+# 重啟 kubelet
 systemctl restart kubelet
 
-# Check kubelet configuration
+# 檢查 kubelet 配置
 cat /var/lib/kubelet/config.yaml
 
-# Check certificates
+# 檢查 certificates
 ls -la /var/lib/kubelet/pki/
 
-# Regenerate certificates if expired
+# 如果 certificates 過期則重新生成
 kubeadm alpha certs renew all
 systemctl restart kubelet
 ```
 
 ---
 
-## etcd Performance and Health Issues
+## etcd Performance 和 Health 問題
 
-### Overview
+### 概述
 
-etcd is the key-value store for Kubernetes cluster state. Performance issues can affect the entire cluster.
+etcd 是 Kubernetes cluster 狀態的 key-value store。Performance 問題會影響整個 cluster。
 
-### Symptoms
+### 症狀
 
-- Slow API server responses
-- "etcdserver: request timed out" errors
-- High etcd latency
-- Cluster state inconsistencies
-- Leader election failures
+- API server 回應緩慢
+- "etcdserver: request timed out" 錯誤
+- etcd 延遲高
+- Cluster 狀態不一致
+- Leader election 失敗
 
-### Diagnostic Procedures
+### 診斷程序
 
 ```bash
-# Check etcd pods
+# 檢查 etcd pods
 kubectl get pods -n kube-system -l component=etcd
 
-# Check etcd logs
+# 檢查 etcd logs
 kubectl logs -n kube-system etcd-${MASTER_NODE} --tail=100
 
-# Check etcd health
+# 檢查 etcd health
 kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   --endpoints=https://127.0.0.1:2379 \
   --cacert=/etc/kubernetes/pki/etcd/ca.crt \
@@ -1584,7 +1505,7 @@ kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   --key=/etc/kubernetes/pki/etcd/server.key \
   endpoint health
 
-# Check etcd metrics
+# 檢查 etcd metrics
 kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   --endpoints=https://127.0.0.1:2379 \
   --cacert=/etc/kubernetes/pki/etcd/ca.crt \
@@ -1593,14 +1514,14 @@ kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   endpoint status --write-out=table
 ```
 
-### Common etcd Issues
+### 常見 etcd 問題
 
-#### Issue 1: High Latency
+#### 問題 1：高延遲
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check etcd latency
+# 檢查 etcd 延遲
 kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   --endpoints=https://127.0.0.1:2379 \
   --cacert=/etc/kubernetes/pki/etcd/ca.crt \
@@ -1608,16 +1529,16 @@ kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   --key=/etc/kubernetes/pki/etcd/server.key \
   check perf
 
-# Check disk I/O
+# 檢查 disk I/O
 ssh ${MASTER_IP}
 iostat -x 1 10
 ```
 
-**Solutions**:
+**解決方案**：
 
 ```bash
-# Use faster disks (SSD/NVMe)
-# For AWS, use io2 or gp3 volumes
+# 使用更快的 disks（SSD/NVMe）
+# 對於 AWS，使用 io2 或 gp3 volumes
 
 # Defragment etcd
 kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
@@ -1641,12 +1562,12 @@ kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
     endpoint status --write-out="json" | jq -r '.[0].Status.header.revision')
 ```
 
-#### Issue 2: Database Size Too Large
+#### 問題 2：Database 大小過大
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check etcd database size
+# 檢查 etcd database 大小
 kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   --endpoints=https://127.0.0.1:2379 \
   --cacert=/etc/kubernetes/pki/etcd/ca.crt \
@@ -1654,7 +1575,7 @@ kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   --key=/etc/kubernetes/pki/etcd/server.key \
   endpoint status --write-out=table
 
-# Check for large keys
+# 檢查大型 keys
 kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   --endpoints=https://127.0.0.1:2379 \
   --cacert=/etc/kubernetes/pki/etcd/ca.crt \
@@ -1663,31 +1584,31 @@ kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   get --prefix --keys-only / | head -100
 ```
 
-**Solutions**:
+**解決方案**：
 
 ```bash
-# Enable automatic compaction
+# 啟用自動 compaction
 kubectl edit pod etcd-${MASTER_NODE} -n kube-system
-# Add: --auto-compaction-retention=1
+# 新增：--auto-compaction-retention=1
 
-# Clean up old events
+# 清理舊 events
 kubectl delete events --all -A
 
-# Clean up completed pods
+# 清理已完成的 pods
 kubectl delete pod --field-selector=status.phase==Succeeded -A
 kubectl delete pod --field-selector=status.phase==Failed -A
 
-# Backup and restore to reduce size
+# Backup 和 restore 以減少大小
 ETCDCTL_API=3 etcdctl snapshot save /tmp/etcd-backup.db
 ETCDCTL_API=3 etcdctl snapshot restore /tmp/etcd-backup.db --data-dir=/var/lib/etcd-new
 ```
 
-#### Issue 3: Split Brain / Quorum Loss
+#### 問題 3：Split Brain / Quorum Loss
 
-**Diagnosis**:
+**診斷**：
 
 ```bash
-# Check member list
+# 檢查 member list
 kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   --endpoints=https://127.0.0.1:2379 \
   --cacert=/etc/kubernetes/pki/etcd/ca.crt \
@@ -1695,7 +1616,7 @@ kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   --key=/etc/kubernetes/pki/etcd/server.key \
   member list
 
-# Check cluster health
+# 檢查 cluster health
 kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   --endpoints=https://127.0.0.1:2379 \
   --cacert=/etc/kubernetes/pki/etcd/ca.crt \
@@ -1704,10 +1625,10 @@ kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   endpoint health --cluster
 ```
 
-**Solutions**:
+**解決方案**：
 
 ```bash
-# Remove unhealthy member
+# 移除不健康的 member
 kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   --endpoints=https://127.0.0.1:2379 \
   --cacert=/etc/kubernetes/pki/etcd/ca.crt \
@@ -1715,7 +1636,7 @@ kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   --key=/etc/kubernetes/pki/etcd/server.key \
   member remove ${MEMBER_ID}
 
-# Add new member
+# 新增新 member
 kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   --endpoints=https://127.0.0.1:2379 \
   --cacert=/etc/kubernetes/pki/etcd/ca.crt \
@@ -1724,12 +1645,12 @@ kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   member add ${NEW_MEMBER_NAME} --peer-urls=https://${NEW_MEMBER_IP}:2380
 ```
 
-### etcd Backup and Restore
+### etcd Backup 和 Restore
 
-**Backup**:
+**Backup**：
 
 ```bash
-# Create snapshot
+# 創建 snapshot
 kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   --endpoints=https://127.0.0.1:2379 \
   --cacert=/etc/kubernetes/pki/etcd/ca.crt \
@@ -1737,14 +1658,14 @@ kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
   --key=/etc/kubernetes/pki/etcd/server.key \
   snapshot save /tmp/etcd-backup-$(date +%Y%m%d-%H%M%S).db
 
-# Copy backup
+# 複製 backup
 kubectl cp kube-system/etcd-${MASTER_NODE}:/tmp/etcd-backup-*.db ./etcd-backup.db
 ```
 
-**Restore**:
+**Restore**：
 
 ```bash
-# Stop API server
+# 停止 API server
 systemctl stop kube-apiserver
 
 # Restore snapshot
@@ -1754,30 +1675,26 @@ ETCDCTL_API=3 etcdctl snapshot restore etcd-backup.db \
   --initial-cluster=${INITIAL_CLUSTER} \
   --initial-advertise-peer-urls=https://${MEMBER_IP}:2380
 
-# Update etcd data directory
+# 更新 etcd data directory
 mv /var/lib/etcd /var/lib/etcd-old
 mv /var/lib/etcd-restored /var/lib/etcd
 
-# Start API server
+# 啟動 API server
 systemctl start kube-apiserver
 ```
 
 ---
 
-## Monitoring and Alerts
+## 監控和 Alerts
 
-### Kubernetes-Specific Alerts
+### Kubernetes 特定 Alerts
 
 ```yaml
 # Prometheus alert rules
 groups:
-
 - name: kubernetes-alerts
-
   rules:
-
   - alert: PodsPendingTooLong
-
     expr: kube_pod_status_phase{phase="Pending"} > 0
     for: 5m
     labels:
@@ -1786,7 +1703,6 @@ groups:
       summary: "Pods pending for more than 5 minutes"
 
   - alert: NodeNotReady
-
     expr: kube_node_status_condition{condition="Ready",status="true"} == 0
     for: 5m
     labels:
@@ -1795,7 +1711,6 @@ groups:
       summary: "Node {{ $labels.node }} is not ready"
 
   - alert: PVCPending
-
     expr: kube_persistentvolumeclaim_status_phase{phase="Pending"} > 0
     for: 10m
     labels:
@@ -1804,7 +1719,6 @@ groups:
       summary: "PVC {{ $labels.persistentvolumeclaim }} pending for 10+ minutes"
 
   - alert: HPAMaxedOut
-
     expr: kube_horizontalpodautoscaler_status_current_replicas >= kube_horizontalpodautoscaler_spec_max_replicas
     for: 15m
     labels:
@@ -1813,7 +1727,6 @@ groups:
       summary: "HPA {{ $labels.horizontalpodautoscaler }} at max replicas"
 
   - alert: etcdHighLatency
-
     expr: histogram_quantile(0.99, rate(etcd_disk_wal_fsync_duration_seconds_bucket[5m])) > 0.5
     for: 10m
     labels:
@@ -1824,17 +1737,17 @@ groups:
 
 ---
 
-## Related Documentation
+## 相關文件
 
-- [Common Issues](common-issues.md) - Quick solutions for common problems
-- [Application Debugging Guide](application-debugging.md) - Application-level debugging
-- [Database Troubleshooting](database-issues.md) - Database-specific issues
-- [Network and Connectivity](network-connectivity.md) - Network troubleshooting
-- [Deployment Process](../deployment/deployment-process.md) - Deployment procedures
-- [Monitoring Strategy](../monitoring/monitoring-strategy.md) - Monitoring setup
+- [常見問題](common-issues.md) - 常見問題的快速解決方案
+- [Application Debugging 指南](application-debugging.md) - Application 層級除錯
+- [Database 疑難排解](database-issues.md) - Database 特定問題
+- [Network 和 Connectivity](network-connectivity.md) - Network 疑難排解
+- [Deployment 流程](../deployment/deployment-process.md) - Deployment 程序
+- [Monitoring 策略](../monitoring/monitoring-strategy.md) - Monitoring 設定
 
 ---
 
-**Last Updated**: 2025-10-25  
-**Owner**: DevOps Team  
-**Review Cycle**: Monthly
+**Last Updated**：2025-10-25
+**Owner**：DevOps Team
+**Review Cycle**：Monthly

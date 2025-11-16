@@ -1,40 +1,40 @@
-# Backup and Restore Guide
+# 備份與還原指南
 
-## Overview
+## 概述
 
-This guide covers backup and restore procedures for all components of the Enterprise E-Commerce Platform.
+本指南涵蓋企業電商平台所有元件的備份和還原程序。
 
-For detailed operational procedures, see [Backup and Restore Runbook](../runbooks/backup-restore.md).
+關於詳細操作程序,請參閱 [Backup and Restore Runbook](../runbooks/backup-restore.md)。
 
-## Backup Strategy
+## 備份策略
 
-### Backup Types
+### 備份類型
 
-| Type | Frequency | Retention | Purpose |
+| 類型 | 頻率 | 保留期 | 目的 |
 |------|-----------|-----------|---------|
-| Full Backup | Daily | 30 days | Complete system recovery |
-| Incremental | Hourly | 7 days | Point-in-time recovery |
-| Transaction Logs | Continuous | 7 days | Minimal data loss |
-| Configuration | On change | 90 days | System configuration |
+| Full Backup | 每日 | 30 天 | 完整系統復原 |
+| Incremental | 每小時 | 7 天 | 時間點復原 |
+| Transaction Log | 持續 | 7 天 | 最小資料遺失 |
+| Configuration | 變更時 | 90 天 | 系統配置 |
 
-### Backup Schedule
+### 備份排程
 
 **Production**:
 
-- Database: Automated snapshots every hour
-- Application config: On every deployment
-- Logs: Continuous to CloudWatch (90-day retention)
-- Metrics: 15-month retention in CloudWatch
+- Database: 每小時自動 snapshot
+- Application config: 每次部署時
+- Log: 持續至 CloudWatch (90 天保留)
+- Metric: CloudWatch 中保留 15 個月
 
 **Staging**:
 
-- Database: Daily snapshots
-- Application config: On deployment
-- Logs: 30-day retention
+- Database: 每日 snapshot
+- Application config: 部署時
+- Log: 30 天保留
 
-## Database Backups
+## 資料庫備份
 
-### Automated RDS Snapshots
+### 自動 RDS Snapshot
 
 Configured in RDS:
 

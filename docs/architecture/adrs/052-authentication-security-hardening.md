@@ -12,126 +12,126 @@ affected_perspectives: ["security", "availability"]
 
 # ADR-052: Authentication Security Hardening
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires comprehensive authentication security hardening to protect against:
+The Enterprise E-Commerce Platform 需要comprehensive authentication security hardening to protect against:
 
-- Brute force attacks and credential stuffing
+- Brute force attacks 和 credential stuffing
 - Weak password vulnerabilities
 - Account takeover attempts
-- Session hijacking and token theft
-- Insider threats and privilege escalation
+- Session hijacking 和 token theft
+- Insider threats 和 privilege escalation
 - Compliance violations (password policies)
 
 Taiwan's cyber security environment presents additional challenges:
 
 - Frequent targeted attacks from state-sponsored actors
 - High-value e-commerce platform as attractive target
-- Need for defense-in-depth authentication security
+- 需要 defense-in-depth authentication security
 - Regulatory compliance requirements (Taiwan Personal Data Protection Act)
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Protect customer accounts and sensitive data
-- Maintain customer trust and platform reputation
-- Comply with security regulations and standards
+- Protect customer accounts 和 sensitive data
+- 維持 customer trust 和 platform reputation
+- Comply 與 security regulations 和 standards
 - Prevent financial losses from account compromise
-- Support 100K+ user accounts with varying risk profiles
+- 支援 100K+ user accounts 與 varying risk profiles
 
-**Constraints**:
+**限制條件**：
 
-- Must balance security with user experience
-- Cannot require complex authentication for all users
-- Must support legacy password migration
-- Budget: $2,000/month for MFA services
+- 必須 balance security 與 用戶體驗
+- 可以not 需要複雜的 authentication 用於 all users
+- 必須 支援 legacy password migration
+- 預算: $2,000/month 用於 MFA services
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
 - JWT-based authentication (ADR-014)
-- Basic password hashing with BCrypt
+- Basic password hashing 與 BCrypt
 - No multi-factor authentication
 - No account lockout mechanism
 - No anomalous login detection
 
-**Requirements**:
+**需求**：
 
 - Strong password policy enforcement
-- Multi-factor authentication (MFA) support
+- Multi-factor authentication (MFA) 支援
 - Account protection mechanisms (lockout, anomaly detection)
-- Secure password storage and rotation
-- Session timeout and management
-- Audit trail for authentication events
+- Secure password storage 和 rotation
+- Session timeout 和 management
+- Audit trail 用於 authentication events
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Security**: Prevent unauthorized access and account compromise
+1. **Security**: Prevent unauthorized access 和 account compromise
 2. **Compliance**: Meet regulatory requirements (GDPR, Taiwan PDPA)
-3. **User Experience**: Balance security with usability
-4. **Scalability**: Support 100K+ users without performance degradation
-5. **Cost**: Minimize operational costs while maintaining security
-6. **Flexibility**: Support different security levels for different user types
-7. **Auditability**: Complete audit trail for compliance
-8. **Recovery**: Enable secure account recovery mechanisms
+3. **User Experience**: Balance security 與 usability
+4. **Scalability**: 支援 100K+ users 沒有 performance degradation
+5. **成本**： Minimize operational costs while maintaining security
+6. **Flexibility**: 支援 different security levels 用於 different user types
+7. **Auditability**: Complete audit trail 用於 compliance
+8. **Recovery**: 啟用 secure account recovery mechanisms
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Comprehensive Security Hardening (Recommended)
+### 選項 1： Comprehensive Security Hardening (Recommended)
 
-**Description**: Multi-layered authentication security with password policy, MFA, account protection, and monitoring
+**描述**： Multi-layered authentication security with password policy, MFA, account protection, and monitoring
 
 **Components**:
 
-- Strong password policy (12+ chars, complexity, history, rotation)
+- Strong password policy (12+ chars, 複雜的ity, history, rotation)
 - Multi-factor authentication (TOTP, SMS backup)
 - Account lockout (5 failed attempts = 15-min lockout)
 - Anomalous login detection (location, device, time)
 - Session timeout (30 minutes idle, 8 hours absolute)
 - Password storage (BCrypt cost factor 12)
-- Mandatory MFA for admin accounts
+- Mandatory MFA 用於 admin accounts
 
-**Pros**:
+**優點**：
 
 - ✅ Defense-in-depth security approach
 - ✅ Protects against multiple attack vectors
-- ✅ Compliance with security standards
+- ✅ Compliance 與 security standards
 - ✅ Flexible security levels per user type
 - ✅ Comprehensive audit trail
 - ✅ Industry best practices
-- ✅ Supports risk-based authentication
+- ✅ 支援s risk-based authentication
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Increased implementation complexity
-- ⚠️ Higher operational overhead
+- ⚠️ Increased implementation 複雜的ity
+- ⚠️ Higher 營運開銷
 - ⚠️ Potential user friction (MFA, password requirements)
-- ⚠️ SMS costs for MFA backup
+- ⚠️ SMS costs 用於 MFA backup
 
-**Cost**: $2,000/month (SMS MFA, monitoring tools)
+**成本**： $2,000/month (SMS MFA, monitoring tools)
 
-**Risk**: **Low** - Proven security practices
+**風險**： **Low** - Proven security practices
 
-### Option 2: Basic Security with Password Policy Only
+### 選項 2： Basic Security with Password Policy Only
 
-**Description**: Minimal security hardening with password policy and basic lockout
+**描述**： Minimal security hardening with password policy and basic lockout
 
-**Pros**:
+**優點**：
 
-- ✅ Simple to implement
-- ✅ Low operational overhead
+- ✅ 簡單implement
+- ✅ Low 營運開銷
 - ✅ Minimal user friction
 - ✅ Low cost
 
-**Cons**:
+**缺點**：
 
 - ❌ Insufficient protection against sophisticated attacks
 - ❌ No MFA protection
@@ -139,22 +139,22 @@ Taiwan's cyber security environment presents additional challenges:
 - ❌ Compliance gaps
 - ❌ Higher risk of account compromise
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **High** - Inadequate security for e-commerce platform
+**風險**： **High** - Inadequate security for e-commerce platform
 
-### Option 3: Third-Party Authentication Service (Auth0, Okta)
+### 選項 3： Third-Party Authentication Service (Auth0, Okta)
 
-**Description**: Delegate authentication security to managed service
+**描述**： Delegate authentication security to managed service
 
-**Pros**:
+**優點**：
 
 - ✅ Managed security features
-- ✅ Professional support
+- ✅ Professional 支援
 - ✅ Advanced features (adaptive MFA, risk scoring)
 - ✅ Compliance certifications
 
-**Cons**:
+**缺點**：
 
 - ❌ High cost ($3,000-5,000/month)
 - ❌ Vendor lock-in
@@ -162,38 +162,38 @@ Taiwan's cyber security environment presents additional challenges:
 - ❌ Data privacy concerns
 - ❌ External dependency
 
-**Cost**: $4,000/month
+**成本**： $4,000/month
 
-**Risk**: **Medium** - Vendor dependency
+**風險**： **Medium** - Vendor dependency
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Comprehensive Security Hardening (Option 1)**
+**選擇的選項**： **Comprehensive Security Hardening (Option 1)**
 
-### Rationale
+### 理由
 
-Comprehensive security hardening was selected for the following reasons:
+Comprehensive security hardening被選擇的原因如下：
 
 1. **Defense-in-Depth**: Multiple security layers protect against various attack vectors
-2. **Compliance**: Meets regulatory requirements for password security and MFA
-3. **Risk Mitigation**: Taiwan's cyber threat environment requires robust authentication security
-4. **Cost-Effective**: $2,000/month is reasonable for 100K+ users
+2. **Compliance**: Meets regulatory requirements 用於 password security 和 MFA
+3. **Risk Mitigation**: Taiwan's cyber threat environment 需要robust authentication security
+4. **Cost-Effective**: $2,000/month is reasonable 用於 100K+ users
 5. **Flexibility**: Risk-based authentication adapts to user behavior
-6. **Control**: Full control over security policies and implementation
-7. **Scalability**: Designed to scale with user growth
+6. **Control**: Full control over security policies 和 implementation
+7. **Scalability**: Designed to scale 與 user growth
 
 ### Password Policy
 
-**Requirements**:
+**需求**：
 
 - Minimum 12 characters (industry best practice)
-- Complexity requirements:
+- 複雜的ity requirements:
   - At least 1 uppercase letter
   - At least 1 lowercase letter
   - At least 1 number
   - At least 1 special character (!@#$%^&*()_+-=[]{}|;:,.<>?)
 - Password history: No reuse of last 5 passwords
-- Mandatory password change every 90 days
+- Mandatory password change every 90 天
 - No common passwords (check against breach database)
 - No personal information in password (name, email, birthdate)
 
@@ -258,11 +258,11 @@ public class PasswordPolicy {
 
 **MFA Requirements**:
 
-- Mandatory for admin accounts
-- Optional but recommended for customer accounts
-- Mandatory for high-value transactions (> $1,000)
+- Mandatory 用於 admin accounts
+- Optional 但 recommended 用於 customer accounts
+- Mandatory 用於 high-value transactions (> $1,000)
 - Mandatory after password reset
-- Remember device for 30 days (optional)
+- Remember device 用於 30 天 (optional)
 
 **Implementation**:
 
@@ -375,10 +375,10 @@ public class AccountProtectionService {
 
 ### Password Storage
 
-**Hashing Algorithm**: BCrypt with cost factor 12
+**Hashing Algorithm**: BCrypt 與 cost factor 12
 
-- Industry standard for password hashing
-- Adaptive cost factor (increases with hardware improvements)
+- Industry standard 用於 password hashing
+- Adaptive cost factor (increases 與 hardware 改善ments)
 - Built-in salt generation
 - Resistant to rainbow table attacks
 
@@ -386,7 +386,7 @@ public class AccountProtectionService {
 
 - Winner of Password Hashing Competition (2015)
 - Memory-hard algorithm (resistant to GPU attacks)
-- Configurable memory, time, and parallelism parameters
+- Configurable memory, time, 和 parallelism parameters
 
 **Implementation**:
 
@@ -428,109 +428,109 @@ public class PasswordService {
 }
 ```
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
 | End Users | Medium | Stronger password requirements, MFA setup | Clear instructions, gradual rollout |
-| Admin Users | High | Mandatory MFA, stricter policies | Training, support documentation |
+| Admin Users | High | Mandatory MFA, stricter policies | Training, 支援 documentation |
 | Development Team | High | Implement security features | Training, code examples, testing tools |
-| Operations Team | Medium | Monitor security events, handle lockouts | Runbooks, automated alerts |
+| Operations Team | Medium | Monitor security events, 處理 lockouts | Runbooks, automated alerts |
 | Security Team | Positive | Enhanced security posture | Regular audits, penetration testing |
-| Customer Support | Medium | Handle lockout and MFA issues | Training, support scripts |
+| Customer 支援 | Medium | 處理 lockout 和 MFA issues | Training, 支援 scripts |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All authentication endpoints
-- User registration and login flows
+- User registration 和 login flows
 - Password reset functionality
 - Session management
 - Admin interfaces
 - Mobile applications
 - API authentication
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
-| User friction from MFA | High | Medium | Optional for customers, clear benefits communication |
+| User friction from MFA | High | Medium | Optional 用於 customers, clear benefits communication |
 | Account lockout false positives | Medium | Medium | Email unlock, admin override, reasonable thresholds |
 | SMS delivery failures | Medium | Low | TOTP as primary, SMS as backup, retry mechanism |
 | Password policy too strict | Medium | Low | User education, password strength meter |
 | Implementation bugs | Low | High | Comprehensive testing, gradual rollout, monitoring |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Password Policy (Week 1-2)
+### 第 1 階段： Password Policy （第 1-2 週）
 
 - [ ] Implement password validation service
-- [ ] Add password complexity checks
+- [ ] Add password 複雜的ity checks
 - [ ] Implement password history tracking
 - [ ] Add password expiration mechanism
 - [ ] Create password strength meter (frontend)
 - [ ] Add common password blacklist
 - [ ] Implement password rotation reminders
 
-### Phase 2: Account Protection (Week 3-4)
+### 第 2 階段： Account Protection （第 3-4 週）
 
 - [ ] Implement failed login tracking
 - [ ] Add account lockout mechanism
 - [ ] Create anomalous login detection
 - [ ] Implement session timeout
-- [ ] Add concurrent session management
+- [ ] Add concurrent 會話管理
 - [ ] Create account lockout notifications
 - [ ] Add admin unlock functionality
 
-### Phase 3: Multi-Factor Authentication (Week 5-6)
+### 第 3 階段： Multi-Factor Authentication （第 5-6 週）
 
-- [ ] Implement TOTP generation and verification
+- [ ] Implement TOTP generation 和 verification
 - [ ] Add MFA enrollment flow
 - [ ] Implement SMS OTP backup
 - [ ] Add device remember functionality
 - [ ] Create MFA recovery codes
-- [ ] Implement MFA enforcement for admins
+- [ ] Implement MFA enforcement 用於 admins
 - [ ] Add MFA status to user profile
 
-### Phase 4: Integration and Testing (Week 7-8)
+### 第 4 階段： Integration and Testing （第 7-8 週）
 
-- [ ] Integrate with existing authentication (ADR-014)
-- [ ] Update frontend for password policy
+- [ ] Integrate 與 existing authentication (ADR-014)
+- [ ] Update frontend 用於 password policy
 - [ ] Add MFA setup UI
 - [ ] Security testing (penetration testing)
 - [ ] Load testing (account lockout scenarios)
 - [ ] User acceptance testing
-- [ ] Documentation and training
+- [ ] Documentation 和 training
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Critical security vulnerability in implementation
 - Excessive user lockouts (> 5% of login attempts)
 - MFA service failures (> 1% failure rate)
 - Performance degradation (> 100ms authentication overhead)
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Disable MFA enforcement (make optional)
 2. Relax password policy temporarily
 3. Disable account lockout
-4. Investigate and fix issues
-5. Gradually re-enable features
+4. Investigate 和 fix issues
+5. Gradually re-啟用 features
 
-**Rollback Time**: < 1 hour
+**回滾時間**： < 1 hour
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Password policy compliance: 100% of new passwords
 - ✅ MFA adoption: > 30% of customers, 100% of admins
@@ -540,11 +540,11 @@ Affects:
 - ✅ Authentication overhead: < 50ms
 - ✅ Zero account compromise incidents
 
-### Monitoring Plan
+### 監控計畫
 
 **CloudWatch Metrics**:
 
-- `auth.password.validation.failure` (count by reason)
+- `auth.password.validation.failure` (count 透過 reason)
 - `auth.account.lockout` (count)
 - `auth.mfa.enrollment` (count)
 - `auth.mfa.verification.success` (count)
@@ -552,10 +552,10 @@ Affects:
 - `auth.anomalous.login.detected` (count)
 - `auth.session.timeout` (count)
 
-**Alerts**:
+**告警**：
 
-- Account lockout rate > 2% for 10 minutes
-- MFA verification failure rate > 5% for 10 minutes
+- Account lockout rate > 2% 用於 10 minutes
+- MFA verification failure rate > 5% 用於 10 minutes
 - Anomalous login detection spike (> 100 in 5 minutes)
 - Password policy bypass attempts
 - Suspicious authentication patterns
@@ -568,57 +568,57 @@ Affects:
 - Password reset abuse
 - Session hijacking attempts
 
-**Review Schedule**:
+**審查時程**：
 
 - Daily: Check authentication security metrics
 - Weekly: Review anomalous login detections
 - Monthly: Password policy effectiveness review
-- Quarterly: Security audit and penetration testing
+- Quarterly: Security audit 和 penetration testing
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Enhanced Security**: Multi-layered protection against account compromise
-- ✅ **Compliance**: Meets regulatory password and MFA requirements
-- ✅ **Auditability**: Complete audit trail for authentication events
+- ✅ **Compliance**: Meets regulatory password 和 MFA requirements
+- ✅ **Auditability**: Complete audit trail 用於 authentication events
 - ✅ **Flexibility**: Risk-based authentication adapts to user behavior
-- ✅ **User Protection**: Proactive detection and prevention of account takeover
+- ✅ **User Protection**: Proactive detection 和 prevention of account takeover
 - ✅ **Reputation**: Demonstrates commitment to security
-- ✅ **Cost-Effective**: $2,000/month for comprehensive security
+- ✅ **Cost-Effective**: $2,000/month 用於 comprehensive security
 
-### Negative Consequences
+### 負面後果
 
 - ⚠️ **User Friction**: Stronger password requirements may frustrate some users
-- ⚠️ **Support Overhead**: Increased support requests for lockouts and MFA issues
-- ⚠️ **Implementation Complexity**: Multiple security features to implement and maintain
-- ⚠️ **Operational Overhead**: Monitoring and responding to security events
-- ⚠️ **SMS Costs**: $0.01 per SMS for MFA backup
+- ⚠️ **支援 Overhead**: Increased 支援 requests 用於 lockouts 和 MFA issues
+- ⚠️ **Implementation 複雜的ity**: Multiple security features to implement 和 維持
+- ⚠️ **Operational Overhead**: Monitoring 和 responding to security events
+- ⚠️ **SMS Costs**: $0.01 per SMS 用於 MFA backup
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. BCrypt cost factor may need increase in future (currently 12)
 2. SMS MFA is less secure than TOTP (acceptable as backup)
-3. No biometric authentication support (future enhancement)
+3. No biometric authentication 支援 (future enhancement)
 4. No adaptive authentication (risk scoring)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q2 2026**: Implement adaptive authentication with risk scoring
-- **Q3 2026**: Add biometric authentication support (WebAuthn)
-- **Q4 2026**: Migrate to Argon2 for password hashing
+- **Q2 2026**: Implement adaptive authentication 與 risk scoring
+- **Q3 2026**: Add biometric authentication 支援 (WebAuthn)
+- **Q4 2026**: Migrate to Argon2 用於 password hashing
 - **2027**: Implement passwordless authentication options
 
-## Related Decisions
+## 相關決策
 
 - [ADR-014: JWT-Based Authentication Strategy](014-jwt-based-authentication-strategy.md) - Base authentication mechanism
 - [ADR-015: Role-Based Access Control (RBAC) Implementation](015-role-based-access-control-implementation.md) - Authorization integration
-- [ADR-053: Security Monitoring and Incident Response](053-security-monitoring-incident-response.md) - Security monitoring integration
+- [ADR-053: Security Monitoring 和 Incident Response](053-security-monitoring-incident-response.md) - Security monitoring integration
 - [ADR-054: Data Loss Prevention (DLP) Strategy](054-data-loss-prevention-strategy.md) - Data protection integration
 
-## Notes
+## 備註
 
 ### Password Policy Configuration
 
@@ -682,15 +682,15 @@ security:
 
 ### Gradual Rollout Plan
 
-**Phase 1 (Week 1-2)**: Password policy for new users
-**Phase 2 (Week 3-4)**: Password policy for existing users (grace period)
-**Phase 3 (Week 5-6)**: Account lockout enabled
-**Phase 4 (Week 7-8)**: MFA optional for customers
-**Phase 5 (Week 9-10)**: MFA mandatory for admins
-**Phase 6 (Week 11-12)**: Anomalous login detection enabled
+**Phase 1 （第 1-2 週）**: Password policy for new users
+**Phase 2 （第 3-4 週）**: Password policy for existing users (grace period)
+**Phase 3 （第 5-6 週）**: Account lockout enabled
+**Phase 4 （第 7-8 週）**: MFA optional for customers
+**Phase 5 （第 9-10 週）**: MFA mandatory for admins
+**Phase 6 （第 11-12 週）**: Anomalous login detection enabled
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

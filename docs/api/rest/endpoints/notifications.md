@@ -1,30 +1,30 @@
 # Notification API
 
-## Overview
+## 概述
 
-The Notification API provides endpoints for managing system notifications, including email, SMS, and in-app notifications. This API handles notification preferences, delivery status, and notification history.
+Notification API 提供了管理系統通知的端點，包括電子郵件、簡訊和應用程式內通知。此 API 處理通知偏好設定、傳送狀態和通知歷史。
 
 **Base Path**: `/api/v1/notifications`
 
-**Authentication**: Required for all endpoints
+**Authentication**: 所有端點皆需要驗證
 
 ## Endpoints
 
 ### Get User Notifications
 
-Retrieve notifications for the authenticated user.
+取得已驗證使用者的通知。
 
 **Endpoint**: `GET /api/v1/notifications/me`
 
-**Authentication**: Required
+**Authentication**: 需要
 
 **Query Parameters**:
 
-- `page`: Page number (default: 0)
-- `size`: Page size (default: 20)
-- `type`: Filter by type (EMAIL, SMS, IN_APP, PUSH)
-- `status`: Filter by status (UNREAD, READ, ARCHIVED)
-- `category`: Filter by category (ORDER, PROMOTION, SYSTEM, ACCOUNT)
+- `page`: 頁碼（預設：0）
+- `size`: 每頁大小（預設：20）
+- `type`: 依類型篩選（EMAIL, SMS, IN_APP, PUSH）
+- `status`: 依狀態篩選（UNREAD, READ, ARCHIVED）
+- `category`: 依分類篩選（ORDER, PROMOTION, SYSTEM, ACCOUNT）
 
 **Success Response** (200 OK):
 
@@ -82,13 +82,13 @@ curl -X GET "https://api.ecommerce.com/api/v1/notifications/me?status=UNREAD" \
 
 ### Get Notification by ID
 
-Retrieve a specific notification.
+取得特定通知。
 
 **Endpoint**: `GET /api/v1/notifications/{id}`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: User can only access own notifications
+**Authorization**: 使用者僅能存取自己的通知
 
 **Path Parameters**:
 
@@ -123,8 +123,8 @@ Retrieve a specific notification.
 
 **Error Responses**:
 
-- `403 Forbidden`: Cannot access other user's notifications
-- `404 Not Found`: Notification not found
+- `403 Forbidden`: 無法存取其他使用者的通知
+- `404 Not Found`: 找不到通知
 
 **curl Example**:
 
@@ -137,11 +137,11 @@ curl -X GET https://api.ecommerce.com/api/v1/notifications/notif-123 \
 
 ### Mark Notification as Read
 
-Mark a notification as read.
+將通知標記為已讀。
 
 **Endpoint**: `PATCH /api/v1/notifications/{id}/read`
 
-**Authentication**: Required
+**Authentication**: 需要
 
 **Path Parameters**:
 
@@ -170,11 +170,11 @@ curl -X PATCH https://api.ecommerce.com/api/v1/notifications/notif-123/read \
 
 ### Mark All Notifications as Read
 
-Mark all notifications as read for the authenticated user.
+將已驗證使用者的所有通知標記為已讀。
 
 **Endpoint**: `POST /api/v1/notifications/me/read-all`
 
-**Authentication**: Required
+**Authentication**: 需要
 
 **Success Response** (200 OK):
 
@@ -198,11 +198,11 @@ curl -X POST https://api.ecommerce.com/api/v1/notifications/me/read-all \
 
 ### Delete Notification
 
-Delete a notification (soft delete/archive).
+刪除通知（軟刪除/封存）。
 
 **Endpoint**: `DELETE /api/v1/notifications/{id}`
 
-**Authentication**: Required
+**Authentication**: 需要
 
 **Path Parameters**:
 
@@ -221,11 +221,11 @@ curl -X DELETE https://api.ecommerce.com/api/v1/notifications/notif-123 \
 
 ### Get Unread Count
 
-Get count of unread notifications.
+取得未讀通知的數量。
 
 **Endpoint**: `GET /api/v1/notifications/me/unread-count`
 
-**Authentication**: Required
+**Authentication**: 需要
 
 **Success Response** (200 OK):
 
@@ -254,11 +254,11 @@ curl -X GET https://api.ecommerce.com/api/v1/notifications/me/unread-count \
 
 ### Get Notification Preferences
 
-Get notification preferences for the authenticated user.
+取得已驗證使用者的通知偏好設定。
 
 **Endpoint**: `GET /api/v1/notifications/me/preferences`
 
-**Authentication**: Required
+**Authentication**: 需要
 
 **Success Response** (200 OK):
 
@@ -322,11 +322,11 @@ curl -X GET https://api.ecommerce.com/api/v1/notifications/me/preferences \
 
 ### Update Notification Preferences
 
-Update notification preferences.
+更新通知偏好設定。
 
 **Endpoint**: `PUT /api/v1/notifications/me/preferences`
 
-**Authentication**: Required
+**Authentication**: 需要
 
 **Request Body**:
 
@@ -413,13 +413,13 @@ curl -X PUT https://api.ecommerce.com/api/v1/notifications/me/preferences \
 
 ### Send Notification (Admin)
 
-Send a notification to users (admin only).
+傳送通知給使用者（僅限管理員）。
 
 **Endpoint**: `POST /api/v1/notifications/send`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: ADMIN or MARKETING role required
+**Authorization**: 需要 ADMIN 或 MARKETING 角色
 
 **Request Body**:
 
@@ -451,9 +451,9 @@ Send a notification to users (admin only).
 
 **Recipient Types**:
 
-- `ALL_USERS`: All registered users
-- `SPECIFIC_USERS`: List of user IDs
-- `SEGMENT`: User segment based on filters
+- `ALL_USERS`: 所有註冊的使用者
+- `SPECIFIC_USERS`: 特定使用者 ID 清單
+- `SEGMENT`: 基於篩選條件的使用者區段
 
 **Success Response** (202 Accepted):
 
@@ -471,8 +471,8 @@ Send a notification to users (admin only).
 
 **Error Responses**:
 
-- `400 Bad Request`: Validation errors
-- `403 Forbidden`: Insufficient permissions
+- `400 Bad Request`: 驗證錯誤
+- `403 Forbidden`: 權限不足
 
 **curl Example**:
 
@@ -497,13 +497,13 @@ curl -X POST https://api.ecommerce.com/api/v1/notifications/send \
 
 ### Get Notification Campaign Status (Admin)
 
-Get status of a notification campaign.
+取得通知活動的狀態。
 
 **Endpoint**: `GET /api/v1/notifications/campaigns/{campaignId}`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: ADMIN or MARKETING role required
+**Authorization**: 需要 ADMIN 或 MARKETING 角色
 
 **Path Parameters**:
 
@@ -548,18 +548,18 @@ curl -X GET https://api.ecommerce.com/api/v1/notifications/campaigns/camp-123 \
 
 ### Get Notification Templates (Admin)
 
-Get available notification templates.
+取得可用的通知範本。
 
 **Endpoint**: `GET /api/v1/notifications/templates`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: ADMIN or MARKETING role required
+**Authorization**: 需要 ADMIN 或 MARKETING 角色
 
 **Query Parameters**:
 
-- `type`: Filter by type (EMAIL, SMS)
-- `category`: Filter by category
+- `type`: 依類型篩選（EMAIL, SMS）
+- `category`: 依分類篩選
 
 **Success Response** (200 OK):
 
@@ -626,44 +626,44 @@ curl -X GET "https://api.ecommerce.com/api/v1/notifications/templates?category=O
 
 | Type | Description | Delivery Method |
 |------|-------------|-----------------|
-| EMAIL | Email notification | SMTP |
-| SMS | SMS notification | SMS Gateway |
-| IN_APP | In-app notification | WebSocket/Polling |
-| PUSH | Push notification | FCM/APNS |
+| EMAIL | 電子郵件通知 | SMTP |
+| SMS | 簡訊通知 | SMS Gateway |
+| IN_APP | 應用程式內通知 | WebSocket/Polling |
+| PUSH | 推播通知 | FCM/APNS |
 
 ### Notification Categories
 
 | Category | Description | Examples |
 |----------|-------------|----------|
-| ORDER | Order-related | Order confirmation, shipping updates |
-| PROMOTION | Marketing | Special offers, discounts |
-| SYSTEM | System messages | Maintenance, updates |
-| ACCOUNT | Account-related | Password reset, profile updates |
+| ORDER | 訂單相關 | 訂單確認、出貨更新 |
+| PROMOTION | 行銷推廣 | 特別優惠、折扣 |
+| SYSTEM | 系統訊息 | 維護、更新 |
+| ACCOUNT | 帳戶相關 | 密碼重設、個人資料更新 |
 
 ## Business Rules
 
-1. **Quiet Hours**: Notifications respect user's quiet hours settings
-2. **Preference Override**: Critical notifications (e.g., security) ignore preferences
-3. **Expiration**: Notifications expire after 30 days
-4. **Delivery Retry**: Failed deliveries retry up to 3 times
-5. **Rate Limiting**: Maximum 10 notifications per user per hour
-6. **Unsubscribe**: Users can unsubscribe from promotional notifications
-7. **Read Status**: In-app notifications marked as read when viewed
+1. **Quiet Hours**: 通知會尊重使用者的勿擾時段設定
+2. **Preference Override**: 重要通知（例如安全性）會忽略偏好設定
+3. **Expiration**: 通知在 30 天後過期
+4. **Delivery Retry**: 傳送失敗時最多重試 3 次
+5. **Rate Limiting**: 每位使用者每小時最多 10 則通知
+6. **Unsubscribe**: 使用者可以取消訂閱促銷通知
+7. **Read Status**: 應用程式內通知在檢視時標記為已讀
 
 ## Error Codes
 
 | Code | Description | Solution |
 |------|-------------|----------|
-| `NOTIFICATION_NOT_FOUND` | Notification not found | Check notification ID |
-| `NOTIFICATION_ACCESS_DENIED` | Cannot access notification | Check ownership |
-| `NOTIFICATION_RATE_LIMIT_EXCEEDED` | Too many notifications | Wait before sending more |
-| `NOTIFICATION_INVALID_RECIPIENT` | Invalid recipient | Check user ID or email |
-| `NOTIFICATION_TEMPLATE_NOT_FOUND` | Template not found | Check template ID |
-| `NOTIFICATION_DELIVERY_FAILED` | Delivery failed | Check delivery settings |
+| `NOTIFICATION_NOT_FOUND` | 找不到通知 | 檢查通知 ID |
+| `NOTIFICATION_ACCESS_DENIED` | 無法存取通知 | 檢查擁有權 |
+| `NOTIFICATION_RATE_LIMIT_EXCEEDED` | 通知過多 | 等待後再傳送更多 |
+| `NOTIFICATION_INVALID_RECIPIENT` | 收件者無效 | 檢查使用者 ID 或電子郵件 |
+| `NOTIFICATION_TEMPLATE_NOT_FOUND` | 找不到範本 | 檢查範本 ID |
+| `NOTIFICATION_DELIVERY_FAILED` | 傳送失敗 | 檢查傳送設定 |
 
 ## Webhook Events
 
-The system can send webhook events for notification status updates:
+系統可以針對通知狀態更新傳送 webhook 事件：
 
 ```json
 {
@@ -680,19 +680,19 @@ The system can send webhook events for notification status updates:
 
 **Event Types**:
 
-- `notification.sent`: Notification sent
-- `notification.delivered`: Notification delivered
-- `notification.failed`: Delivery failed
-- `notification.opened`: Email/push opened
-- `notification.clicked`: Action clicked
+- `notification.sent`: 通知已傳送
+- `notification.delivered`: 通知已送達
+- `notification.failed`: 傳送失敗
+- `notification.opened`: 電子郵件/推播已開啟
+- `notification.clicked`: 動作已點擊
 
 ## Related Documentation
 
-- [Customer API](customers.md) - Customer preferences
-- [Order API](orders.md) - Order notifications
-- [Logistics API](logistics.md) - Shipping notifications
+- [Customer API](customers.md) - 顧客偏好設定
+- [Order API](orders.md) - 訂單通知
+- [Logistics API](logistics.md) - 出貨通知
 
 ---
 
-**Last Updated**: 2025-10-25  
+**Last Updated**: 2025-10-25
 **API Version**: v1

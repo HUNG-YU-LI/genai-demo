@@ -1,12 +1,12 @@
-# Network and Connectivity Troubleshooting Guide
+# 網路與連線疑難排解指南
 
-## Overview
+## 概述
 
-This document provides comprehensive troubleshooting procedures for network and connectivity issues in the Enterprise E-Commerce Platform. It covers DNS resolution, service mesh debugging, load balancer issues, ingress controllers, TLS/certificate problems, network policies, cross-region connectivity, and VPC networking.
+本文件提供企業電商平台網路和連線問題的全面疑難排解程序。涵蓋 DNS 解析、service mesh 除錯、load balancer 問題、ingress controller、TLS/憑證問題、network policy、跨區域連線和 VPC 網路。
 
-**Target Audience**: DevOps engineers, SREs, network administrators  
-**Prerequisites**: Access to AWS Console, kubectl, network debugging tools  
-**Related Documents**:
+**目標受眾**: DevOps engineer、SRE、網路管理員
+**先決條件**: 存取 AWS Console、kubectl、網路除錯工具
+**相關文件**:
 
 - [Deployment Architecture](../../viewpoints/deployment/physical-architecture.md)
 - [Network Architecture](../../viewpoints/deployment/network-architecture.md)
@@ -14,37 +14,37 @@ This document provides comprehensive troubleshooting procedures for network and 
 
 ---
 
-## Table of Contents
+## 目錄
 
-1. [DNS Resolution Troubleshooting](#dns-resolution-troubleshooting)
-2. [Service Mesh Debugging](#service-mesh-debugging)
-3. [Load Balancer Health Check Failures](#load-balancer-health-check-failures)
-4. [Ingress Controller Troubleshooting](#ingress-controller-troubleshooting)
-5. [Certificate and TLS Issues](#certificate-and-tls-issues)
-6. [Network Policy Debugging](#network-policy-debugging)
-7. [Cross-Region Connectivity](#cross-region-connectivity)
-8. [VPC Peering and Transit Gateway](#vpc-peering-and-transit-gateway)
-9. [Common Network Commands](#common-network-commands)
+1. [DNS 解析疑難排解](#dns-resolution-troubleshooting)
+2. [Service Mesh 除錯](#service-mesh-debugging)
+3. [Load Balancer Health Check 失敗](#load-balancer-health-check-failures)
+4. [Ingress Controller 疑難排解](#ingress-controller-troubleshooting)
+5. [憑證與 TLS 問題](#certificate-and-tls-issues)
+6. [Network Policy 除錯](#network-policy-debugging)
+7. [跨區域連線](#cross-region-connectivity)
+8. [VPC Peering 與 Transit Gateway](#vpc-peering-and-transit-gateway)
+9. [常用網路指令](#common-network-commands)
 
 ---
 
-## DNS Resolution Troubleshooting
+## DNS 解析疑難排解
 
-### Overview
+### 概述
 
-DNS resolution issues can cause service discovery failures, external API call failures, and intermittent connectivity problems.
+DNS 解析問題可能導致服務探索失敗、外部 API 呼叫失敗和間歇性連線問題。
 
-### Symptoms
+### 症狀
 
-- "Name or service not known" errors
-- "Could not resolve host" errors
-- Intermittent connection failures
-- Service discovery failures
-- External API timeouts
+- "Name or service not known" 錯誤
+- "Could not resolve host" 錯誤
+- 間歇性連線失敗
+- 服務探索失敗
+- 外部 API 逾時
 
-### Diagnostic Procedures
+### 診斷程序
 
-#### Step 1: Test DNS Resolution from Pod
+#### 步驟 1: 從 Pod 測試 DNS 解析
 
 ```bash
 # Test internal service DNS

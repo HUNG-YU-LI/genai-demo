@@ -1,353 +1,353 @@
-# Performance Requirements
+# Performance 要求
 
-> **Last Updated**: 2025-10-23  
-> **Status**: ✅ Active
+> **最後更新**: 2025-10-23
+> **狀態**: ✅ 啟用中
 
-## Overview
+## 概述
 
-This document defines the specific performance requirements for the e-commerce platform. These requirements are measurable, testable, and directly tied to business objectives and user experience goals.
+本文件定義電子商務平台的具體效能要求。這些要求是可測量、可測試的,並且直接與業務目標和使用者體驗目標相關。
 
-## Response Time Requirements
+## 回應時間要求
 
-### API Response Time Targets
+### API 回應時間目標
 
-All API endpoints must meet the following response time targets at the 95th percentile:
+所有 API endpoints 必須在第 95 百分位達到以下回應時間目標:
 
-| API Category | Target (95th percentile) | Rationale |
-|--------------|-------------------------|-----------|
-| Critical APIs (auth, payment) | ≤ 500ms | User trust and security perception require immediate feedback |
-| Business APIs (orders, customers, products) | ≤ 1000ms | Standard e-commerce user experience expectations |
-| Reporting APIs (analytics, reports) | ≤ 3000ms | Users expect some delay for complex analytics |
-| Batch APIs (imports, exports) | ≤ 30000ms | Background operations with progress indicators |
+| API 類別 | 目標 (第 95 百分位) | 理由 |
+|----------|-------------------|------|
+| Critical APIs (auth, payment) | ≤ 500ms | 使用者信任和安全感知需要即時回饋 |
+| Business APIs (orders, customers, products) | ≤ 1000ms | 標準電子商務使用者體驗期望 |
+| Reporting APIs (analytics, reports) | ≤ 3000ms | 使用者預期複雜分析會有一些延遲 |
+| Batch APIs (imports, exports) | ≤ 30000ms | 背景操作帶有進度指示器 |
 
-**Measurement Method**: CloudWatch metrics with custom dimensions for endpoint and method
+**測量方法**: CloudWatch metrics 帶有 endpoint 和 method 的自訂維度
 
-**Verification**:
+**驗證**:
 
-- Continuous monitoring in production
-- Load testing in staging environment
-- Performance regression tests in CI/CD pipeline
+- 生產環境持續監控
+- Staging 環境負載測試
+- CI/CD pipeline 中的效能回歸測試
 
-### Database Query Performance Targets
+### Database Query Performance 目標
 
-| Query Type | Target (95th percentile) | Example Operations |
-|------------|-------------------------|-------------------|
-| Simple queries (single table, indexed) | ≤ 10ms | Find customer by ID, find product by SKU |
-| Complex queries (joins, aggregations) | ≤ 100ms | Order with items, customer with orders |
-| Reporting queries (large datasets) | ≤ 1000ms | Sales reports, analytics queries |
+| Query 類型 | 目標 (第 95 百分位) | 範例操作 |
+|-----------|-------------------|----------|
+| Simple queries (單表, 已建立索引) | ≤ 10ms | 依 ID 查詢客戶, 依 SKU 查詢產品 |
+| Complex queries (joins, aggregations) | ≤ 100ms | 訂單含項目, 客戶含訂單 |
+| Reporting queries (大資料集) | ≤ 1000ms | 銷售報表, 分析查詢 |
 
-**Measurement Method**: RDS Performance Insights, slow query logs
+**測量方法**: RDS Performance Insights, slow query logs
 
-**Verification**:
+**驗證**:
 
-- Database performance monitoring
-- Weekly slow query log analysis
-- Query execution plan reviews
+- Database 效能監控
+- 每週 slow query log 分析
+- Query execution plan 審查
 
-### Frontend Performance Targets
+### Frontend Performance 目標
 
-Based on Google's Core Web Vitals and industry best practices:
+基於 Google 的 Core Web Vitals 和業界最佳實務:
 
-| Metric | Target | Description |
-|--------|--------|-------------|
-| First Contentful Paint (FCP) | ≤ 1.5s | Time until first content appears |
-| Largest Contentful Paint (LCP) | ≤ 2.5s | Time until main content is visible |
-| First Input Delay (FID) | ≤ 100ms | Time until page becomes interactive |
-| Cumulative Layout Shift (CLS) | ≤ 0.1 | Visual stability during page load |
-| Time to Interactive (TTI) | ≤ 3.5s | Time until page is fully interactive |
+| 指標 | 目標 | 說明 |
+|------|------|------|
+| First Contentful Paint (FCP) | ≤ 1.5s | 首次內容出現的時間 |
+| Largest Contentful Paint (LCP) | ≤ 2.5s | 主要內容可見的時間 |
+| First Input Delay (FID) | ≤ 100ms | 頁面變為可互動的時間 |
+| Cumulative Layout Shift (CLS) | ≤ 0.1 | 頁面載入期間的視覺穩定性 |
+| Time to Interactive (TTI) | ≤ 3.5s | 頁面完全可互動的時間 |
 
-**Measurement Method**:
+**測量方法**:
 
-- CloudWatch RUM for real user monitoring
-- Lighthouse CI in deployment pipeline
-- Synthetic monitoring with CloudWatch Synthetics
+- CloudWatch RUM 用於真實使用者監控
+- Deployment pipeline 中的 Lighthouse CI
+- CloudWatch Synthetics 進行合成監控
 
-**Verification**:
+**驗證**:
 
-- Real user monitoring in production
-- Lighthouse scores in CI/CD (minimum score: 90)
-- Weekly performance audits
+- 生產環境真實使用者監控
+- CI/CD 中的 Lighthouse scores (最低分數: 90)
+- 每週效能稽核
 
-## Throughput Requirements
+## 吞吐量要求
 
-### System Capacity Targets
+### 系統容量目標
 
-| Metric | Target | Rationale |
-|--------|--------|-----------|
-| Peak load handling | 1000 requests/second | Black Friday traffic projection with 2x safety margin |
-| Sustained load | 500 requests/second | Typical business hours traffic |
-| Concurrent users | 5000 active users | Peak concurrent user estimate |
-| Database connections per instance | Max 20 connections | Balance between throughput and resource usage |
+| 指標 | 目標 | 理由 |
+|------|------|------|
+| Peak load handling | 1000 requests/second | Black Friday 流量預測含 2x 安全餘裕 |
+| Sustained load | 500 requests/second | 典型營業時間流量 |
+| Concurrent users | 5000 active users | 尖峰同時使用者估計 |
+| Database connections per instance | Max 20 connections | 平衡吞吐量與資源使用 |
 
-**Measurement Method**: ALB metrics, application metrics
+**測量方法**: ALB metrics, application metrics
 
-**Verification**:
+**驗證**:
 
-- Load testing with JMeter (weekly in staging)
-- Production traffic monitoring
-- Capacity planning reviews (quarterly)
+- JMeter 負載測試 (每週在 staging)
+- 生產流量監控
+- 容量規劃審查 (每季)
 
-### Transaction Processing Targets
+### Transaction Processing 目標
 
-| Transaction Type | Target Throughput | Target Latency |
-|-----------------|------------------|----------------|
+| Transaction 類型 | 目標吞吐量 | 目標延遲 |
+|-----------------|----------|---------|
 | Order submission | 100 orders/second | ≤ 1000ms |
 | Product search | 500 searches/second | ≤ 500ms |
 | Cart operations | 200 operations/second | ≤ 300ms |
 | Payment processing | 50 payments/second | ≤ 2000ms |
 
-**Measurement Method**: Custom application metrics, business metrics
+**測量方法**: 自訂 application metrics, business metrics
 
-**Verification**:
+**驗證**:
 
-- Transaction monitoring dashboards
-- Business metrics correlation
-- Load testing scenarios
+- Transaction 監控儀表板
+- Business metrics 相關性分析
+- 負載測試情境
 
-## Resource Utilization Requirements
+## 資源使用要求
 
 ### Compute Resources
 
-| Resource | Target Utilization | Alert Threshold |
-|----------|-------------------|-----------------|
+| 資源 | 目標使用率 | 警報門檻 |
+|------|----------|---------|
 | CPU utilization | ≤ 70% average | > 80% for 5 minutes |
 | Memory utilization | ≤ 80% average | > 90% for 5 minutes |
 | JVM heap usage | ≤ 75% of max heap | > 85% for 5 minutes |
 | Thread pool utilization | ≤ 80% | > 90% for 2 minutes |
 
-**Rationale**: Maintain headroom for traffic spikes and ensure system stability
+**理由**: 維持流量激增的餘裕空間並確保系統穩定性
 
-**Measurement Method**: CloudWatch metrics, JVM metrics via Micrometer
+**測量方法**: CloudWatch metrics, JVM metrics via Micrometer
 
-**Verification**:
+**驗證**:
 
-- Continuous monitoring
-- Resource utilization reports (weekly)
-- Capacity planning reviews
+- 持續監控
+- 資源使用報告 (每週)
+- 容量規劃審查
 
 ### Database Resources
 
-| Resource | Target | Alert Threshold |
-|----------|--------|-----------------|
+| 資源 | 目標 | 警報門檻 |
+|------|------|---------|
 | Database CPU | ≤ 70% average | > 80% for 5 minutes |
 | Database connections | ≤ 80% of max | > 90% for 2 minutes |
 | Read IOPS | ≤ 70% of provisioned | > 85% for 5 minutes |
 | Write IOPS | ≤ 70% of provisioned | > 85% for 5 minutes |
 | Storage utilization | ≤ 80% | > 85% |
 
-**Measurement Method**: RDS CloudWatch metrics, Performance Insights
+**測量方法**: RDS CloudWatch metrics, Performance Insights
 
-**Verification**:
+**驗證**:
 
-- Database performance monitoring
-- Capacity planning reviews
-- Storage growth analysis
+- Database 效能監控
+- 容量規劃審查
+- Storage 成長分析
 
 ### Cache Performance
 
-| Metric | Target | Alert Threshold |
-|--------|--------|-----------------|
+| 指標 | 目標 | 警報門檻 |
+|------|------|---------|
 | Cache hit rate | ≥ 85% | < 80% for 10 minutes |
 | Cache memory usage | ≤ 80% | > 90% for 5 minutes |
 | Cache eviction rate | < 5% of requests | > 10% for 10 minutes |
-| Cache response time | ≤ 5ms (95th percentile) | > 10ms for 5 minutes |
+| Cache response time | ≤ 5ms (第 95 百分位) | > 10ms for 5 minutes |
 
-**Measurement Method**: Redis INFO stats, custom metrics
+**測量方法**: Redis INFO stats, custom metrics
 
-**Verification**:
+**驗證**:
 
-- Cache performance monitoring
-- Cache hit rate analysis
-- Cache sizing reviews
+- Cache 效能監控
+- Cache hit rate 分析
+- Cache sizing 審查
 
-## Scalability Requirements
+## 可擴展性要求
 
 ### Horizontal Scaling
 
-| Requirement | Target | Verification Method |
-|-------------|--------|-------------------|
+| 要求 | 目標 | 驗證方法 |
+|------|------|---------|
 | Auto-scale range | 2 to 20 instances | Load testing |
 | Scale-out time | < 5 minutes | Auto-scaling tests |
 | Scale-in time | < 10 minutes (with connection draining) | Auto-scaling tests |
 | Scaling trigger (CPU) | 70% average over 3 minutes | Production monitoring |
 | Scaling trigger (Memory) | 80% average over 3 minutes | Production monitoring |
 
-**Measurement Method**: Kubernetes metrics, auto-scaling events
+**測量方法**: Kubernetes metrics, auto-scaling events
 
-**Verification**:
+**驗證**:
 
-- Auto-scaling load tests (weekly)
-- Production scaling events analysis
-- Scaling policy tuning
+- Auto-scaling 負載測試 (每週)
+- 生產 scaling events 分析
+- Scaling policy 調整
 
 ### Database Scaling
 
-| Requirement | Target | Implementation |
-|-------------|--------|----------------|
+| 要求 | 目標 | 實作方式 |
+|------|------|---------|
 | Read replica count | 1-3 replicas | Based on read load |
 | Replication lag | < 2 seconds | RDS monitoring |
 | Read/write split | 80% reads to replicas | Application routing |
 | Failover time | < 2 minutes | RDS Multi-AZ |
 
-**Measurement Method**: RDS metrics, replication lag monitoring
+**測量方法**: RDS metrics, replication lag monitoring
 
-**Verification**:
+**驗證**:
 
-- Replication lag monitoring
-- Failover testing (quarterly)
-- Read/write distribution analysis
+- Replication lag 監控
+- Failover 測試 (每季)
+- Read/write 分佈分析
 
 ## Quality Attribute Scenarios
 
 ### Scenario 1: Peak Traffic Handling
 
-**Context**: Black Friday sale with 10x normal traffic
+**情境**: Black Friday 促銷,流量為正常的 10 倍
 
-**Stimulus**: Traffic increases from 100 to 1000 concurrent users over 1 hour
+**刺激**: 流量在 1 小時內從 100 增加到 1000 同時使用者
 
-**Expected Response**:
+**預期回應**:
 
-- System auto-scales from 2 to 10 instances within 5 minutes
-- 95th percentile response time remains ≤ 1000ms
-- No failed requests due to capacity issues
-- Database read replicas handle increased read load
+- 系統在 5 分鐘內從 2 個 instances 自動擴展到 10 個
+- 第 95 百分位回應時間保持 ≤ 1000ms
+- 沒有因容量問題導致的失敗請求
+- Database read replicas 處理增加的讀取負載
 
-**Acceptance Criteria**:
+**驗收標準**:
 
-- ✅ Auto-scaling completes within target time
-- ✅ Response times within targets
-- ✅ Error rate < 0.1%
-- ✅ All services remain healthy
+- ✅ Auto-scaling 在目標時間內完成
+- ✅ 回應時間在目標範圍內
+- ✅ 錯誤率 < 0.1%
+- ✅ 所有服務保持健康狀態
 
-**Test Method**: Load testing with gradual ramp-up
+**測試方法**: 逐漸增加負載的負載測試
 
 ### Scenario 2: Database Query Performance
 
-**Context**: New feature requires complex analytics query
+**情境**: 新功能需要複雜的分析查詢
 
-**Stimulus**: Query joins 5 tables with aggregations
+**刺激**: 查詢 join 5 個表並進行彙總
 
-**Expected Response**:
+**預期回應**:
 
-- Query execution time ≤ 100ms (95th percentile)
-- Proper indexes created for query optimization
-- Query plan reviewed and optimized
-- No impact on other database operations
+- 查詢執行時間 ≤ 100ms (第 95 百分位)
+- 為查詢優化建立適當的索引
+- 查詢計畫已審查和優化
+- 對其他 database 操作無影響
 
-**Acceptance Criteria**:
+**驗收標準**:
 
-- ✅ Query execution time within target
-- ✅ Database CPU remains < 70%
-- ✅ No connection pool exhaustion
-- ✅ Query plan uses indexes efficiently
+- ✅ 查詢執行時間在目標範圍內
+- ✅ Database CPU 保持 < 70%
+- ✅ 沒有 connection pool 耗盡
+- ✅ Query plan 有效使用索引
 
-**Test Method**: Database performance testing, query plan analysis
+**測試方法**: Database 效能測試, query plan 分析
 
 ### Scenario 3: Cache Effectiveness
 
-**Context**: Product catalog accessed frequently
+**情境**: 產品目錄經常被存取
 
-**Stimulus**: 1000 requests/second for product details
+**刺激**: 1000 requests/second 查詢產品詳情
 
-**Expected Response**:
+**預期回應**:
 
 - Cache hit rate ≥ 85%
-- API response time ≤ 200ms for cached data
-- Database load reduced by 80%
-- Cache memory usage within limits
+- 快取資料的 API 回應時間 ≤ 200ms
+- Database 負載減少 80%
+- Cache memory 使用在限制內
 
-**Acceptance Criteria**:
+**驗收標準**:
 
-- ✅ Cache hit rate meets target
-- ✅ Response time improvement measurable
-- ✅ Database query reduction verified
-- ✅ No cache memory issues
+- ✅ Cache hit rate 達到目標
+- ✅ 回應時間改善可測量
+- ✅ Database query 減少已驗證
+- ✅ 沒有 cache memory 問題
 
-**Test Method**: Load testing with cache monitoring
+**測試方法**: 帶 cache 監控的負載測試
 
 ### Scenario 4: Frontend Performance on Mobile
 
-**Context**: User accessing product catalog on mobile 4G
+**情境**: 使用者在行動裝置 4G 網路上存取產品目錄
 
-**Stimulus**: User navigates to product listing page
+**刺激**: 使用者導航到產品列表頁面
 
-**Expected Response**:
+**預期回應**:
 
 - LCP ≤ 2.5s on mobile 4G
 - FID ≤ 100ms
-- Page fully interactive within 3.5s
-- Images lazy-loaded appropriately
+- 頁面在 3.5s 內完全可互動
+- 圖片適當的 lazy-loaded
 
-**Acceptance Criteria**:
+**驗收標準**:
 
-- ✅ Core Web Vitals meet targets
+- ✅ Core Web Vitals 達到目標
 - ✅ Lighthouse mobile score ≥ 90
-- ✅ Bundle size optimized
-- ✅ Critical rendering path optimized
+- ✅ Bundle size 已優化
+- ✅ Critical rendering path 已優化
 
-**Test Method**: Lighthouse CI, real user monitoring
+**測試方法**: Lighthouse CI, 真實使用者監控
 
 ### Scenario 5: Resource Exhaustion Prevention
 
-**Context**: Sudden traffic spike during flash sale
+**情境**: Flash sale 期間突然流量激增
 
-**Stimulus**: Traffic doubles in 30 seconds
+**刺激**: 流量在 30 秒內加倍
 
-**Expected Response**:
+**預期回應**:
 
-- Circuit breakers prevent cascading failures
-- Connection pools don't exhaust
-- System degrades gracefully
-- Auto-scaling triggers immediately
+- Circuit breakers 防止級聯失敗
+- Connection pools 不會耗盡
+- 系統優雅降級
+- Auto-scaling 立即觸發
 
-**Acceptance Criteria**:
+**驗收標準**:
 
-- ✅ No connection timeout errors
-- ✅ Circuit breakers trip appropriately
-- ✅ Fallback responses provided
-- ✅ System recovers after spike
+- ✅ 沒有 connection timeout 錯誤
+- ✅ Circuit breakers 適當啟動
+- ✅ 提供 fallback responses
+- ✅ 系統在流量激增後恢復
 
-**Test Method**: Stress testing, chaos engineering
+**測試方法**: Stress testing, chaos engineering
 
-## Performance Budget
+## 效能預算
 
 ### API Performance Budget
 
-Each API endpoint has a performance budget that must not be exceeded:
+每個 API endpoint 都有不得超過的效能預算:
 
-| Component | Budget | Measurement |
-|-----------|--------|-------------|
-| Database query | 50ms | Query execution time |
-| Business logic | 100ms | Application processing |
+| 組件 | 預算 | 測量方式 |
+|------|------|---------|
+| Database query | 50ms | Query 執行時間 |
+| Business logic | 100ms | Application 處理 |
 | External service calls | 200ms | Third-party API calls |
 | Serialization | 50ms | JSON serialization |
-| Network overhead | 100ms | Network latency |
-| **Total Budget** | **500ms** | End-to-end response time |
+| Network overhead | 100ms | Network 延遲 |
+| **總預算** | **500ms** | End-to-end 回應時間 |
 
-**Enforcement**: Performance regression tests in CI/CD pipeline
+**強制執行**: CI/CD pipeline 中的效能回歸測試
 
 ### Frontend Performance Budget
 
-| Resource Type | Budget | Current | Status |
-|--------------|--------|---------|--------|
-| JavaScript bundle | 200 KB (gzipped) | 180 KB | ✅ Within budget |
-| CSS bundle | 50 KB (gzipped) | 45 KB | ✅ Within budget |
-| Images (above fold) | 500 KB | 450 KB | ✅ Within budget |
-| Web fonts | 100 KB | 80 KB | ✅ Within budget |
-| Third-party scripts | 100 KB | 120 KB | ⚠️ Over budget |
+| 資源類型 | 預算 | 目前 | 狀態 |
+|---------|------|------|------|
+| JavaScript bundle | 200 KB (gzipped) | 180 KB | ✅ 在預算內 |
+| CSS bundle | 50 KB (gzipped) | 45 KB | ✅ 在預算內 |
+| Images (above fold) | 500 KB | 450 KB | ✅ 在預算內 |
+| Web fonts | 100 KB | 80 KB | ✅ 在預算內 |
+| Third-party scripts | 100 KB | 120 KB | ⚠️ 超出預算 |
 
-**Enforcement**: Bundle size checks in CI/CD, Lighthouse CI
+**強制執行**: CI/CD 中的 bundle size 檢查, Lighthouse CI
 
-## Monitoring and Alerting Requirements
+## 監控和警報要求
 
-### Required Metrics
+### 必要的指標
 
-All services must expose the following performance metrics:
+所有服務必須公開以下效能指標:
 
 1. **Request Metrics**:
-   - Request count (by endpoint, method, status)
-   - Request duration (histogram with percentiles)
-   - Error rate (by error type)
+   - Request count (依 endpoint, method, status)
+   - Request duration (histogram 含百分位數)
+   - Error rate (依錯誤類型)
 
 2. **Resource Metrics**:
    - CPU utilization
@@ -360,81 +360,81 @@ All services must expose the following performance metrics:
    - Conversion rate
    - Cart abandonment rate
 
-### Alert Configuration
+### Alert 設定
 
-| Alert | Condition | Severity | Action |
-|-------|-----------|----------|--------|
-| High response time | 95th percentile > 1500ms for 5 min | Warning | Investigate performance |
-| Very high response time | 95th percentile > 2000ms for 5 min | Critical | Page on-call engineer |
+| Alert | 條件 | 嚴重性 | 行動 |
+|-------|------|--------|------|
+| High response time | 第 95 百分位 > 1500ms for 5 min | Warning | 調查效能問題 |
+| Very high response time | 第 95 百分位 > 2000ms for 5 min | Critical | Page on-call engineer |
 | High error rate | Error rate > 1% for 5 min | Critical | Page on-call engineer |
-| Database slow queries | > 10 slow queries/min | Warning | Review query performance |
-| Cache hit rate low | Hit rate < 80% for 10 min | Warning | Investigate cache config |
+| Database slow queries | > 10 slow queries/min | Warning | 審查 query 效能 |
+| Cache hit rate low | Hit rate < 80% for 10 min | Warning | 調查 cache 設定 |
 | Auto-scaling failure | Scaling event fails | Critical | Page on-call engineer |
 
-## Performance Testing Requirements
+## 效能測試要求
 
 ### Load Testing
 
-**Frequency**: Weekly in staging, before major releases
+**頻率**: 每週在 staging, 主要版本發布前
 
-**Scenarios**:
+**情境**:
 
 1. Normal load: 500 req/s for 30 minutes
 2. Peak load: 1000 req/s for 30 minutes
 3. Spike test: 0 to 1000 req/s in 1 minute
 4. Endurance test: 500 req/s for 24 hours
 
-**Success Criteria**:
+**成功標準**:
 
-- All response time targets met
-- Error rate < 0.1%
-- Auto-scaling works correctly
-- No resource exhaustion
+- 所有回應時間目標達成
+- 錯誤率 < 0.1%
+- Auto-scaling 正確運作
+- 沒有資源耗盡
 
 ### Performance Regression Testing
 
-**Frequency**: Every deployment to staging
+**頻率**: 每次部署到 staging
 
-**Method**: Automated performance tests in CI/CD pipeline
+**方法**: CI/CD pipeline 中的自動化效能測試
 
-**Baseline**: Previous release performance metrics
+**基準**: 前一版本的效能指標
 
-**Threshold**: No more than 10% degradation in any metric
+**門檻**: 任何指標不超過 10% 的降級
 
-**Action**: Block deployment if regression detected
+**行動**: 如果檢測到回歸則阻止部署
 
-## Compliance and Reporting
+## 合規性和報告
 
 ### Performance SLO
 
-**Service Level Objective**: 95% of requests complete within target response time
+**Service Level Objective**: 95% 的請求在目標回應時間內完成
 
-**Measurement Period**: Rolling 30-day window
+**測量期間**: 滾動 30 天窗口
 
-**Reporting**: Monthly SLO report to stakeholders
+**報告**: 每月 SLO 報告給利害關係人
 
 ### Performance Review
 
-**Frequency**: Monthly performance review meeting
+**頻率**: 每月效能審查會議
 
-**Attendees**: Development team, operations team, architects
+**參與者**: 開發團隊, 營運團隊, 架構師
 
-**Agenda**:
+**議程**:
 
-- Review performance metrics
-- Identify performance issues
-- Plan optimization work
-- Update performance requirements
+- 審查效能指標
+- 識別效能問題
+- 規劃優化工作
+- 更新效能要求
 
-## Related Documentation
+## 相關文件
 
-- [Performance Overview](overview.md) - High-level performance perspective
-- [Scalability Strategy](scalability.md) - Horizontal scaling approach
-- [Optimization Guidelines](optimization.md) - Performance optimization techniques
-- [Verification](verification.md) - Testing and monitoring details
+- [Performance Overview](overview.md) - 高階效能視角
+- [Scalability Strategy](scalability.md) - Horizontal scaling 方法
+- [Optimization Guidelines](optimization.md) - 效能優化技術
+- [Verification](verification.md) - 測試和監控細節
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2025-10-23  
-**Owner**: Architecture Team
+**文件版本**: 1.0
+**最後更新**: 2025-10-23
+**負責人**: Architecture Team

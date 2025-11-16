@@ -1,30 +1,30 @@
 # Product Context Events
 
-## Overview
+## 概述
 
-This document describes all domain events published by the Product bounded context. These events capture product lifecycle, catalog management, and inventory-related changes.
+本文件描述 Product bounded context 發佈的所有 domain events。這些事件捕獲產品生命週期、目錄管理和庫存相關變更。
 
-**Last Updated**: 2025-10-25
+**最後更新**: 2025-10-25
 
 ---
 
-## Event List
+## 事件列表
 
-| Event Name | Trigger | Frequency | Priority |
+| 事件名稱 | 觸發條件 | 頻率 | 優先級 |
 |------------|---------|-----------|----------|
-| `ProductCreatedEvent` | Product creation | Medium | P1 |
-| `ProductUpdatedEvent` | Product edit | High | P1 |
-| `ProductPriceChangedEvent` | Price update | Medium | P0 |
-| `ProductStockUpdatedEvent` | Stock adjustment | High | P0 |
-| `ProductDeactivatedEvent` | Product deactivation | Low | P1 |
-| `ProductReactivatedEvent` | Product reactivation | Low | P1 |
-| `ProductCategoryChangedEvent` | Category update | Low | P2 |
+| `ProductCreatedEvent` | 建立產品 | 中 | P1 |
+| `ProductUpdatedEvent` | 編輯產品 | 高 | P1 |
+| `ProductPriceChangedEvent` | 更新價格 | 中 | P0 |
+| `ProductStockUpdatedEvent` | 調整庫存 | 高 | P0 |
+| `ProductDeactivatedEvent` | 停用產品 | 低 | P1 |
+| `ProductReactivatedEvent` | 重新啟用產品 | 低 | P1 |
+| `ProductCategoryChangedEvent` | 更新類別 | 低 | P2 |
 
 ---
 
 ## ProductCreatedEvent
 
-### Event Structure
+### 事件結構
 
 ```java
 public record ProductCreatedEvent(
@@ -40,7 +40,7 @@ public record ProductCreatedEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -62,15 +62,15 @@ public record ProductCreatedEvent(
 
 ### Event Handlers
 
-- `ProductSearchIndexHandler`: Add to search index
-- `ProductCatalogHandler`: Update product catalog
-- `SellerProductCountHandler`: Update seller's product count
+- `ProductSearchIndexHandler`：加入搜尋索引
+- `ProductCatalogHandler`：更新產品目錄
+- `SellerProductCountHandler`：更新賣家的產品數量
 
 ---
 
 ## ProductPriceChangedEvent
 
-### Event Structure
+### 事件結構
 
 ```java
 public record ProductPriceChangedEvent(
@@ -84,7 +84,7 @@ public record ProductPriceChangedEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -107,15 +107,15 @@ public record ProductPriceChangedEvent(
 
 ### Event Handlers
 
-- `PricingCacheHandler`: Update pricing cache
-- `PriceHistoryHandler`: Record price history
-- `PriceAlertHandler`: Notify customers with price alerts
+- `PricingCacheHandler`：更新價格快取
+- `PriceHistoryHandler`：記錄價格歷史
+- `PriceAlertHandler`：通知有設定價格提醒的客戶
 
 ---
 
 ## ProductStockUpdatedEvent
 
-### Event Structure
+### 事件結構
 
 ```java
 public record ProductStockUpdatedEvent(
@@ -129,7 +129,7 @@ public record ProductStockUpdatedEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -146,12 +146,12 @@ public record ProductStockUpdatedEvent(
 
 ### Event Handlers
 
-- `LowStockAlertHandler`: Check for low stock alerts
-- `ProductAvailabilityHandler`: Update availability status
-- `InventoryReportHandler`: Update inventory reports
+- `LowStockAlertHandler`：檢查低庫存提醒
+- `ProductAvailabilityHandler`：更新可用狀態
+- `InventoryReportHandler`：更新庫存報表
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2025-10-25  
-**Owner**: Product Domain Team
+**文件版本**: 1.0
+**最後更新**: 2025-10-25
+**負責人**: Product Domain Team

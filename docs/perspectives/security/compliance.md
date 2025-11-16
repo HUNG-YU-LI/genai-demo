@@ -1,51 +1,49 @@
 # Security Compliance
 
-> **Last Updated**: 2025-10-23  
+> **Last Updated**: 2025-10-23
 > **Status**: ✅ Active
 
-## Overview
+## 概述
 
-This document describes the regulatory compliance requirements and implementation strategies for the e-commerce platform. The system must comply with GDPR (General Data Protection Regulation) for data privacy and PCI-DSS (Payment Card Industry Data Security Standard) for payment card data handling.
+本文件描述電子商務平台的法規合規要求和實作策略。系統必須遵守 GDPR（一般資料保護規範）以保護資料隱私，以及 PCI-DSS（支付卡產業資料安全標準）以處理支付卡資料。
 
-## GDPR Compliance
+## GDPR 合規性
 
-### Overview
+### 概述
 
-The General Data Protection Regulation (GDPR) is a comprehensive data protection law that applies to all organizations processing personal data of EU residents. Our e-commerce platform handles customer personal data and must comply with GDPR requirements.
+一般資料保護規範（GDPR）是一項全面的資料保護法律，適用於所有處理 EU 居民個人資料的組織。我們的電子商務平台處理客戶個人資料，必須遵守 GDPR 要求。
 
-### Key GDPR Principles
+### GDPR 關鍵原則
 
-1. **Lawfulness, Fairness, and Transparency**: Process data lawfully and transparently
-2. **Purpose Limitation**: Collect data for specified, explicit purposes
-3. **Data Minimization**: Collect only necessary data
-4. **Accuracy**: Keep personal data accurate and up-to-date
-5. **Storage Limitation**: Retain data only as long as necessary
-6. **Integrity and Confidentiality**: Protect data with appropriate security
-7. **Accountability**: Demonstrate compliance with GDPR
+1. **合法性、公平性和透明度**：以合法和透明的方式處理資料
+2. **目的限制**：為特定、明確的目的收集資料
+3. **資料最小化**：僅收集必要的資料
+4. **準確性**：保持個人資料準確且最新
+5. **儲存限制**：僅在必要期間保留資料
+6. **完整性和機密性**：以適當的 security 保護資料
+7. **問責制**：證明符合 GDPR
 
-### Data Subject Rights
+### 資料主體權利
 
-#### Right to Access (Article 15)
+#### 存取權（第 15 條）
 
 ```java
 @Service
 public class GDPRDataAccessService {
-    
+
     /**
-
-     * Provide customer with all their personal data
-
+     * 向客戶提供其所有個人資料
      */
     public CustomerDataExport exportCustomerData(String customerId) {
         Customer customer = customerRepository.findById(customerId)
             .orElseThrow(() -> new CustomerNotFoundException(customerId));
-        
+
         List<Order> orders = orderRepository.findByCustomerId(customerId);
         List<Review> reviews = reviewRepository.findByCustomerId(customerId);
         List<Address> addresses = addressRepository.findByCustomerId(customerId);
         List<PaymentMethod> paymentMethods = paymentMethodRepository
             .findByCustomerId(customerId);
-        
+
         return CustomerDataExport.builder()
             .personalInfo(mapPersonalInfo(customer))
             .orders(mapOrders(orders))
@@ -56,7 +54,7 @@ public class GDPRDataAccessService {
             .format("JSON")
             .build();
     }
-    
+
     private PersonalInfoDto mapPersonalInfo(Customer customer) {
         return PersonalInfoDto.builder()
             .customerId(customer.getId())
@@ -71,26 +69,24 @@ public class GDPRDataAccessService {
 }
 ```
 
-#### Right to Rectification (Article 16)
+#### 更正權（第 16 條）
 
 ```java
 @Service
 public class GDPRDataRectificationService {
-    
+
     /**
-
-     * Allow customer to correct their personal data
-
+     * 允許客戶更正其個人資料
      */
     @Transactional
     public Customer rectifyCustomerData(
             String customerId,
             CustomerDataRectificationRequest request) {
-        
+
         Customer customer = customerRepository.findById(customerId)
             .orElseThrow(() -> new CustomerNotFoundException(customerId));
-        
-        // Update personal information
+
+        // 更新個人資訊
         if (request.name() != null) {
             customer.setName(request.name());
         }
@@ -104,117 +100,113 @@ public class GDPRDataRectificationService {
         if (request.dateOfBirth() != null) {
             customer.setDateOfBirth(request.dateOfBirth());
         }
-        
+
         customer.setUpdatedAt(LocalDateTime.now());
         Customer updated = customerRepository.save(customer);
-        
-        // Log rectification for audit
+
+        // 記錄更正以供稽核
         auditLogger.logDataRectification(customerId, request);
-        
+
         return updated;
     }
 }
 ```
 
-#### Right to Erasure (Article 17)
+#### 刪除權（第 17 條）
 
 ```java
 @Service
 public class GDPRDataErasureService {
-    
+
     /**
-
-     * Anonymize customer data (right to be forgotten)
-
+     * 匿名化客戶資料（被遺忘權）
      */
     @Transactional
     public void eraseCustomerData(String customerId) {
         Customer customer = customerRepository.findById(customerId)
             .orElseThrow(() -> new CustomerNotFoundException(customerId));
-        
-        // Check if erasure is allowed
+
+        // 檢查是否允許刪除
         if (!canEraseData(customerId)) {
             throw new DataErasureException(
                 "Cannot erase data due to legal obligations or pending transactions"
             );
         }
-        
-        // Anonymize personal data
+
+        // 匿名化個人資料
         customer.setName("ANONYMIZED_" + UUID.randomUUID());
         customer.setEmail("anonymized_" + UUID.randomUUID() + "@deleted.local");
         customer.setPhoneNumber("000-000-0000");
         customer.setDateOfBirth(null);
         customer.setAnonymized(true);
         customer.setAnonymizedAt(LocalDateTime.now());
-        
+
         customerRepository.save(customer);
-        
-        // Anonymize related data
+
+        // 匿名化相關資料
         anonymizeRelatedData(customerId);
-        
-        // Log erasure for audit
+
+        // 記錄刪除以供稽核
         auditLogger.logDataErasure(customerId);
     }
-    
+
     private boolean canEraseData(String customerId) {
-        // Cannot erase if there are pending orders
+        // 如果有待處理的訂單則無法刪除
         List<Order> pendingOrders = orderRepository
             .findByCustomerIdAndStatus(customerId, OrderStatus.PENDING);
         if (!pendingOrders.isEmpty()) {
             return false;
         }
-        
-        // Cannot erase if there are recent transactions (within 90 days)
+
+        // 如果有最近的交易（90 天內）則無法刪除
         LocalDateTime ninetyDaysAgo = LocalDateTime.now().minusDays(90);
         List<Order> recentOrders = orderRepository
             .findByCustomerIdAndCreatedAtAfter(customerId, ninetyDaysAgo);
-        
+
         return recentOrders.isEmpty();
     }
-    
+
     private void anonymizeRelatedData(String customerId) {
-        // Anonymize order shipping addresses
+        // 匿名化訂單配送地址
         List<Order> orders = orderRepository.findByCustomerId(customerId);
         for (Order order : orders) {
             order.setShippingAddress("ANONYMIZED");
             order.setBillingAddress("ANONYMIZED");
             orderRepository.save(order);
         }
-        
-        // Delete addresses
+
+        // 刪除地址
         addressRepository.deleteByCustomerId(customerId);
-        
-        // Delete payment methods (keep transaction records)
+
+        // 刪除付款方式（保留交易記錄）
         paymentMethodRepository.deleteByCustomerId(customerId);
     }
 }
 ```
 
-#### Right to Data Portability (Article 20)
+#### 資料可攜權（第 20 條）
 
 ```java
 @Service
 public class GDPRDataPortabilityService {
-    
+
     /**
-
-     * Export customer data in machine-readable format
-
+     * 以機器可讀格式匯出客戶資料
      */
     public byte[] exportDataInMachineReadableFormat(
             String customerId,
             ExportFormat format) {
-        
+
         CustomerDataExport data = gdprDataAccessService
             .exportCustomerData(customerId);
-        
+
         return switch (format) {
             case JSON -> exportAsJson(data);
             case XML -> exportAsXml(data);
             case CSV -> exportAsCsv(data);
         };
     }
-    
+
     private byte[] exportAsJson(CustomerDataExport data) {
         try {
             return objectMapper.writerWithDefaultPrettyPrinter()
@@ -226,64 +218,58 @@ public class GDPRDataPortabilityService {
 }
 ```
 
-#### Right to Restriction of Processing (Article 18)
+#### 限制處理權（第 18 條）
 
 ```java
 @Service
 public class GDPRProcessingRestrictionService {
-    
+
     /**
-
-     * Restrict processing of customer data
-
+     * 限制客戶資料的處理
      */
     @Transactional
     public void restrictProcessing(String customerId, RestrictionReason reason) {
         Customer customer = customerRepository.findById(customerId)
             .orElseThrow(() -> new CustomerNotFoundException(customerId));
-        
+
         customer.setProcessingRestricted(true);
         customer.setRestrictionReason(reason);
         customer.setRestrictionDate(LocalDateTime.now());
-        
+
         customerRepository.save(customer);
-        
-        // Log restriction
+
+        // 記錄限制
         auditLogger.logProcessingRestriction(customerId, reason);
     }
-    
+
     /**
-
-     * Lift processing restriction
-
+     * 解除處理限制
      */
     @Transactional
     public void liftRestriction(String customerId) {
         Customer customer = customerRepository.findById(customerId)
             .orElseThrow(() -> new CustomerNotFoundException(customerId));
-        
+
         customer.setProcessingRestricted(false);
         customer.setRestrictionReason(null);
         customer.setRestrictionDate(null);
-        
+
         customerRepository.save(customer);
-        
-        // Log restriction lift
+
+        // 記錄解除限制
         auditLogger.logRestrictionLifted(customerId);
     }
 }
 ```
 
-### Consent Management
+### 同意管理
 
 ```java
 @Service
 public class ConsentManagementService {
-    
+
     /**
-
-     * Record customer consent
-
+     * 記錄客戶同意
      */
     @Transactional
     public void recordConsent(String customerId, ConsentType type) {
@@ -295,90 +281,86 @@ public class ConsentManagementService {
             .ipAddress(getCurrentIpAddress())
             .userAgent(getCurrentUserAgent())
             .build();
-        
+
         consentRepository.save(consent);
     }
-    
+
     /**
-
-     * Withdraw customer consent
-
+     * 撤回客戶同意
      */
     @Transactional
     public void withdrawConsent(String customerId, ConsentType type) {
         Consent consent = consentRepository
             .findByCustomerIdAndConsentType(customerId, type)
             .orElseThrow(() -> new ConsentNotFoundException(customerId, type));
-        
+
         consent.setGranted(false);
         consent.setWithdrawnAt(LocalDateTime.now());
-        
+
         consentRepository.save(consent);
-        
-        // Handle consent withdrawal
+
+        // 處理同意撤回
         handleConsentWithdrawal(customerId, type);
     }
-    
+
     private void handleConsentWithdrawal(String customerId, ConsentType type) {
         switch (type) {
-            case MARKETING_EMAILS -> 
+            case MARKETING_EMAILS ->
                 emailPreferenceService.unsubscribeFromMarketing(customerId);
-            case DATA_ANALYTICS -> 
+            case DATA_ANALYTICS ->
                 analyticsService.excludeFromAnalytics(customerId);
-            case THIRD_PARTY_SHARING -> 
+            case THIRD_PARTY_SHARING ->
                 thirdPartyService.stopDataSharing(customerId);
         }
     }
 }
 ```
 
-### Data Retention Policy
+### 資料保留政策
 
 ```java
 @Service
 public class DataRetentionService {
-    
-    // Retention periods (in days)
-    private static final int CUSTOMER_DATA_RETENTION = 2555; // 7 years
-    private static final int ORDER_DATA_RETENTION = 2555; // 7 years
-    private static final int LOG_RETENTION = 90; // 90 days
-    private static final int ANONYMIZED_DATA_RETENTION = 365; // 1 year after anonymization
-    
+
+    // 保留期限（天數）
+    private static final int CUSTOMER_DATA_RETENTION = 2555; // 7 年
+    private static final int ORDER_DATA_RETENTION = 2555; // 7 年
+    private static final int LOG_RETENTION = 90; // 90 天
+    private static final int ANONYMIZED_DATA_RETENTION = 365; // 匿名化後 1 年
+
     /**
-
-     * Enforce data retention policy
-
+     * 執行資料保留政策
      */
-    @Scheduled(cron = "0 0 3 * * *") // Daily at 3 AM
+    @Scheduled(cron = "0 0 3 * * *") // 每天凌晨 3 點
     public void enforceRetentionPolicy() {
         deleteExpiredAnonymizedData();
         deleteExpiredLogs();
         archiveOldOrders();
     }
-    
+
     private void deleteExpiredAnonymizedData() {
         LocalDateTime cutoffDate = LocalDateTime.now()
             .minusDays(ANONYMIZED_DATA_RETENTION);
-        
+
         List<Customer> expiredCustomers = customerRepository
             .findByAnonymizedTrueAndAnonymizedAtBefore(cutoffDate);
-        
+
         for (Customer customer : expiredCustomers) {
-            // Delete customer and all related data
+            // 刪除客戶和所有相關資料
             deleteCustomerCompletely(customer.getId());
-            
+
             logger.info("Deleted expired anonymized customer data",
                 kv("customerId", customer.getId()),
                 kv("anonymizedAt", customer.getAnonymizedAt()));
         }
     }
-    
+
     private void deleteExpiredLogs() {
         LocalDateTime cutoffDate = LocalDateTime.now()
             .minusDays(LOG_RETENTION);
-        
+
         int deletedCount = auditLogRepository.deleteByCreatedAtBefore(cutoffDate);
-        
+
         logger.info("Deleted expired audit logs",
             kv("count", deletedCount),
             kv("cutoffDate", cutoffDate));
@@ -386,254 +368,238 @@ public class DataRetentionService {
 }
 ```
 
-### GDPR Compliance Checklist
+### GDPR 合規性檢查清單
 
-- [x] **Lawful Basis for Processing**: Documented consent and legitimate interest
-- [x] **Privacy Policy**: Clear, accessible privacy policy
-- [x] **Data Subject Rights**: All rights implemented and tested
-- [x] **Consent Management**: Granular consent with easy withdrawal
-- [x] **Data Minimization**: Collect only necessary data
-- [x] **Data Retention**: Automated retention policy enforcement
-- [x] **Data Security**: Encryption, access controls, audit logging
-- [x] **Data Breach Notification**: Incident response plan in place
-- [x] **Data Protection Officer**: DPO appointed and contactable
-- [x] **Privacy by Design**: Security built into system design
-- [x] **Data Processing Agreements**: Contracts with third-party processors
+- [x] **處理的合法基礎**：已記錄同意和合法利益
+- [x] **隱私政策**：清晰、可存取的隱私政策
+- [x] **資料主體權利**：所有權利已實作和測試
+- [x] **同意管理**：細粒度同意且易於撤回
+- [x] **資料最小化**：僅收集必要資料
+- [x] **資料保留**：自動執行保留政策
+- [x] **資料 Security**：加密、存取控制、稽核日誌
+- [x] **資料外洩通知**：已建立事件回應計劃
+- [x] **資料保護長**：已任命且可聯繫 DPO
+- [x] **隱私設計**：Security 內建於系統設計中
+- [x] **資料處理協議**：與第三方處理者的合約
 
-## PCI-DSS Compliance
+## PCI-DSS 合規性
 
-### Overview
+### 概述
 
-The Payment Card Industry Data Security Standard (PCI-DSS) is a set of security standards designed to ensure that all companies that accept, process, store, or transmit credit card information maintain a secure environment.
+支付卡產業資料安全標準（PCI-DSS）是一套 security 標準，旨在確保所有接受、處理、儲存或傳輸信用卡資訊的公司維護安全環境。
 
-### PCI-DSS Requirements
+### PCI-DSS 要求
 
-#### Requirement 1: Install and Maintain Firewall Configuration
+#### 要求 1：安裝和維護防火牆配置
 
 ```yaml
-# AWS Security Group Configuration
+# AWS Security Group 配置
 SecurityGroup:
   Type: AWS::EC2::SecurityGroup
   Properties:
     GroupDescription: Application security group
     VpcId: !Ref VPC
     SecurityGroupIngress:
-      # Allow HTTPS only
-
+      # 僅允許 HTTPS
       - IpProtocol: tcp
-
         FromPort: 443
         ToPort: 443
         CidrIp: 0.0.0.0/0
     SecurityGroupEgress:
-      # Allow outbound to payment gateway only
-
+      # 僅允許出站到付款閘道
       - IpProtocol: tcp
-
         FromPort: 443
         ToPort: 443
         DestinationSecurityGroupId: !Ref PaymentGatewaySecurityGroup
 ```
 
-#### Requirement 2: Do Not Use Vendor-Supplied Defaults
+#### 要求 2：不使用供應商提供的預設值
 
 ```java
 @Configuration
 public class SecurityDefaultsConfiguration {
-    
+
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // Use strong password encoding (not default)
+        // 使用強密碼編碼（非預設）
         return new BCryptPasswordEncoder(12);
     }
-    
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // Disable default security
+            // 停用預設 security
             .csrf().disable()
             .cors().and()
-            // Custom security configuration
+            // 自訂 security 配置
             .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        
+
         return http.build();
     }
 }
 ```
 
-#### Requirement 3: Protect Stored Cardholder Data
+#### 要求 3：保護儲存的持卡人資料
 
 ```java
 @Service
 public class PCIDSSPaymentService {
-    
+
     /**
-
-     * NEVER store full PAN (Primary Account Number)
-     * NEVER store CVV/CVC
-     * NEVER store PIN
-
+     * 絕不儲存完整 PAN（主要帳號）
+     * 絕不儲存 CVV/CVC
+     * 絕不儲存 PIN
      */
     @Transactional
     public PaymentResult processPayment(PaymentRequest request) {
-        // Validate card data (but don't log it)
+        // 驗證卡資料（但不記錄）
         validateCardData(request);
-        
-        // Send directly to payment gateway
-        // DO NOT store card data in our database
+
+        // 直接傳送到付款閘道
+        // 不在我們的資料庫中儲存卡資料
         PaymentGatewayResponse response = paymentGateway.process(request);
-        
-        // Store only tokenized reference
+
+        // 僅儲存 tokenized 參考
         Payment payment = Payment.builder()
             .orderId(request.getOrderId())
             .amount(request.getAmount())
-            .paymentToken(response.getToken()) // Token only, not card data
+            .paymentToken(response.getToken()) // 僅 Token，非卡資料
             .last4Digits(request.getCardNumber().substring(
-                request.getCardNumber().length() - 4)) // Last 4 digits only
+                request.getCardNumber().length() - 4)) // 僅最後 4 位數
             .cardBrand(detectCardBrand(request.getCardNumber()))
             .status(response.getStatus())
             .processedAt(LocalDateTime.now())
             .build();
-        
+
         paymentRepository.save(payment);
-        
+
         return PaymentResult.from(response);
     }
-    
+
     private void validateCardData(PaymentRequest request) {
-        // Validate but NEVER log card data
+        // 驗證但絕不記錄卡資料
         if (!isValidCardNumber(request.getCardNumber())) {
             throw new InvalidCardException("Invalid card number");
         }
-        
-        // Ensure CVV is not stored
+
+        // 確保 CVV 未被儲存
         if (request.getCvv() == null || request.getCvv().length() < 3) {
             throw new InvalidCardException("Invalid CVV");
         }
-        
-        // CVV should only be used for validation, never stored
+
+        // CVV 應僅用於驗證，絕不儲存
     }
 }
 ```
 
-#### Requirement 4: Encrypt Transmission of Cardholder Data
+#### 要求 4：加密持卡人資料的傳輸
 
 ```yaml
-# application.yml - Force TLS 1.3
+# application.yml - 強制 TLS 1.3
 server:
   ssl:
     enabled: true
     protocol: TLS
     enabled-protocols: TLSv1.3
     ciphers:
-
       - TLS_AES_256_GCM_SHA384
       - TLS_AES_128_GCM_SHA256
-
 ```
 
-#### Requirement 5: Protect All Systems Against Malware
+#### 要求 5：保護所有系統免受惡意軟體攻擊
 
 ```yaml
-# Automated vulnerability scanning
+# 自動漏洞掃描
 security-scanning:
   enabled: true
-  schedule: "0 0 2 * * *" # Daily at 2 AM
+  schedule: "0 0 2 * * *" # 每天凌晨 2 點
   tools:
-
     - dependency-check
     - spotbugs
     - sonarqube
-
 ```
 
-#### Requirement 6: Develop and Maintain Secure Systems
+#### 要求 6：開發和維護安全系統
 
 ```java
-// Secure coding practices enforced through code review and automated checks
+// 透過程式碼審查和自動檢查強制執行安全編碼實踐
 @RestController
 @RequestMapping("/api/v1/payments")
 public class PaymentController {
-    
+
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PaymentResult> processPayment(
             @Valid @RequestBody PaymentRequest request) {
-        
-        // Input validation
+
+        // 輸入驗證
         validatePaymentRequest(request);
-        
-        // Process payment securely
+
+        // 安全處理付款
         PaymentResult result = paymentService.processPayment(request);
-        
+
         return ResponseEntity.ok(result);
     }
 }
 ```
 
-#### Requirement 7: Restrict Access to Cardholder Data
+#### 要求 7：限制對持卡人資料的存取
 
 ```java
 @PreAuthorize("hasRole('PAYMENT_PROCESSOR')")
 public class PaymentProcessingService {
-    
+
     /**
-
-     * Only authorized personnel can access payment processing
-
+     * 僅授權人員可存取付款處理
      */
     @AuditDataAccess
     public PaymentResult processPayment(PaymentRequest request) {
-        // Payment processing logic
-        // All access is logged for audit
+        // 付款處理邏輯
+        // 所有存取都被記錄以供稽核
     }
 }
 ```
 
-#### Requirement 8: Identify and Authenticate Access
+#### 要求 8：識別和驗證存取
 
 ```java
-// Strong authentication for payment processing
+// 付款處理的強 authentication
 @Service
 public class PaymentAuthenticationService {
-    
+
     /**
-
-     * Require MFA for payment processing access
-
+     * 付款處理存取需要 MFA
      */
     public boolean authenticatePaymentProcessor(String userId, String mfaCode) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserNotFoundException(userId));
-        
-        // Verify user has payment processor role
+
+        // 驗證使用者具有付款處理者角色
         if (!user.hasRole("PAYMENT_PROCESSOR")) {
             return false;
         }
-        
-        // Verify MFA code
+
+        // 驗證 MFA 代碼
         return mfaService.verifyCode(userId, mfaCode);
     }
 }
 ```
 
-#### Requirement 9: Restrict Physical Access
+#### 要求 9：限制實體存取
 
-- Physical access controls to data centers (AWS responsibility)
-- Visitor logs and escort requirements
-- Secure disposal of media containing cardholder data
+- 資料中心的實體存取控制（AWS 責任）
+- 訪客日誌和護送要求
+- 安全處理包含持卡人資料的媒體
 
-#### Requirement 10: Track and Monitor All Access
+#### 要求 10：追蹤和監控所有存取
 
 ```java
 @Component
 public class PaymentAuditLogger {
-    
+
     /**
-
-     * Log all payment-related activities
-
+     * 記錄所有與付款相關的活動
      */
     public void logPaymentAccess(String userId, String action, String details) {
         AuditLogEntry entry = AuditLogEntry.builder()
@@ -644,10 +610,10 @@ public class PaymentAuditLogger {
             .ipAddress(getCurrentIpAddress())
             .timestamp(Instant.now())
             .build();
-        
+
         auditLogRepository.save(entry);
-        
-        // Also send to centralized logging
+
+        // 同時傳送到集中式日誌記錄
         logger.info("Payment access",
             kv("userId", userId),
             kv("action", action),
@@ -656,29 +622,29 @@ public class PaymentAuditLogger {
 }
 ```
 
-#### Requirement 11: Regularly Test Security Systems
+#### 要求 11：定期測試 Security 系統
 
 ```java
 @SpringBootTest
 class PCIDSSSecurityTest {
-    
+
     @Test
     void should_not_store_full_card_number() {
-        // Verify no full card numbers in database
+        // 驗證資料庫中沒有完整卡號
         List<Payment> payments = paymentRepository.findAll();
-        
+
         for (Payment payment : payments) {
             assertThat(payment.getCardNumber()).isNull();
             assertThat(payment.getLast4Digits()).hasSize(4);
             assertThat(payment.getPaymentToken()).isNotNull();
         }
     }
-    
+
     @Test
     void should_not_store_cvv() {
-        // Verify no CVV stored anywhere
+        // 驗證沒有儲存 CVV
         List<Payment> payments = paymentRepository.findAll();
-        
+
         for (Payment payment : payments) {
             assertThat(payment.getCvv()).isNull();
         }
@@ -686,52 +652,52 @@ class PCIDSSSecurityTest {
 }
 ```
 
-#### Requirement 12: Maintain Information Security Policy
+#### 要求 12：維護資訊 Security 政策
 
-- Documented security policies
-- Annual security awareness training
-- Incident response plan
-- Regular security assessments
+- 記錄的 security 政策
+- 年度 security 意識培訓
+- 事件回應計劃
+- 定期 security 評估
 
-### PCI-DSS Compliance Checklist
+### PCI-DSS 合規性檢查清單
 
-- [x] **Firewall Configuration**: AWS Security Groups configured
-- [x] **No Default Passwords**: All defaults changed
-- [x] **Cardholder Data Protection**: No card data stored
-- [x] **Encryption in Transit**: TLS 1.3 enforced
-- [x] **Malware Protection**: Automated scanning enabled
-- [x] **Secure Development**: Secure coding practices enforced
-- [x] **Access Restriction**: RBAC with MFA for payment processing
-- [x] **Authentication**: Strong authentication required
-- [x] **Physical Access**: AWS data center controls
-- [x] **Audit Logging**: All payment access logged
-- [x] **Security Testing**: Automated and manual testing
-- [x] **Security Policy**: Documented and maintained
+- [x] **防火牆配置**：AWS Security Groups 已配置
+- [x] **無預設密碼**：所有預設值已變更
+- [x] **持卡人資料保護**：未儲存卡資料
+- [x] **傳輸中加密**：強制執行 TLS 1.3
+- [x] **惡意軟體保護**：已啟用自動掃描
+- [x] **安全開發**：強制執行安全編碼實踐
+- [x] **存取限制**：付款處理的 RBAC 與 MFA
+- [x] **Authentication**：需要強 authentication
+- [x] **實體存取**：AWS 資料中心控制
+- [x] **稽核日誌**：所有付款存取都被記錄
+- [x] **Security 測試**：自動和手動測試
+- [x] **Security 政策**：已記錄和維護
 
-## Compliance Monitoring
+## 合規性監控
 
-### Automated Compliance Checks
+### 自動合規性檢查
 
 ```java
 @Service
 public class ComplianceMonitoringService {
-    
-    @Scheduled(cron = "0 0 1 * * *") // Daily at 1 AM
+
+    @Scheduled(cron = "0 0 1 * * *") // 每天凌晨 1 點
     public void runComplianceChecks() {
         ComplianceReport report = ComplianceReport.builder()
             .reportDate(LocalDate.now())
             .gdprCompliance(checkGDPRCompliance())
             .pciDssCompliance(checkPCIDSSCompliance())
             .build();
-        
+
         complianceReportRepository.save(report);
-        
-        // Alert if non-compliant
+
+        // 如果不合規則發出警報
         if (!report.isFullyCompliant()) {
             alertComplianceTeam(report);
         }
     }
-    
+
     private GDPRComplianceStatus checkGDPRCompliance() {
         return GDPRComplianceStatus.builder()
             .dataSubjectRightsImplemented(true)
@@ -741,7 +707,7 @@ public class ComplianceMonitoringService {
             .dataBreachProceduresTested(checkLastDRPTest())
             .build();
     }
-    
+
     private PCIDSSComplianceStatus checkPCIDSSCompliance() {
         return PCIDSSComplianceStatus.builder()
             .noCardDataStored(verifyNoCardDataStored())
@@ -754,26 +720,26 @@ public class ComplianceMonitoringService {
 }
 ```
 
-## Compliance Documentation
+## 合規性文件
 
-### Required Documentation
+### 必要文件
 
-1. **Privacy Policy**: Customer-facing privacy policy
-2. **Data Processing Agreement**: Contracts with third-party processors
-3. **Data Protection Impact Assessment (DPIA)**: Risk assessment
-4. **Incident Response Plan**: Data breach response procedures
-5. **Security Policy**: Internal security policies and procedures
-6. **Audit Logs**: Comprehensive access and activity logs
-7. **Compliance Reports**: Regular compliance assessment reports
+1. **隱私政策**：面向客戶的隱私政策
+2. **資料處理協議**：與第三方處理者的合約
+3. **資料保護影響評估 (DPIA)**：風險評估
+4. **事件回應計劃**：資料外洩回應程序
+5. **Security 政策**：內部 security 政策和程序
+6. **稽核日誌**：全面的存取和活動日誌
+7. **合規性報告**：定期合規性評估報告
 
-## Related Documentation
+## 相關文件
 
-- [Security Overview](overview.md) - Overall security perspective
-- [Data Protection](data-protection.md) - Data protection implementation
-- [Authentication](authentication.md) - Authentication mechanisms
-- [Authorization](authorization.md) - Authorization model
+- [Security Overview](overview.md) - 整體 security 觀點
+- [Data Protection](data-protection.md) - 資料保護實作
+- [Authentication](authentication.md) - Authentication 機制
+- [Authorization](authorization.md) - Authorization 模型
 
-## References
+## 參考資料
 
 - GDPR Official Text: <https://gdpr.eu/>
 - PCI-DSS Standards: <https://www.pcisecuritystandards.org/>

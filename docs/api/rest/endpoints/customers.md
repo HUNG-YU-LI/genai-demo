@@ -1,22 +1,22 @@
 # Customer API
 
-## Overview
+## 概述
 
-The Customer API provides endpoints for managing customer profiles, including creation, retrieval, updates, and deletion. Customers are the primary users of the e-commerce platform.
+Customer API 提供管理客戶資料的 endpoints，包括建立、檢索、更新和刪除。客戶是電子商務平台的主要使用者。
 
 **Base Path**: `/api/v1/customers`
 
-**Authentication**: Required for all endpoints except registration
+**Authentication**: 除註冊外，所有 endpoints 都需要身份驗證
 
 ## Endpoints
 
 ### Create Customer (Register)
 
-Create a new customer account.
+建立新的客戶帳戶。
 
 **Endpoint**: `POST /api/v1/customers`
 
-**Authentication**: Not required
+**Authentication**: 不需要
 
 **Request Body**:
 
@@ -36,15 +36,15 @@ Create a new customer account.
 }
 ```
 
-**Validation Rules**:
+**驗證規則**:
 
-- `name`: Required, 2-100 characters
-- `email`: Required, valid email format, unique
-- `password`: Required, min 8 characters, must contain uppercase, lowercase, and number
-- `phone`: Optional, valid phone format
-- `address`: Required object with all fields
+- `name`: 必填，2-100 個字元
+- `email`: 必填，有效的 email 格式，唯一
+- `password`: 必填，最少 8 個字元，必須包含大寫、小寫和數字
+- `phone`: 選填，有效的電話格式
+- `address`: 必填物件，所有欄位皆必填
 
-**Success Response** (201 Created):
+**成功回應** (201 Created):
 
 ```json
 {
@@ -72,12 +72,12 @@ Create a new customer account.
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `400 Bad Request`: Validation errors
-- `409 Conflict`: Email already registered
+- `400 Bad Request`: 驗證錯誤
+- `409 Conflict`: Email 已註冊
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/customers \
@@ -101,19 +101,19 @@ curl -X POST https://api.ecommerce.com/api/v1/customers \
 
 ### Get Customer by ID
 
-Retrieve a specific customer by their ID.
+依 ID 檢索特定客戶。
 
 **Endpoint**: `GET /api/v1/customers/{id}`
 
-**Authentication**: Required
+**Authentication**: 必填
 
-**Authorization**: User can access own profile, or ADMIN role required
+**Authorization**: 使用者可存取自己的資料，或需要 ADMIN 角色
 
 **Path Parameters**:
 
-- `id`: Customer ID (e.g., `cust-123`)
+- `id`: Customer ID (例如：`cust-123`)
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -142,13 +142,13 @@ Retrieve a specific customer by their ID.
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `401 Unauthorized`: Missing or invalid token
-- `403 Forbidden`: Insufficient permissions
-- `404 Not Found`: Customer not found
+- `401 Unauthorized`: 缺少或無效的 token
+- `403 Forbidden`: 權限不足
+- `404 Not Found`: 找不到客戶
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/customers/cust-123 \
@@ -159,13 +159,13 @@ curl -X GET https://api.ecommerce.com/api/v1/customers/cust-123 \
 
 ### Get Current Customer Profile
 
-Retrieve the authenticated user's profile.
+檢索已驗證使用者的資料。
 
 **Endpoint**: `GET /api/v1/customers/me`
 
-**Authentication**: Required
+**Authentication**: 必填
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -194,11 +194,11 @@ Retrieve the authenticated user's profile.
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `401 Unauthorized`: Missing or invalid token
+- `401 Unauthorized`: 缺少或無效的 token
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/customers/me \
@@ -209,25 +209,25 @@ curl -X GET https://api.ecommerce.com/api/v1/customers/me \
 
 ### List Customers
 
-Retrieve a paginated list of customers.
+檢索分頁的客戶列表。
 
 **Endpoint**: `GET /api/v1/customers`
 
-**Authentication**: Required
+**Authentication**: 必填
 
-**Authorization**: ADMIN role required
+**Authorization**: 需要 ADMIN 角色
 
 **Query Parameters**:
 
-- `page`: Page number (0-based, default: 0)
-- `size`: Page size (default: 20, max: 100)
-- `sort`: Sort field and direction (default: `createdAt,desc`)
-  - Examples: `name,asc`, `email,desc`, `createdAt,desc`
-- `search`: Search term (searches name and email)
-- `membershipLevel`: Filter by membership level (STANDARD, PREMIUM, VIP)
-- `status`: Filter by status (ACTIVE, INACTIVE, SUSPENDED)
+- `page`: 頁碼（從 0 開始，預設值：0）
+- `size`: 每頁大小（預設值：20，最大值：100）
+- `sort`: 排序欄位和方向（預設值：`createdAt,desc`）
+  - 範例：`name,asc`、`email,desc`、`createdAt,desc`
+- `search`: 搜尋關鍵字（搜尋姓名和 email）
+- `membershipLevel`: 依會員等級篩選（STANDARD、PREMIUM、VIP）
+- `status`: 依狀態篩選（ACTIVE、INACTIVE、SUSPENDED）
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -262,19 +262,19 @@ Retrieve a paginated list of customers.
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `401 Unauthorized`: Missing or invalid token
-- `403 Forbidden`: Insufficient permissions (ADMIN required)
+- `401 Unauthorized`: 缺少或無效的 token
+- `403 Forbidden`: 權限不足（需要 ADMIN）
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
-# Basic list
+# 基本列表
 curl -X GET "https://api.ecommerce.com/api/v1/customers?page=0&size=20" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 
-# With search and filters
+# 使用搜尋和篩選
 curl -X GET "https://api.ecommerce.com/api/v1/customers?search=john&membershipLevel=PREMIUM&sort=name,asc" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
@@ -283,13 +283,13 @@ curl -X GET "https://api.ecommerce.com/api/v1/customers?search=john&membershipLe
 
 ### Update Customer
 
-Update customer information.
+更新客戶資訊。
 
 **Endpoint**: `PUT /api/v1/customers/{id}`
 
-**Authentication**: Required
+**Authentication**: 必填
 
-**Authorization**: User can update own profile, or ADMIN role required
+**Authorization**: 使用者可更新自己的資料，或需要 ADMIN 角色
 
 **Path Parameters**:
 
@@ -311,14 +311,14 @@ Update customer information.
 }
 ```
 
-**Validation Rules**:
+**驗證規則**:
 
-- `name`: Optional, 2-100 characters if provided
-- `phone`: Optional, valid phone format if provided
-- `address`: Optional, all fields required if provided
-- `email`: Cannot be updated (use separate endpoint)
+- `name`: 選填，若提供則為 2-100 個字元
+- `phone`: 選填，若提供則為有效的電話格式
+- `address`: 選填，若提供則所有欄位皆必填
+- `email`: 無法更新（使用另外的 endpoint）
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -340,14 +340,14 @@ Update customer information.
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `400 Bad Request`: Validation errors
-- `401 Unauthorized`: Missing or invalid token
-- `403 Forbidden`: Insufficient permissions
-- `404 Not Found`: Customer not found
+- `400 Bad Request`: 驗證錯誤
+- `401 Unauthorized`: 缺少或無效的 token
+- `403 Forbidden`: 權限不足
+- `404 Not Found`: 找不到客戶
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X PUT https://api.ecommerce.com/api/v1/customers/cust-123 \
@@ -370,19 +370,19 @@ curl -X PUT https://api.ecommerce.com/api/v1/customers/cust-123 \
 
 ### Partial Update Customer
 
-Partially update customer information (only specified fields).
+部分更新客戶資訊（僅更新指定欄位）。
 
 **Endpoint**: `PATCH /api/v1/customers/{id}`
 
-**Authentication**: Required
+**Authentication**: 必填
 
-**Authorization**: User can update own profile, or ADMIN role required
+**Authorization**: 使用者可更新自己的資料，或需要 ADMIN 角色
 
 **Path Parameters**:
 
 - `id`: Customer ID
 
-**Request Body** (all fields optional):
+**Request Body** (所有欄位皆為選填):
 
 ```json
 {
@@ -391,7 +391,7 @@ Partially update customer information (only specified fields).
 }
 ```
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -413,14 +413,14 @@ Partially update customer information (only specified fields).
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `400 Bad Request`: Validation errors
-- `401 Unauthorized`: Missing or invalid token
-- `403 Forbidden`: Insufficient permissions
-- `404 Not Found`: Customer not found
+- `400 Bad Request`: 驗證錯誤
+- `401 Unauthorized`: 缺少或無效的 token
+- `403 Forbidden`: 權限不足
+- `404 Not Found`: 找不到客戶
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X PATCH https://api.ecommerce.com/api/v1/customers/cust-123 \
@@ -435,28 +435,28 @@ curl -X PATCH https://api.ecommerce.com/api/v1/customers/cust-123 \
 
 ### Delete Customer
 
-Delete a customer account.
+刪除客戶帳戶。
 
 **Endpoint**: `DELETE /api/v1/customers/{id}`
 
-**Authentication**: Required
+**Authentication**: 必填
 
-**Authorization**: User can delete own account, or ADMIN role required
+**Authorization**: 使用者可刪除自己的帳戶，或需要 ADMIN 角色
 
 **Path Parameters**:
 
 - `id`: Customer ID
 
-**Success Response** (204 No Content)
+**成功回應** (204 No Content)
 
-**Error Responses**:
+**錯誤回應**:
 
-- `401 Unauthorized`: Missing or invalid token
-- `403 Forbidden`: Insufficient permissions
-- `404 Not Found`: Customer not found
-- `409 Conflict`: Cannot delete customer with active orders
+- `401 Unauthorized`: 缺少或無效的 token
+- `403 Forbidden`: 權限不足
+- `404 Not Found`: 找不到客戶
+- `409 Conflict`: 無法刪除有活躍訂單的客戶
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X DELETE https://api.ecommerce.com/api/v1/customers/cust-123 \
@@ -467,13 +467,13 @@ curl -X DELETE https://api.ecommerce.com/api/v1/customers/cust-123 \
 
 ### Update Customer Email
 
-Update customer email address (requires verification).
+更新客戶 email 地址（需要驗證）。
 
 **Endpoint**: `POST /api/v1/customers/{id}/email`
 
-**Authentication**: Required
+**Authentication**: 必填
 
-**Authorization**: User can update own email, or ADMIN role required
+**Authorization**: 使用者可更新自己的 email，或需要 ADMIN 角色
 
 **Path Parameters**:
 
@@ -488,12 +488,12 @@ Update customer email address (requires verification).
 }
 ```
 
-**Validation Rules**:
+**驗證規則**:
 
-- `newEmail`: Required, valid email format, unique
-- `password`: Required for verification
+- `newEmail`: 必填，有效的 email 格式，唯一
+- `password`: 必填，用於驗證
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -504,13 +504,13 @@ Update customer email address (requires verification).
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `400 Bad Request`: Validation errors
-- `401 Unauthorized`: Invalid password
-- `409 Conflict`: Email already in use
+- `400 Bad Request`: 驗證錯誤
+- `401 Unauthorized`: 無效的密碼
+- `409 Conflict`: Email 已被使用
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/customers/cust-123/email \
@@ -526,13 +526,13 @@ curl -X POST https://api.ecommerce.com/api/v1/customers/cust-123/email \
 
 ### Get Customer Orders
 
-Retrieve orders for a specific customer.
+檢索特定客戶的訂單。
 
 **Endpoint**: `GET /api/v1/customers/{id}/orders`
 
-**Authentication**: Required
+**Authentication**: 必填
 
-**Authorization**: User can access own orders, or ADMIN role required
+**Authorization**: 使用者可存取自己的訂單，或需要 ADMIN 角色
 
 **Path Parameters**:
 
@@ -540,11 +540,11 @@ Retrieve orders for a specific customer.
 
 **Query Parameters**:
 
-- `page`: Page number (default: 0)
-- `size`: Page size (default: 20)
-- `status`: Filter by order status (PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED)
+- `page`: 頁碼（預設值：0）
+- `size`: 每頁大小（預設值：20）
+- `status`: 依訂單狀態篩選（PENDING、CONFIRMED、SHIPPED、DELIVERED、CANCELLED）
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -571,7 +571,7 @@ Retrieve orders for a specific customer.
 }
 ```
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/customers/cust-123/orders?status=DELIVERED" \
@@ -582,13 +582,13 @@ curl -X GET "https://api.ecommerce.com/api/v1/customers/cust-123/orders?status=D
 
 ### Update Customer Preferences
 
-Update customer preferences and settings.
+更新客戶偏好和設定。
 
 **Endpoint**: `PATCH /api/v1/customers/{id}/preferences`
 
-**Authentication**: Required
+**Authentication**: 必填
 
-**Authorization**: User can update own preferences
+**Authorization**: 使用者可更新自己的偏好設定
 
 **Path Parameters**:
 
@@ -605,7 +605,7 @@ Update customer preferences and settings.
 }
 ```
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -621,7 +621,7 @@ Update customer preferences and settings.
 }
 ```
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X PATCH https://api.ecommerce.com/api/v1/customers/cust-123/preferences \
@@ -668,38 +668,38 @@ curl -X PATCH https://api.ecommerce.com/api/v1/customers/cust-123/preferences \
 
 ### Membership Levels
 
-| Level | Description | Benefits |
+| 等級 | 描述 | 權益 |
 |-------|-------------|----------|
-| STANDARD | Default membership | Basic features |
-| PREMIUM | Upgraded membership | 5% discount, priority support |
-| VIP | Top-tier membership | 10% discount, free shipping, exclusive access |
+| STANDARD | 預設會員 | 基本功能 |
+| PREMIUM | 升級會員 | 5% 折扣、優先客服 |
+| VIP | 頂級會員 | 10% 折扣、免運費、專屬優惠 |
 
-## Business Rules
+## 業務規則
 
-1. **Email Uniqueness**: Each email can only be registered once
-2. **Membership Upgrade**: Automatic upgrade based on purchase history
-3. **Loyalty Points**: Earned on purchases, 1 point per $10 spent
-4. **Account Deletion**: Cannot delete account with active orders
-5. **Email Change**: Requires verification via email
-6. **Password Change**: Requires current password verification
+1. **Email 唯一性**：每個 email 只能註冊一次
+2. **會員升級**：根據購買記錄自動升級
+3. **點數累積**：每消費 $10 獲得 1 點
+4. **帳戶刪除**：無法刪除有活躍訂單的帳戶
+5. **Email 變更**：需透過 email 驗證
+6. **密碼變更**：需要當前密碼驗證
 
-## Error Codes
+## 錯誤代碼
 
-| Code | Description | Solution |
+| 代碼 | 描述 | 解決方案 |
 |------|-------------|----------|
-| `CUSTOMER_EMAIL_EXISTS` | Email already registered | Use different email or login |
-| `CUSTOMER_NOT_FOUND` | Customer ID not found | Check customer ID |
-| `CUSTOMER_INVALID_PASSWORD` | Password verification failed | Check current password |
-| `CUSTOMER_HAS_ACTIVE_ORDERS` | Cannot delete with active orders | Cancel orders first |
-| `CUSTOMER_EMAIL_VERIFICATION_REQUIRED` | Email not verified | Check email for verification link |
+| `CUSTOMER_EMAIL_EXISTS` | Email 已註冊 | 使用不同 email 或登入 |
+| `CUSTOMER_NOT_FOUND` | 找不到 Customer ID | 檢查客戶 ID |
+| `CUSTOMER_INVALID_PASSWORD` | 密碼驗證失敗 | 檢查當前密碼 |
+| `CUSTOMER_HAS_ACTIVE_ORDERS` | 無法刪除有活躍訂單的客戶 | 先取消訂單 |
+| `CUSTOMER_EMAIL_VERIFICATION_REQUIRED` | Email 未驗證 | 檢查 email 中的驗證連結 |
 
-## Related Documentation
+## 相關文件
 
-- [Authentication](../authentication.md) - Authentication and authorization
-- [Order API](orders.md) - Order management
-- [Error Handling](../error-handling.md) - Error codes and troubleshooting
+- [Authentication](../authentication.md) - 身份驗證和授權
+- [Order API](orders.md) - 訂單管理
+- [Error Handling](../error-handling.md) - 錯誤代碼和疑難排解
 
 ---
 
-**Last Updated**: 2025-10-25  
+**最後更新**: 2025-10-25
 **API Version**: v1

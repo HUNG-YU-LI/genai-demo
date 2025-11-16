@@ -1,6 +1,6 @@
 ---
 adr_number: 026
-title: "CQRS Pattern for Read/Write Separation"
+title: "CQRS Pattern 用於 Read/Write Separation"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,95 +10,95 @@ affected_viewpoints: ["information", "functional", "performance"]
 affected_perspectives: ["performance", "scalability", "evolution"]
 ---
 
-# ADR-026: CQRS Pattern for Read/Write Separation
+# ADR-026: CQRS Pattern 用於 Read/Write Separation
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires optimized read and write operations with different characteristics:
+The Enterprise E-Commerce Platform 需要optimized read 和 write operations 與 different characteristics:
 
 **Business Requirements**:
 
-- **Read Performance**: Fast product searches and catalog browsing
-- **Write Consistency**: Strong consistency for orders and payments
+- **Read Performance**: Fast product searches 和 catalog browsing
+- **Write Consistency**: Strong consistency 用於 orders 和 payments
 - **Scalability**: Scale reads independently from writes
-- **Complex Queries**: Support complex reporting and analytics
-- **Real-time Updates**: Near real-time data for customer-facing features
-- **Flexibility**: Different data models for reads and writes
+- **複雜的 Queries**: 支援 複雜的 reporting 和 analytics
+- **Real-time Updates**: Near real-time data 用於 customer-facing features
+- **Flexibility**: Different data models 用於 reads 和 writes
 
 **Technical Challenges**:
 
 - Read-heavy workload (90% reads, 10% writes)
-- Complex queries spanning multiple aggregates
-- Different performance requirements for reads vs writes
-- Need for denormalized data for queries
+- 複雜的 queries spanning multiple aggregates
+- Different performance requirements 用於 reads vs writes
+- 需要 denormalized data 用於 queries
 - Reporting requirements
 - Search functionality
 
 **Current Issues**:
 
-- Single model for reads and writes
-- Complex queries impact write performance
-- Difficult to optimize for both use cases
+- Single model 用於 reads 和 writes
+- 複雜的 queries impact write performance
+- 難以optimize 用於 both 使用案例s
 - Denormalization creates data duplication
 - Reporting queries slow down transactional operations
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Improve customer experience (fast searches)
-- Support business intelligence and reporting
-- Enable real-time dashboards
-- Scale for growth
-- Reduce infrastructure costs
+- 改善 customer experience (fast searches)
+- 支援 business intelligence 和 reporting
+- 啟用 real-time dashboards
+- Scale 用於 growth
+- 降低 infrastructure costs
 
-**Constraints**:
+**限制條件**：
 
-- Budget: $70,000 for implementation
-- Timeline: 3 months
+- 預算: $70,000 用於 implementation
+- Timeline: 3 個月
 - Team: 3 senior developers
-- Must maintain data consistency
-- Cannot impact current operations
+- 必須 維持 資料一致性
+- 可以not impact current operations
 - Gradual adoption strategy
 
-### Technical Context
+### 技術上下文
 
 **Current Approach**:
 
 - Single database model
-- JPA entities for all operations
-- Complex queries on write model
+- JPA entities 用於 all operations
+- 複雜的 queries on write model
 - Performance bottlenecks
 
 **Target Approach**:
 
-- Separate read and write models
-- Optimized read models for queries
+- Separate read 和 write models
+- Optimized read models 用於 queries
 - Event-driven synchronization
 - Independent scaling
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Performance**: Optimize reads and writes independently
+1. **Performance**: Optimize reads 和 writes independently
 2. **Scalability**: Scale reads separately from writes
-3. **Flexibility**: Different models for different needs
-4. **Complexity**: Manage additional complexity
-5. **Consistency**: Maintain acceptable consistency
-6. **Maintainability**: Keep system maintainable
-7. **Cost**: Optimize infrastructure costs
+3. **Flexibility**: Different models 用於 different needs
+4. **複雜的ity**: Manage additional 複雜的ity
+5. **Consistency**: 維持 acceptable consistency
+6. **維持ability**: Keep system 維持able
+7. **成本**： Optimize infrastructure costs
 8. **Team Skills**: Team capability to implement
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: CQRS with Event-Driven Synchronization (Recommended)
+### 選項 1： CQRS with Event-Driven Synchronization (Recommended)
 
-**Description**: Separate read and write models, synchronized through domain events
+**描述**： Separate read and write models, synchronized through domain events
 
 **Architecture Overview**:
 
@@ -469,7 +469,7 @@ public class OrderQueryController {
 }
 ```
 
-**ElasticSearch for Advanced Queries**:
+**ElasticSearch 用於 Advanced Queries**:
 
 ```java
 // Product search read model in ElasticSearch
@@ -616,7 +616,7 @@ public class ReadModelConsistencyChecker {
 }
 ```
 
-**Monitoring and Metrics**:
+**Monitoring 和 Metrics**:
 
 ```java
 @Component
@@ -665,80 +665,80 @@ public class CQRSMetrics {
 }
 ```
 
-**Pros**:
+**優點**：
 
-- ✅ Optimized read and write performance
+- ✅ Optimized read 和 write performance
 - ✅ Independent scaling
 - ✅ Flexible data models
-- ✅ Complex queries without impacting writes
-- ✅ Natural fit for event-driven architecture
-- ✅ Supports multiple read models (SQL + ElasticSearch)
+- ✅ 複雜的 queries 沒有 impacting writes
+- ✅ Natural fit 用於 event-driven architecture
+- ✅ 支援s multiple read models (SQL + ElasticSearch)
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Eventual consistency
-- ⚠️ Increased complexity
+- ⚠️ Increased 複雜的ity
 - ⚠️ Data duplication
 - ⚠️ Synchronization overhead
 - ⚠️ More infrastructure to manage
 
-**Cost**: $70,000 implementation + $8,000/year operational
+**成本**： $70,000 implementation + $8,000/year operational
 
-**Risk**: **Medium** - Complexity and consistency challenges
+**風險**： **Medium** - Complexity and consistency challenges
 
-### Option 2: Simple Read Replicas
+### 選項 2： Simple Read Replicas
 
-**Description**: Use database read replicas for read scaling
+**描述**： Use database read replicas for read scaling
 
-**Pros**:
+**優點**：
 
-- ✅ Simple to implement
+- ✅ 簡單implement
 - ✅ Strong consistency
 - ✅ No code changes
 
-**Cons**:
+**缺點**：
 
-- ❌ Same data model for reads and writes
+- ❌ Same data model 用於 reads 和 writes
 - ❌ Limited optimization
 - ❌ Replication lag
-- ❌ Cannot use different databases
+- ❌ 可以not use different databases
 
-**Cost**: $20,000 implementation + $15,000/year (replicas)
+**成本**： $20,000 implementation + $15,000/year (replicas)
 
-**Risk**: **Low** - But limited benefits
+**風險**： **Low** - But limited benefits
 
-### Option 3: Materialized Views
+### 選項 3： Materialized Views
 
-**Description**: Use database materialized views for complex queries
+**描述**： Use database materialized views for complex queries
 
-**Pros**:
+**優點**：
 
 - ✅ Database-level optimization
 - ✅ No application changes
 - ✅ Familiar to DBAs
 
-**Cons**:
+**缺點**：
 
 - ❌ Database-specific
 - ❌ Limited flexibility
 - ❌ Refresh overhead
-- ❌ Cannot use different databases
+- ❌ 可以not use different databases
 
-**Cost**: $15,000 implementation
+**成本**： $15,000 implementation
 
-**Risk**: **Low** - But limited scalability
+**風險**： **Low** - But limited scalability
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **CQRS with Event-Driven Synchronization (Option 1)**
+**選擇的選項**： **CQRS with Event-Driven Synchronization (Option 1)**
 
-### Rationale
+### 理由
 
-CQRS provides the flexibility and performance optimization needed for our read-heavy workload, allowing independent scaling and optimization of reads and writes while fitting naturally with our event-driven architecture.
+CQRS 提供s the flexibility 和 performance optimization needed 用於 our read-heavy workload, allowing independent scaling 和 optimization of reads 和 writes while fitting naturally 與 our event-driven architecture.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
@@ -750,9 +750,9 @@ CQRS provides the flexibility and performance optimization needed for our read-h
 
 ### Impact Radius Assessment
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All bounded contexts
 - API design
@@ -760,21 +760,21 @@ Affects:
 - Event-driven architecture
 - Monitoring systems
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | Eventual consistency issues | Medium | Medium | Consistency checks, monitoring |
 | Projection lag | Low | Medium | Performance optimization, alerts |
 | Data synchronization failures | Low | High | Retry mechanism, manual tools |
-| Increased complexity | High | Medium | Training, documentation, tooling |
+| Increased 複雜的ity | High | Medium | Training, documentation, tooling |
 | Storage costs | Low | Low | Optimize projections, archiving |
 
-**Overall Risk Level**: **Medium**
+**整體風險等級**： **Medium**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Framework Setup (Month 1)
+### 第 1 階段： Framework Setup (Month 1)
 
 **Tasks**:
 
@@ -790,7 +790,7 @@ Affects:
 - Monitoring working
 - Documentation complete
 
-### Phase 2: Pilot Implementation (Month 2)
+### 第 2 階段： Pilot Implementation (Month 2)
 
 **Tasks**:
 
@@ -803,14 +803,14 @@ Affects:
 **Success Criteria**:
 
 - Order CQRS working
-- Performance improved
+- Performance 改善d
 - Team comfortable
 
-### Phase 3: Expansion (Month 3)
+### 第 3 階段： Expansion (Month 3)
 
 **Tasks**:
 
-- [ ] Implement Product CQRS with ElasticSearch
+- [ ] Implement Product CQRS 與 ElasticSearch
 - [ ] Implement Customer CQRS
 - [ ] Add consistency checks
 - [ ] Optimize performance
@@ -822,26 +822,26 @@ Affects:
 - Performance targets met
 - Team trained
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Unacceptable consistency issues
 - Performance degradation
-- Team cannot maintain
+- Team 可以not 維持
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Disable read models
-2. Use write model for queries
+2. Use write model 用於 queries
 3. Fix issues
-4. Re-enable CQRS
+4. Re-啟用 CQRS
 
-**Rollback Time**: 1 day
+**回滾時間**： 1 day
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
@@ -849,7 +849,7 @@ Affects:
 | Write Performance | < 200ms p95 | Application metrics |
 | Projection Lag | < 1s | Monitoring |
 | Consistency Rate | > 99.9% | Consistency checks |
-| Read Scalability | 10x improvement | Load testing |
+| Read Scalability | 10x 改善ment | Load testing |
 
 ### Review Schedule
 
@@ -857,61 +857,61 @@ Affects:
 - **Monthly**: Pattern optimization
 - **Quarterly**: Strategy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Performance**: Optimized reads and writes
+- ✅ **Performance**: Optimized reads 和 writes
 - ✅ **Scalability**: Independent scaling
-- ✅ **Flexibility**: Different models for different needs
-- ✅ **Complex Queries**: Support without impacting writes
+- ✅ **Flexibility**: Different models 用於 different needs
+- ✅ **複雜的 Queries**: 支援 沒有 impacting writes
 - ✅ **Multiple Stores**: SQL + ElasticSearch
 - ✅ **Cost Optimization**: Scale only what's needed
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Complexity**: Significant increase
+- ⚠️ **複雜的ity**: Signifi可以t increase
 - ⚠️ **Eventual Consistency**: Not immediate
 - ⚠️ **Data Duplication**: More storage
-- ⚠️ **Synchronization**: Overhead and potential failures
-- ⚠️ **Testing**: More complex scenarios
+- ⚠️ **Synchronization**: Overhead 和 potential failures
+- ⚠️ **Testing**: More 複雜的 scenarios
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Manual projection rebuild
 2. Limited consistency monitoring
 3. Basic error handling
 4. No projection versioning
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Automated projection rebuild
 - **Q3 2026**: Comprehensive consistency monitoring
 - **Q4 2026**: Advanced error handling
 - **Q1 2027**: Projection versioning
 
-## Related Decisions
+## 相關決策
 
-- [ADR-020: Database Migration Strategy with Flyway](020-database-migration-strategy-flyway.md)
-- [ADR-021: Event Sourcing for Critical Aggregates](021-event-sourcing-critical-aggregates.md)
-- [ADR-025: Saga Pattern for Distributed Transactions](025-saga-pattern-distributed-transactions.md)
+- [ADR-020: Database Migration Strategy 與 Flyway](020-database-migration-strategy-flyway.md)
+- [ADR-021: Event Sourcing 用於 Critical Aggregates](021-event-sourcing-critical-aggregates.md)
+- [ADR-025: Saga Pattern 用於 Distributed Transactions](025-saga-pattern-distributed-transactions.md)
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）
 
-## Notes
+## 備註
 
 ### CQRS Best Practices
 
 **DO**:
 
-- ✅ Use for read-heavy workloads
-- ✅ Optimize read models for queries
+- ✅ Use 用於 read-heavy workloads
+- ✅ Optimize read models 用於 queries
 - ✅ Monitor projection lag
 - ✅ Implement consistency checks
 - ✅ Use different databases when beneficial
@@ -927,16 +927,16 @@ Affects:
 
 ### When to Use CQRS
 
-**Good Candidates**:
+**良好的 可以didates**:
 
 - ✅ Read-heavy entities (products, catalog)
-- ✅ Complex query requirements
+- ✅ 複雜的 query requirements
 - ✅ Different scaling needs
 - ✅ Multiple read models needed
 
-**Poor Candidates**:
+**Poor 可以didates**:
 
-- ❌ Simple CRUD entities
+- ❌ 簡單的 CRUD entities
 - ❌ Low traffic entities
 - ❌ Strong consistency required
-- ❌ Simple queries only
+- ❌ 簡單的 queries only

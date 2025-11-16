@@ -1,23 +1,23 @@
 # Shipping Context Events
 
-## Overview
+## 概述
 
-Domain events for shipping and logistics operations.
+物流配送作業的 domain events。
 
-**Last Updated**: 2025-10-25
+**最後更新**: 2025-10-25
 
 ---
 
-## Event List
+## 事件列表
 
-| Event Name | Trigger | Priority |
+| 事件名稱 | 觸發條件 | 優先級 |
 |------------|---------|----------|
-| `ShippingScheduledEvent` | Order confirmation | P0 |
-| `ShippingLabelCreatedEvent` | Label generation | P0 |
-| `ShippingDispatchedEvent` | Package pickup | P0 |
-| `ShippingInTransitEvent` | Transit update | P1 |
-| `ShippingDeliveredEvent` | Delivery confirmation | P0 |
-| `ShippingFailedEvent` | Delivery failure | P1 |
+| `ShippingScheduledEvent` | 確認訂單 | P0 |
+| `ShippingLabelCreatedEvent` | 產生標籤 | P0 |
+| `ShippingDispatchedEvent` | 包裹取件 | P0 |
+| `ShippingInTransitEvent` | 運送更新 | P1 |
+| `ShippingDeliveredEvent` | 確認送達 | P0 |
+| `ShippingFailedEvent` | 配送失敗 | P1 |
 
 ---
 
@@ -35,7 +35,7 @@ public record ShippingScheduledEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -72,7 +72,7 @@ public record ShippingDispatchedEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -90,6 +90,6 @@ public record ShippingDispatchedEvent(
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2025-10-25  
-**Owner**: Shipping Domain Team
+**文件版本**: 1.0
+**最後更新**: 2025-10-25
+**負責人**: Shipping Domain Team

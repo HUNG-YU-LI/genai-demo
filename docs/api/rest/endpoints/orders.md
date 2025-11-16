@@ -1,12 +1,12 @@
 # Order API
 
-## Overview
+## 概述
 
-The Order API provides endpoints for managing customer orders, including order creation, retrieval, updates, and cancellation. Orders represent the complete purchase transaction from cart to delivery.
+Order API 提供了管理顧客訂單的端點，包括訂單建立、檢索、更新和取消。訂單代表從購物車到交付的完整購買交易。
 
 **Base Path**: `/api/v1/orders`
 
-**Authentication**: Required for all endpoints
+**Authentication**: 所有端點皆需要驗證
 
 ## Order Lifecycle
 
@@ -31,11 +31,11 @@ graph TD
 
 ### Create Order (Submit Order)
 
-Create a new order from shopping cart.
+從購物車建立新訂單。
 
 **Endpoint**: `POST /api/v1/orders`
 
-**Authentication**: Required
+**Authentication**: 需要
 
 **Request Body**:
 
@@ -75,12 +75,12 @@ Create a new order from shopping cart.
 
 **Validation Rules**:
 
-- `customerId`: Required, must exist
-- `items`: Required, at least 1 item
-- `items[].productId`: Required, must exist and be in stock
-- `items[].quantity`: Required, must be > 0
-- `shippingAddress`: Required
-- `paymentMethod`: Required (CREDIT_CARD, DEBIT_CARD, BANK_TRANSFER, CASH_ON_DELIVERY)
+- `customerId`: 必填，必須存在
+- `items`: 必填，至少 1 個項目
+- `items[].productId`: 必填，必須存在且有庫存
+- `items[].quantity`: 必填，必須 > 0
+- `shippingAddress`: 必填
+- `paymentMethod`: 必填（CREDIT_CARD, DEBIT_CARD, BANK_TRANSFER, CASH_ON_DELIVERY）
 
 **Success Response** (201 Created):
 
@@ -137,9 +137,9 @@ Create a new order from shopping cart.
 
 **Error Responses**:
 
-- `400 Bad Request`: Validation errors
-- `401 Unauthorized`: Missing or invalid token
-- `409 Conflict`: Insufficient inventory
+- `400 Bad Request`: 驗證錯誤
+- `401 Unauthorized`: token 遺失或無效
+- `409 Conflict`: 庫存不足
 
 **curl Example**:
 
@@ -171,17 +171,17 @@ curl -X POST https://api.ecommerce.com/api/v1/orders \
 
 ### Get Order by ID
 
-Retrieve a specific order by its ID.
+根據 ID 取得特定訂單。
 
 **Endpoint**: `GET /api/v1/orders/{id}`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: User can access own orders, or ADMIN role required
+**Authorization**: 使用者可存取自己的訂單，或需要 ADMIN 角色
 
 **Path Parameters**:
 
-- `id`: Order ID (e.g., `order-789`)
+- `id`: Order ID（例如：`order-789`）
 
 **Success Response** (200 OK):
 
@@ -237,9 +237,9 @@ Retrieve a specific order by its ID.
 
 **Error Responses**:
 
-- `401 Unauthorized`: Missing or invalid token
-- `403 Forbidden`: Insufficient permissions
-- `404 Not Found`: Order not found
+- `401 Unauthorized`: token 遺失或無效
+- `403 Forbidden`: 權限不足
+- `404 Not Found`: 找不到訂單
 
 **curl Example**:
 
@@ -252,26 +252,26 @@ curl -X GET https://api.ecommerce.com/api/v1/orders/order-789 \
 
 ### List Orders
 
-Retrieve a paginated list of orders.
+取得分頁的訂單清單。
 
 **Endpoint**: `GET /api/v1/orders`
 
-**Authentication**: Required
+**Authentication**: 需要
 
 **Authorization**:
 
-- Regular users see only their own orders
-- ADMIN role can see all orders
+- 一般使用者僅能查看自己的訂單
+- ADMIN 角色可查看所有訂單
 
 **Query Parameters**:
 
-- `page`: Page number (0-based, default: 0)
-- `size`: Page size (default: 20, max: 100)
-- `sort`: Sort field and direction (default: `createdAt,desc`)
-- `status`: Filter by status (PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED)
-- `customerId`: Filter by customer ID (ADMIN only)
-- `startDate`: Filter orders created after this date (ISO 8601)
-- `endDate`: Filter orders created before this date (ISO 8601)
+- `page`: 頁碼（從 0 開始，預設：0）
+- `size`: 每頁大小（預設：20，最大：100）
+- `sort`: 排序欄位和方向（預設：`createdAt,desc`）
+- `status`: 依狀態篩選（PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED）
+- `customerId`: 依顧客 ID 篩選（僅限 ADMIN）
+- `startDate`: 篩選此日期之後建立的訂單（ISO 8601）
+- `endDate`: 篩選此日期之前建立的訂單（ISO 8601）
 
 **Success Response** (200 OK):
 
@@ -321,13 +321,13 @@ curl -X GET "https://api.ecommerce.com/api/v1/orders?startDate=2025-10-01T00:00:
 
 ### Update Order Status
 
-Update the status of an order.
+更新訂單的狀態。
 
 **Endpoint**: `PATCH /api/v1/orders/{id}/status`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: ADMIN or SELLER role required
+**Authorization**: 需要 ADMIN 或 SELLER 角色
 
 **Path Parameters**:
 
@@ -344,9 +344,9 @@ Update the status of an order.
 
 **Valid Status Transitions**:
 
-- `PENDING` → `CONFIRMED` or `CANCELLED`
-- `CONFIRMED` → `PROCESSING` or `CANCELLED`
-- `PROCESSING` → `SHIPPED` or `CANCELLED`
+- `PENDING` → `CONFIRMED` 或 `CANCELLED`
+- `CONFIRMED` → `PROCESSING` 或 `CANCELLED`
+- `PROCESSING` → `SHIPPED` 或 `CANCELLED`
 - `SHIPPED` → `DELIVERED`
 
 **Success Response** (200 OK):
@@ -376,11 +376,11 @@ Update the status of an order.
 
 **Error Responses**:
 
-- `400 Bad Request`: Invalid status transition
-- `401 Unauthorized`: Missing or invalid token
-- `403 Forbidden`: Insufficient permissions
-- `404 Not Found`: Order not found
-- `409 Conflict`: Invalid state transition
+- `400 Bad Request`: 無效的狀態轉換
+- `401 Unauthorized`: token 遺失或無效
+- `403 Forbidden`: 權限不足
+- `404 Not Found`: 找不到訂單
+- `409 Conflict`: 無效的狀態轉換
 
 **curl Example**:
 
@@ -398,13 +398,13 @@ curl -X PATCH https://api.ecommerce.com/api/v1/orders/order-789/status \
 
 ### Cancel Order
 
-Cancel an order.
+取消訂單。
 
 **Endpoint**: `POST /api/v1/orders/{id}/cancel`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: User can cancel own orders (if eligible), or ADMIN role required
+**Authorization**: 使用者可取消自己的訂單（如符合條件），或需要 ADMIN 角色
 
 **Path Parameters**:
 
@@ -421,9 +421,9 @@ Cancel an order.
 
 **Cancellation Rules**:
 
-- Can cancel if status is PENDING or CONFIRMED
-- Cannot cancel if status is PROCESSING, SHIPPED, or DELIVERED
-- Refund processed automatically for paid orders
+- 若狀態為 PENDING 或 CONFIRMED 可取消
+- 若狀態為 PROCESSING、SHIPPED 或 DELIVERED 無法取消
+- 已付款的訂單會自動處理退款
 
 **Success Response** (200 OK):
 
@@ -442,10 +442,10 @@ Cancel an order.
 
 **Error Responses**:
 
-- `401 Unauthorized`: Missing or invalid token
-- `403 Forbidden`: Insufficient permissions
-- `404 Not Found`: Order not found
-- `409 Conflict`: Order cannot be cancelled (already shipped)
+- `401 Unauthorized`: token 遺失或無效
+- `403 Forbidden`: 權限不足
+- `404 Not Found`: 找不到訂單
+- `409 Conflict`: 訂單無法取消（已出貨）
 
 **curl Example**:
 
@@ -463,13 +463,13 @@ curl -X POST https://api.ecommerce.com/api/v1/orders/order-789/cancel \
 
 ### Add Tracking Information
 
-Add shipping tracking information to an order.
+新增訂單的物流追蹤資訊。
 
 **Endpoint**: `POST /api/v1/orders/{id}/tracking`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: ADMIN or SELLER role required
+**Authorization**: 需要 ADMIN 或 SELLER 角色
 
 **Path Parameters**:
 
@@ -519,13 +519,13 @@ curl -X POST https://api.ecommerce.com/api/v1/orders/order-789/tracking \
 
 ### Get Order Invoice
 
-Retrieve the invoice for an order.
+取得訂單的發票。
 
 **Endpoint**: `GET /api/v1/orders/{id}/invoice`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: User can access own order invoices, or ADMIN role required
+**Authorization**: 使用者可存取自己的訂單發票，或需要 ADMIN 角色
 
 **Path Parameters**:
 
@@ -533,7 +533,7 @@ Retrieve the invoice for an order.
 
 **Query Parameters**:
 
-- `format`: Invoice format (PDF, HTML, default: PDF)
+- `format`: 發票格式（PDF, HTML，預設：PDF）
 
 **Success Response** (200 OK):
 
@@ -589,13 +589,13 @@ curl -X GET "https://api.ecommerce.com/api/v1/orders/order-789/invoice?format=PD
 
 ### Get Order History
 
-Retrieve the complete history of status changes for an order.
+取得訂單狀態變更的完整歷史。
 
 **Endpoint**: `GET /api/v1/orders/{id}/history`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: User can access own order history, or ADMIN role required
+**Authorization**: 使用者可存取自己的訂單歷史，或需要 ADMIN 角色
 
 **Path Parameters**:
 
@@ -677,14 +677,14 @@ sequenceDiagram
 
 ### Step-by-Step Process
 
-1. **Create Order**: Customer submits order with items and shipping info
-2. **Validate Items**: System validates all products exist and are in stock
-3. **Reserve Inventory**: System reserves inventory for order items
-4. **Calculate Totals**: System calculates subtotal, discounts, tax, shipping
-5. **Process Payment**: System processes payment via payment gateway
-6. **Confirm Order**: System confirms order and updates status
-7. **Send Notifications**: System sends confirmation email to customer
-8. **Prepare Shipment**: Warehouse prepares order for shipping
+1. **Create Order**: 顧客提交包含商品和配送資訊的訂單
+2. **Validate Items**: 系統驗證所有產品存在且有庫存
+3. **Reserve Inventory**: 系統為訂單項目保留庫存
+4. **Calculate Totals**: 系統計算小計、折扣、稅金、運費
+5. **Process Payment**: 系統透過付款閘道處理付款
+6. **Confirm Order**: 系統確認訂單並更新狀態
+7. **Send Notifications**: 系統傳送確認郵件給顧客
+8. **Prepare Shipment**: 倉庫準備訂單以進行配送
 
 ## Data Models
 
@@ -731,52 +731,52 @@ sequenceDiagram
 
 | Status | Description | Next Possible Status |
 |--------|-------------|---------------------|
-| CREATED | Order just created | PENDING |
-| PENDING | Awaiting payment | CONFIRMED, CANCELLED |
-| CONFIRMED | Payment confirmed | PROCESSING, CANCELLED |
-| PROCESSING | Being prepared | SHIPPED, CANCELLED |
-| SHIPPED | In transit | DELIVERED |
-| DELIVERED | Delivered to customer | - |
-| CANCELLED | Order cancelled | - |
+| CREATED | 訂單剛建立 | PENDING |
+| PENDING | 等待付款 | CONFIRMED, CANCELLED |
+| CONFIRMED | 付款已確認 | PROCESSING, CANCELLED |
+| PROCESSING | 準備中 | SHIPPED, CANCELLED |
+| SHIPPED | 運送中 | DELIVERED |
+| DELIVERED | 已送達顧客 | - |
+| CANCELLED | 訂單已取消 | - |
 
 ### Payment Methods
 
 | Method | Code | Description |
 |--------|------|-------------|
 | Credit Card | CREDIT_CARD | Visa, Mastercard, JCB |
-| Debit Card | DEBIT_CARD | Bank debit card |
-| Bank Transfer | BANK_TRANSFER | Direct bank transfer |
-| Cash on Delivery | CASH_ON_DELIVERY | Pay upon delivery |
+| Debit Card | DEBIT_CARD | 銀行金融卡 |
+| Bank Transfer | BANK_TRANSFER | 直接銀行轉帳 |
+| Cash on Delivery | CASH_ON_DELIVERY | 貨到付款 |
 
 ## Business Rules
 
-1. **Inventory Reservation**: Inventory is reserved when order is created
-2. **Payment Timeout**: Unpaid orders are cancelled after 24 hours
-3. **Cancellation Window**: Orders can be cancelled before shipping
-4. **Refund Processing**: Refunds processed within 7-14 business days
-5. **Minimum Order**: Minimum order amount is $100 TWD
-6. **Maximum Items**: Maximum 50 items per order
+1. **Inventory Reservation**: 建立訂單時保留庫存
+2. **Payment Timeout**: 未付款的訂單在 24 小時後取消
+3. **Cancellation Window**: 訂單可在出貨前取消
+4. **Refund Processing**: 退款在 7-14 個工作天內處理
+5. **Minimum Order**: 最低訂單金額為 100 TWD
+6. **Maximum Items**: 每筆訂單最多 50 個項目
 
 ## Error Codes
 
 | Code | Description | Solution |
 |------|-------------|----------|
-| `ORDER_INSUFFICIENT_INVENTORY` | Not enough inventory | Reduce quantity or remove item |
-| `ORDER_PAYMENT_FAILED` | Payment processing failed | Check payment details |
-| `ORDER_CANNOT_BE_CANCELLED` | Order already shipped | Contact support |
-| `ORDER_INVALID_STATUS_TRANSITION` | Invalid status change | Check current status |
-| `ORDER_MINIMUM_AMOUNT_NOT_MET` | Order below minimum | Add more items |
-| `ORDER_NOT_FOUND` | Order ID not found | Check order ID |
+| `ORDER_INSUFFICIENT_INVENTORY` | 庫存不足 | 減少數量或移除項目 |
+| `ORDER_PAYMENT_FAILED` | 付款處理失敗 | 檢查付款詳細資料 |
+| `ORDER_CANNOT_BE_CANCELLED` | 訂單已出貨 | 聯絡客服 |
+| `ORDER_INVALID_STATUS_TRANSITION` | 無效的狀態變更 | 檢查目前狀態 |
+| `ORDER_MINIMUM_AMOUNT_NOT_MET` | 訂單低於最低金額 | 新增更多項目 |
+| `ORDER_NOT_FOUND` | 找不到訂單 ID | 檢查訂單 ID |
 
 ## Related Documentation
 
-- [Customer API](customers.md) - Customer management
-- [Product API](products.md) - Product catalog
-- [Payment API](payments.md) - Payment processing
-- [Authentication](../authentication.md) - Authentication and authorization
-- [Error Handling](../error-handling.md) - Error codes and troubleshooting
+- [Customer API](customers.md) - 顧客管理
+- [Product API](products.md) - 產品目錄
+- [Payment API](payments.md) - 付款處理
+- [Authentication](../authentication.md) - 驗證和授權
+- [Error Handling](../error-handling.md) - 錯誤碼和故障排除
 
 ---
 
-**Last Updated**: 2025-10-25  
+**Last Updated**: 2025-10-25
 **API Version**: v1

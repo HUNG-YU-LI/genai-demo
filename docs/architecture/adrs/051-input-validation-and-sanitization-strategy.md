@@ -1,6 +1,6 @@
 ---
 adr_number: 051
-title: "Input Validation and Sanitization Strategy"
+title: "Input Validation 和 Sanitization Strategy"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,17 +10,17 @@ affected_viewpoints: ["functional", "development"]
 affected_perspectives: ["security"]
 ---
 
-# ADR-051: Input Validation and Sanitization Strategy
+# ADR-051: Input Validation 和 Sanitization Strategy
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform must protect against injection attacks and malicious input through comprehensive validation and sanitization:
+The Enterprise E-Commerce Platform 必須 protect against injection attacks 和 malicious input through comprehensive validation 和 sanitization:
 
 - **SQL Injection**: Malicious SQL queries targeting database
 - **Cross-Site Scripting (XSS)**: Injection of malicious scripts
@@ -28,42 +28,42 @@ The Enterprise E-Commerce Platform must protect against injection attacks and ma
 - **Command Injection**: OS command execution attempts
 - **Path Traversal**: Unauthorized file system access
 - **XML/JSON Injection**: Malicious data in structured formats
-- **Business Logic Bypass**: Invalid data causing unexpected behavior
+- **Business Logic Bypass**: Invalid data causing un預期的 behavior
 
-The platform requires defense-in-depth validation strategy with multiple layers:
+The platform 需要defense-in-depth validation strategy 與 multiple layers:
 
-- Frontend validation for user experience
-- API Gateway validation for early rejection
-- Application validation for business rules
+- Frontend validation 用於 用戶體驗
+- API Gateway validation 用於 early rejection
+- Application validation 用於 business rules
 - Database validation as final defense
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- **Data Integrity**: Ensure data quality and consistency
+- **Data Integrity**: Ensure data quality 和 consistency
 - **Security Compliance**: PCI-DSS, GDPR requirements
 - **User Trust**: Protect customer data from breaches
-- **Regulatory Requirements**: Must prevent data manipulation
+- **Regulatory Requirements**: 必須 prevent data manipulation
 
 **Taiwan-Specific Context**:
 
 - **High Attack Volume**: Frequent injection attack attempts
-- **E-Commerce Targeting**: Payment and customer data are prime targets
+- **E-Commerce Targeting**: Payment 和 customer data are prime targets
 - **Regulatory Scrutiny**: Taiwan Personal Data Protection Act compliance
 
-**Constraints**:
+**限制條件**：
 
-- Must not impact user experience (< 10ms validation overhead)
-- Must support internationalization (Unicode, multi-language)
-- Must integrate with existing Spring Boot application
-- Budget: No additional infrastructure cost
+- 必須 not impact 用戶體驗 (< 10ms validation overhead)
+- 必須 支援 internationalization (Unicode, multi-language)
+- 必須 integrate 與 existing Spring Boot application
+- 預算: No additional infrastructure cost
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- Spring Boot 3.4.5 with Spring Validation
+- Spring Boot 3.4.5 與 Spring Validation
 - Basic @Valid annotation usage
 - No comprehensive sanitization
 - No CSRF protection
@@ -78,22 +78,22 @@ The platform requires defense-in-depth validation strategy with multiple layers:
 - **File Upload**: Malicious file uploads
 - **API Endpoints**: JSON injection, parameter tampering
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **Security**: Prevent all injection attacks (SQL, XSS, CSRF)
 2. **Performance**: < 10ms validation overhead
 3. **User Experience**: Clear, helpful error messages
-4. **Maintainability**: Centralized validation logic
-5. **Compliance**: Meet PCI-DSS and GDPR requirements
-6. **Flexibility**: Support custom validation rules
-7. **Integration**: Seamless Spring Boot integration
-8. **Cost**: No additional infrastructure cost
+4. **維持ability**: Centralized validation logic
+5. **Compliance**: Meet PCI-DSS 和 GDPR requirements
+6. **Flexibility**: 支援 custom validation rules
+7. **Integration**: 無縫的Spring Boot整合
+8. **成本**： No additional infrastructure cost
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Multi-Layer Validation (Frontend + API Gateway + Application + Database) - Recommended
+### 選項 1： Multi-Layer Validation (Frontend + API Gateway + Application + Database) - Recommended
 
-**Description**: Defense-in-depth with validation at every layer
+**描述**： Defense-in-depth with validation at every layer
 
 **Validation Layers**:
 
@@ -102,83 +102,83 @@ The platform requires defense-in-depth validation strategy with multiple layers:
 3. **Application**: Business logic validation (comprehensive)
 4. **Database**: Final defense (constraints, triggers)
 
-**Pros**:
+**優點**：
 
 - ✅ **Defense in Depth**: Multiple layers of protection
 - ✅ **Early Rejection**: Invalid requests rejected at gateway
 - ✅ **User Experience**: Immediate frontend feedback
 - ✅ **Security**: Comprehensive protection against all injection types
 - ✅ **Performance**: < 10ms overhead per layer
-- ✅ **Maintainability**: Clear separation of concerns
+- ✅ **維持ability**: Clear separation of concerns
 
-**Cons**:
+**缺點**：
 
-- ⚠️ **Complexity**: Multiple validation layers to maintain
-- ⚠️ **Duplication**: Some validation logic duplicated across layers
+- ⚠️ **複雜的ity**: Multiple validation layers to 維持
+- ⚠️ **Duplication**: Some validation logic duplicated 跨 layers
 
-**Cost**: $0 (using existing infrastructure)
+**成本**： $0 (using existing infrastructure)
 
-**Risk**: **Low** - Industry best practice
+**風險**： **Low** - Industry best practice
 
-### Option 2: Application-Only Validation (Basic)
+### 選項 2： Application-Only Validation (Basic)
 
-**Description**: Validation only at application layer
+**描述**： Validation only at application layer
 
-**Pros**:
+**優點**：
 
-- ✅ **Simple**: Single validation layer
+- ✅ **簡單的**: Single validation layer
 - ✅ **Low Maintenance**: One place to update
 
-**Cons**:
+**缺點**：
 
 - ❌ **No Early Rejection**: Invalid requests reach application
 - ❌ **Performance**: Wasted processing on invalid requests
 - ❌ **Security**: Single point of failure
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **Medium** - Insufficient defense in depth
+**風險**： **Medium** - Insufficient defense in depth
 
-### Option 3: Third-Party Validation Service
+### 選項 3： Third-Party Validation Service
 
-**Description**: Use external validation service
+**描述**： Use external validation service
 
-**Pros**:
+**優點**：
 
-- ✅ **Managed Service**: Less operational overhead
+- ✅ **Managed Service**: Less 營運開銷
 - ✅ **Advanced Features**: ML-based validation
 
-**Cons**:
+**缺點**：
 
 - ❌ **High Cost**: $500-2,000/month
 - ❌ **Latency**: Additional network hop
-- ❌ **Vendor Lock-In**: Difficult to migrate
+- ❌ **Vendor Lock-In**: 難以migrate
 
-**Cost**: $500-2,000/month
+**成本**： $500-2,000/month
 
-**Risk**: **Medium** - Vendor dependency
+**風險**： **Medium** - Vendor dependency
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Multi-Layer Validation (Frontend + API Gateway + Application + Database)**
+**選擇的選項**： **Multi-Layer Validation (Frontend + API Gateway + Application + Database)**
 
-### Rationale
+### 理由
 
-Multi-layer validation was selected for the following reasons:
+Multi-layer validation被選擇的原因如下：
 
-1. **Defense in Depth**: Multiple layers provide comprehensive protection
+1. **Defense in Depth**: Multiple layers 提供 comprehensive protection
 2. **Early Rejection**: Invalid requests rejected at gateway (saves resources)
 3. **User Experience**: Immediate frontend feedback
 4. **Security**: Protection against all injection types
 5. **Performance**: < 10ms overhead per layer
 6. **Cost-Effective**: Uses existing infrastructure
-7. **Compliance**: Meets PCI-DSS and GDPR requirements
+7. **Compliance**: Meets PCI-DSS 和 GDPR requirements
 
-**Validation Strategy by Layer**:
+**Validation Strategy 透過 Layer**:
 
 **Layer 1 - Frontend (UX Validation)**:
 
-- **Purpose**: Immediate user feedback, reduce server load
+- **Purpose**: Immediate user feedback, 降低 server load
 - **Validation**: Format, length, required fields
 - **Technology**: React Hook Form, Angular Forms
 - **Example**: Email format, password strength, required fields
@@ -192,7 +192,7 @@ Multi-layer validation was selected for the following reasons:
 
 **Layer 3 - Application (Business Logic Validation)**:
 
-- **Purpose**: Comprehensive validation and sanitization
+- **Purpose**: Comprehensive validation 和 sanitization
 - **Validation**: Business rules, cross-field validation, sanitization
 - **Technology**: Spring Validation, Hibernate Validator, OWASP Java Encoder
 - **Example**: Business rules, SQL injection prevention, XSS prevention
@@ -207,9 +207,9 @@ Multi-layer validation was selected for the following reasons:
 **SQL Injection Prevention**:
 
 - **Mandatory**: Use parameterized queries (JPA, JDBC PreparedStatement)
-- **Prohibited**: String concatenation for SQL queries
+- **Prohibited**: String concatenation 用於 SQL queries
 - **ORM Usage**: Prefer JPA/Hibernate over native SQL
-- **Code Review**: Automated checks for SQL injection vulnerabilities
+- **Code Review**: Automated checks 用於 SQL injection vulnerabilities
 
 **XSS Prevention**:
 
@@ -221,150 +221,150 @@ Multi-layer validation was selected for the following reasons:
 
 **CSRF Prevention**:
 
-- **CSRF Tokens**: Required for all state-changing operations
-- **SameSite Cookies**: SameSite=Strict or Lax
+- **CSRF Tokens**: Required 用於 all state-changing operations
+- **SameSite Cookies**: SameSite=Strict 或 Lax
 - **Double-Submit Cookie**: Additional CSRF protection
 - **Referer Validation**: Validate Referer header
 
-**Why Not Application-Only**: Insufficient defense in depth, no early rejection of invalid requests.
+**為何不選 Application-Only**： Insufficient defense in depth, no early rejection of invalid requests.
 
-**Why Not Third-Party**: High cost ($500-2K/month) not justified when we can implement comprehensive validation using existing infrastructure.
+**為何不選 Third-Party**： High cost ($500-2K/month) not justified when we 可以 implement comprehensive validation using existing infrastructure.
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Application-Level Validation (Week 1)
+### 第 1 階段： Application-Level Validation （第 1 週）
 
 - [x] Configure Spring Validation
-- [x] Implement custom validators for business rules
+- [x] Implement custom validators 用於 business rules
 - [x] Add @Valid annotations to all DTOs
 - [x] Implement validation error handling
 - [x] Add validation unit tests
 
-### Phase 2: SQL Injection Prevention (Week 2)
+### 第 2 階段： SQL Injection Prevention （第 2 週）
 
-- [x] Audit all SQL queries for injection vulnerabilities
+- [x] Audit all SQL queries 用於 injection vulnerabilities
 - [x] Convert string concatenation to parameterized queries
 - [x] Implement JPA query validation
 - [x] Add ArchUnit rules to prevent SQL injection
 - [x] Conduct security testing
 
-### Phase 3: XSS Prevention (Week 3)
+### 第 3 階段： XSS Prevention （第 3 週）
 
-- [x] Implement output encoding for all user-generated content
+- [x] Implement output encoding 用於 all user-generated content
 - [x] Configure OWASP Java HTML Sanitizer
 - [x] Add CSP headers
-- [x] Configure HTTPOnly and Secure cookies
-- [x] Test XSS prevention with OWASP ZAP
+- [x] Configure HTTPOnly 和 Secure cookies
+- [x] Test XSS prevention 與 OWASP ZAP
 
-### Phase 4: CSRF Protection (Week 4)
+### 第 4 階段： CSRF Protection （第 4 週）
 
-- [x] Enable Spring Security CSRF protection
-- [x] Configure CSRF tokens for all state-changing operations
+- [x] 啟用 Spring Security CSRF protection
+- [x] Configure CSRF tokens 用於 all state-changing operations
 - [x] Implement SameSite cookie attribute
 - [x] Add double-submit cookie pattern
 - [x] Test CSRF protection
 
-### Phase 5: API Gateway Validation (Week 5)
+### Phase 5: API Gateway Validation （第 5 週）
 
 - [x] Configure OpenAPI 3.0 schema validation
 - [x] Implement request validation at API Gateway
 - [x] Add validation error responses
-- [x] Test with invalid requests
+- [x] Test 與 invalid requests
 - [x] Monitor validation metrics
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Validation causing service outage
 - False positive rate > 1% (legitimate requests rejected)
 - Performance degradation > 20ms
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Disable specific validation rules causing issues
 2. Revert to previous validation configuration
-3. Investigate and fix issues
-4. Re-deploy with corrections
+3. Investigate 和 fix issues
+4. Re-deploy 與 corrections
 
-**Rollback Time**: < 15 minutes
+**回滾時間**： < 15 minutes
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ **Injection Prevention**: 100% of injection attempts blocked
 - ✅ **False Positive Rate**: < 0.1% legitimate requests rejected
 - ✅ **Performance**: < 10ms validation overhead
 - ✅ **User Experience**: Clear, helpful error messages
-- ✅ **Compliance**: Pass PCI-DSS and GDPR audits
+- ✅ **Compliance**: Pass PCI-DSS 和 GDPR audits
 - ✅ **Security**: Zero successful injection attacks
 
-### Monitoring Plan
+### 監控計畫
 
 **CloudWatch Metrics**:
 
-- `validation.errors` (count by field)
+- `validation.errors` (count 透過 field)
 - `validation.sql_injection_attempts` (count)
 - `validation.xss_attempts` (count)
 - `validation.csrf_failures` (count)
 - `validation.latency` (histogram)
 
-**Alerts**:
+**告警**：
 
 - **P0 Critical**: SQL injection attempts > 100/min
 - **P1 High**: XSS attempts > 50/min
 - **P2 Medium**: Validation error rate > 10%
 - **P3 Low**: Unusual validation patterns
 
-**Review Schedule**:
+**審查時程**：
 
 - **Real-Time**: 24/7 monitoring dashboard
 - **Daily**: Review validation errors
 - **Weekly**: Analyze attack patterns
-- **Monthly**: Security review and validation optimization
+- **Monthly**: Security review 和 validation optimization
 - **Quarterly**: Penetration testing
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Enhanced Security**: Protection against all injection attacks
-- ✅ **Data Integrity**: Ensure data quality and consistency
+- ✅ **Data Integrity**: Ensure data quality 和 consistency
 - ✅ **User Experience**: Clear, helpful error messages
-- ✅ **Compliance**: Meet PCI-DSS and GDPR requirements
+- ✅ **Compliance**: Meet PCI-DSS 和 GDPR requirements
 - ✅ **Performance**: < 10ms validation overhead
-- ✅ **Maintainability**: Centralized validation logic
+- ✅ **維持ability**: Centralized validation logic
 - ✅ **Cost-Effective**: No additional infrastructure cost
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Complexity**: Multiple validation layers to maintain
-- ⚠️ **Duplication**: Some validation logic duplicated across layers
-- ⚠️ **Development Overhead**: More code to write and test
+- ⚠️ **複雜的ity**: Multiple validation layers to 維持
+- ⚠️ **Duplication**: Some validation logic duplicated 跨 layers
+- ⚠️ **Development Overhead**: More code to write 和 test
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Manual validation rule updates (acceptable initially)
-2. Limited internationalization support for error messages
+2. Limited internationalization 支援 用於 error messages
 3. No automated validation testing
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Implement automated validation rule generation
-- **Q3 2026**: Enhance internationalization support
+- **Q3 2026**: Enhance internationalization 支援
 - **Q4 2026**: Implement automated validation testing
 
-## Related Decisions
+## 相關決策
 
-- [ADR-009: RESTful API Design with OpenAPI 3.0](009-restful-api-design-with-openapi.md) - API schema validation
+- [ADR-009: RESTful API Design 與 OpenAPI 3.0](009-restful-api-design-with-openapi.md) - API schema validation
 - [ADR-014: JWT-Based Authentication Strategy](014-jwt-based-authentication-strategy.md) - Authentication
-- [ADR-049: Web Application Firewall (WAF) Rules and Policies](049-web-application-firewall-rules-and-policies.md) - WAF protection
-- [ADR-050: API Security and Rate Limiting Strategy](050-api-security-and-rate-limiting-strategy.md) - API security
+- [ADR-049: Web Application Firewall (WAF) Rules 和 Policies](049-web-application-firewall-rules-and-policies.md) - WAF protection
+- [ADR-050: API Security 和 Rate Limiting Strategy](050-api-security-and-rate-limiting-strategy.md) - API security
 
-## Notes
+## 備註
 
 ### Validation Examples
 
@@ -500,6 +500,6 @@ public class SecurityHeadersConfiguration {
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

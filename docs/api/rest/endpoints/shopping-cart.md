@@ -1,24 +1,24 @@
 # Shopping Cart API
 
-## Overview
+## 概述
 
-The Shopping Cart API provides endpoints for managing customer shopping carts, including adding items, updating quantities, applying promotions, and checkout preparation.
+Shopping Cart API 提供管理客戶購物車的 endpoints，包括新增項目、更新數量、套用促銷活動和結帳準備。
 
 **Base Path**: `/api/v1/carts`
 
-**Authentication**: Required for all endpoints
+**Authentication**: 所有 endpoints 都需要
 
 ## Endpoints
 
-### Get Current Cart
+### 取得目前購物車
 
-Retrieve the authenticated user's shopping cart.
+檢索已驗證使用者的購物車。
 
 **Endpoint**: `GET /api/v1/carts/me`
 
 **Authentication**: Required
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -64,12 +64,12 @@ Retrieve the authenticated user's shopping cart.
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `401 Unauthorized`: Missing or invalid token
-- `404 Not Found`: Cart not found (empty cart)
+- `401 Unauthorized`: 缺少或無效的 token
+- `404 Not Found`: 找不到購物車（空購物車）
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/carts/me \
@@ -78,9 +78,9 @@ curl -X GET https://api.ecommerce.com/api/v1/carts/me \
 
 ---
 
-### Add Item to Cart
+### 新增項目到購物車
 
-Add a product to the shopping cart.
+將產品新增到購物車。
 
 **Endpoint**: `POST /api/v1/carts/me/items`
 
@@ -95,12 +95,12 @@ Add a product to the shopping cart.
 }
 ```
 
-**Validation Rules**:
+**驗證規則**:
 
-- `productId`: Required, must exist
-- `quantity`: Required, positive integer, max 99
+- `productId`: 必填，必須存在
+- `quantity`: 必填，正整數，最大 99
 
-**Success Response** (201 Created):
+**成功回應** (201 Created):
 
 ```json
 {
@@ -126,13 +126,13 @@ Add a product to the shopping cart.
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `400 Bad Request`: Validation errors
-- `404 Not Found`: Product not found
-- `409 Conflict`: Insufficient inventory
+- `400 Bad Request`: 驗證錯誤
+- `404 Not Found`: 找不到產品
+- `409 Conflict`: 庫存不足
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/carts/me/items \
@@ -146,9 +146,9 @@ curl -X POST https://api.ecommerce.com/api/v1/carts/me/items \
 
 ---
 
-### Update Cart Item Quantity
+### 更新購物車項目數量
 
-Update the quantity of an item in the cart.
+更新購物車中項目的數量。
 
 **Endpoint**: `PATCH /api/v1/carts/me/items/{itemId}`
 
@@ -156,7 +156,7 @@ Update the quantity of an item in the cart.
 
 **Path Parameters**:
 
-- `itemId`: Cart item ID
+- `itemId`: 購物車項目 ID
 
 **Request Body**:
 
@@ -166,11 +166,11 @@ Update the quantity of an item in the cart.
 }
 ```
 
-**Validation Rules**:
+**驗證規則**:
 
-- `quantity`: Required, positive integer (0 to remove), max 99
+- `quantity`: 必填，正整數（0 表示移除），最大 99
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -196,13 +196,13 @@ Update the quantity of an item in the cart.
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `400 Bad Request`: Validation errors
-- `404 Not Found`: Item not found
-- `409 Conflict`: Insufficient inventory
+- `400 Bad Request`: 驗證錯誤
+- `404 Not Found`: 找不到項目
+- `409 Conflict`: 庫存不足
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X PATCH https://api.ecommerce.com/api/v1/carts/me/items/item-1 \
@@ -215,9 +215,9 @@ curl -X PATCH https://api.ecommerce.com/api/v1/carts/me/items/item-1 \
 
 ---
 
-### Remove Item from Cart
+### 從購物車移除項目
 
-Remove an item from the shopping cart.
+從購物車中移除項目。
 
 **Endpoint**: `DELETE /api/v1/carts/me/items/{itemId}`
 
@@ -225,16 +225,16 @@ Remove an item from the shopping cart.
 
 **Path Parameters**:
 
-- `itemId`: Cart item ID
+- `itemId`: 購物車項目 ID
 
-**Success Response** (204 No Content)
+**成功回應** (204 No Content)
 
-**Error Responses**:
+**錯誤回應**:
 
-- `401 Unauthorized`: Missing or invalid token
-- `404 Not Found`: Item not found
+- `401 Unauthorized`: 缺少或無效的 token
+- `404 Not Found`: 找不到項目
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X DELETE https://api.ecommerce.com/api/v1/carts/me/items/item-1 \
@@ -243,21 +243,21 @@ curl -X DELETE https://api.ecommerce.com/api/v1/carts/me/items/item-1 \
 
 ---
 
-### Clear Cart
+### 清空購物車
 
-Remove all items from the shopping cart.
+移除購物車中的所有項目。
 
 **Endpoint**: `DELETE /api/v1/carts/me`
 
 **Authentication**: Required
 
-**Success Response** (204 No Content)
+**成功回應** (204 No Content)
 
-**Error Responses**:
+**錯誤回應**:
 
-- `401 Unauthorized`: Missing or invalid token
+- `401 Unauthorized`: 缺少或無效的 token
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X DELETE https://api.ecommerce.com/api/v1/carts/me \
@@ -266,9 +266,9 @@ curl -X DELETE https://api.ecommerce.com/api/v1/carts/me \
 
 ---
 
-### Apply Promotion Code
+### 套用促銷代碼
 
-Apply a promotion code to the cart.
+將促銷代碼套用到購物車。
 
 **Endpoint**: `POST /api/v1/carts/me/promotions`
 
@@ -282,7 +282,7 @@ Apply a promotion code to the cart.
 }
 ```
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -305,12 +305,12 @@ Apply a promotion code to the cart.
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `400 Bad Request`: Invalid promotion code
-- `409 Conflict`: Promotion not applicable or expired
+- `400 Bad Request`: 無效的促銷代碼
+- `409 Conflict`: 促銷不適用或已過期
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/carts/me/promotions \
@@ -323,9 +323,9 @@ curl -X POST https://api.ecommerce.com/api/v1/carts/me/promotions \
 
 ---
 
-### Remove Promotion Code
+### 移除促銷代碼
 
-Remove a promotion code from the cart.
+從購物車中移除促銷代碼。
 
 **Endpoint**: `DELETE /api/v1/carts/me/promotions/{promotionId}`
 
@@ -333,9 +333,9 @@ Remove a promotion code from the cart.
 
 **Path Parameters**:
 
-- `promotionId`: Promotion ID
+- `promotionId`: 促銷 ID
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -351,7 +351,7 @@ Remove a promotion code from the cart.
 }
 ```
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X DELETE https://api.ecommerce.com/api/v1/carts/me/promotions/promo-001 \
@@ -360,9 +360,9 @@ curl -X DELETE https://api.ecommerce.com/api/v1/carts/me/promotions/promo-001 \
 
 ---
 
-### Merge Carts
+### 合併購物車
 
-Merge anonymous cart with authenticated user's cart (used after login).
+將匿名購物車與已驗證使用者的購物車合併（登入後使用）。
 
 **Endpoint**: `POST /api/v1/carts/me/merge`
 
@@ -376,7 +376,7 @@ Merge anonymous cart with authenticated user's cart (used after login).
 }
 ```
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -401,13 +401,13 @@ Merge anonymous cart with authenticated user's cart (used after login).
 }
 ```
 
-**Business Rules**:
+**業務規則**:
 
-- Duplicate items are merged (quantities added)
-- Anonymous cart is deleted after merge
-- Promotions from anonymous cart are validated
+- 重複項目會合併（數量相加）
+- 合併後匿名購物車會被刪除
+- 來自匿名購物車的促銷會被驗證
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/carts/me/merge \
@@ -420,15 +420,15 @@ curl -X POST https://api.ecommerce.com/api/v1/carts/me/merge \
 
 ---
 
-### Validate Cart for Checkout
+### 驗證購物車以進行結帳
 
-Validate cart items and calculate final totals before checkout.
+在結帳前驗證購物車項目並計算最終總額。
 
 **Endpoint**: `POST /api/v1/carts/me/validate`
 
 **Authentication**: Required
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -454,7 +454,7 @@ Validate cart items and calculate final totals before checkout.
 }
 ```
 
-**Validation Response with Issues** (200 OK):
+**有問題的驗證回應** (200 OK):
 
 ```json
 {
@@ -480,7 +480,7 @@ Validate cart items and calculate final totals before checkout.
 }
 ```
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/carts/me/validate \
@@ -489,7 +489,7 @@ curl -X POST https://api.ecommerce.com/api/v1/carts/me/validate \
 
 ---
 
-## Data Models
+## 資料模型
 
 ### Cart Object
 
@@ -528,35 +528,35 @@ curl -X POST https://api.ecommerce.com/api/v1/carts/me/validate \
 }
 ```
 
-## Business Rules
+## 業務規則
 
-1. **Cart Expiration**: Anonymous carts expire after 30 days
-2. **Authenticated Cart**: Persists until explicitly cleared
-3. **Quantity Limits**: Maximum 99 units per item
-4. **Stock Validation**: Real-time inventory check on add/update
-5. **Promotion Stacking**: Multiple promotions can be applied based on rules
-6. **Price Updates**: Prices are recalculated on each cart retrieval
-7. **Merge Logic**: Duplicate items have quantities summed
+1. **購物車過期**: 匿名購物車在 30 天後過期
+2. **已驗證購物車**: 持續保存直到明確清空
+3. **數量限制**: 每個項目最多 99 單位
+4. **庫存驗證**: 新增/更新時即時檢查庫存
+5. **促銷堆疊**: 可根據規則套用多個促銷
+6. **價格更新**: 每次檢索購物車時重新計算價格
+7. **合併邏輯**: 重複項目的數量會相加
 
-## Error Codes
+## 錯誤代碼
 
 | Code | Description | Solution |
 |------|-------------|----------|
-| `CART_ITEM_NOT_FOUND` | Cart item not found | Check item ID |
-| `CART_INSUFFICIENT_STOCK` | Not enough inventory | Reduce quantity |
-| `CART_INVALID_QUANTITY` | Invalid quantity value | Use positive integer 1-99 |
-| `CART_PRODUCT_NOT_FOUND` | Product not found | Check product ID |
-| `CART_PROMOTION_INVALID` | Invalid promotion code | Check code and expiration |
-| `CART_PROMOTION_NOT_APPLICABLE` | Promotion not applicable | Check promotion conditions |
+| `CART_ITEM_NOT_FOUND` | 找不到購物車項目 | 檢查項目 ID |
+| `CART_INSUFFICIENT_STOCK` | 庫存不足 | 減少數量 |
+| `CART_INVALID_QUANTITY` | 無效的數量值 | 使用正整數 1-99 |
+| `CART_PRODUCT_NOT_FOUND` | 找不到產品 | 檢查產品 ID |
+| `CART_PROMOTION_INVALID` | 無效的促銷代碼 | 檢查代碼和有效期限 |
+| `CART_PROMOTION_NOT_APPLICABLE` | 促銷不適用 | 檢查促銷條件 |
 
-## Related Documentation
+## 相關文件
 
-- [Product API](products.md) - Product information
-- [Promotion API](promotions.md) - Promotion management
-- [Order API](orders.md) - Checkout and order creation
-- [Inventory API](inventory.md) - Stock availability
+- [Product API](products.md) - 產品資訊
+- [Promotion API](promotions.md) - 促銷管理
+- [Order API](orders.md) - 結帳和訂單建立
+- [Inventory API](inventory.md) - 庫存可用性
 
 ---
 
-**Last Updated**: 2025-10-25  
-**API Version**: v1
+**最後更新**: 2025-10-25
+**API 版本**: v1

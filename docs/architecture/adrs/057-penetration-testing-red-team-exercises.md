@@ -1,6 +1,6 @@
 ---
 adr_number: 057
-title: "Penetration Testing and Red Team Exercises"
+title: "Penetration Testing 和 Red Team Exercises"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,54 +10,54 @@ affected_viewpoints: ["operational"]
 affected_perspectives: ["security", "availability"]
 ---
 
-# ADR-057: Penetration Testing and Red Team Exercises
+# ADR-057: Penetration Testing 和 Red Team Exercises
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires comprehensive security testing to:
+The Enterprise E-Commerce Platform 需要comprehensive security testing to:
 
 - Identify security vulnerabilities before attackers do
 - Validate security controls effectiveness
 - Test incident response capabilities
-- Comply with security standards (PCI-DSS, ISO 27001)
-- Improve security posture continuously
-- Prepare for real-world attacks
+- Comply 與 security standards (PCI-DSS, ISO 27001)
+- 改善 security posture continuously
+- Prepare 用於 real-world attacks
 
 Taiwan's cyber security environment presents unique challenges:
 
 - Sophisticated APT attacks from state-sponsored actors
 - High-value e-commerce platform as attractive target
 - Need to test defenses against advanced threats
-- Regulatory requirements for security testing
+- Regulatory requirements 用於 security testing
 - Limited internal security expertise
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Protect customer data and business operations
-- Maintain platform reputation and trust
-- Comply with PCI-DSS requirement 11.3 (penetration testing)
+- Protect customer data 和 business operations
+- 維持 platform reputation 和 trust
+- Comply 與 PCI-DSS requirement 11.3 (penetration testing)
 - Validate security investments
-- Improve incident response readiness
+- 改善 incident response readiness
 
-**Constraints**:
+**限制條件**：
 
-- Must not disrupt production services
-- Cannot expose real customer data
-- Must comply with legal and ethical guidelines
-- Budget: $50,000/year for external testing
+- 必須 not disrupt production services
+- 可以not expose real customer data
+- 必須 comply 與 legal 和 ethical guidelines
+- 預算: $50,000/year 用於 external testing
 - Internal team capacity: 2 security engineers
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
 - No regular penetration testing
 - No red team exercises
@@ -66,7 +66,7 @@ Taiwan's cyber security environment presents unique challenges:
 - Limited security testing expertise
 - No attack simulation framework
 
-**Requirements**:
+**需求**：
 
 - Regular penetration testing (quarterly)
 - Annual red team exercises
@@ -75,22 +75,22 @@ Taiwan's cyber security environment presents unique challenges:
 - Incident response testing
 - Compliance-ready reporting
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **Coverage**: Comprehensive testing of all attack vectors
 2. **Frequency**: Regular testing to catch new vulnerabilities
 3. **Realism**: Simulate real-world attack scenarios
-4. **Compliance**: Meet PCI-DSS and ISO 27001 requirements
-5. **Cost**: Optimize testing budget
+4. **Compliance**: Meet PCI-DSS 和 ISO 27001 requirements
+5. **成本**： Optimize testing budget
 6. **Expertise**: Leverage external expertise
 7. **Safety**: Minimize risk to production systems
-8. **Learning**: Improve team security skills
+8. **Learning**: 改善 team security skills
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Hybrid Penetration Testing Program (Recommended)
+### 選項 1： Hybrid Penetration Testing Program (Recommended)
 
-**Description**: Combination of external penetration testing, internal security testing, and red team exercises
+**描述**： Combination of external penetration testing, internal security testing, and red team exercises
 
 **Components**:
 
@@ -99,85 +99,85 @@ Taiwan's cyber security environment presents unique challenges:
 - **Annual Red Team Exercise**: Simulate APT attack
 - **Continuous Automated Testing**: DAST, SAST tools
 - **Bug Bounty Program**: Crowdsourced security testing
-- **Post-Major-Update Testing**: Test after significant changes
+- **Post-Major-Update Testing**: Test after signifi可以t changes
 
-**Pros**:
+**優點**：
 
 - ✅ Comprehensive coverage (external + internal + automated)
 - ✅ Regular testing cadence
 - ✅ Real-world attack simulation
 - ✅ Cost-effective ($50K/year)
 - ✅ Compliance-ready
-- ✅ Continuous improvement
+- ✅ Continuous 改善ment
 - ✅ Team skill development
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Requires coordination
 - ⚠️ Internal team capacity needed
-- ⚠️ Potential for service disruption
+- ⚠️ Potential 用於 service disruption
 
-**Cost**: $50,000/year ($30K external, $10K red team, $10K tools/bounty)
+**成本**： $50,000/year ($30K external, $10K red team, $10K tools/bounty)
 
-**Risk**: **Low** - Industry best practices
+**風險**： **Low** - Industry best practices
 
-### Option 2: External Penetration Testing Only
+### 選項 2： External Penetration Testing Only
 
-**Description**: Rely solely on external security firms
+**描述**： Rely solely on external security firms
 
-**Pros**:
+**優點**：
 
 - ✅ Professional expertise
 - ✅ Compliance-ready reports
 - ✅ No internal capacity needed
 
-**Cons**:
+**缺點**：
 
 - ❌ Limited testing frequency
 - ❌ No continuous testing
 - ❌ No team skill development
-- ❌ Higher cost for frequent testing
+- ❌ Higher cost 用於 frequent testing
 
-**Cost**: $80,000/year (quarterly external testing)
+**成本**： $80,000/year (quarterly external testing)
 
-**Risk**: **Medium** - Gaps between tests
+**風險**： **Medium** - Gaps between tests
 
-### Option 3: Internal Testing Only
+### 選項 3： Internal Testing Only
 
-**Description**: Build internal security testing capability
+**描述**： Build internal security testing capability
 
-**Pros**:
+**優點**：
 
 - ✅ Continuous testing capability
 - ✅ Deep system knowledge
 - ✅ Lower long-term cost
 
-**Cons**:
+**缺點**：
 
 - ❌ Limited expertise
 - ❌ Potential bias
 - ❌ Compliance concerns
 - ❌ High initial investment
 
-**Cost**: $100,000/year (2 security engineers)
+**成本**： $100,000/year (2 security engineers)
 
-**Risk**: **High** - Insufficient expertise
+**風險**： **High** - Insufficient expertise
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Hybrid Penetration Testing Program (Option 1)**
+**選擇的選項**： **Hybrid Penetration Testing Program (Option 1)**
 
-### Rationale
+### 理由
 
-Hybrid penetration testing program was selected for the following reasons:
+Hybrid penetration testing program被選擇的原因如下：
 
-1. **Comprehensive**: Combines external expertise with internal capability
-2. **Cost-Effective**: $50K/year vs $80K+ for external-only
-3. **Continuous**: Regular testing plus automated scanning
-4. **Compliance**: Meets PCI-DSS and ISO 27001 requirements
+1. **Comprehensive**: Combines external expertise 與 internal capability
+2. **Cost-Effective**: $50K/year vs $80K+ 用於 external-only
+3. **Continuous**: Regular testing plus automated s可以ning
+4. **Compliance**: Meets PCI-DSS 和 ISO 27001 requirements
 5. **Realistic**: Red team exercises simulate real attacks
 6. **Skill Development**: Internal team learns from external experts
-7. **Flexible**: Can adjust testing focus based on threats
+7. **Flexible**: 可以 adjust testing focus based on threats
 
 ### Penetration Testing Scope
 
@@ -186,7 +186,7 @@ Hybrid penetration testing program was selected for the following reasons:
 **1. Web Application Testing**
 
 - OWASP Top 10 vulnerabilities
-- Authentication and authorization
+- Authentication 和 authorization
 - Session management
 - Input validation
 - Business logic flaws
@@ -227,31 +227,31 @@ Hybrid penetration testing program was selected for the following reasons:
 
 **Testing Schedule**:
 
-- **Q1**: Web application and API testing
-- **Q2**: Infrastructure and cloud security testing
+- **Q1**: Web application 和 API testing
+- **Q2**: Infrastructure 和 cloud security testing
 - **Q3**: Full-scope testing (web + infrastructure)
 - **Q4**: Post-major-update testing
 
 **Testing Process**:
 
-**Week 1: Planning and Scoping**
+**Week 1: Planning 和 Scoping**
 
-- Define testing scope and objectives
-- Identify critical assets and systems
+- Define testing scope 和 objectives
+- Identify critical assets 和 systems
 - Establish rules of engagement
 - Set up testing environment
-- Coordinate with operations team
+- Coordinate 與 operations team
 
 **Week 2-3: Testing Execution**
 
-- Reconnaissance and information gathering
+- Reconnaissance 和 information gathering
 - Vulnerability identification
 - Exploitation attempts
 - Privilege escalation testing
 - Lateral movement testing
 - Data exfiltration simulation
 
-**Week 4: Reporting and Remediation**
+**Week 4: Reporting 和 Remediation**
 
 - Detailed findings report
 - Risk prioritization
@@ -261,11 +261,11 @@ Hybrid penetration testing program was selected for the following reasons:
 
 **Vendor Selection Criteria**:
 
-- CREST or OSCP certified testers
-- Experience with e-commerce platforms
+- CREST 或 OSCP certified testers
+- Experience 與 e-commerce platforms
 - Understanding of Taiwan cyber threats
 - PCI-DSS testing experience
-- Good communication and reporting
+- 良好的 communication 和 reporting
 
 **Implementation**:
 
@@ -303,17 +303,17 @@ penetration_testing:
 **Internal Testing Focus**:
 
 - Validate external testing findings
-- Test new features and changes
+- Test new features 和 changes
 - Continuous security assessment
 - Team skill development
 
 **Testing Tools**:
 
 - **Burp Suite Professional**: Web application testing
-- **OWASP ZAP**: Automated scanning
+- **OWASP ZAP**: Automated s可以ning
 - **Metasploit**: Exploitation framework
-- **Nmap**: Network scanning
-- **Nikto**: Web server scanning
+- **Nmap**: Network s可以ning
+- **Nikto**: Web server s可以ning
 
 **Internal Testing Process**:
 
@@ -347,16 +347,16 @@ trivy image app:latest --severity HIGH,CRITICAL
 **Red Team Objectives**:
 
 - Simulate Advanced Persistent Threat (APT) attack
-- Test detection and response capabilities
+- Test detection 和 response capabilities
 - Identify security gaps
 - Validate incident response procedures
-- Improve security awareness
+- 改善 security awareness
 
 **Attack Scenarios**:
 
 **Scenario 1: External Breach**
 
-- Initial access via phishing or vulnerability exploitation
+- Initial access via phishing 或 vulnerability exploitation
 - Establish persistence
 - Privilege escalation
 - Lateral movement
@@ -378,31 +378,31 @@ trivy image app:latest --severity HIGH,CRITICAL
 
 **Red Team Exercise Process**:
 
-**Phase 1: Planning (Week 1-2)**
+**Phase 1: Planning （第 1-2 週）**
 
-- Define objectives and scope
+- Define objectives 和 scope
 - Establish rules of engagement
 - Identify target systems
-- Coordinate with blue team (limited disclosure)
-- Set up command and control infrastructure
+- Coordinate 與 blue team (limited disclosure)
+- Set up command 和 control infrastructure
 
-**Phase 2: Execution (Week 3-6)**
+**Phase 2: Execution （第 3-6 週）**
 
-- Reconnaissance and intelligence gathering
+- Reconnaissance 和 intelligence gathering
 - Initial access attempts
 - Establish foothold
 - Privilege escalation
 - Lateral movement
 - Achieve objectives (data exfiltration, etc.)
-- Maintain persistence
+- 維持 persistence
 
-**Phase 3: Reporting (Week 7-8)**
+**Phase 3: Reporting （第 7-8 週）**
 
 - Detailed attack timeline
-- Techniques, tactics, and procedures (TTPs)
+- Techniques, tactics, 和 procedures (TTPs)
 - Detection gaps identified
 - Blue team performance analysis
-- Recommendations for improvement
+- Recommendations 用於 改善ment
 
 **Implementation**:
 
@@ -511,9 +511,9 @@ jobs:
 
 **Program Structure**:
 
-- **Platform**: HackerOne or Bugcrowd
-- **Scope**: Production web application and APIs
-- **Budget**: $10,000/year
+- **Platform**: HackerOne 或 Bugcrowd
+- **Scope**: Production web application 和 APIs
+- **預算**: $10,000/year
 - **Rewards**: $100-$5,000 per vulnerability
 
 **Reward Tiers**:
@@ -570,113 +570,113 @@ jobs:
 
 **Testing Process**:
 
-1. Identify changes and potential security impacts
+1. Identify changes 和 potential security impacts
 2. Conduct focused penetration testing
 3. Validate security controls
-4. Test for regression vulnerabilities
-5. Document findings and remediation
+4. Test 用於 regression vulnerabilities
+5. Document findings 和 remediation
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Development Team | Medium | Vulnerability remediation work | Prioritization, support |
+| Development Team | Medium | Vulnerability remediation work | Prioritization, 支援 |
 | Operations Team | Medium | Testing coordination, potential disruption | Scheduling, communication |
 | Security Team | High | Testing execution, remediation validation | Training, tools |
 | End Users | None | Transparent testing (staging environment) | N/A |
 | Compliance Team | Positive | PCI-DSS compliance evidence | Regular reporting |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
-- All applications and services
-- Infrastructure and cloud configuration
-- Security controls and policies
+- All applications 和 services
+- Infrastructure 和 cloud configuration
+- Security controls 和 policies
 - Incident response procedures
 - Team security awareness
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
-| Service disruption during testing | Low | High | Test in staging, coordinate with ops |
+| Service disruption 期間 testing | Low | High | Test in staging, coordinate 與 ops |
 | False sense of security | Medium | Medium | Regular testing, multiple methodologies |
 | Vulnerability disclosure | Low | Critical | Responsible disclosure policy, NDA |
-| Testing cost overrun | Medium | Low | Fixed-price contracts, budget monitoring |
-| Internal team capacity | Medium | Medium | External support, training |
+| Testing cost overrun | Medium | Low | Fixed-price contracts, 預算 monitoring |
+| Internal team capacity | Medium | Medium | External 支援, training |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Program Setup (Month 1)
+### 第 1 階段： Program Setup (Month 1)
 
-- [ ] Define testing scope and objectives
+- [ ] Define testing scope 和 objectives
 - [ ] Select external penetration testing vendor
 - [ ] Procure testing tools
 - [ ] Set up bug bounty program
-- [ ] Create testing procedures and runbooks
+- [ ] Create testing procedures 和 runbooks
 
-### Phase 2: Initial Testing (Month 2-3)
+### 第 2 階段： Initial Testing (Month 2-3)
 
 - [ ] Conduct first external penetration test
-- [ ] Set up automated security scanning
+- [ ] Set up automated security s可以ning
 - [ ] Train internal security team
 - [ ] Launch bug bounty program
-- [ ] Document findings and remediation
+- [ ] Document findings 和 remediation
 
-### Phase 3: Regular Testing (Month 4-12)
+### 第 3 階段： Regular Testing (Month 4-12)
 
 - [ ] Quarterly external penetration testing
 - [ ] Semi-annual internal testing
-- [ ] Continuous automated scanning
+- [ ] Continuous automated s可以ning
 - [ ] Bug bounty program management
 - [ ] Remediation tracking
 
-### Phase 4: Red Team Exercise (Month 12)
+### 第 4 階段： Red Team Exercise (Month 12)
 
 - [ ] Plan red team exercise
 - [ ] Execute attack scenarios
 - [ ] Analyze blue team response
 - [ ] Document lessons learned
-- [ ] Implement improvements
+- [ ] Implement 改善ments
 
-### Rollback Strategy
+### 回滾策略
 
-**Not Applicable** - Testing is non-destructive and conducted in controlled manner
+**Not Applicable** - Testing is non-destructive 和 conducted in controlled manner
 
 **Safety Measures**:
 
 - Test in staging environment first
-- Coordinate with operations team
-- Have rollback plan for any changes
-- Monitor systems during testing
+- Coordinate 與 operations team
+- Have rollback plan 用於 any changes
+- Monitor systems 期間 testing
 - Stop testing if issues detected
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Quarterly penetration testing: 100% completion
 - ✅ Critical vulnerabilities: Remediated within 24 hours
-- ✅ High vulnerabilities: Remediated within 7 days
+- ✅ High vulnerabilities: Remediated within 7 天
 - ✅ Red team exercise: Annual completion
-- ✅ Bug bounty submissions: > 10 per year
+- ✅ Bug bounty submissions: > 10 per 年
 - ✅ PCI-DSS compliance: 100%
 - ✅ Zero successful real attacks
 
-### Monitoring Plan
+### 監控計畫
 
 **Tracking Metrics**:
 
-- `security.testing.completed` (count by type)
-- `security.vulnerabilities.found` (count by severity)
-- `security.vulnerabilities.remediated` (count by severity)
+- `security.testing.completed` (count 透過 type)
+- `security.vulnerabilities.found` (count 透過 severity)
+- `security.vulnerabilities.remediated` (count 透過 severity)
 - `security.remediation.time` (histogram)
 - `security.testing.cost` (dollars)
 
@@ -687,72 +687,72 @@ Affects:
 - Annual: Red team exercise report
 - Annual: Security posture assessment
 
-**Review Schedule**:
+**審查時程**：
 
 - Monthly: Vulnerability remediation review
 - Quarterly: Testing program effectiveness
-- Annual: Program budget and scope review
+- Annual: Program 預算 和 scope review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Proactive Security**: Find vulnerabilities before attackers
 - ✅ **Compliance**: Meet PCI-DSS requirement 11.3
 - ✅ **Validation**: Validate security controls effectiveness
-- ✅ **Improvement**: Continuous security improvement
-- ✅ **Readiness**: Improved incident response capabilities
+- ✅ **改善ment**: Continuous security 改善ment
+- ✅ **Readiness**: 改善d incident response capabilities
 - ✅ **Awareness**: Enhanced team security awareness
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Cost**: $50,000/year ongoing expense
-- ⚠️ **Effort**: Remediation work for development team
-- ⚠️ **Coordination**: Requires coordination with multiple teams
-- ⚠️ **Potential Disruption**: Risk of service disruption during testing
+- ⚠️ **成本**： $50,000/year ongoing expense
+- ⚠️ **Effort**: Remediation work 用於 development team
+- ⚠️ **Coordination**: Requires coordination 與 multiple teams
+- ⚠️ **Potential Disruption**: Risk of service disruption 期間 testing
 - ⚠️ **False Positives**: Some findings may not be exploitable
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Manual testing coordination (acceptable initially)
 2. Limited internal testing capability
 3. No automated remediation validation
 4. Basic bug bounty program
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q2 2026**: Automate testing coordination and scheduling
+- **Q2 2026**: Automate testing coordination 和 scheduling
 - **Q3 2026**: Build internal red team capability
 - **Q4 2026**: Implement automated remediation validation
-- **2027**: Expand bug bounty program with private researchers
+- **2027**: Expand bug bounty program 與 private researchers
 
-## Related Decisions
+## 相關決策
 
-- [ADR-053: Security Monitoring and Incident Response](053-security-monitoring-incident-response.md) - Incident response testing
+- [ADR-053: Security Monitoring 和 Incident Response](053-security-monitoring-incident-response.md) - Incident response testing
 - [ADR-054: Data Loss Prevention (DLP) Strategy](054-data-loss-prevention-strategy.md) - Data protection testing
-- [ADR-055: Vulnerability Management and Patching Strategy](055-vulnerability-management-patching-strategy.md) - Vulnerability remediation
-- [ADR-056: Network Segmentation and Isolation Strategy](056-network-segmentation-isolation-strategy.md) - Network security testing
+- [ADR-055: Vulnerability Management 和 Patching Strategy](055-vulnerability-management-patching-strategy.md) - Vulnerability remediation
+- [ADR-056: Network Segmentation 和 Isolation Strategy](056-network-segmentation-isolation-strategy.md) - Network security testing
 
-## Notes
+## 備註
 
 ### PCI-DSS Requirement 11.3
 
-**Requirement**: Implement a methodology for penetration testing that includes:
+**Requirement**: Implement a methodology 用於 penetration testing that includes:
 
-- External and internal penetration testing at least annually
-- Testing after significant infrastructure or application upgrades
-- Segmentation and scope-reduction controls testing
-- Application-layer and network-layer penetration tests
-- Testing to validate any segmentation and scope-reduction controls
+- External 和 internal penetration testing at least annually
+- Testing after signifi可以t infrastructure 或 application upgrades
+- Segmentation 和 scope-reduction controls testing
+- Application-layer 和 network-layer penetration tests
+- Testing to validate any segmentation 和 scope-reduction controls
 
 ### OWASP Testing Guide
 
 Follow OWASP Testing Guide v4.2 methodology:
 
 1. Information Gathering
-2. Configuration and Deployment Management Testing
+2. Configuration 和 Deployment Management Testing
 3. Identity Management Testing
 4. Authentication Testing
 5. Authorization Testing
@@ -781,6 +781,6 @@ Follow OWASP Testing Guide v4.2 methodology:
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

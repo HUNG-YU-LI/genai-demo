@@ -1,14 +1,14 @@
-# Database Maintenance Guide
+# 資料庫維護指南
 
-## Overview
+## 概述
 
-This guide covers routine database maintenance tasks for PostgreSQL RDS instances.
+本指南涵蓋 PostgreSQL RDS instance 的例行資料庫維護任務。
 
-## Routine Maintenance Tasks
+## 例行維護任務
 
-### Daily Tasks
+### 每日任務
 
-#### Monitor Database Performance
+#### 監控資料庫效能
 
 ```bash
 # Check database metrics

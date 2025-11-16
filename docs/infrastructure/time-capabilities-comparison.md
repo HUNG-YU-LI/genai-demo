@@ -1,56 +1,56 @@
-# Time Capabilities Comparison
+# Time 功能比較
 
-> **Last Updated**: 2025-01-22
+> **最後更新**: 2025-01-22
 
-## Overview
+## 總覽
 
-This document compares different methods for getting time information in Kiro.
+本文件比較在 Kiro 中取得時間資訊的不同方法。
 
 ---
 
-## 🕐 Available Time Methods
+## 🕐 可用的時間方法
 
-### Method 1: System Commands (Built-in)
+### 方法 1: 系統命令 (內建)
 
-**How it works**: Execute bash commands directly
+**運作方式**: 直接執行 bash 命令
 
 ```bash
-# Current time
+# 目前時間
 date
 
-# Formatted time
+# 格式化時間
 date +"%Y-%m-%d %H:%M:%S %Z"
 
-# UTC time
+# UTC 時間
 date -u
 
-# Specific timezone
+# 特定時區
 TZ="America/New_York" date
 ```
 
-**Capabilities**:
+**功能**:
 
-- ✅ Get current system time
-- ✅ Format time in various ways
-- ✅ Get UTC time
-- ✅ Convert to specific timezones
-- ✅ No additional dependencies
-- ✅ Always available
+- ✅ 取得目前系統時間
+- ✅ 以各種方式格式化時間
+- ✅ 取得 UTC 時間
+- ✅ 轉換到特定時區
+- ✅ 無額外相依性
+- ✅ 隨時可用
 
-**Limitations**:
+**限制**:
 
-- ❌ Requires bash command execution
-- ❌ Manual timezone conversion logic
-- ❌ Less convenient for complex operations
-- ❌ Platform-dependent syntax (macOS vs Linux)
+- ❌ 需要執行 bash 命令
+- ❌ 手動時區轉換邏輯
+- ❌ 複雜操作較不方便
+- ❌ 平台相依語法 (macOS vs Linux)
 
 ---
 
-### Method 2: Time MCP Server (Optional)
+### 方法 2: Time MCP Server (選擇性)
 
-**How it works**: Dedicated MCP server with time tools
+**運作方式**: 專用的 MCP server 與時間工具
 
-**Configuration**:
+**配置**:
 
 ```json
 {
@@ -70,276 +70,236 @@ TZ="America/New_York" date
 }
 ```
 
-**Capabilities**:
+**功能**:
 
-- ✅ `get_current_time` - Get current time in any timezone
-- ✅ `get_timezone` - Get timezone information
-- ✅ `convert_time` - Convert between timezones
-- ✅ `format_time` - Format time in various formats
-- ✅ `calculate_time_difference` - Calculate time differences
-- ✅ Structured API with clear parameters
-- ✅ Cross-platform consistency
+- ✅ `get_current_time` - 取得任何時區的目前時間
+- ✅ `get_timezone` - 取得時區資訊
+- ✅ `convert_time` - 時區間轉換
+- ✅ `format_time` - 以各種格式格式化時間
+- ✅ `calculate_time_difference` - 計算時間差異
+- ✅ 結構化 API 與明確參數
+- ✅ 跨平台一致性
 
-**Limitations**:
+**限制**:
 
-- ❌ Requires MCP server installation
-- ❌ Additional dependency to manage
-- ❌ Slightly more overhead than direct commands
+- ❌ 需要安裝 MCP server
+- ❌ 需要管理的額外相依性
+- ❌ 比直接命令有稍多的開銷
 
 ---
 
-## 📊 Feature Comparison
+## 📊 功能比較
 
-| Feature | System Commands | Time MCP Server |
+| 功能 | 系統命令 | Time MCP Server |
 |---------|----------------|-----------------|
-| **Get current time** | ✅ `date` | ✅ `get_current_time` |
-| **Format time** | ✅ `date +format` | ✅ `format_time` |
-| **Timezone conversion** | ⚠️ Manual | ✅ `convert_time` |
-| **Time difference** | ⚠️ Manual calculation | ✅ `calculate_time_difference` |
-| **Multiple timezones** | ⚠️ Multiple commands | ✅ Single call |
-| **Cross-platform** | ⚠️ Syntax varies | ✅ Consistent |
-| **Dependencies** | ✅ None | ❌ Requires uvx |
-| **Performance** | ✅ Fast | ✅ Fast |
-| **Ease of use** | ⚠️ Moderate | ✅ Easy |
+| **取得目前時間** | ✅ `date` | ✅ `get_current_time` |
+| **格式化時間** | ✅ `date +format` | ✅ `format_time` |
+| **時區轉換** | ⚠️ 手動 | ✅ `convert_time` |
+| **時間差異** | ⚠️ 手動計算 | ✅ `calculate_time_difference` |
+| **多個時區** | ⚠️ 多個命令 | ✅ 單一呼叫 |
+| **跨平台** | ⚠️ 語法差異 | ✅ 一致 |
+| **依賴項** | ✅ 無 | ⚠️ 需要 uvx |
+| **設定** | ✅ 無 | ⚠️ 需要配置 |
+| **複雜操作** | ⚠️ 需要腳本 | ✅ 內建函式 |
 
 ---
 
-## 🎯 Use Case Recommendations
+## 💡 建議
 
-### Use System Commands When
+### 使用系統命令時機
 
-- ✅ Simple time queries (current time, date)
-- ✅ One-off time operations
-- ✅ Minimal dependencies preferred
-- ✅ Quick scripts and automation
+**適合**:
+- 簡單時間查詢
+- 單一時區操作
+- 最小相依性環境
+- 快速一次性檢查
 
-**Example**:
+**範例**:
+```bash
+# 簡單查詢
+"現在幾點？"
+→ date
+
+# 基本格式化
+"以 ISO 格式顯示時間"
+→ date -I
+```
+
+### 使用 Time MCP Server 時機
+
+**適合**:
+- 時區轉換
+- 時間計算
+- 複雜格式化
+- 經常性時間操作
+
+**範例**:
+```
+# 時區轉換
+"現在紐約幾點？"
+→ get_current_time(timezone="America/New_York")
+
+# 時間計算
+"東京時間 2:00 PM 是舊金山的幾點？"
+→ convert_time(time="14:00", from="Asia/Tokyo", to="America/Los_Angeles")
+```
+
+---
+
+## 🔧 設定建議
+
+### 選項 1: 僅系統命令 (極簡)
+
+**優點**:
+- 無額外設定
+- 立即可用
+- 無相依性
+
+**缺點**:
+- 複雜操作需要更多工作
+- 平台差異
+
+### 選項 2: Time MCP Server (推薦)
+
+**優點**:
+- 豐富的時間功能
+- 跨平台一致性
+- 更好的用戶體驗
+
+**缺點**:
+- 需要一次性設定
+- 額外的相依性
+
+**設定步驟**:
+
+1. 在 `.kiro/settings/mcp.json` 加入配置
+2. 重新啟動 Kiro
+3. 測試：詢問 "現在幾點？"
+
+---
+
+## 📋 使用範例
+
+### 常見時間任務
+
+| 任務 | 系統命令 | Time MCP Server |
+|------|----------------|-----------------|
+| **目前本機時間** | `date` | `get_current_time()` |
+| **目前 UTC 時間** | `date -u` | `get_current_time(timezone="UTC")` |
+| **特定時區時間** | `TZ="Asia/Tokyo" date` | `get_current_time(timezone="Asia/Tokyo")` |
+| **格式化時間** | `date +"%Y-%m-%d %H:%M"` | `format_time(format="YYYY-MM-DD HH:mm")` |
+| **時區轉換** | 手動計算 | `convert_time(...)` |
+| **時間差異** | 手動計算 | `calculate_time_difference(...)` |
+
+---
+
+## 🎯 最佳實務
+
+### 對於單純查詢
 
 ```bash
-# Get current date for documentation
-CURRENT_DATE=$(date +%Y-%m-%d)
-echo "Last Updated: $CURRENT_DATE"
-```
-
-### Use Time MCP Server When
-
-- ✅ Complex timezone conversions
-- ✅ Multiple time operations in sequence
-- ✅ Need structured time data
-- ✅ Cross-platform consistency required
-- ✅ Frequent time-related queries
-
-**Example**:
-
-```text
-User: "What time is it in Tokyo, New York, and London?"
-Kiro: Uses time MCP server to get all three times in one operation
-```
-
----
-
-## 💡 Practical Examples
-
-### Example 1: Documentation Timestamps
-
-**Using System Commands** (Recommended):
-
-```bash
-# Simple and direct
-date +%Y-%m-%d
-# Output: 2025-01-22
-```
-
-**Using Time MCP Server**:
-
-```text
-get_current_time(timezone="Asia/Taipei", format="YYYY-MM-DD")
-```
-
-**Winner**: System commands (simpler for this use case)
-
----
-
-### Example 2: Multi-Timezone Meeting Scheduler
-
-**Using System Commands**:
-
-```bash
-# Requires multiple commands
-TZ="America/New_York" date
-TZ="Europe/London" date  
-TZ="Asia/Tokyo" date
-```
-
-**Using Time MCP Server**:
-
-```text
-get_current_time(timezone="America/New_York")
-get_current_time(timezone="Europe/London")
-get_current_time(timezone="Asia/Tokyo")
-```
-
-**Winner**: Time MCP Server (cleaner API, consistent format)
-
----
-
-### Example 3: Time Difference Calculation
-
-**Using System Commands**:
-
-```bash
-# Complex manual calculation needed
-start_time=$(date +%s)
-# ... do something ...
-end_time=$(date +%s)
-diff=$((end_time - start_time))
-echo "$diff seconds"
-```
-
-**Using Time MCP Server**:
-
-```text
-calculate_time_difference(
-  start_time="2025-01-22T10:00:00Z",
-  end_time="2025-01-22T14:30:00Z"
-)
-# Returns: 4 hours 30 minutes
-```
-
-**Winner**: Time MCP Server (much simpler)
-
----
-
-## 🔧 Current Configuration Analysis
-
-### Your Current Setup
-
-**Project Config**: Time MCP server is **enabled**
-
-```json
-"time": {
-  "command": "uvx",
-  "args": ["mcp-server-time"],
-  "disabled": false
-}
-```
-
-**Global Config**: Time MCP server is **disabled**
-
-```json
-"time": {
-  "command": "uvx",
-  "args": ["mcp-server-time"],
-  "disabled": true
-}
-```
-
-### Recommendation
-
-**Keep the Time MCP Server in Project Config** ✅
-
-**Reasons**:
-
-1. **Provides advanced capabilities** beyond simple date commands
-2. **Already installed and working** - no reason to remove
-3. **Useful for documentation** with multiple timezone support
-4. **Small overhead** - minimal resource usage
-5. **Better UX** - structured API vs manual bash commands
-
-**Remove from Global Config** ✅
-
-- It's disabled anyway
-- Project config takes precedence
-- Reduces configuration duplication
-
----
-
-## 📋 Recommended Action
-
-### Keep This Configuration
-
-**Project Config** (`.kiro/settings/mcp.json`):
-
-```json
-{
-  "mcpServers": {
-    "time": {
-      "command": "uvx",
-      "args": ["mcp-server-time"],
-      "env": {},
-      "disabled": false,
-      "autoApprove": [
-        "get_current_time",
-        "get_timezone",
-        "convert_time",
-        "format_time",
-        "calculate_time_difference"
-      ]
-    }
-  }
-}
-```
-
-**Global Config** (`~/.kiro/settings/mcp.json`):
-
-```json
-{
-  "mcpServers": {
-    // Remove "time" entry completely
-  }
-}
-```
-
----
-
-## 🧪 Testing Both Methods
-
-### Test System Commands
-
-```bash
-# Current time
+# 系統命令就足夠
 date
-
-# Formatted
-date +"%Y-%m-%d %H:%M:%S"
-
-# UTC
 date -u
+date +"%Y-%m-%d"
+```
 
-# Specific timezone
+### 對於時區工作
+
+```
+# 使用 Time MCP Server
+"現在東京幾點？"
+"將 3:00 PM PST 轉換為 EST"
+"UTC 時間 14:00 與 PST 時間 9:00 AM 的差異是多少？"
+```
+
+### 對於格式化
+
+```bash
+# 簡單格式 - 使用 date
+date +"%Y-%m-%d"
+
+# 複雜格式 - 使用 Time MCP Server
+format_time(format="dddd, MMMM Do YYYY, h:mm:ss a")
+```
+
+---
+
+## 🔄 遷移指南
+
+### 從系統命令遷移到 Time MCP Server
+
+**之前**:
+```bash
+TZ="Asia/Tokyo" date
 TZ="America/New_York" date
 ```
 
-### Test Time MCP Server
-
-```text
-Ask Kiro:
-
-- "What time is it?"
-- "What time is it in Tokyo?"
-- "Convert 2pm EST to Tokyo time"
-- "What's the time difference between New York and London?"
-
+**之後**:
+```
+"現在東京和紐約分別幾點？"
 ```
 
----
-
-## 📊 Summary
-
-| Aspect | Recommendation |
-|--------|----------------|
-| **Simple time queries** | Use system commands |
-| **Complex time operations** | Use Time MCP server |
-| **Documentation timestamps** | Use system commands |
-| **Multi-timezone support** | Use Time MCP server |
-| **Project config** | ✅ Keep Time MCP server |
-| **Global config** | ❌ Remove Time MCP server |
-
-**Bottom Line**: Keep the Time MCP server in your project config. It provides valuable functionality beyond what system commands offer, and there's no downside to having it available.
+**好處**:
+- 更自然的互動
+- 單一請求
+- 一致的回應格式
 
 ---
 
-**Related Documentation**:
+## 📝 故障排除
 
-- [MCP Server Analysis](./mcp-server-analysis.md)
-- [MCP Cleanup Recommendations](./mcp-cleanup-recommendations.md)
+### Time MCP Server 未工作
+
+1. **檢查配置**:
+   ```bash
+   cat .kiro/settings/mcp.json | grep -A 10 '"time"'
+   ```
+
+2. **驗證 uvx**:
+   ```bash
+   uvx --version
+   ```
+
+3. **測試 server**:
+   ```bash
+   uvx mcp-server-time
+   ```
+
+4. **檢查日誌**:
+   - 查看 Kiro 日誌中的錯誤訊息
+
+### 系統命令問題
+
+1. **檢查 date 命令**:
+   ```bash
+   which date
+   date --version  # Linux
+   date  # macOS
+   ```
+
+2. **驗證時區**:
+   ```bash
+   timedatectl list-timezones  # Linux
+   ls /usr/share/zoneinfo/  # macOS/Linux
+   ```
+
+---
+
+## 🎉 結論
+
+**建議配置**:
+- ✅ 啟用 Time MCP Server 以獲得最佳體驗
+- ✅ 為簡單查詢保留系統命令
+- ✅ 兩種方法均可用，取決於任務
+
+**記住**:
+- 系統命令：快速且簡單
+- Time MCP Server：強大且一致
+- 兩者都很有用，根據需求選擇！
+
+---
+
+**相關 Documentation**:
+- [MCP Configuration](./mcp-final-status.md)
+- [Time Server Documentation](https://github.com/modelcontextprotocol/servers/tree/main/src/time)

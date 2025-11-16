@@ -12,76 +12,76 @@ affected_perspectives: ["performance", "availability", "evolution"]
 
 # ADR-003: Use Domain Events for Cross-Context Communication
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-24
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform consists of 13 bounded contexts that need to communicate and stay synchronized. We need a mechanism that:
+企業電子商務平台由 13 個 bounded contexts 組成，需要通訊和保持同步。我們需要一個機制能夠：
 
-- Maintains loose coupling between bounded contexts
-- Ensures eventual consistency across contexts
-- Supports asynchronous processing for scalability
-- Enables audit trails and event sourcing capabilities
-- Allows new contexts to subscribe to events without modifying existing code
-- Preserves domain knowledge in the event stream
+- 維持 bounded contexts 之間的鬆散耦合
+- 確保跨 contexts 的最終一致性
+- 支援非同步處理以實現可擴展性
+- 啟用稽核軌跡和 event sourcing 功能
+- 允許新 contexts 訂閱事件而無需修改現有程式碼
+- 在事件串流中保留領域知識
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Need for independent development and deployment of bounded contexts
-- Requirement for audit trails and compliance (GDPR, PCI-DSS)
-- Expected high transaction volume (1000+ orders/second at peak)
-- Need for real-time notifications and analytics
-- Support for eventual consistency in distributed system
+- 需要 bounded contexts 的獨立開發和部署
+- 稽核軌跡和合規性要求（GDPR、PCI-DSS）
+- 預期高交易量（尖峰時 1000+ 訂單/秒）
+- 需要即時通知和分析
+- 分散式系統中支援最終一致性
 
-**Constraints**:
+**限制條件**：
 
-- Must integrate with existing AWS infrastructure
-- Team has limited experience with event-driven architecture
-- Need to maintain data consistency across contexts
-- Must support both synchronous and asynchronous operations
+- 必須整合現有的 AWS 基礎設施
+- 團隊在 event-driven architecture 方面經驗有限
+- 需要維持跨 contexts 的資料一致性
+- 必須支援同步和非同步操作
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- Hexagonal Architecture adopted (ADR-002)
-- PostgreSQL for primary database (ADR-001)
-- 13 bounded contexts identified
+- 採用 Hexagonal Architecture（ADR-002）
+- PostgreSQL 作為主要資料庫（ADR-001）
+- 已識別 13 個 bounded contexts
 - Spring Boot 3.4.5 + Java 21
 
-**Requirements**:
+**需求**：
 
-- Loose coupling between bounded contexts
-- Eventual consistency support
-- Event replay capability
-- Scalable event processing
-- Event versioning support
-- Dead letter queue for failed events
+- Bounded contexts 之間鬆散耦合
+- 最終一致性支援
+- 事件重播功能
+- 可擴展的事件處理
+- 事件版本控制支援
+- 失敗事件的 dead letter queue
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Loose Coupling**: Bounded contexts should not directly depend on each other
-2. **Scalability**: System must handle high event volumes
-3. **Auditability**: Complete audit trail of all business events
-4. **Flexibility**: Easy to add new event consumers
-5. **Consistency**: Eventual consistency across contexts
-6. **Reliability**: Guaranteed event delivery
-7. **Evolution**: Support for event schema evolution
-8. **DDD Alignment**: Events represent domain concepts
+1. **鬆散耦合**：Bounded contexts 不應直接依賴彼此
+2. **可擴展性**：系統必須處理高事件量
+3. **可稽核性**：所有業務事件的完整稽核軌跡
+4. **靈活性**：容易新增事件消費者
+5. **一致性**：跨 contexts 的最終一致性
+6. **可靠性**：保證事件傳遞
+7. **演進性**：支援事件 schema 演進
+8. **DDD 對齊**：事件代表領域概念
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Domain Events with Event Bus
+### 選項 1：Domain Events with Event Bus
 
-**Description**: Use domain events published through an in-process event bus (Spring ApplicationEventPublisher) with optional external messaging
+**描述**：使用透過 in-process event bus（Spring ApplicationEventPublisher）發布的 domain events，並可選擇外部 messaging
 
-**Architecture**:
+**架構**：
 
 ```mermaid
 graph TD
@@ -98,224 +98,224 @@ graph TD
     N5 --> N6
 ```
 
-**Pros**:
+**優點**：
 
-- ✅ Aligns perfectly with DDD tactical patterns
-- ✅ Events are first-class domain concepts
-- ✅ Loose coupling between bounded contexts
-- ✅ Easy to add new event handlers
-- ✅ Supports both sync and async processing
-- ✅ Built-in Spring Boot support
-- ✅ Testable in isolation
-- ✅ Event sourcing ready
+- ✅ 與 DDD tactical patterns 完美對齊
+- ✅ 事件是一等領域概念
+- ✅ Bounded contexts 之間鬆散耦合
+- ✅ 容易新增事件處理器
+- ✅ 支援同步和非同步處理
+- ✅ 內建 Spring Boot 支援
+- ✅ 可獨立測試
+- ✅ 準備好進行 event sourcing
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Requires external message broker for cross-service events
-- ⚠️ Need to handle event versioning
-- ⚠️ Eventual consistency complexity
+- ⚠️ 跨服務事件需要外部 message broker
+- ⚠️ 需要處理事件版本控制
+- ⚠️ 最終一致性的複雜性
 
-**Cost**: Low - leverages Spring Boot features
+**成本**：低 - 利用 Spring Boot 功能
 
-**Risk**: **Low** - Well-established pattern in DDD
+**風險**：**低** - DDD 中已建立的模式
 
-### Option 2: Direct REST API Calls
+### 選項 2：Direct REST API Calls
 
-**Description**: Bounded contexts communicate via synchronous REST API calls
+**描述**：Bounded contexts 透過同步 REST API 呼叫通訊
 
-**Pros**:
+**優點**：
 
-- ✅ Simple to implement
-- ✅ Immediate consistency
-- ✅ Easy to debug
+- ✅ 實作簡單
+- ✅ 立即一致性
+- ✅ 容易除錯
 
-**Cons**:
+**缺點**：
 
-- ❌ Tight coupling between contexts
-- ❌ Cascading failures
-- ❌ Poor scalability
-- ❌ No audit trail
-- ❌ Difficult to add new consumers
-- ❌ Violates bounded context independence
+- ❌ Contexts 之間緊密耦合
+- ❌ 級聯失敗
+- ❌ 可擴展性差
+- ❌ 無稽核軌跡
+- ❌ 難以新增消費者
+- ❌ 違反 bounded context 獨立性
 
-**Cost**: Low initial, high maintenance
+**成本**：低初始成本，高維護成本
 
-**Risk**: **High** - Creates distributed monolith
+**風險**：**高** - 建立分散式單體
 
-### Option 3: Shared Database
+### 選項 3：Shared Database
 
-**Description**: Multiple contexts share the same database tables
+**描述**：多個 contexts 共享相同的資料庫表
 
-**Pros**:
+**優點**：
 
-- ✅ Immediate consistency
-- ✅ Simple queries across contexts
+- ✅ 立即一致性
+- ✅ 跨 contexts 的簡單查詢
 
-**Cons**:
+**缺點**：
 
-- ❌ Violates bounded context boundaries
-- ❌ Tight coupling at data level
-- ❌ Cannot deploy contexts independently
-- ❌ Schema changes affect multiple contexts
-- ❌ No clear ownership
-- ❌ Violates DDD principles
+- ❌ 違反 bounded context 邊界
+- ❌ 資料層級的緊密耦合
+- ❌ 無法獨立部署 contexts
+- ❌ Schema 變更影響多個 contexts
+- ❌ 沒有明確的所有權
+- ❌ 違反 DDD 原則
 
-**Cost**: Low initial, very high maintenance
+**成本**：低初始成本，非常高的維護成本
 
-**Risk**: **Critical** - Destroys bounded context isolation
+**風險**：**關鍵** - 破壞 bounded context 隔離
 
-### Option 4: Message Queue Only (No Domain Events)
+### 選項 4：Message Queue Only（無 Domain Events）
 
-**Description**: Direct publishing to message queue without domain events
+**描述**：直接發布到 message queue 而不使用 domain events
 
-**Pros**:
+**優點**：
 
-- ✅ Loose coupling
-- ✅ Asynchronous processing
-- ✅ Scalable
+- ✅ 鬆散耦合
+- ✅ 非同步處理
+- ✅ 可擴展
 
-**Cons**:
+**缺點**：
 
-- ❌ Events not part of domain model
-- ❌ Violates DDD principles
-- ❌ Harder to test
-- ❌ No in-process event handling
-- ❌ Infrastructure concerns leak into domain
+- ❌ 事件不是領域模型的一部分
+- ❌ 違反 DDD 原則
+- ❌ 更難測試
+- ❌ 無 in-process 事件處理
+- ❌ 基礎設施關注點洩漏到領域
 
-**Cost**: Medium
+**成本**：中等
 
-**Risk**: **Medium** - Misses DDD benefits
+**風險**：**中等** - 錯過 DDD 效益
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Domain Events with Event Bus**
+**選擇的選項**：**Domain Events with Event Bus**
 
-### Rationale
+### 理由
 
-Domain Events were selected for the following reasons:
+選擇 Domain Events 的原因如下：
 
-1. **DDD Alignment**: Events are first-class domain concepts, not infrastructure concerns
-2. **Loose Coupling**: Bounded contexts communicate through events, not direct calls
-3. **Flexibility**: New event handlers can be added without modifying existing code
-4. **Auditability**: Complete event stream provides audit trail
-5. **Scalability**: Asynchronous event processing supports high volumes
-6. **Testability**: Events can be tested in isolation without infrastructure
-7. **Evolution**: Event versioning supports schema evolution
-8. **Hexagonal Architecture Fit**: Events flow through ports and adapters naturally
+1. **DDD 對齊**：事件是一等領域概念，而非基礎設施關注點
+2. **鬆散耦合**：Bounded contexts 透過事件通訊，而非直接呼叫
+3. **靈活性**：可以新增事件處理器而無需修改現有程式碼
+4. **可稽核性**：完整的事件串流提供稽核軌跡
+5. **可擴展性**：非同步事件處理支援高容量
+6. **可測試性**：事件可以在沒有基礎設施的情況下獨立測試
+7. **演進性**：事件版本控制支援 schema 演進
+8. **Hexagonal Architecture 契合**：事件自然地透過 ports 和 adapters 流動
 
-**Implementation Strategy**:
+**實作策略**：
 
-- Aggregates collect events during business operations
-- Application services publish events after successful transactions
-- Spring ApplicationEventPublisher for in-process events
-- External message broker (Kafka) for cross-service events
-- Event handlers in infrastructure layer
+- Aggregates 在業務操作期間收集事件
+- Application services 在成功交易後發布事件
+- Spring ApplicationEventPublisher 用於 in-process 事件
+- 外部 message broker（Kafka）用於跨服務事件
+- 事件處理器在基礎設施層
 
-**Why Not REST**: Direct REST calls create tight coupling and cascading failures. Events provide loose coupling and better scalability.
+**為何不選 REST**：直接 REST 呼叫造成緊密耦合和級聯失敗。事件提供鬆散耦合和更好的可擴展性。
 
-**Why Not Shared Database**: Violates bounded context boundaries and prevents independent deployment.
+**為何不選 Shared Database**：違反 bounded context 邊界並阻止獨立部署。
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Development Team | High | Need to learn event-driven patterns | Training, examples, pair programming |
-| Architects | Positive | Clear communication patterns | Event catalog, documentation |
-| QA Team | Medium | Need to test eventual consistency | Testing guides, event replay tools |
-| Operations | Medium | Monitor event processing | Dashboards, alerts for event lag |
-| Business | Positive | Better audit trails | Event-based reporting |
+| Development Team | High | 需要學習 event-driven patterns | 培訓、範例、結對程式設計 |
+| Architects | Positive | 清晰的通訊模式 | 事件目錄、文檔 |
+| QA Team | Medium | 需要測試最終一致性 | 測試指南、事件重播工具 |
+| Operations | Medium | 監控事件處理 | 儀表板、事件延遲告警 |
+| Business | Positive | 更好的稽核軌跡 | 基於事件的報告 |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**：**System**
 
-Affects:
+影響：
 
-- All bounded contexts (event publishing and handling)
-- Application services (event publishing)
-- Infrastructure layer (event handlers)
-- Testing strategy (event-based testing)
-- Monitoring (event metrics)
+- 所有 bounded contexts（事件發布和處理）
+- Application services（事件發布）
+- Infrastructure 層（事件處理器）
+- 測試策略（基於事件的測試）
+- 監控（事件指標）
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
-| Eventual consistency bugs | Medium | High | Comprehensive testing, event replay, monitoring |
-| Event versioning issues | Medium | Medium | Schema evolution strategy, event upcasting |
-| Event ordering problems | Low | Medium | Use event timestamps, idempotent handlers |
-| Event loss | Low | Critical | Reliable message broker, dead letter queue |
-| Performance degradation | Low | Medium | Async processing, event batching |
+| 最終一致性錯誤 | Medium | High | 全面測試、事件重播、監控 |
+| 事件版本控制問題 | Medium | Medium | Schema 演進策略、事件升級轉換 |
+| 事件排序問題 | Low | Medium | 使用事件時間戳、冪等處理器 |
+| 事件遺失 | Low | Critical | 可靠的 message broker、dead letter queue |
+| 效能下降 | Low | Medium | 非同步處理、事件批次處理 |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**：**低**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Foundation (Week 1-2)
+### 第 1 階段：基礎（第 1-2 週）
 
-- [x] Define DomainEvent interface
-- [x] Create AggregateRoot base class with event collection
-- [x] Implement DomainEventApplicationService for publishing
-- [x] Set up Spring ApplicationEventPublisher integration
-- [x] Create example events (CustomerCreated, OrderSubmitted)
+- [x] 定義 DomainEvent 介面
+- [x] 建立具有事件收集的 AggregateRoot 基底類別
+- [x] 實作 DomainEventApplicationService 用於發布
+- [x] 設定 Spring ApplicationEventPublisher 整合
+- [x] 建立範例事件（CustomerCreated、OrderSubmitted）
 
-### Phase 2: Event Handlers (Week 3-4)
+### 第 2 階段：事件處理器（第 3-4 週）
 
-- [x] Create AbstractDomainEventHandler base class
-- [x] Implement event handlers for Customer context
-- [x] Implement event handlers for Order context
-- [x] Add idempotency checks
-- [x] Implement retry mechanism
+- [x] 建立 AbstractDomainEventHandler 基底類別
+- [x] 實作 Customer context 的事件處理器
+- [x] 實作 Order context 的事件處理器
+- [x] 新增冪等性檢查
+- [x] 實作重試機制
 
-### Phase 3: External Messaging (Week 5-6)
+### 第 3 階段：外部 Messaging（第 5-6 週）
 
-- [ ] Integrate with Kafka (ADR-005)
-- [ ] Implement event publisher adapter
-- [ ] Implement event consumer adapter
-- [ ] Add dead letter queue
-- [ ] Set up monitoring
+- [ ] 整合 Kafka（ADR-005）
+- [ ] 實作事件發布器 adapter
+- [ ] 實作事件消費者 adapter
+- [ ] 新增 dead letter queue
+- [ ] 設定監控
 
-### Phase 4: Event Sourcing (Future)
+### 第 4 階段：Event Sourcing（未來）
 
-- [ ] Implement event store
-- [ ] Add event replay capability
-- [ ] Create event-based projections
-- [ ] Implement CQRS patterns
+- [ ] 實作事件儲存
+- [ ] 新增事件重播功能
+- [ ] 建立基於事件的投影
+- [ ] 實作 CQRS patterns
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
-- Eventual consistency causes critical business issues
-- Event processing lag > 5 minutes consistently
-- Event loss > 0.1%
-- Team unable to manage complexity
+- 最終一致性造成關鍵業務問題
+- 事件處理延遲持續 > 5 分鐘
+- 事件遺失 > 0.1%
+- 團隊無法管理複雜性
 
-**Rollback Steps**:
+**回滾步驟**：
 
-1. Switch to synchronous REST calls for critical paths
-2. Keep events for audit trail only
-3. Simplify event handlers
-4. Re-evaluate after addressing issues
+1. 對關鍵路徑切換到同步 REST 呼叫
+2. 僅保留事件作為稽核軌跡
+3. 簡化事件處理器
+4. 在解決問題後重新評估
 
-**Rollback Time**: 1 week
+**回滾時間**：1 週
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
-- ✅ Event publishing success rate > 99.9%
-- ✅ Event processing lag < 1 second (95th percentile)
-- ✅ Zero event loss
-- ✅ Event handler idempotency 100%
-- ✅ New event handlers added without modifying existing code
-- ✅ Complete audit trail of all business events
+- ✅ 事件發布成功率 > 99.9%
+- ✅ 事件處理延遲 < 1 秒（第 95 百分位）
+- ✅ 零事件遺失
+- ✅ 事件處理器冪等性 100%
+- ✅ 新增事件處理器而無需修改現有程式碼
+- ✅ 所有業務事件的完整稽核軌跡
 
-### Monitoring Plan
+### 監控計畫
 
-**Event Metrics**:
+**事件指標**：
 
 ```java
 @Component
@@ -324,69 +324,69 @@ public class EventMetrics {
     private final Counter eventsProcessed;
     private final Counter eventsFailed;
     private final Timer eventProcessingTime;
-    
-    // Track event publishing and processing
+
+    // 追蹤事件發布和處理
 }
 ```
 
-**Alerts**:
+**告警**：
 
-- Event processing lag > 5 seconds
-- Event failure rate > 1%
-- Dead letter queue size > 100
-- Event handler execution time > 1 second
+- 事件處理延遲 > 5 秒
+- 事件失敗率 > 1%
+- Dead letter queue 大小 > 100
+- 事件處理器執行時間 > 1 秒
 
-**Review Schedule**:
+**審查時程**：
 
-- Daily: Check event processing metrics
-- Weekly: Review failed events
-- Monthly: Event schema evolution review
-- Quarterly: Event-driven architecture review
+- 每日：檢查事件處理指標
+- 每週：審查失敗事件
+- 每月：事件 schema 演進審查
+- 每季：Event-driven architecture 審查
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Loose Coupling**: Bounded contexts are independent
-- ✅ **Scalability**: Asynchronous processing handles high volumes
-- ✅ **Auditability**: Complete event stream for compliance
-- ✅ **Flexibility**: Easy to add new event consumers
-- ✅ **Testability**: Events can be tested in isolation
-- ✅ **Evolution**: Event versioning supports schema changes
-- ✅ **DDD Alignment**: Events are domain concepts
-- ✅ **Resilience**: Failures don't cascade across contexts
+- ✅ **鬆散耦合**：Bounded contexts 獨立
+- ✅ **可擴展性**：非同步處理處理高容量
+- ✅ **可稽核性**：完整的事件串流用於合規
+- ✅ **靈活性**：容易新增事件消費者
+- ✅ **可測試性**：事件可以獨立測試
+- ✅ **演進性**：事件版本控制支援 schema 變更
+- ✅ **DDD 對齊**：事件是領域概念
+- ✅ **彈性**：失敗不會跨 contexts 級聯
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Eventual Consistency**: Not all operations are immediately consistent
-- ⚠️ **Complexity**: More moving parts to manage
-- ⚠️ **Debugging**: Harder to trace event flows
-- ⚠️ **Testing**: Need to test eventual consistency scenarios
-- ⚠️ **Event Versioning**: Need to manage schema evolution
+- ⚠️ **最終一致性**：並非所有操作都立即一致
+- ⚠️ **複雜性**：更多需要管理的部分
+- ⚠️ **除錯**：更難追蹤事件流
+- ⚠️ **測試**：需要測試最終一致性情境
+- ⚠️ **事件版本控制**：需要管理 schema 演進
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. No event store yet (acceptable for MVP)
-2. Manual event versioning (can be improved with schema registry)
-3. Limited event replay capability (future enhancement)
+1. 尚無事件儲存（對 MVP 可接受）
+2. 手動事件版本控制（可透過 schema registry 改進）
+3. 有限的事件重播功能（未來增強）
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q2 2026**: Implement event store for event sourcing
-- **Q3 2026**: Add schema registry for event versioning
-- **Q4 2026**: Implement event replay and CQRS patterns
+- **2026 年 Q2**：實作 event sourcing 的事件儲存
+- **2026 年 Q3**：新增 schema registry 用於事件版本控制
+- **2026 年 Q4**：實作事件重播和 CQRS patterns
 
-## Related Decisions
+## 相關決策
 
-- [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - Events flow through ports and adapters
-- [ADR-005: Use Apache Kafka for Event Streaming](005-use-kafka-for-event-streaming.md) - External message broker
-- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md) - Event persistence
+- [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - 事件透過 ports 和 adapters 流動
+- [ADR-005: Use Apache Kafka for Event Streaming](005-use-kafka-for-event-streaming.md) - 外部 message broker
+- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md) - 事件持久化
 
-## Notes
+## 備註
 
-### Event Structure
+### 事件結構
 
 ```java
 public record CustomerCreatedEvent(
@@ -413,18 +413,18 @@ public record CustomerCreatedEvent(
 }
 ```
 
-### Event Publishing Flow
+### 事件發布流程
 
 ```java
-// 1. Aggregate collects events
+// 1. Aggregate 收集事件
 public class Customer extends AggregateRoot {
     public void register() {
-        // Business logic
+        // 業務邏輯
         collectEvent(CustomerCreatedEvent.create(id, name, email, level));
     }
 }
 
-// 2. Application service publishes events
+// 2. Application service 發布事件
 @Service
 @Transactional
 public class CustomerApplicationService {
@@ -435,25 +435,25 @@ public class CustomerApplicationService {
     }
 }
 
-// 3. Event handler processes events
+// 3. Event handler 處理事件
 @Component
 public class CustomerCreatedEventHandler extends AbstractDomainEventHandler<CustomerCreatedEvent> {
     @Override
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handle(CustomerCreatedEvent event) {
-        // Send welcome email
-        // Create reward account
-        // Update analytics
+        // 發送歡迎電子郵件
+        // 建立獎勵帳戶
+        // 更新分析
     }
 }
 ```
 
-### Event Versioning Strategy
+### 事件版本控制策略
 
-**Schema Evolution Pattern**:
+**Schema 演進模式**：
 
 ```java
-// V1: Original event
+// V1: 原始事件
 public record CustomerCreatedEvent(
     CustomerId customerId,
     CustomerName customerName,
@@ -463,31 +463,31 @@ public record CustomerCreatedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// V2: Add optional fields
+// V2: 新增可選欄位
 public record CustomerCreatedEvent(
     CustomerId customerId,
     CustomerName customerName,
     Email email,
     MembershipLevel membershipLevel,
-    Optional<LocalDate> birthDate,  // New field
-    Optional<Address> address,      // New field
+    Optional<LocalDate> birthDate,  // 新欄位
+    Optional<Address> address,      // 新欄位
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 ```
 
-### Event Catalog
+### 事件目錄
 
 | Event | Publisher | Consumers | Description |
 |-------|-----------|-----------|-------------|
-| CustomerCreated | Customer Context | Email, Reward, Analytics | New customer registered |
-| OrderSubmitted | Order Context | Inventory, Payment, Notification | Order placed |
-| PaymentProcessed | Payment Context | Order, Accounting | Payment completed |
-| InventoryReserved | Inventory Context | Order, Logistics | Items reserved |
-| OrderShipped | Logistics Context | Customer, Notification | Order shipped |
+| CustomerCreated | Customer Context | Email, Reward, Analytics | 新客戶註冊 |
+| OrderSubmitted | Order Context | Inventory, Payment, Notification | 訂單已下 |
+| PaymentProcessed | Payment Context | Order, Accounting | 付款完成 |
+| InventoryReserved | Inventory Context | Order, Logistics | 商品已保留 |
+| OrderShipped | Logistics Context | Customer, Notification | 訂單已出貨 |
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-24  
-**Next Review**: 2026-01-24 (Quarterly)
+**文檔狀態**：✅ Accepted
+**上次審查**：2025-10-24
+**下次審查**：2026-01-24（每季）

@@ -1,6 +1,6 @@
 ---
 adr_number: 010
-title: "Next.js for CMC Management Frontend"
+title: "Next.js 用於 CMC Management Frontend"
 date: 2025-10-24
 status: "accepted"
 supersedes: []
@@ -10,115 +10,115 @@ affected_viewpoints: ["development"]
 affected_perspectives: ["development-resource", "accessibility"]
 ---
 
-# ADR-010: Next.js for CMC Management Frontend
+# ADR-010: Next.js 用於 CMC Management Frontend
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-24
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires a Content Management Console (CMC) for internal users (administrators, content managers, operations team) that:
+The Enterprise E-Commerce Platform 需要Content Management Console (CMC) 用於 internal users (administrators, content managers, operations team) that:
 
-- Provides intuitive UI for managing products, orders, customers
-- Supports server-side rendering for performance
-- Enables rapid development with modern tooling
-- Integrates seamlessly with REST API (ADR-009)
-- Supports authentication and authorization
-- Provides responsive design for desktop and tablet
-- Enables real-time updates for operational dashboards
-- Supports internationalization
+- 提供s intuitive UI 用於 managing products, orders, customers
+- 支援s server-side rendering 用於 performance
+- 啟用s rapid development 與 modern tooling
+- Integrates seamlessly 與 REST API (ADR-009)
+- 支援s authentication 和 authorization
+- 提供s responsive design 用於 desktop 和 tablet
+- 啟用s real-time updates 用於 operational dashboards
+- 支援s internationalization
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Need for efficient internal operations management
-- Requirement for fast page loads and SEO (for help documentation)
+- 需要 efficient internal operations management
+- Requirement 用於 fast 頁面載入 和 SEO (for help documentation)
 - Team growth requiring scalable frontend architecture
-- Need for rapid feature development
-- Support for multiple languages (English, Chinese)
+- 需要 rapid feature development
+- 支援 用於 multiple languages (English, Chinese)
 
-**Constraints**:
+**限制條件**：
 
 - Team has React experience
-- Must integrate with existing REST API
-- Budget: No additional frontend infrastructure costs
-- Timeline: 3 months to MVP
-- Must support modern browsers (Chrome, Firefox, Safari, Edge)
+- 必須 integrate 與 existing REST API
+- 預算: No additional frontend infrastructure costs
+- Timeline: 3 個月 to MVP
+- 必須 支援 modern browsers (Chrome, Firefox, Safari, Edge)
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- RESTful API with OpenAPI 3.0 (ADR-009)
+- RESTful API 與 OpenAPI 3.0 (ADR-009)
 - Spring Boot backend
 - AWS infrastructure (ADR-007)
-- TypeScript preference for type safety
+- TypeScript preference 用於 type safety
 
-**Requirements**:
+**需求**：
 
-- Server-side rendering (SSR) for performance
-- Static site generation (SSG) for documentation
-- API routes for BFF pattern
-- TypeScript for type safety
-- Component library for consistency
+- Server-side rendering (SSR) 用於 performance
+- Static site generation (SSG) 用於 documentation
+- API routes 用於 BFF pattern
+- TypeScript 用於 type safety
+- Component library 用於 consistency
 - State management
-- Form handling and validation
+- Form handling 和 validation
 - Real-time updates
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Performance**: Fast page loads with SSR/SSG
-2. **Developer Experience**: Modern tooling and hot reload
+1. **Performance**: Fast 頁面載入 與 SSR/SSG
+2. **Developer Experience**: Modern tooling 和 hot reload
 3. **Team Skills**: Leverage React knowledge
-4. **Type Safety**: TypeScript support
-5. **SEO**: Server-side rendering for help docs
-6. **Flexibility**: Support SSR, SSG, and CSR
-7. **Ecosystem**: Rich component libraries
-8. **Cost**: Free and open source
+4. **Type Safety**: TypeScript 支援
+5. **SEO**: Server-side rendering 用於 help docs
+6. **Flexibility**: 支援 SSR, SSG, 和 CSR
+7. **Ecosystem**: 豐富的 component libraries
+8. **成本**： Free and open source
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Next.js 14 with React 18
+### 選項 1： Next.js 14 with React 18
 
-**Description**: React framework with SSR, SSG, and API routes
+**描述**： React framework with SSR, SSG, and API routes
 
-**Pros**:
+**優點**：
 
-- ✅ Excellent performance (SSR, SSG, ISR)
-- ✅ Built-in TypeScript support
-- ✅ API routes for BFF pattern
+- ✅ 優秀的 performance (SSR, SSG, ISR)
+- ✅ Built-in TypeScript 支援
+- ✅ API routes 用於 BFF pattern
 - ✅ File-based routing
 - ✅ Image optimization
 - ✅ Team has React experience
-- ✅ Large ecosystem (shadcn/ui, Radix UI)
-- ✅ Excellent developer experience
+- ✅ 大型的 ecosystem (shadcn/ui, Radix UI)
+- ✅ 優秀的 developer experience
 - ✅ Vercel deployment (optional)
-- ✅ App Router with React Server Components
+- ✅ App Router 與 React Server Components
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Learning curve for App Router
-- ⚠️ Server infrastructure needed for SSR
+- ⚠️ Learning curve 用於 App Router
+- ⚠️ Server infrastructure needed 用於 SSR
 
-**Cost**: $0 (open source)
+**成本**： $0 (open source)
 
-**Risk**: **Low** - Mature, widely adopted
+**風險**： **Low** - Mature, widely adopted
 
-### Option 2: Create React App (CRA)
+### 選項 2： Create React App (CRA)
 
-**Description**: Client-side React application
+**描述**： Client-side React application
 
-**Pros**:
+**優點**：
 
-- ✅ Simple setup
+- ✅ 簡單的 setup
 - ✅ Team knows React
 - ✅ No server needed
 
-**Cons**:
+**缺點**：
 
 - ❌ No SSR (poor initial load)
 - ❌ No built-in routing
@@ -126,71 +126,71 @@ The Enterprise E-Commerce Platform requires a Content Management Console (CMC) f
 - ❌ Limited optimization
 - ❌ CRA is deprecated
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **High** - CRA is no longer maintained
+**風險**： **High** - CRA is no longer maintained
 
-### Option 3: Vue.js with Nuxt
+### 選項 3： Vue.js with Nuxt
 
-**Description**: Vue framework with SSR
+**描述**： Vue framework with SSR
 
-**Pros**:
+**優點**：
 
-- ✅ Good performance
-- ✅ SSR support
-- ✅ Good developer experience
+- ✅ 良好的 performance
+- ✅ SSR 支援
+- ✅ 良好的 developer experience
 
-**Cons**:
+**缺點**：
 
 - ❌ Team lacks Vue experience
 - ❌ Smaller ecosystem than React
 - ❌ Learning curve
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **Medium** - Team learning curve
+**風險**： **Medium** - Team learning curve
 
-### Option 4: Angular (Same as Consumer App)
+### 選項 4： Angular (Same as Consumer App)
 
-**Description**: Use Angular for both CMC and consumer app
+**描述**： Use Angular for both CMC and consumer app
 
-**Pros**:
+**優點**：
 
-- ✅ Single framework for both apps
-- ✅ Strong TypeScript support
+- ✅ Single framework 用於 both apps
+- ✅ Strong TypeScript 支援
 - ✅ Comprehensive framework
 
-**Cons**:
+**缺點**：
 
-- ❌ Heavier than needed for CMC
+- ❌ Heavier than needed 用於 CMC
 - ❌ Steeper learning curve
 - ❌ Less flexible than Next.js
-- ❌ Overkill for internal tool
+- ❌ Overkill 用於 internal tool
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **Low** - But not optimal for CMC
+**風險**： **Low** - But not optimal for CMC
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Next.js 14 with React 18**
+**選擇的選項**： **Next.js 14 with React 18**
 
-### Rationale
+### 理由
 
-Next.js was selected for the CMC frontend for the following reasons:
+Next.js was selected 用於 the CMC frontend 用於 the following reasons:
 
-1. **Performance**: SSR and SSG provide fast page loads
+1. **Performance**: SSR 和 SSG 提供 fast 頁面載入
 2. **Team Skills**: Team already knows React
-3. **TypeScript**: Built-in TypeScript support
-4. **Flexibility**: Supports SSR, SSG, and CSR as needed
-5. **API Routes**: BFF pattern for backend integration
-6. **Developer Experience**: Excellent tooling and hot reload
-7. **Ecosystem**: Rich component libraries (shadcn/ui, Radix UI)
-8. **Modern Features**: App Router with React Server Components
+3. **TypeScript**: Built-in TypeScript 支援
+4. **Flexibility**: 支援s SSR, SSG, 和 CSR as needed
+5. **API Routes**: BFF pattern 用於 backend integration
+6. **Developer Experience**: 優秀的 tooling 和 hot reload
+7. **Ecosystem**: 豐富的 component libraries (shadcn/ui, Radix UI)
+8. **Modern Features**: App Router 與 React Server Components
 
-**Implementation Strategy**:
+**實作策略**：
 
-**Architecture**:
+**架構**：
 
 ```text
 Next.js App (CMC)
@@ -203,21 +203,21 @@ Next.js App (CMC)
 
 **Key Features**:
 
-- Server-side rendering for dashboard pages
-- Static generation for help documentation
-- API routes for authentication and data aggregation
-- shadcn/ui for consistent UI components
-- React Query for data fetching and caching
+- Server-side rendering 用於 dashboard pages
+- Static generation 用於 help documentation
+- API routes 用於 authentication 和 data aggregation
+- shadcn/ui 用於 consistent UI components
+- React Query 用於 data fetching 和 caching
 
-**Why Not CRA**: CRA is deprecated and lacks SSR capabilities needed for performance.
+**為何不選 CRA**： CRA is deprecated 和 lacks SSR capabilities needed 用於 performance.
 
-**Why Not Vue/Nuxt**: Team lacks Vue experience. React knowledge can be leveraged immediately.
+**為何不選 Vue/Nuxt**： Team lacks Vue experience. React knowledge 可以 be leveraged immediately.
 
-**Why Not Angular for CMC**: Angular is better suited for the consumer app's complexity. Next.js is more appropriate for the internal CMC tool.
+**為何不選 Angular 用於 CMC**： Angular is 更好的 suited 用於 the consumer app's 複雜的ity. Next.js is more appropriate 用於 the internal CMC tool.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
@@ -226,31 +226,31 @@ Next.js App (CMC)
 | Operations Team | High | Primary users of CMC | User training, intuitive UI |
 | DevOps Team | Medium | Need to deploy Next.js app | Deployment guides, Docker setup |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **Bounded Context**
+**選擇的影響半徑**： **Bounded Context**
 
-Affects:
+影響：
 
 - CMC frontend application
 - Deployment infrastructure
 - Development workflow
 - Testing strategy
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | App Router learning curve | High | Medium | Training, examples, pair programming |
-| SSR infrastructure complexity | Medium | Medium | Use Vercel or containerize with Docker |
+| SSR infrastructure 複雜的ity | Medium | Medium | Use Vercel 或 containerize 與 Docker |
 | Performance issues | Low | High | Implement caching, optimize images |
-| State management complexity | Medium | Medium | Use React Query, minimize global state |
+| State management 複雜的ity | Medium | Medium | Use React Query, minimize global state |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Project Setup (Week 1)
+### 第 1 階段： Project Setup （第 1 週）
 
 - [ ] Create Next.js project
 
@@ -303,7 +303,7 @@ Affects:
   └── public/
   ```
 
-### Phase 2: UI Component Library (Week 1-2)
+### 第 2 階段： UI Component Library （第 1-2 週）
 
 - [ ] Install shadcn/ui
 
@@ -348,7 +348,7 @@ Affects:
   }
   ```
 
-### Phase 3: Authentication (Week 2-3)
+### 第 3 階段： Authentication （第 2-3 週）
 
 - [ ] Implement NextAuth.js
 
@@ -429,7 +429,7 @@ Affects:
   }
   ```
 
-### Phase 4: API Integration (Week 3-4)
+### 第 4 階段： API Integration （第 3-4 週）
 
 - [ ] Set up React Query
 
@@ -556,7 +556,7 @@ Affects:
   }
   ```
 
-### Phase 5: Feature Implementation (Week 4-8)
+### Phase 5: Feature Implementation （第 4-8 週）
 
 - [ ] Implement Customer Management
 
@@ -582,9 +582,9 @@ Affects:
 
 - [ ] Implement Order Management
 - [ ] Implement Product Management
-- [ ] Implement Dashboard with metrics
+- [ ] Implement Dashboard 與 metrics
 
-### Phase 6: Testing and Optimization (Week 8-9)
+### Phase 6: Testing and Optimization （第 8-9 週）
 
 - [ ] Set up testing
 
@@ -593,93 +593,93 @@ Affects:
   ```
 
 - [ ] Write component tests
-- [ ] Implement E2E tests with Playwright
-- [ ] Optimize images and performance
+- [ ] Implement E2E tests 與 Playwright
+- [ ] Optimize images 和 performance
 - [ ] Add error boundaries
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
-- Performance issues with SSR
+- Performance issues 與 SSR
 - Team unable to adopt Next.js
-- Deployment complexity too high
+- Deployment 複雜的ity too high
 - Development velocity decreases > 30%
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Migrate to Vite + React
 2. Use client-side rendering only
 3. Simplify deployment
 4. Re-evaluate after addressing issues
 
-**Rollback Time**: 2 weeks
+**回滾時間**： 2 weeks
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Page load time < 2 seconds
 - ✅ Lighthouse score > 90
 - ✅ Zero runtime errors in production
 - ✅ Developer satisfaction > 4/5
-- ✅ Feature delivery velocity maintained
+- ✅ Feature delivery velocity 維持ed
 - ✅ Bundle size < 500KB
 
-### Monitoring Plan
+### 監控計畫
 
 **Performance Metrics**:
 
 - Core Web Vitals (LCP, FID, CLS)
 - Page load times
-- API response times
+- API 回應時間
 - Bundle size
 
-**Review Schedule**:
+**審查時程**：
 
 - Weekly: Performance review
 - Monthly: Dependency updates
 - Quarterly: Architecture review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Excellent Performance**: SSR provides fast initial loads
-- ✅ **Developer Experience**: Modern tooling and hot reload
+- ✅ **優秀的 Performance**: SSR 提供s fast initial loads
+- ✅ **Developer Experience**: Modern tooling 和 hot reload
 - ✅ **Type Safety**: TypeScript throughout
-- ✅ **Flexibility**: SSR, SSG, and CSR as needed
-- ✅ **Rich Ecosystem**: shadcn/ui, Radix UI, React Query
-- ✅ **SEO**: Server-side rendering for help docs
-- ✅ **API Routes**: BFF pattern for backend integration
+- ✅ **Flexibility**: SSR, SSG, 和 CSR as needed
+- ✅ **豐富的 Ecosystem**: shadcn/ui, Radix UI, React Query
+- ✅ **SEO**: Server-side rendering 用於 help docs
+- ✅ **API Routes**: BFF pattern 用於 backend integration
 
-### Negative Consequences
+### 負面後果
 
 - ⚠️ **Learning Curve**: App Router is new paradigm
 - ⚠️ **Server Infrastructure**: Need to run Node.js server
-- ⚠️ **Complexity**: More complex than pure client-side
+- ⚠️ **複雜的ity**: More 複雜的 than pure client-side
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. No E2E tests initially (acceptable for MVP)
+1. No E2E tests initially (acceptable 用於 MVP)
 2. Limited accessibility testing (future enhancement)
 3. No internationalization yet (future requirement)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q1 2026**: Implement comprehensive E2E tests
-- **Q2 2026**: Add accessibility testing and improvements
+- **Q2 2026**: Add accessibility testing 和 改善ments
 - **Q3 2026**: Implement internationalization
-- **Q4 2026**: Optimize bundle size and performance
+- **Q4 2026**: Optimize bundle size 和 performance
 
-## Related Decisions
+## 相關決策
 
-- [ADR-009: RESTful API Design with OpenAPI](009-restful-api-design-with-openapi.md) - API integration
-- [ADR-011: Angular for Consumer Frontend](011-angular-for-consumer-frontend.md) - Consumer app frontend
+- [ADR-009: RESTful API Design 與 OpenAPI](009-restful-api-design-with-openapi.md) - API integration
+- [ADR-011: Angular 用於 Consumer Frontend](011-angular-for-consumer-frontend.md) - Consumer app frontend
 
-## Notes
+## 備註
 
 ### Next.js App Router Structure
 
@@ -726,6 +726,6 @@ app/
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-24  
-**Next Review**: 2026-01-24 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-24  
+**下次審查**： 2026-01-24 （每季）

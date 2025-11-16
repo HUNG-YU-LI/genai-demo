@@ -1,30 +1,30 @@
 # Promotion API
 
-## Overview
+## 概述
 
-The Promotion API provides endpoints for managing promotional campaigns, discount codes, and special offers. Promotions can be applied to products, categories, or entire orders.
+Promotion API 提供了管理促銷活動、折扣碼和特別優惠的端點。促銷可以應用於產品、類別或整個訂單。
 
 **Base Path**: `/api/v1/promotions`
 
-**Authentication**: Required for management endpoints, optional for public queries
+**Authentication**: 管理端點需要驗證，公開查詢為選填
 
 ## Endpoints
 
 ### List Active Promotions
 
-Retrieve all currently active promotions.
+取得所有當前有效的促銷活動。
 
 **Endpoint**: `GET /api/v1/promotions`
 
-**Authentication**: Not required
+**Authentication**: 不需要
 
 **Query Parameters**:
 
-- `page`: Page number (default: 0)
-- `size`: Page size (default: 20)
-- `type`: Filter by type (PERCENTAGE, FIXED_AMOUNT, BUY_X_GET_Y, FREE_SHIPPING)
-- `category`: Filter by applicable category
-- `active`: Filter by active status (default: true)
+- `page`: 頁碼（預設：0）
+- `size`: 每頁大小（預設：20）
+- `type`: 依類型篩選（PERCENTAGE, FIXED_AMOUNT, BUY_X_GET_Y, FREE_SHIPPING）
+- `category`: 依適用類別篩選
+- `active`: 依有效狀態篩選（預設：true）
 
 **Success Response** (200 OK):
 
@@ -80,11 +80,11 @@ curl -X GET "https://api.ecommerce.com/api/v1/promotions?type=PERCENTAGE&active=
 
 ### Get Promotion by ID
 
-Retrieve a specific promotion by ID.
+根據 ID 取得特定促銷活動。
 
 **Endpoint**: `GET /api/v1/promotions/{id}`
 
-**Authentication**: Not required
+**Authentication**: 不需要
 
 **Path Parameters**:
 
@@ -121,7 +121,7 @@ Retrieve a specific promotion by ID.
 
 **Error Responses**:
 
-- `404 Not Found`: Promotion not found
+- `404 Not Found`: 找不到促銷活動
 
 **curl Example**:
 
@@ -133,11 +133,11 @@ curl -X GET https://api.ecommerce.com/api/v1/promotions/promo-001
 
 ### Validate Promotion Code
 
-Validate a promotion code for a specific cart or order.
+驗證特定購物車或訂單的促銷碼。
 
 **Endpoint**: `POST /api/v1/promotions/validate`
 
-**Authentication**: Required
+**Authentication**: 需要
 
 **Request Body**:
 
@@ -192,8 +192,8 @@ Validate a promotion code for a specific cart or order.
 
 **Error Responses**:
 
-- `400 Bad Request`: Invalid request format
-- `404 Not Found`: Promotion code not found
+- `400 Bad Request`: 請求格式無效
+- `404 Not Found`: 找不到促銷碼
 
 **curl Example**:
 
@@ -212,13 +212,13 @@ curl -X POST https://api.ecommerce.com/api/v1/promotions/validate \
 
 ### Create Promotion (Admin)
 
-Create a new promotion.
+建立新的促銷活動。
 
 **Endpoint**: `POST /api/v1/promotions`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: ADMIN or MARKETING role required
+**Authorization**: 需要 ADMIN 或 MARKETING 角色
 
 **Request Body**:
 
@@ -243,12 +243,12 @@ Create a new promotion.
 
 **Validation Rules**:
 
-- `code`: Required, unique, 4-20 characters, alphanumeric
-- `name`: Required, 3-100 characters
-- `type`: Required, one of: PERCENTAGE, FIXED_AMOUNT, BUY_X_GET_Y, FREE_SHIPPING
-- `discountValue`: Required for PERCENTAGE and FIXED_AMOUNT
-- `startDate`: Required, must be future date
-- `endDate`: Required, must be after startDate
+- `code`: 必填，唯一，4-20 個字元，僅限英數字
+- `name`: 必填，3-100 個字元
+- `type`: 必填，必須為以下其中之一：PERCENTAGE, FIXED_AMOUNT, BUY_X_GET_Y, FREE_SHIPPING
+- `discountValue`: PERCENTAGE 和 FIXED_AMOUNT 類型必填
+- `startDate`: 必填，必須為未來日期
+- `endDate`: 必填，必須晚於 startDate
 
 **Success Response** (201 Created):
 
@@ -277,9 +277,9 @@ Create a new promotion.
 
 **Error Responses**:
 
-- `400 Bad Request`: Validation errors
-- `403 Forbidden`: Insufficient permissions
-- `409 Conflict`: Promotion code already exists
+- `400 Bad Request`: 驗證錯誤
+- `403 Forbidden`: 權限不足
+- `409 Conflict`: 促銷碼已存在
 
 **curl Example**:
 
@@ -301,13 +301,13 @@ curl -X POST https://api.ecommerce.com/api/v1/promotions \
 
 ### Update Promotion (Admin)
 
-Update an existing promotion.
+更新現有的促銷活動。
 
 **Endpoint**: `PUT /api/v1/promotions/{id}`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: ADMIN or MARKETING role required
+**Authorization**: 需要 ADMIN 或 MARKETING 角色
 
 **Path Parameters**:
 
@@ -343,15 +343,15 @@ Update an existing promotion.
 
 **Business Rules**:
 
-- Cannot change promotion code after creation
-- Cannot change type after creation
-- Cannot reduce usage limit below current usage count
+- 建立後無法變更促銷碼
+- 建立後無法變更類型
+- 無法將使用次數限制降低至低於當前使用次數
 
 **Error Responses**:
 
-- `400 Bad Request`: Validation errors
-- `403 Forbidden`: Insufficient permissions
-- `404 Not Found`: Promotion not found
+- `400 Bad Request`: 驗證錯誤
+- `403 Forbidden`: 權限不足
+- `404 Not Found`: 找不到促銷活動
 
 **curl Example**:
 
@@ -369,13 +369,13 @@ curl -X PUT https://api.ecommerce.com/api/v1/promotions/promo-003 \
 
 ### Deactivate Promotion (Admin)
 
-Deactivate a promotion (soft delete).
+停用促銷活動（軟刪除）。
 
 **Endpoint**: `DELETE /api/v1/promotions/{id}`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: ADMIN or MARKETING role required
+**Authorization**: 需要 ADMIN 或 MARKETING 角色
 
 **Path Parameters**:
 
@@ -385,8 +385,8 @@ Deactivate a promotion (soft delete).
 
 **Error Responses**:
 
-- `403 Forbidden`: Insufficient permissions
-- `404 Not Found`: Promotion not found
+- `403 Forbidden`: 權限不足
+- `404 Not Found`: 找不到促銷活動
 
 **curl Example**:
 
@@ -399,13 +399,13 @@ curl -X DELETE https://api.ecommerce.com/api/v1/promotions/promo-003 \
 
 ### Get Promotion Usage Statistics (Admin)
 
-Get usage statistics for a promotion.
+取得促銷活動的使用統計資料。
 
 **Endpoint**: `GET /api/v1/promotions/{id}/statistics`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: ADMIN or MARKETING role required
+**Authorization**: 需要 ADMIN 或 MARKETING 角色
 
 **Path Parameters**:
 
@@ -454,16 +454,16 @@ curl -X GET https://api.ecommerce.com/api/v1/promotions/promo-001/statistics \
 
 ### Get Customer Promotion History
 
-Get promotion usage history for the authenticated customer.
+取得已驗證顧客的促銷使用歷史。
 
 **Endpoint**: `GET /api/v1/promotions/me/history`
 
-**Authentication**: Required
+**Authentication**: 需要
 
 **Query Parameters**:
 
-- `page`: Page number (default: 0)
-- `size`: Page size (default: 20)
+- `page`: 頁碼（預設：0）
+- `size`: 每頁大小（預設：20）
 
 **Success Response** (200 OK):
 
@@ -532,42 +532,42 @@ curl -X GET https://api.ecommerce.com/api/v1/promotions/me/history \
 
 | Type | Description | Example |
 |------|-------------|---------|
-| PERCENTAGE | Percentage discount | 10% off |
-| FIXED_AMOUNT | Fixed amount discount | $50 off |
-| BUY_X_GET_Y | Buy X get Y free | Buy 2 get 1 free |
-| FREE_SHIPPING | Free shipping | Free shipping over $500 |
+| PERCENTAGE | 百分比折扣 | 10% off |
+| FIXED_AMOUNT | 固定金額折扣 | $50 off |
+| BUY_X_GET_Y | 買 X 送 Y | Buy 2 get 1 free |
+| FREE_SHIPPING | 免運費 | Free shipping over $500 |
 
 ## Business Rules
 
-1. **Code Uniqueness**: Promotion codes must be unique
-2. **Date Validation**: End date must be after start date
-3. **Usage Limits**: Cannot exceed global or per-customer limits
-4. **Stacking**: Non-stackable promotions cannot be combined
-5. **Category/Product Rules**: Promotion applies only to specified items
-6. **Minimum Purchase**: Order must meet minimum amount
-7. **Maximum Discount**: Discount cannot exceed maximum cap
-8. **Expiration**: Promotions automatically deactivate after end date
+1. **Code Uniqueness**: 促銷碼必須是唯一的
+2. **Date Validation**: 結束日期必須晚於開始日期
+3. **Usage Limits**: 不能超過全域或每位顧客的使用次數限制
+4. **Stacking**: 不可堆疊的促銷活動無法合併使用
+5. **Category/Product Rules**: 促銷僅適用於指定的商品
+6. **Minimum Purchase**: 訂單必須達到最低金額
+7. **Maximum Discount**: 折扣不能超過最大上限
+8. **Expiration**: 促銷活動在結束日期後會自動停用
 
 ## Error Codes
 
 | Code | Description | Solution |
 |------|-------------|----------|
-| `PROMOTION_NOT_FOUND` | Promotion code not found | Check code spelling |
-| `PROMOTION_EXPIRED` | Promotion has expired | Use current promotion |
-| `PROMOTION_NOT_STARTED` | Promotion not yet active | Wait for start date |
-| `PROMOTION_USAGE_LIMIT_REACHED` | Usage limit reached | Promotion no longer available |
-| `PROMOTION_CUSTOMER_LIMIT_REACHED` | Customer usage limit reached | Cannot use again |
-| `PROMOTION_MINIMUM_NOT_MET` | Minimum purchase not met | Add more items |
-| `PROMOTION_NOT_APPLICABLE` | Not applicable to cart items | Check eligible products |
-| `PROMOTION_NOT_STACKABLE` | Cannot combine with other promotions | Remove other promotions |
+| `PROMOTION_NOT_FOUND` | 找不到促銷碼 | 檢查碼的拼寫 |
+| `PROMOTION_EXPIRED` | 促銷已過期 | 使用當前有效的促銷 |
+| `PROMOTION_NOT_STARTED` | 促銷尚未開始 | 等待開始日期 |
+| `PROMOTION_USAGE_LIMIT_REACHED` | 已達使用次數限制 | 促銷不再可用 |
+| `PROMOTION_CUSTOMER_LIMIT_REACHED` | 已達顧客使用次數限制 | 無法再次使用 |
+| `PROMOTION_MINIMUM_NOT_MET` | 未達最低購買金額 | 新增更多商品 |
+| `PROMOTION_NOT_APPLICABLE` | 不適用於購物車商品 | 檢查符合條件的產品 |
+| `PROMOTION_NOT_STACKABLE` | 無法與其他促銷合併使用 | 移除其他促銷 |
 
 ## Related Documentation
 
-- [Shopping Cart API](shopping-cart.md) - Apply promotions to cart
-- [Order API](orders.md) - Promotions in orders
-- [Product API](products.md) - Product categories
+- [Shopping Cart API](shopping-cart.md) - 將促銷套用至購物車
+- [Order API](orders.md) - 訂單中的促銷
+- [Product API](products.md) - 產品類別
 
 ---
 
-**Last Updated**: 2025-10-25  
+**Last Updated**: 2025-10-25
 **API Version**: v1

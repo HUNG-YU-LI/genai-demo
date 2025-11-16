@@ -13,7 +13,7 @@ decision_makers: ["Architecture Team", "Backend Team", "Security Team"]
 
 # ADR-036: Third-Party Integration Pattern
 
-## Status
+## 狀態
 
 **Status**: Accepted
 
@@ -21,166 +21,166 @@ decision_makers: ["Architecture Team", "Backend Team", "Security Team"]
 
 **Decision Makers**: Architecture Team, Backend Team, Security Team
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform needs to integrate with multiple third-party services for critical business functions:
+The Enterprise E-Commerce Platform needs to integrate 與 multiple third-party services 用於 critical business functions:
 
-- **Payment Gateways**: Stripe, PayPal for payment processing
-- **Logistics Providers**: FedEx, UPS, DHL for shipping and tracking
-- **Email Services**: SendGrid, AWS SES for transactional emails
-- **SMS Services**: Twilio for SMS notifications
-- **Analytics**: Google Analytics, Mixpanel for user behavior tracking
+- **Payment Gateways**: Stripe, PayPal 用於 payment processing
+- **Logistics 提供rs**: FedEx, UPS, DHL 用於 shipping 和 tracking
+- **Email Services**: SendGrid, AWS SES 用於 transactional emails
+- **SMS Services**: Twilio 用於 SMS notifications
+- **Analytics**: Google Analytics, Mixpanel 用於 user behavior tracking
 
-We need to decide on an integration pattern that:
+We 需要to decide on an integration pattern：
 
 - Isolates third-party dependencies from core business logic
-- Handles third-party service failures gracefully
-- Supports switching between providers without major code changes
-- Ensures security and data protection
-- Provides monitoring and observability
+- 處理s third-party service failures gracefully
+- 支援s switching between 提供rs 沒有 major code changes
+- Ensures security 和 data protection
+- 提供s monitoring 和 observability
 
 This decision impacts:
 
-- System reliability and fault tolerance
-- Code maintainability and testability
-- Vendor lock-in and flexibility
-- Security and compliance
-- Development complexity
+- System reliability 和 fault tolerance
+- Code 維持ability 和 testability
+- Vendor lock-in 和 flexibility
+- Security 和 compliance
+- Development 複雜的ity
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - Critical business functions depend on third-party services
-- Need flexibility to switch providers (cost, features, reliability)
+- Need flexibility to switch 提供rs (cost, features, reliability)
 - Minimize impact of third-party service outages
-- Support multiple payment gateways for different markets
-- Comply with PCI-DSS for payment processing
-- Maintain high availability despite third-party failures
+- 支援 multiple payment gateways 用於 different markets
+- Comply 與 PCI-DSS 用於 payment processing
+- 維持 高可用性 despite third-party failures
 
 **Business Constraints**:
 
-- Payment processing is critical (cannot fail)
-- Email delivery is important but not critical
-- Shipping integration required for order fulfillment
-- Third-party service costs must be optimized
+- Payment processing is critical (可以not fail)
+- Email delivery is important 但 not critical
+- Shipping integration required 用於 order fulfillment
+- Third-party service costs 必須 be optimized
 - Compliance requirements (PCI-DSS, GDPR)
 - SLA requirements: 99.9% availability
 
 **Business Requirements**:
 
-- Support multiple payment gateways (Stripe, PayPal)
-- Support multiple logistics providers (FedEx, UPS, DHL)
+- 支援 multiple payment gateways (Stripe, PayPal)
+- 支援 multiple logistics 提供rs (FedEx, UPS, DHL)
 - Graceful degradation when third-party services fail
-- Ability to switch providers without downtime
-- Comprehensive logging and monitoring
+- Ability to switch 提供rs 沒有 downtime
+- Comprehensive logging 和 monitoring
 - Secure handling of sensitive data (credit cards, personal info)
 
-### Technical Context
+### 技術上下文
 
 **Current Architecture**:
 
-- Backend: Spring Boot microservices with Hexagonal Architecture (ADR-002)
+- Backend: Spring Boot microservices 與 Hexagonal Architecture (ADR-002)
 - Event System: Domain Events via Kafka (ADR-003, ADR-005)
-- Communication: REST for sync, Kafka for async (ADR-031)
+- Communication: REST 用於 sync, Kafka 用於 async (ADR-031)
 - Deployment: AWS EKS (ADR-018)
 - Observability: CloudWatch + X-Ray + Grafana (ADR-008)
 
 **Technical Constraints**:
 
-- Must integrate with Hexagonal Architecture (ports and adapters)
-- Must handle third-party API rate limits
-- Must handle third-party service timeouts and failures
-- Must support API versioning (third-party APIs evolve)
-- Must secure sensitive data (PCI-DSS compliance)
-- Must provide comprehensive error handling
+- 必須 integrate 與 Hexagonal Architecture (ports 和 adapters)
+- 必須 處理 third-party API rate limits
+- 必須 處理 third-party service timeouts 和 failures
+- 必須 支援 API versioning (third-party APIs evolve)
+- 必須 secure sensitive data (PCI-DSS compliance)
+- 必須 提供 comprehensive error handling
 
 **Dependencies**:
 
-- ADR-002: Hexagonal Architecture (adapter pattern for integrations)
+- ADR-002: Hexagonal Architecture (adapter pattern 用於 integrations)
 - ADR-003: Domain Events (event-driven integration)
 - ADR-005: Apache Kafka (async communication)
 - ADR-031: Inter-Service Communication (communication patterns)
 
-## Decision Drivers
+## 決策驅動因素
 
 - **Isolation**: Isolate third-party dependencies from core business logic
-- **Flexibility**: Easy to switch between providers
+- **Flexibility**: 容易switch between 提供rs
 - **Reliability**: Graceful handling of third-party failures
 - **Security**: Secure handling of sensitive data
-- **Testability**: Easy to test without calling real third-party APIs
-- **Observability**: Comprehensive monitoring and logging
-- **Maintainability**: Clean, maintainable integration code
+- **Testability**: 容易test 沒有 calling real third-party APIs
+- **Observability**: Comprehensive monitoring 和 logging
+- **維持ability**: Clean, 維持able integration code
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Adapter Pattern with Anti-Corruption Layer
+### 選項 1： Adapter Pattern with Anti-Corruption Layer
 
-**Description**:
-Implement third-party integrations as adapters in the infrastructure layer, with an anti-corruption layer to translate between domain models and third-party APIs.
+**描述**：
+Implement third-party integrations as adapters in the infrastructure layer, 與 an anti-corruption layer to translate between domain models 和 third-party APIs.
 
 **Pros** ✅:
 
-- **Clean Architecture**: Aligns with Hexagonal Architecture (ADR-002)
+- **Clean Architecture**: Aligns 與 Hexagonal Architecture (ADR-002)
 - **Isolation**: Core business logic isolated from third-party APIs
-- **Flexibility**: Easy to switch providers by implementing new adapter
-- **Testability**: Easy to mock adapters for testing
+- **Flexibility**: 容易switch 提供rs 透過 implementing new adapter
+- **Testability**: 容易mock adapters 用於 testing
 - **Domain Protection**: Anti-corruption layer protects domain model
-- **Multiple Providers**: Support multiple providers simultaneously
-- **Gradual Migration**: Can migrate from one provider to another gradually
+- **Multiple 提供rs**: 支援 multiple 提供rs simultaneously
+- **Gradual Migration**: 可以 migrate from one 提供r to another gradually
 
 **Cons** ❌:
 
 - **Boilerplate Code**: More code to write (interfaces, adapters, translators)
-- **Complexity**: Additional abstraction layer
+- **複雜的ity**: Additional abstraction layer
 - **Performance**: Translation overhead (minimal)
 - **Learning Curve**: Team needs to understand adapter pattern
 
-**Cost**:
+**成本**：
 
-- **Implementation Cost**: 4 person-weeks (implement adapters for all integrations)
+- **Implementation Cost**: 4 person-weeks (implement adapters 用於 all integrations)
 - **Maintenance Cost**: 1 person-day/month
-- **Total Cost of Ownership (3 years)**: ~$30,000
+- **Total Cost of Ownership (3 年)**: ~$30,000
 
-**Risk**: Low
+**風險**： Low
 
-**Risk Description**: Proven pattern with extensive production usage
+**Risk Description**: Proven pattern 與 extensive production usage
 
 **Effort**: Medium
 
 **Effort Description**: Moderate implementation effort, clear pattern to follow
 
-### Option 2: Direct Integration with Wrapper Classes
+### 選項 2： Direct Integration with Wrapper Classes
 
-**Description**:
-Directly integrate with third-party SDKs using thin wrapper classes for error handling and logging.
+**描述**：
+Directly integrate 與 third-party SDKs using thin wrapper classes 用於 error handling 和 logging.
 
 **Pros** ✅:
 
-- **Simple**: Minimal abstraction, straightforward implementation
+- **簡單的**: Minimal abstraction, straightforward implementation
 - **Fast Development**: Quick to implement
-- **Less Code**: Fewer classes and interfaces
+- **Less Code**: Fewer classes 和 interfaces
 - **Direct Access**: Full access to third-party SDK features
 - **Performance**: No translation overhead
 
 **Cons** ❌:
 
 - **Tight Coupling**: Business logic coupled to third-party APIs
-- **Hard to Switch**: Difficult to switch providers
-- **Hard to Test**: Difficult to test without calling real APIs
+- **Hard to Switch**: 難以switch 提供rs
+- **Hard to Test**: 難以test 沒有 calling real APIs
 - **Domain Pollution**: Third-party models leak into domain layer
-- **Vendor Lock-in**: Tightly coupled to specific providers
+- **Vendor Lock-in**: Tightly coupled to specific 提供rs
 - **Maintenance**: Changes in third-party APIs affect business logic
 
-**Cost**:
+**成本**：
 
 - **Implementation Cost**: 2 person-weeks
 - **Maintenance Cost**: 2 person-days/month (higher due to coupling)
-- **Total Cost of Ownership (3 years)**: ~$40,000 (higher maintenance)
+- **Total Cost of Ownership (3 年)**: ~$40,000 (higher maintenance)
 
-**Risk**: High
+**風險**： High
 
 **Risk Description**: Tight coupling leads to maintenance issues
 
@@ -188,65 +188,65 @@ Directly integrate with third-party SDKs using thin wrapper classes for error ha
 
 **Effort Description**: Quick to implement initially
 
-### Option 3: Integration Service Layer (Separate Microservice)
+### 選項 3： Integration Service Layer (Separate Microservice)
 
-**Description**:
-Create separate integration microservices for each third-party service (Payment Service, Email Service, Shipping Service).
+**描述**：
+Create separate integration microservices 用於 each third-party service (Payment Service, Email Service, Shipping Service).
 
 **Pros** ✅:
 
 - **Complete Isolation**: Third-party integrations completely isolated
-- **Independent Deployment**: Can deploy integration services independently
-- **Technology Flexibility**: Can use different languages/frameworks
-- **Team Ownership**: Dedicated teams for integration services
+- **Independent Deployment**: 可以 deploy integration services independently
+- **Technology Flexibility**: 可以 use different languages/frameworks
+- **Team Ownership**: Dedicated teams 用於 integration services
 - **Scalability**: Scale integration services independently
 
 **Cons** ❌:
 
-- **Operational Overhead**: More services to deploy and monitor
+- **Operational Overhead**: More services to deploy 和 monitor
 - **Network Latency**: Additional network hops
-- **Complexity**: Distributed system complexity
-- **Debugging**: Harder to debug across services
-- **Cost**: Higher infrastructure costs
-- **Overkill**: Too complex for current scale
+- **複雜的ity**: Distributed system 複雜的ity
+- **Debugging**: 更難debug 跨 services
+- **成本**： Higher infrastructure costs
+- **Overkill**: Too 複雜的 用於 current scale
 
-**Cost**:
+**成本**：
 
 - **Implementation Cost**: 8 person-weeks (create separate services)
 - **Infrastructure Cost**: $1,000/month (additional EKS nodes, databases)
 - **Maintenance Cost**: 2 person-days/month
-- **Total Cost of Ownership (3 years)**: ~$80,000
+- **Total Cost of Ownership (3 年)**: ~$80,000
 
-**Risk**: Medium
+**風險**： Medium
 
-**Risk Description**: Increased operational complexity
+**Risk Description**: Increased operational 複雜的ity
 
 **Effort**: High
 
-**Effort Description**: Significant implementation and operational effort
+**Effort Description**: Signifi可以t implementation 和 operational effort
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: Option 1 - Adapter Pattern with Anti-Corruption Layer
+**選擇的選項**： Option 1 - Adapter Pattern with Anti-Corruption Layer
 
 **Rationale**:
-We chose the Adapter Pattern with Anti-Corruption Layer as our third-party integration strategy. This decision prioritizes clean architecture, flexibility, and maintainability:
+We chose the Adapter Pattern 與 Anti-Corruption Layer as our third-party integration strategy. This decision prioritizes clean architecture, flexibility, 和 維持ability:
 
 1. **Hexagonal Architecture Alignment**: Adapter pattern is core to Hexagonal Architecture (ADR-002). Third-party integrations implemented as adapters in infrastructure layer, keeping domain layer pure.
 
-2. **Domain Protection**: Anti-corruption layer translates between domain models and third-party APIs. Domain model remains clean and independent of third-party data structures.
+2. **Domain Protection**: Anti-corruption layer translates between domain models 和 third-party APIs. Domain model remains clean 和 independent of third-party data structures.
 
-3. **Provider Flexibility**: Easy to switch providers by implementing new adapter. Support multiple providers simultaneously (e.g., Stripe and PayPal for payments).
+3. **提供r Flexibility**: 容易switch 提供rs 透過 implementing new adapter. 支援 multiple 提供rs simultaneously (e.g., Stripe 和 PayPal 用於 payments).
 
-4. **Testability**: Easy to test business logic with mock adapters. No need to call real third-party APIs in tests. Can test error scenarios easily.
+4. **Testability**: 容易test business logic 與 mock adapters. No need to call real third-party APIs in tests. 可以 test error scenarios easily.
 
-5. **Fault Isolation**: Third-party failures isolated to adapter layer. Business logic continues working with fallback strategies or graceful degradation.
+5. **Fault Isolation**: Third-party failures isolated to adapter layer. Business logic continues working 與 fallback strategies 或 graceful degradation.
 
-6. **Gradual Migration**: Can migrate from one provider to another gradually. Run both providers in parallel during migration, route traffic based on feature flags.
+6. **Gradual Migration**: 可以 migrate from one 提供r to another gradually. Run both 提供rs in parallel 期間 migration, route traffic based on feature flags.
 
-7. **Proven Pattern**: Adapter pattern is well-established and widely used. Clear separation of concerns, easy to understand and maintain.
+7. **Proven Pattern**: Adapter pattern is well-established 和 widely used. Clear separation of concerns, easy to understand 和 維持.
 
-8. **Cost-Effective**: Moderate implementation cost with low maintenance cost. Long-term benefits outweigh initial investment.
+8. **Cost-Effective**: Moderate implementation cost 與 low maintenance cost. Long-term benefits outweigh initial investment.
 
 **Integration Architecture**:
 
@@ -260,41 +260,41 @@ graph TD
     N7 --> N8
 ```
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation Strategy |
 |-------------|--------------|-------------|-------------------|
-| Backend Team | High | Need to implement adapters for all integrations | Adapter templates, code examples, training |
+| Backend Team | High | Need to implement adapters 用於 all integrations | Adapter templates, code examples, training |
 | Security Team | Medium | Need to review adapter security | Security review checklist, PCI-DSS compliance |
 | DevOps Team | Medium | Need to monitor third-party integrations | Monitoring dashboards, alerting |
-| QA Team | Medium | Need to test with mock adapters | Mock adapter implementations, testing guidelines |
-| Business Team | Low | Transparent change, improved reliability | Communication about benefits |
+| QA Team | Medium | Need to test 與 mock adapters | Mock adapter implementations, testing guidelines |
+| Business Team | Low | Transparent change, 改善d reliability | Communication about benefits |
 
 ### Impact Radius Assessment
 
-**Selected Impact Radius**: System
+**選擇的影響半徑**： System
 
 **Impact Description**:
 
 - **System**: Integration pattern affects all third-party integrations
   - All third-party integrations implemented as adapters
   - All adapters follow consistent pattern
-  - All adapters include error handling and retry logic
-  - All adapters monitored and logged
+  - All adapters include error handling 和 retry logic
+  - All adapters monitored 和 logged
 
 ### Affected Components
 
-- **Payment Service**: Stripe and PayPal adapters
-- **Email Service**: SendGrid and AWS SES adapters
+- **Payment Service**: Stripe 和 PayPal adapters
+- **Email Service**: SendGrid 和 AWS SES adapters
 - **Shipping Service**: FedEx, UPS, DHL adapters
 - **SMS Service**: Twilio adapter
 - **Analytics Service**: Google Analytics, Mixpanel adapters
 - **Domain Services**: Use adapter interfaces (ports)
-- **Testing Framework**: Mock adapters for testing
+- **Testing Framework**: Mock adapters 用於 testing
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy | Owner |
 |------|-------------|--------|-------------------|-------|
@@ -302,22 +302,22 @@ graph TD
 | Third-party API changes | Medium | Medium | API versioning, monitoring | Backend Team |
 | Performance overhead | Low | Low | Performance testing, optimization | Backend Team |
 | Security vulnerabilities | Low | High | Security reviews, PCI-DSS compliance | Security Team |
-| Provider switching complexity | Low | Medium | Comprehensive testing, gradual migration | Backend Team |
+| 提供r switching 複雜的ity | Low | Medium | Comprehensive testing, gradual migration | Backend Team |
 
-**Overall Risk Level**: Low
+**整體風險等級**： Low
 
 **Risk Mitigation Plan**:
 
-- Comprehensive code reviews for all adapters
-- Extensive testing with mock and real adapters
-- Security reviews for sensitive data handling
+- Comprehensive code reviews 用於 all adapters
+- Extensive testing 與 mock 和 real adapters
+- Security reviews 用於 sensitive data handling
 - Performance testing to validate overhead is minimal
-- Monitoring and alerting for third-party failures
-- Documentation and training for team
+- Monitoring 和 alerting 用於 third-party failures
+- Documentation 和 training 用於 team
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Adapter Framework (Timeline: Week 1)
+### 第 1 階段： Adapter Framework (Timeline: Week 1)
 
 **Objectives**:
 
@@ -329,28 +329,28 @@ graph TD
 
 - [ ] Define PaymentGateway interface (port)
 - [ ] Define EmailService interface (port)
-- [ ] Define ShippingProvider interface (port)
+- [ ] Define Shipping提供r interface (port)
 - [ ] Create AbstractPaymentAdapter base class
 - [ ] Create AbstractEmailAdapter base class
 - [ ] Create AbstractShippingAdapter base class
-- [ ] Implement retry logic with exponential backoff
-- [ ] Implement circuit breaker for third-party calls
+- [ ] Implement retry logic 與 exponential backoff
+- [ ] Implement circuit breaker 用於 third-party calls
 - [ ] Create adapter exception hierarchy
 - [ ] Document adapter pattern guidelines
 
 **Deliverables**:
 
-- Adapter interfaces and base classes
+- Adapter interfaces 和 base classes
 - Error handling framework
 - Adapter pattern guidelines
 
 **Success Criteria**:
 
 - Clear adapter interfaces defined
-- Reusable base classes with error handling
+- Reusable base classes 與 error handling
 - Documentation complete
 
-### Phase 2: Payment Gateway Adapters (Timeline: Week 1-2)
+### 第 2 階段： Payment Gateway Adapters (Timeline: Week 1-2)
 
 **Objectives**:
 
@@ -361,40 +361,40 @@ graph TD
 **Tasks**:
 
 - [ ] Implement StripePaymentAdapter
-  - charge() method with Stripe API integration
-  - refund() method with Stripe API integration
+  - charge() method 與 Stripe API integration
+  - refund() method 與 Stripe API integration
   - Anti-corruption layer: Domain ↔ Stripe models
-  - Error handling and retry logic
+  - Error handling 和 retry logic
   - Idempotency key handling
 - [ ] Implement PayPalPaymentAdapter
-  - charge() method with PayPal API integration
-  - refund() method with PayPal API integration
+  - charge() method 與 PayPal API integration
+  - refund() method 與 PayPal API integration
   - Anti-corruption layer: Domain ↔ PayPal models
-  - Error handling and retry logic
+  - Error handling 和 retry logic
 - [ ] Implement payment adapter factory (select adapter based on config)
-- [ ] Security review for PCI-DSS compliance
-- [ ] Create mock payment adapter for testing
-- [ ] Integration tests with Stripe/PayPal sandbox
+- [ ] Security review 用於 PCI-DSS compliance
+- [ ] Create mock payment adapter 用於 testing
+- [ ] Integration tests 與 Stripe/PayPal sandbox
 
 **Deliverables**:
 
-- Stripe and PayPal adapters
+- Stripe 和 PayPal adapters
 - Payment adapter factory
-- Mock adapter for testing
+- Mock adapter 用於 testing
 - Security review report
 
 **Success Criteria**:
 
-- Payment processing working with both Stripe and PayPal
+- Payment processing working 與 both Stripe 和 PayPal
 - PCI-DSS compliance validated
 - Integration tests passing
 
-### Phase 3: Email and Shipping Adapters (Timeline: Week 2-3)
+### 第 3 階段： Email and Shipping Adapters (Timeline: Week 2-3)
 
 **Objectives**:
 
 - Implement email service adapters
-- Implement shipping provider adapters
+- Implement shipping 提供r adapters
 - Test all integrations
 
 **Tasks**:
@@ -406,46 +406,46 @@ graph TD
 - [ ] Implement UpsShippingAdapter
 - [ ] Implement DhlShippingAdapter
 - [ ] Implement shipping adapter factory
-- [ ] Create mock adapters for testing
-- [ ] Integration tests with real APIs (sandbox)
+- [ ] Create mock adapters 用於 testing
+- [ ] Integration tests 與 real APIs (sandbox)
 - [ ] Document adapter usage
 
 **Deliverables**:
 
-- Email and shipping adapters
+- Email 和 shipping adapters
 - Adapter factories
 - Mock adapters
 - Integration tests
 
 **Success Criteria**:
 
-- Email sending working with SendGrid and AWS SES
-- Shipping integration working with FedEx, UPS, DHL
+- Email sending working 與 SendGrid 和 AWS SES
+- Shipping integration working 與 FedEx, UPS, DHL
 - All integration tests passing
 
-### Phase 4: Monitoring and Operations (Timeline: Week 3-4)
+### 第 4 階段： Monitoring and Operations (Timeline: Week 3-4)
 
 **Objectives**:
 
-- Set up monitoring for third-party integrations
+- Set up monitoring 用於 third-party integrations
 - Create operational runbooks
 - Train team on adapter pattern
 
 **Tasks**:
 
-- [ ] Configure metrics for adapter calls (success rate, latency, errors)
-- [ ] Create Grafana dashboards for third-party integrations
-- [ ] Set up CloudWatch alarms for adapter failures
-- [ ] Configure X-Ray tracing for adapter calls
-- [ ] Create operational runbooks for adapter issues
+- [ ] Configure metrics 用於 adapter calls (success rate, latency, errors)
+- [ ] Create Grafana dashboards 用於 third-party integrations
+- [ ] Set up CloudWatch alarms 用於 adapter failures
+- [ ] Configure X-Ray tracing 用於 adapter calls
+- [ ] Create operational runbooks 用於 adapter issues
 - [ ] Document troubleshooting procedures
 - [ ] Conduct training sessions on adapter pattern
 - [ ] Create adapter implementation guide
-- [ ] Perform load testing with real third-party APIs
+- [ ] Perform load testing 與 real third-party APIs
 
 **Deliverables**:
 
-- Monitoring dashboards and alerts
+- Monitoring dashboards 和 alerts
 - Operational runbooks
 - Training materials
 - Load testing results
@@ -453,34 +453,34 @@ graph TD
 **Success Criteria**:
 
 - All adapter metrics visible in Grafana
-- Alerts triggering correctly for failures
+- Alerts triggering correctly 用於 failures
 - Team trained on adapter pattern
 - Load testing validates performance
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Critical adapter failures affecting business operations
 - Security vulnerabilities discovered
 - Performance degradation > 50%
 - Third-party integration completely broken
 
-**Rollback Steps**:
+**回滾步驟**：
 
-1. **Immediate Action**: Switch to fallback provider or disable feature
-2. **Service Rollback**: Deploy previous version without new adapters
+1. **Immediate Action**: Switch to fallback 提供r 或 disable feature
+2. **Service Rollback**: Deploy previous version 沒有 new adapters
 3. **Configuration Rollback**: Restore previous integration configuration
 4. **Validation**: Verify third-party integrations working
-5. **Root Cause Analysis**: Investigate issues and plan remediation
+5. **Root Cause Analysis**: Investigate issues 和 plan remediation
 
-**Rollback Time**: 10-15 minutes
+**回滾時間**： 10-15 minutes
 
 **Rollback Testing**: Test rollback procedure in staging environment
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement Method | Review Frequency |
 |--------|--------|-------------------|------------------|
@@ -488,86 +488,86 @@ graph TD
 | Adapter Latency (p95) | < 2 seconds | Adapter metrics | Real-time |
 | Third-Party API Errors | < 0.5% | Error logs | Daily |
 | Circuit Breaker Trips | < 10/day | Circuit breaker metrics | Daily |
-| Provider Switch Time | < 5 minutes | Manual testing | Monthly |
+| 提供r Switch Time | < 5 minutes | Manual testing | Monthly |
 
-### Monitoring Plan
+### 監控計畫
 
 **Dashboards**:
 
-- **Third-Party Integration Dashboard**: Success rate, latency, errors per provider
+- **Third-Party Integration Dashboard**: Success rate, latency, errors per 提供r
 - **Payment Gateway Dashboard**: Payment success rate, refund rate, transaction volume
 - **Email Service Dashboard**: Email delivery rate, bounce rate, send volume
-- **Shipping Provider Dashboard**: Shipment creation rate, tracking updates, errors
+- **Shipping 提供r Dashboard**: Shipment creation rate, tracking updates, errors
 
-**Alerts**:
+**告警**：
 
 - **Critical**: Payment gateway failure (PagerDuty)
-- **Critical**: Circuit breaker open for > 5 minutes (PagerDuty)
+- **Critical**: Circuit breaker open 用於 > 5 minutes (PagerDuty)
 - **Warning**: Third-party API error rate > 1% (Slack)
 - **Warning**: Adapter latency > 5 seconds (Slack)
-- **Info**: Provider switched (Slack)
+- **Info**: 提供r switched (Slack)
 
-**Review Schedule**:
+**審查時程**：
 
-- **Real-time**: Automated monitoring and alerting
-- **Daily**: Review third-party integration metrics and errors
-- **Weekly**: Analyze provider performance and costs
-- **Monthly**: Comprehensive integration review and optimization
+- **Real-time**: Automated monitoring 和 alerting
+- **Daily**: Review third-party integration metrics 和 errors
+- **Weekly**: Analyze 提供r performance 和 costs
+- **Monthly**: Comprehensive integration review 和 optimization
 
 ### Key Performance Indicators (KPIs)
 
 - **Reliability KPI**: Adapter success rate > 99.5%
 - **Performance KPI**: Adapter latency < 2 seconds (p95)
-- **Flexibility KPI**: Provider switch time < 5 minutes
+- **Flexibility KPI**: 提供r switch time < 5 minutes
 - **Security KPI**: Zero PCI-DSS compliance violations
 
-## Consequences
+## 後果
 
 ### Positive Consequences ✅
 
 - **Clean Architecture**: Domain layer isolated from third-party dependencies
-- **Flexibility**: Easy to switch providers or support multiple providers
-- **Testability**: Easy to test with mock adapters
-- **Maintainability**: Clear separation of concerns
+- **Flexibility**: 容易switch 提供rs 或 支援 multiple 提供rs
+- **Testability**: 容易test 與 mock adapters
+- **維持ability**: Clear separation of concerns
 - **Fault Isolation**: Third-party failures don't affect domain logic
-- **Gradual Migration**: Can migrate providers without downtime
+- **Gradual Migration**: 可以 migrate 提供rs 沒有 downtime
 - **Domain Protection**: Anti-corruption layer protects domain model
-- **Observability**: Centralized monitoring for all integrations
+- **Observability**: Centralized monitoring 用於 all integrations
 
 ### Negative Consequences ❌
 
-- **Boilerplate Code**: More code to write (interfaces, adapters, translators) (Mitigation: Adapter templates and base classes)
-- **Complexity**: Additional abstraction layer (Mitigation: Clear documentation and training)
-- **Performance Overhead**: Translation overhead (Mitigation: Minimal overhead, validated by testing)
+- **Boilerplate Code**: More code to write (interfaces, adapters, translators) (Mitigation: Adapter templates 和 base classes)
+- **複雜的ity**: Additional abstraction layer (Mitigation: Clear documentation 和 training)
+- **Performance Overhead**: Translation overhead (Mitigation: Minimal overhead, validated 透過 testing)
 
-### Technical Debt
+### 技術債務
 
 **Debt Introduced**:
 
-- **Adapter Maintenance**: Need to maintain adapters for each provider
-- **API Version Management**: Need to handle third-party API version changes
-- **Testing Overhead**: Need to test both mock and real adapters
+- **Adapter Maintenance**: Need to 維持 adapters 用於 each 提供r
+- **API Version Management**: Need to 處理 third-party API version changes
+- **Testing Overhead**: Need to test both mock 和 real adapters
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Automation**: Automate adapter testing with sandbox APIs
-- **Documentation**: Maintain comprehensive adapter documentation
-- **Monitoring**: Continuous monitoring for API changes
+- **Automation**: Automate adapter testing 與 sandbox APIs
+- **Documentation**: 維持 comprehensive adapter documentation
+- **Monitoring**: Continuous monitoring 用於 API changes
 - **Refactoring**: Regular refactoring to keep adapters clean
 
 ### Long-term Implications
 
-This decision establishes the Adapter Pattern as our standard for third-party integrations for the next 3-5 years. As the platform evolves:
+This decision establishes the Adapter Pattern as our standard 用於 third-party integrations 用於 the next 3-5 年. As the platform evolves:
 
-- Add new adapters for new third-party services
-- Migrate to new providers by implementing new adapters
-- Deprecate old adapters when providers are no longer used
-- Keep adapters updated with third-party API changes
-- Monitor adapter performance and optimize as needed
+- Add new adapters 用於 new third-party services
+- Migrate to new 提供rs 透過 implementing new adapters
+- Deprecate old adapters when 提供rs are no longer used
+- Keep adapters updated 與 third-party API changes
+- Monitor adapter performance 和 optimize as needed
 
-The Adapter Pattern provides foundation for flexible, maintainable third-party integrations while protecting our domain model and business logic.
+The Adapter Pattern 提供s foundation 用於 flexible, 維持able third-party integrations while protecting our domain model 和 business logic.
 
-## Related Decisions
+## 相關決策
 
 ### Related ADRs
 
@@ -586,39 +586,39 @@ The Adapter Pattern provides foundation for flexible, maintainable third-party i
 
 - [Security Perspective](../../perspectives/security/README.md) - Secure data handling
 - [Availability Perspective](../../perspectives/availability/README.md) - Fault tolerance
-- [Evolution Perspective](../../perspectives/evolution/README.md) - Provider flexibility
+- [Evolution Perspective](../../perspectives/evolution/README.md) - 提供r flexibility
 
-## Notes
+## 備註
 
 ### Assumptions
 
-- Team understands Hexagonal Architecture and Adapter Pattern
-- Third-party services provide sandbox environments for testing
+- Team understands Hexagonal Architecture 和 Adapter Pattern
+- Third-party services 提供 sandbox environments 用於 testing
 - Third-party APIs are relatively stable (no frequent breaking changes)
 - PCI-DSS compliance requirements understood
 - Monitoring infrastructure available
 
 ### Constraints
 
-- Must comply with PCI-DSS for payment processing
-- Must handle third-party API rate limits
-- Must support multiple providers simultaneously
-- Must provide comprehensive error handling
-- Must integrate with existing observability stack
+- 必須 comply 與 PCI-DSS 用於 payment processing
+- 必須 處理 third-party API rate limits
+- 必須 支援 multiple 提供rs simultaneously
+- 必須 提供 comprehensive error handling
+- 必須 integrate 與 existing observability stack
 
 ### Open Questions
 
-- Should we implement adapter versioning for API version management?
-- How to handle third-party API deprecations?
-- Should we cache third-party API responses?
-- How to handle third-party webhook integrations?
+- 應該 we implement adapter versioning 用於 API version management?
+- How to 處理 third-party API deprecations?
+- 應該 we cache third-party API responses?
+- How to 處理 third-party webhook integrations?
 
 ### Follow-up Actions
 
 - [ ] Create adapter interface templates - Architecture Team
 - [ ] Implement payment gateway adapters - Backend Team
 - [ ] Implement email service adapters - Backend Team
-- [ ] Implement shipping provider adapters - Backend Team
+- [ ] Implement shipping 提供r adapters - Backend Team
 - [ ] Conduct PCI-DSS security review - Security Team
 - [ ] Set up monitoring dashboards - DevOps Team
 - [ ] Create operational runbooks - DevOps Team

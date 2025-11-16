@@ -12,186 +12,186 @@ affected_perspectives: ["security", "performance"]
 
 # ADR-014: JWT-Based Authentication Strategy
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires a secure, scalable, and stateless authentication mechanism that can:
+The Enterprise E-Commerce Platform 需要secure, scalable, 和 stateless authentication mechanism that 可以:
 
-- Support both web and mobile clients
-- Scale horizontally without session affinity
-- Enable microservices architecture with distributed authentication
-- Provide fine-grained access control
-- Support token refresh without re-authentication
-- Minimize database lookups for authentication
-- Enable single sign-on (SSO) capabilities
+- 支援 both web 和 mobile clients
+- Scale horizontally 沒有 session affinity
+- 啟用 microservices architecture 與 distributed authentication
+- 提供 fine-grained access control
+- 支援 token refresh 沒有 re-authentication
+- Minimize database lookups 用於 authentication
+- 啟用 single sign-on (SSO) capabilities
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - Multi-channel access (web, mobile, API partners)
-- Expected 100K+ concurrent users at peak
+- 預期的 100K+ concurrent users at peak
 - 24/7 availability requirement
-- Need for API access by third-party integrations
+- 需要 API access 透過 third-party integrations
 - Regulatory compliance (GDPR, data protection)
 
-**Constraints**:
+**限制條件**：
 
-- Must support stateless authentication for horizontal scaling
-- Token expiration must balance security and user experience
-- Must integrate with existing Spring Security framework
-- Budget: No additional licensing costs preferred
+- 必須 支援 stateless authentication 用於 horizontal scaling
+- Token expiration 必須 balance security 和 用戶體驗
+- 必須 integrate 與 existing Spring Security framework
+- 預算: No additional licensing costs preferred
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- Spring Boot 3.4.5 with Spring Security
-- Microservices architecture with multiple services
-- AWS EKS deployment with auto-scaling
+- Spring Boot 3.4.5 與 Spring Security
+- Microservices architecture 與 multiple services
+- AWS EKS deployment 與 auto-scaling
 - No existing authentication system (greenfield)
 
-**Requirements**:
+**需求**：
 
 - Stateless authentication (no server-side sessions)
-- Support for role-based access control (RBAC)
-- Token expiration and refresh mechanism
-- Secure token storage and transmission
-- Audit trail for authentication events
-- Support for token revocation
+- 支援 用於 role-based access control (RBAC)
+- Token expiration 和 refresh mechanism
+- Secure token storage 和 transmission
+- Audit trail 用於 authentication events
+- 支援 用於 token revocation
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Scalability**: Must support horizontal scaling without session affinity
+1. **Scalability**: 必須 支援 horizontal scaling 沒有 session affinity
 2. **Performance**: Minimize authentication overhead (< 10ms per request)
 3. **Security**: Industry-standard security practices
-4. **Statelessness**: Enable true stateless microservices
-5. **Developer Experience**: Easy to implement and test
+4. **Statelessness**: 啟用 true stateless microservices
+5. **Developer Experience**: 容易implement 和 test
 6. **Standards Compliance**: Use widely adopted standards
-7. **Cost**: No additional licensing fees
-8. **Flexibility**: Support multiple client types
+7. **成本**： No additional licensing fees
+8. **Flexibility**: 支援 multiple client types
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: JWT (JSON Web Tokens) with RS256
+### 選項 1： JWT (JSON Web Tokens) with RS256
 
-**Description**: Stateless tokens signed with RSA asymmetric keys
+**描述**： Stateless tokens signed with RSA asymmetric keys
 
-**Pros**:
+**優點**：
 
 - ✅ Truly stateless - no database lookup needed
 - ✅ Horizontal scaling friendly
 - ✅ Industry standard (RFC 7519)
-- ✅ Self-contained (includes user info and permissions)
-- ✅ Asymmetric signing enables distributed verification
-- ✅ Excellent Spring Security integration
-- ✅ Supports token refresh pattern
-- ✅ Can include custom claims for RBAC
+- ✅ Self-contained (includes user info 和 permissions)
+- ✅ Asymmetric signing 啟用s distributed verification
+- ✅ 優秀的Spring Security整合
+- ✅ 支援s token refresh pattern
+- ✅ 可以 include custom claims 用於 RBAC
 - ✅ No licensing costs
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Token revocation requires additional mechanism
-- ⚠️ Larger token size than session IDs
-- ⚠️ Cannot update permissions until token expires
-- ⚠️ Key management complexity
+- ⚠️ Token revocation 需要additional mechanism
+- ⚠️ 大型的r token size than session IDs
+- ⚠️ 可以not update permissions until token expires
+- ⚠️ Key management 複雜的ity
 
-**Cost**: $0 (open standard, built into Spring Security)
+**成本**： $0 (open standard, built into Spring Security)
 
-**Risk**: **Low** - Proven technology with extensive production use
+**風險**： **Low** - Proven technology with extensive production use
 
-### Option 2: Session-Based Authentication with Redis
+### 選項 2： Session-Based Authentication with Redis
 
-**Description**: Traditional session cookies with centralized session store
+**描述**： Traditional session cookies with centralized session store
 
-**Pros**:
+**優點**：
 
-- ✅ Easy to implement
+- ✅ 容易implement
 - ✅ Immediate session invalidation
 - ✅ Smaller cookie size
-- ✅ Can update permissions immediately
+- ✅ 可以 update permissions immediately
 - ✅ Familiar pattern
 
-**Cons**:
+**缺點**：
 
-- ❌ Requires session affinity or shared session store
-- ❌ Additional Redis dependency for sessions
+- ❌ Requires session affinity 或 shared session store
+- ❌ Additional Redis dependency 用於 sessions
 - ❌ Database lookup on every request
 - ❌ Not truly stateless
-- ❌ Harder to scale horizontally
+- ❌ 更難scale horizontally
 - ❌ Single point of failure (Redis)
 
-**Cost**: $500/month (Redis cluster for sessions)
+**成本**： $500/month (Redis cluster for sessions)
 
-**Risk**: **Medium** - Scalability limitations
+**風險**： **Medium** - Scalability limitations
 
-### Option 3: OAuth 2.0 with External Provider (Auth0, Okta)
+### 選項 3： OAuth 2.0 with External Provider (Auth0, Okta)
 
-**Description**: Delegate authentication to third-party provider
+**描述**： Delegate authentication to third-party provider
 
-**Pros**:
+**優點**：
 
-- ✅ Managed service (less operational overhead)
+- ✅ Managed service (less 營運開銷)
 - ✅ Advanced features (MFA, social login)
 - ✅ Compliance certifications
-- ✅ Professional support
+- ✅ Professional 支援
 
-**Cons**:
+**缺點**：
 
 - ❌ Monthly licensing costs ($500-2000/month)
 - ❌ Vendor lock-in
 - ❌ External dependency
-- ❌ Data privacy concerns (user data with third party)
-- ❌ Network latency for authentication
+- ❌ Data privacy concerns (user data 與 third party)
+- ❌ Network latency 用於 authentication
 - ❌ Less control over authentication flow
 
-**Cost**: $1,500/month (Auth0 Professional plan)
+**成本**： $1,500/month (Auth0 Professional plan)
 
-**Risk**: **Medium** - Vendor dependency, cost escalation
+**風險**： **Medium** - Vendor dependency, cost escalation
 
-### Option 4: API Keys for Service-to-Service
+### 選項 4： API Keys for Service-to-Service
 
-**Description**: Simple API keys for authentication
+**描述**： Simple API keys for authentication
 
-**Pros**:
+**優點**：
 
-- ✅ Very simple to implement
+- ✅ Very 簡單的 to implement
 - ✅ Low overhead
-- ✅ Good for service-to-service
+- ✅ 良好的 用於 service-to-service
 
-**Cons**:
+**缺點**：
 
-- ❌ Not suitable for user authentication
+- ❌ Not suitable 用於 user authentication
 - ❌ No expiration mechanism
-- ❌ Difficult to rotate
+- ❌ 難以rotate
 - ❌ No fine-grained permissions
 - ❌ Security risks if leaked
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **High** - Security limitations
+**風險**： **High** - Security limitations
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **JWT with RS256 Asymmetric Signing**
+**選擇的選項**： **JWT with RS256 Asymmetric Signing**
 
-### Rationale
+### 理由
 
-JWT with RS256 was selected for the following reasons:
+JWT 與 RS256被選擇的原因如下：
 
-1. **Stateless Architecture**: Enables true stateless microservices, critical for horizontal scaling
-2. **Performance**: No database lookup needed for authentication (< 5ms overhead)
-3. **Scalability**: No session affinity required, perfect for auto-scaling EKS
-4. **Security**: Industry-standard with strong cryptographic signing
-5. **Flexibility**: Self-contained tokens work across all services
+1. **Stateless Architecture**: 啟用s true stateless microservices, critical 用於 horizontal scaling
+2. **Performance**: No database lookup needed 用於 authentication (< 5ms overhead)
+3. **Scalability**: No session affinity required, perfect 用於 auto-scaling EKS
+4. **Security**: Industry-standard 與 strong cryptographic signing
+5. **Flexibility**: Self-contained tokens work 跨 all services
 6. **Cost-Effective**: No licensing fees, built into Spring Security
-7. **Developer Experience**: Excellent tooling and documentation
-8. **Standards-Based**: RFC 7519 standard, widely supported
+7. **Developer Experience**: 優秀的 tooling 和 documentation
+8. **Standards-Based**: RFC 7519 standard, widely 支援ed
 
 **Token Structure**:
 
@@ -216,106 +216,106 @@ JWT with RS256 was selected for the following reasons:
 }
 ```
 
-**Why Not Session-Based**: Requires session affinity or shared session store, limiting horizontal scalability and adding Redis dependency.
+**為何不選 Session-Based**： Requires session affinity 或 shared session store, limiting horizontal scalability 和 adding Redis dependency.
 
-**Why Not OAuth Provider**: High cost ($1,500/month) and vendor lock-in not justified for our requirements. We can implement OAuth 2.0 ourselves with JWT.
+**為何不選 OAuth 提供r**： High cost ($1,500/month) 和 vendor lock-in not justified 用於 our requirements. We 可以 implement OAuth 2.0 ourselves 與 JWT.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
 | Development Team | Medium | Need to implement JWT handling | Training, code examples, libraries |
-| Frontend Team | Medium | Need to store and send JWT tokens | Documentation, SDK provided |
+| Frontend Team | Medium | Need to store 和 send JWT tokens | Documentation, SDK 提供d |
 | Operations Team | Low | Key management required | Automated key rotation, documentation |
 | End Users | None | Transparent to users | N/A |
 | Security Team | Positive | Industry-standard security | Regular security audits |
 | API Partners | Positive | Standard token-based auth | API documentation |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All API endpoints (authentication required)
 - All microservices (token verification)
-- Frontend applications (token storage and transmission)
+- Frontend applications (token storage 和 transmission)
 - API Gateway (token validation)
 - Infrastructure (key management)
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | Token theft/leakage | Medium | High | Short expiration (15 min), HTTPS only, HttpOnly cookies |
-| Key compromise | Low | Critical | Key rotation every 90 days, HSM storage, monitoring |
-| Token revocation delay | Medium | Medium | Short expiration, blacklist for critical cases |
+| Key compromise | Low | Critical | Key rotation every 90 天, HSM storage, monitoring |
+| Token revocation delay | Medium | Medium | Short expiration, blacklist 用於 critical cases |
 | Clock skew issues | Low | Medium | NTP synchronization, clock skew tolerance (5 min) |
 | Token size overhead | Low | Low | Minimize claims, compress if needed |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Core JWT Infrastructure (Week 1)
+### 第 1 階段： Core JWT Infrastructure （第 1 週）
 
-- [x] Generate RSA key pair (2048-bit) for signing
+- [x] Generate RSA key pair (2048-bit) 用於 signing
 - [x] Store private key in AWS Secrets Manager
 - [x] Implement JWT generation service
 - [x] Implement JWT validation filter
-- [x] Configure Spring Security with JWT
+- [x] Configure Spring Security 與 JWT
 - [x] Add JWT utilities (parse, validate, extract claims)
 
-### Phase 2: Authentication Endpoints (Week 2)
+### 第 2 階段： Authentication Endpoints （第 2 週）
 
 - [x] Implement `/api/v1/auth/login` endpoint
 - [x] Implement `/api/v1/auth/refresh` endpoint
 - [x] Implement `/api/v1/auth/logout` endpoint
-- [x] Add password validation and hashing (BCrypt)
-- [x] Implement rate limiting for auth endpoints
+- [x] Add password validation 和 hashing (BCrypt)
+- [x] Implement 速率限制 用於 auth endpoints
 - [x] Add authentication event logging
 
-### Phase 3: Token Refresh Mechanism (Week 3)
+### 第 3 階段： Token Refresh Mechanism （第 3 週）
 
 - [x] Implement refresh token generation
 - [x] Store refresh tokens in database (hashed)
 - [x] Implement refresh token rotation
-- [x] Add refresh token expiration (7 days)
+- [x] Add refresh token expiration (7 天)
 - [x] Implement refresh token revocation
 - [x] Add refresh token cleanup job
 
-### Phase 4: Integration and Testing (Week 4)
+### 第 4 階段： Integration and Testing （第 4 週）
 
-- [x] Integrate with all microservices
-- [x] Update API Gateway for token validation
+- [x] Integrate 與 all microservices
+- [x] Update API Gateway 用於 token validation
 - [x] Frontend integration (token storage)
 - [x] Security testing (penetration testing)
 - [x] Load testing (10K concurrent users)
-- [x] Documentation and examples
+- [x] Documentation 和 examples
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Critical security vulnerability discovered
 - Performance degradation > 50ms per request
 - Token validation failures > 1%
 - Key management issues
 
-**Rollback Steps**:
+**回滾步驟**：
 
-1. Enable temporary session-based authentication
-2. Investigate and fix JWT implementation
-3. Re-deploy with fixes
+1. 啟用 temporary session-based authentication
+2. Investigate 和 fix JWT implementation
+3. Re-deploy 與 fixes
 4. Gradually migrate users back to JWT
 
-**Rollback Time**: < 2 hours
+**回滾時間**： < 2 hours
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Authentication latency < 10ms (95th percentile)
 - ✅ Token validation latency < 5ms (95th percentile)
@@ -324,7 +324,7 @@ Affects:
 - ✅ Authentication failure rate < 0.1%
 - ✅ No unauthorized access incidents
 
-### Monitoring Plan
+### 監控計畫
 
 **CloudWatch Metrics**:
 
@@ -335,10 +335,10 @@ Affects:
 - `auth.token.invalid` (count)
 - `auth.refresh.success` (count)
 
-**Alerts**:
+**告警**：
 
-- Authentication failure rate > 5% for 5 minutes
-- Token validation latency > 20ms for 5 minutes
+- Authentication failure rate > 5% 用於 5 minutes
+- Token validation latency > 20ms 用於 5 minutes
 - Suspicious authentication patterns (brute force)
 - Key rotation failures
 
@@ -349,56 +349,56 @@ Affects:
 - Refresh token usage patterns
 - Anomalous authentication times/locations
 
-**Review Schedule**:
+**審查時程**：
 
 - Daily: Check authentication metrics
 - Weekly: Review failed authentication logs
 - Monthly: Security audit of JWT implementation
-- Quarterly: Key rotation and security review
+- Quarterly: Key rotation 和 security review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Horizontal Scalability**: No session affinity required
 - ✅ **Performance**: Fast authentication (< 5ms overhead)
 - ✅ **Stateless**: True stateless microservices
 - ✅ **Security**: Industry-standard cryptographic signing
-- ✅ **Flexibility**: Works across all client types
+- ✅ **Flexibility**: Works 跨 all client types
 - ✅ **Cost-Effective**: No licensing fees
-- ✅ **Developer-Friendly**: Excellent tooling and libraries
+- ✅ **Developer-Friendly**: 優秀的 tooling 和 libraries
 - ✅ **Standards-Based**: RFC 7519 compliance
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Token Revocation**: Requires additional blacklist mechanism for immediate revocation
-- ⚠️ **Token Size**: Larger than session IDs (typically 500-1000 bytes)
-- ⚠️ **Permission Updates**: Cannot update permissions until token expires
-- ⚠️ **Key Management**: Need secure key storage and rotation process
-- ⚠️ **Clock Synchronization**: Requires NTP for accurate expiration
+- ⚠️ **Token Revocation**: Requires additional blacklist mechanism 用於 immediate revocation
+- ⚠️ **Token Size**: 大型的r than session IDs (typically 500-1000 bytes)
+- ⚠️ **Permission Updates**: 可以not update permissions until token expires
+- ⚠️ **Key Management**: Need secure key storage 和 rotation process
+- ⚠️ **Clock Synchronization**: Requires NTP 用於 accurate expiration
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. No token blacklist implemented (acceptable for 15-min expiration)
+1. No token blacklist implemented (acceptable 用於 15-min expiration)
 2. Manual key rotation process (acceptable initially)
-3. No token compression (acceptable for current size)
+3. No token compression (acceptable 用於 current size)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q2 2026**: Implement Redis-based token blacklist for critical revocations
-- **Q3 2026**: Automate key rotation with AWS KMS
+- **Q2 2026**: Implement Redis-based token blacklist 用於 critical revocations
+- **Q3 2026**: Automate key rotation 與 AWS KMS
 - **Q4 2026**: Implement token compression if size becomes issue
 
-## Related Decisions
+## 相關決策
 
 - [ADR-015: Role-Based Access Control (RBAC) Implementation](015-role-based-access-control-implementation.md) - Authorization model
 - [ADR-052: Authentication Security Hardening](052-authentication-security-hardening.md) - Additional security measures
-- [ADR-009: RESTful API Design with OpenAPI 3.0](009-restful-api-design-with-openapi.md) - API authentication integration
-- [ADR-007: Use AWS CDK for Infrastructure](007-use-aws-cdk-for-infrastructure.md) - Key management infrastructure
+- [ADR-009: RESTful API Design 與 OpenAPI 3.0](009-restful-api-design-with-openapi.md) - API authentication integration
+- [ADR-007: Use AWS CDK 用於 Infrastructure](007-use-aws-cdk-for-infrastructure.md) - Key management infrastructure
 
-## Notes
+## 備註
 
 ### JWT Configuration
 
@@ -415,21 +415,21 @@ jwt:
 
 ### Token Expiration Strategy
 
-- **Access Token**: 15 minutes (short-lived for security)
-- **Refresh Token**: 7 days (balance between security and UX)
-- **Remember Me**: 30 days (optional, with additional security)
+- **Access Token**: 15 minutes (short-lived 用於 security)
+- **Refresh Token**: 7 天 (balance between security 和 UX)
+- **Remember Me**: 30 天 (optional, 與 additional security)
 
 ### Key Rotation Schedule
 
-- **Frequency**: Every 90 days
-- **Process**: Generate new key pair, dual-signing period (7 days), deprecate old key
+- **Frequency**: Every 90 天
+- **Process**: Generate new key pair, dual-signing period (7 天), deprecate old key
 - **Emergency Rotation**: < 1 hour if compromise suspected
 
 ### Security Best Practices
 
 1. **HTTPS Only**: All JWT transmission over HTTPS
 2. **HttpOnly Cookies**: Store tokens in HttpOnly cookies (web)
-3. **Secure Storage**: Use Keychain/Keystore for mobile apps
+3. **Secure Storage**: Use Keychain/Keystore 用於 mobile apps
 4. **Short Expiration**: 15-minute access tokens
 5. **Token Refresh**: Implement refresh token rotation
 6. **Rate Limiting**: Limit authentication attempts
@@ -437,6 +437,6 @@ jwt:
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

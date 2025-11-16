@@ -12,28 +12,28 @@ affected_perspectives: ["availability", "evolution"]
 
 # ADR-046: Third Region Disaster Recovery (Singapore/Seoul)
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-Current active-active architecture in Taiwan and Tokyo provides high availability but lacks geographic diversity for true disaster recovery:
+Current active-active architecture in Taiwan 和 Tokyo 提供s 高可用性 但 lacks geographic diversity 用於 true disaster recovery:
 
 **Current Limitations**:
 
 - **Geographic Concentration**: Both regions in East Asia
 - **Correlated Risks**: Regional disasters (earthquakes, typhoons) could affect both
 - **Geopolitical Risks**: Taiwan Strait tensions could impact both regions
-- **Limited Failover Options**: No third region for complete primary region loss
+- **Limited Failover Options**: No third region 用於 complete primary region loss
 - **Recovery Time**: Extended recovery if both regions unavailable
-- **Data Sovereignty**: Need alternative region for data residency compliance
+- **Data Sovereignty**: Need alternative region 用於 data residency compliance
 
 **Disaster Scenarios Requiring Third Region**:
 
-1. **Dual Region Failure**: Both Taiwan and Tokyo unavailable
+1. **Dual Region Failure**: Both Taiwan 和 Tokyo unavailable
 2. **Regional Natural Disaster**: Major earthquake affecting East Asia
 3. **Geopolitical Crisis**: Conflict impacting multiple regions
 4. **Extended Outage**: Long-term unavailability requiring alternative region
@@ -48,62 +48,62 @@ Current active-active architecture in Taiwan and Tokyo provides high availabilit
 - Revenue loss
 - Regulatory non-compliance
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - Business continuity (mandatory)
 - Geographic risk diversification
 - Regulatory compliance (data residency)
-- Customer trust and reliability
+- Customer trust 和 reliability
 - Competitive advantage
 - Market expansion opportunities
 
-**Constraints**:
+**限制條件**：
 
-- Budget: $50,000/year for third region
-- Must maintain 99.9% availability
+- 預算: $50,000/year 用於 third region
+- 必須 維持 99.9% availability
 - Data sovereignty requirements
-- Minimize operational complexity
+- Minimize operational 複雜的ity
 - Cost optimization
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- Active-active in Taiwan (ap-northeast-1) and Tokyo (ap-northeast-1)
+- Active-active in Taiwan (ap-northeast-1) 和 Tokyo (ap-northeast-1)
 - No third region
 - Manual disaster recovery procedures
 - Limited geographic diversity
-- 4-hour RTO for complete region loss
+- 4-hour RTO 用於 complete region loss
 
-**Requirements**:
+**需求**：
 
 - Third region in different geographic area
 - Automated failover capability
-- < 2 hour RTO for third region activation
-- < 15 minute RPO for critical data
+- < 2 hour RTO 用於 third region activation
+- < 15 minute RPO 用於 關鍵資料
 - Data sovereignty compliance
 - Cost-effective implementation
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Geographic Diversity**: Reduce correlated regional risks
-2. **Availability**: Maintain 99.9% SLO even during dual region failure
-3. **Recovery Time**: < 2 hour RTO for third region activation
-4. **Data Protection**: < 15 minute RPO for critical data
-5. **Cost**: Optimize third region costs ($50K/year budget)
+1. **Geographic Diversity**: 降低 correlated regional risks
+2. **Availability**: 維持 99.9% SLO even 期間 dual region failure
+3. **Recovery Time**: < 2 hour RTO 用於 third region activation
+4. **Data Protection**: < 15 minute RPO 用於 關鍵資料
+5. **成本**： Optimize third region costs ($50K/year budget)
 6. **Compliance**: Meet data sovereignty requirements
-7. **Automation**: Automated failover and recovery
-8. **Simplicity**: Minimize operational complexity
+7. **Automation**: Automated failover 和 recovery
+8. **Simplicity**: Minimize operational 複雜的ity
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Singapore as Primary Third Region with Seoul Backup (Recommended)
+### 選項 1： Singapore as Primary Third Region with Seoul Backup (Recommended)
 
-**Description**: Deploy Singapore (ap-southeast-1) as warm standby third region with Seoul (ap-northeast-2) as cold standby backup
+**描述**： Deploy Singapore (ap-southeast-1) as warm standby third region with Seoul (ap-northeast-2) as cold standby backup
 
-**Architecture**:
+**架構**：
 
 ```text
 Primary Regions (Active-Active):
@@ -213,17 +213,17 @@ interface SeoulColdStandby {
 - ✅ Low latency to Taiwan/Tokyo (~50-80ms)
 - ✅ Stable political environment
 - ✅ Strong data protection laws
-- ✅ Excellent AWS infrastructure
-- ✅ English-speaking support
-- ✅ Regional hub for APAC
+- ✅ 優秀的 AWS infrastructure
+- ✅ English-speaking 支援
+- ✅ Regional hub 用於 APAC
 
 **Why Seoul as Backup?**:
 
 - ✅ Geographic proximity to Taiwan/Tokyo
 - ✅ Lower cost than Singapore
-- ✅ Good AWS infrastructure
+- ✅ 良好的 AWS infrastructure
 - ✅ Alternative if Singapore unavailable
-- ✅ Cultural and business ties to region
+- ✅ Cultural 和 business ties to region
 
 **Activation Procedures**:
 
@@ -418,131 +418,131 @@ const thirdRegionCosts = {
 
 **Cost Optimization Options**:
 
-1. **Reduce Singapore capacity to 10%**: Save $18,000/year
+1. **降低 Singapore capacity to 10%**: Save $18,000/year
 2. **Use Spot instances**: Save $15,000/year
 3. **Optimize data transfer**: Save $10,000/year
 4. **Use smaller database instance**: Save $12,000/year
 5. **Total potential savings**: $55,000/year
-6. **Optimized cost**: $71,000/year (still over budget)
+6. **Optimized cost**: $71,000/year (still over 預算)
 
-**Pros**:
+**優點**：
 
 - ✅ True geographic diversity
 - ✅ Fast activation (< 2 hours)
 - ✅ Low data loss (< 15 minutes RPO)
 - ✅ Automated failover capability
 - ✅ Two backup options (Singapore + Seoul)
-- ✅ Supports data sovereignty
+- ✅ 支援s data sovereignty
 - ✅ Regional expansion opportunity
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Cost exceeds budget ($126K vs $50K)
-- ⚠️ Operational complexity
+- ⚠️ Cost exceeds 預算 ($126K vs $50K)
+- ⚠️ Operational 複雜的ity
 - ⚠️ Data transfer costs
 - ⚠️ Requires cost optimization
 
-**Cost**: $126,000/year (requires optimization to $71K)
+**成本**： $126,000/year (requires optimization to $71K)
 
-**Risk**: **Low** - Comprehensive coverage
+**風險**： **Low** - Comprehensive coverage
 
-### Option 2: Seoul Only (Cost-Optimized)
+### 選項 2： Seoul Only (Cost-Optimized)
 
-**Description**: Deploy Seoul as single third region (warm standby)
+**描述**： Deploy Seoul as single third region (warm standby)
 
-**Pros**:
+**優點**：
 
 - ✅ Lower cost ($60K/year)
-- ✅ Simpler operations
+- ✅ 簡單的r operations
 - ✅ Geographic proximity
 
-**Cons**:
+**缺點**：
 
 - ❌ Still in East Asia (limited diversity)
 - ❌ Single backup option
 - ❌ Higher correlated risk
 
-**Cost**: $60,000/year
+**成本**： $60,000/year
 
-**Risk**: **Medium** - Limited geographic diversity
+**風險**： **Medium** - Limited geographic diversity
 
-### Option 3: Mumbai as Third Region
+### 選項 3： Mumbai as Third Region
 
-**Description**: Deploy Mumbai (ap-south-1) as third region
+**描述**： Deploy Mumbai (ap-south-1) as third region
 
-**Pros**:
+**優點**：
 
 - ✅ True geographic diversity
 - ✅ Lower cost than Singapore
 - ✅ Growing AWS region
 
-**Cons**:
+**缺點**：
 
 - ❌ Higher latency (~150ms)
 - ❌ Less mature infrastructure
 - ❌ Potential connectivity issues
 
-**Cost**: $80,000/year
+**成本**： $80,000/year
 
-**Risk**: **Medium** - Latency and infrastructure concerns
+**風險**： **Medium** - Latency and infrastructure concerns
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Singapore as Primary Third Region with Seoul Backup (Option 1)** with cost optimization
+**選擇的選項**： **Singapore as Primary Third Region with Seoul Backup (Option 1)** with cost optimization
 
-### Rationale
+### 理由
 
-Singapore provides optimal geographic diversity with acceptable latency, while Seoul offers cost-effective backup option.
+Singapore 提供s optimal geographic diversity 與 acceptable latency, while Seoul offers cost-effective backup option.
 
 **Cost Optimization Plan**:
 
-1. Reduce Singapore capacity to 15% (save $12K)
-2. Use Spot instances for non-critical workloads (save $15K)
-3. Optimize data transfer with caching (save $10K)
+1. 降低 Singapore capacity to 15% (save $12K)
+2. Use Spot instances 用於 non-critical workloads (save $15K)
+3. Optimize data transfer 與 caching (save $10K)
 4. Use smaller database instance initially (save $12K)
-5. Implement lifecycle policies for storage (save $6K)
+5. Implement lifecycle policies 用於 storage (save $6K)
 
-**Optimized Cost**: $71,000/year (requires $21K budget increase or further optimization)
+**Optimized Cost**: $71,000/year (需要$21K 預算 increase 或 further optimization)
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Executive Team | High | Budget increase required | ROI analysis, phased approach |
+| Executive Team | High | 預算 increase required | ROI analysis, phased approach |
 | Operations Team | High | Manage third region infrastructure | Training, automation, runbooks |
-| Development Team | Medium | Support multi-region testing | Documentation, tooling |
-| Finance Team | High | Budget approval for cost increase | Cost-benefit analysis |
+| Development Team | Medium | 支援 multi-region testing | Documentation, tooling |
+| Finance Team | High | 預算 approval 用於 cost increase | Cost-benefit analysis |
 | Customers | Low | Transparent failover | Communication plan |
 
 ### Impact Radius Assessment
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
-- All services and data
+- All services 和 data
 - Infrastructure architecture
 - Disaster recovery procedures
 - Cost structure
 - Operational processes
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | Cost overruns | Medium | High | Strict cost monitoring, optimization |
 | Activation failure | Low | Critical | Regular testing, automation |
-| Data loss during failover | Low | High | Frequent replication, testing |
+| Data loss 期間 failover | Low | High | Frequent replication, testing |
 | Latency increase | Low | Medium | Performance monitoring, optimization |
-| Operational complexity | Medium | Medium | Automation, training, documentation |
+| Operational 複雜的ity | Medium | Medium | Automation, training, documentation |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Singapore Infrastructure Setup (Month 1-2)
+### 第 1 階段： Singapore Infrastructure Setup (Month 1-2)
 
 **Tasks**:
 
@@ -550,7 +550,7 @@ Affects:
 - [ ] Set up RDS read replica
 - [ ] Configure ElastiCache
 - [ ] Set up S3 cross-region replication
-- [ ] Configure VPC and networking
+- [ ] Configure VPC 和 networking
 - [ ] Deploy monitoring infrastructure
 - [ ] Test data replication
 - [ ] Perform initial failover test
@@ -561,11 +561,11 @@ Affects:
 - Data replication working (< 5 min lag)
 - Initial failover test successful
 
-### Phase 2: Seoul Backup Setup (Month 3)
+### 第 2 階段： Seoul Backup Setup (Month 3)
 
 **Tasks**:
 
-- [ ] Create IaC templates for Seoul
+- [ ] Create IaC templates 用於 Seoul
 - [ ] Set up automated snapshots
 - [ ] Configure backup replication
 - [ ] Test infrastructure deployment
@@ -574,11 +574,11 @@ Affects:
 
 **Success Criteria**:
 
-- Seoul can be deployed < 2 hours
+- Seoul 可以 be deployed < 2 hours
 - Backup restoration tested
 - Procedures documented
 
-### Phase 3: Automation & Testing (Month 4-5)
+### 第 3 階段： Automation & Testing (Month 4-5)
 
 **Tasks**:
 
@@ -596,7 +596,7 @@ Affects:
 - RPO < 15 minutes achieved
 - Team trained
 
-### Phase 4: Cost Optimization (Month 6)
+### 第 4 階段： Cost Optimization (Month 6)
 
 **Tasks**:
 
@@ -604,34 +604,34 @@ Affects:
 - [ ] Optimize data transfer
 - [ ] Right-size resources
 - [ ] Implement lifecycle policies
-- [ ] Monitor and adjust
+- [ ] Monitor 和 adjust
 
 **Success Criteria**:
 
-- Cost reduced to $71K/year
-- Performance maintained
-- Availability maintained
+- Cost 降低d to $71K/year
+- Performance 維持ed
+- Availability 維持ed
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
-- Cost exceeds budget significantly
+- Cost exceeds 預算 signifi可以tly
 - Performance degradation
 - Activation failures
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Decommission Singapore infrastructure
 2. Return to two-region architecture
-3. Maintain Seoul snapshots only
+3. 維持 Seoul snapshots only
 4. Re-evaluate strategy
 
-**Rollback Time**: < 1 week
+**回滾時間**： < 1 week
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
@@ -649,42 +649,42 @@ Affects:
 - **Quarterly**: Failover drill, procedure review
 - **Annually**: Comprehensive strategy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **True Geographic Diversity**: Singapore in Southeast Asia
 - ✅ **Fast Recovery**: < 2 hour RTO
 - ✅ **Low Data Loss**: < 15 minute RPO
 - ✅ **Dual Backup Options**: Singapore + Seoul
-- ✅ **Automated Failover**: Reduces manual effort
-- ✅ **Regional Expansion**: Foundation for APAC growth
+- ✅ **Automated Failover**: 降低s manual effort
+- ✅ **Regional Expansion**: Foundation 用於 APAC growth
 - ✅ **Customer Confidence**: Demonstrated resilience
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Cost Increase**: $71K/year (42% over budget)
-- ⚠️ **Operational Complexity**: More regions to manage
+- ⚠️ **Cost Increase**: $71K/year (42% over 預算)
+- ⚠️ **Operational 複雜的ity**: More regions to manage
 - ⚠️ **Data Transfer Costs**: Cross-region replication
 - ⚠️ **Testing Overhead**: Regular drills required
 - ⚠️ **Latency Considerations**: Singapore slightly higher latency
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Manual cost optimization
 2. Basic failover automation
 3. Limited testing scenarios
 4. Manual capacity planning
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Advanced automation
 - **Q3 2026**: AI-powered capacity planning
 - **Q4 2026**: Predictive failover
 
-## Related Decisions
+## 相關決策
 
 - [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md)
 - [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md)
@@ -693,11 +693,11 @@ Affects:
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）
 
-## Notes
+## 備註
 
 ### Geographic Diversity Analysis
 
@@ -721,31 +721,31 @@ Affects:
 
 | Route | Latency | Impact |
 |-------|---------|--------|
-| Taiwan ↔ Tokyo | ~30ms | Excellent |
-| Taiwan ↔ Singapore | ~50ms | Good |
+| Taiwan ↔ Tokyo | ~30ms | 優秀的 |
+| Taiwan ↔ Singapore | ~50ms | 良好的 |
 | Tokyo ↔ Singapore | ~80ms | Acceptable |
-| Taiwan ↔ Seoul | ~40ms | Good |
-| Tokyo ↔ Seoul | ~30ms | Excellent |
+| Taiwan ↔ Seoul | ~40ms | 良好的 |
+| Tokyo ↔ Seoul | ~30ms | 優秀的 |
 
 ### Alternative Regions Considered
 
 **Hong Kong**: Rejected due to geopolitical concerns
 **Sydney**: Rejected due to high latency (~150ms)
-**Mumbai**: Considered but higher latency (~150ms)
+**Mumbai**: Considered 但 higher latency (~150ms)
 **Osaka**: Rejected due to proximity to Tokyo
 
-### Budget Considerations
+### 預算 Considerations
 
-**Original Budget**: $50,000/year
+**Original 預算**: $50,000/year
 **Actual Cost**: $126,000/year
 **Optimized Cost**: $71,000/year
-**Budget Gap**: $21,000/year
+**預算 Gap**: $21,000/year
 
 **Options**:
 
-1. Request budget increase
+1. Request 預算 increase
 2. Further cost optimization
 3. Phased implementation
-4. Reduce scope (Seoul only)
+4. 降低 scope (Seoul only)
 
-**Recommendation**: Request $25K budget increase with commitment to optimize to $71K
+**Recommendation**: Request $25K 預算 increase 與 commitment to optimize to $71K

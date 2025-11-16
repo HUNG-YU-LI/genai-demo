@@ -1,6 +1,6 @@
 ---
 adr_number: 022
-title: "Distributed Locking with Redis"
+title: "Distributed Locking 與 Redis"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,222 +10,222 @@ affected_viewpoints: ["concurrency", "deployment"]
 affected_perspectives: ["performance", "availability", "scalability"]
 ---
 
-# ADR-022: Distributed Locking with Redis
+# ADR-022: Distributed Locking 與 Redis
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires distributed locking to:
+The Enterprise E-Commerce Platform 需要分散式鎖定 to:
 
-- Prevent race conditions in distributed systems (multiple application instances)
-- Ensure data consistency for critical operations (inventory updates, order processing)
-- Coordinate access to shared resources across services
-- Handle concurrent requests safely without database-level locking overhead
-- Support timeout and automatic lock release for fault tolerance
-- Provide high performance with minimal latency impact
+- Prevent race conditions in distributed systems (multiple 應用程式實例)
+- Ensure 資料一致性 用於 critical operations (inventory updates, order processing)
+- Coordinate access to shared resources 跨 services
+- 處理 concurrent requests safely 沒有 database-level locking overhead
+- 支援 timeout 和 automatic lock release 用於 fault tolerance
+- 提供 high performance 與 minimal latency impact
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - Prevent overselling inventory (critical business requirement)
 - Ensure order processing integrity (no duplicate charges)
-- Support horizontal scaling (multiple application instances)
-- Maintain data consistency in distributed environment
-- Handle high concurrency during promotions (1000+ concurrent users)
+- 支援 horizontal scaling (multiple 應用程式實例)
+- 維持 資料一致性 in distributed environment
+- 處理 high concurrency 期間 promotions (1000+ concurrent users)
 
 **Business Constraints**:
 
-- Must prevent inventory overselling (zero tolerance)
-- Order processing must be atomic and consistent
-- Lock acquisition must be fast (< 10ms)
-- System must handle lock holder failures gracefully
+- 必須 prevent inventory overselling (zero tolerance)
+- Order processing 必須 be atomic 和 consistent
+- Lock acquisition 必須 be fast (< 10ms)
+- System 必須 處理 lock holder failures gracefully
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- Redis distributed caching (ADR-004)
-- Kafka for event streaming (ADR-005)
-- Saga pattern for distributed transactions (ADR-025)
-- Multiple application instances (horizontal scaling)
-- PostgreSQL with optimistic locking
+- Redis 分散式快取 (ADR-004)
+- Kafka 用於 event streaming (ADR-005)
+- Saga pattern 用於 distributed transactions (ADR-025)
+- Multiple 應用程式實例 (horizontal scaling)
+- PostgreSQL 與 optimistic locking
 
-**Requirements**:
+**需求**：
 
-- Distributed lock across multiple instances
-- Lock timeout and automatic release
+- Distributed lock 跨 multiple instances
+- Lock timeout 和 automatic release
 - Deadlock prevention
 - High availability (99.9% uptime)
 - Low latency (< 10ms lock acquisition)
 - Fair lock acquisition (FIFO when possible)
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Consistency**: Prevent race conditions and data corruption
+1. **Consistency**: Prevent race conditions 和 data corruption
 2. **Performance**: Lock acquisition < 10ms, minimal overhead
-3. **Availability**: 99.9% uptime with automatic failover
-4. **Scalability**: Support 1000+ concurrent lock requests
+3. **Availability**: 99.9% uptime 與 自動容錯移轉
+4. **Scalability**: 支援 1000+ concurrent lock requests
 5. **Fault Tolerance**: Automatic lock release on failure
-6. **Integration**: Seamless Spring Boot integration
-7. **Cost**: Leverage existing Redis infrastructure
-8. **Operations**: Simple to monitor and troubleshoot
+6. **Integration**: 無縫的Spring Boot整合
+7. **成本**： Leverage existing Redis infrastructure
+8. **Operations**: 簡單monitor 和 troubleshoot
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Redis Distributed Locks (Redisson)
+### 選項 1： Redis Distributed Locks (Redisson)
 
-**Description**: Use Redisson library for Redis-based distributed locks with advanced features
+**描述**： Use Redisson library for Redis-based distributed locks with advanced features
 
-**Pros**:
+**優點**：
 
 - ✅ Built on existing Redis infrastructure (ADR-004)
-- ✅ Excellent Spring Boot integration
+- ✅ 優秀的Spring Boot整合
 - ✅ Automatic lock renewal (watchdog)
-- ✅ Fair locks (FIFO) support
-- ✅ Read-write locks support
-- ✅ Semaphore and CountDownLatch support
+- ✅ Fair locks (FIFO) 支援
+- ✅ Read-write locks 支援
+- ✅ Semaphore 和 CountDownLatch 支援
 - ✅ Proven in production (Netflix, Alibaba)
 - ✅ Low latency (< 5ms)
 - ✅ Comprehensive documentation
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Requires Redis cluster for high availability
-- ⚠️ Network partition can cause issues
+- ⚠️ Requires Redis cluster 用於 高可用性
+- ⚠️ Network partition 可以 cause issues
 - ⚠️ Additional library dependency
 
-**Cost**:
+**成本**：
 
 - Development: $0 (uses existing Redis)
 - Production: $0 (included in Redis cost)
-- Learning: 2-3 days
+- Learning: 2-3 天
 
-**Risk**: **Low** - Industry-standard solution
+**風險**： **Low** - Industry-standard solution
 
-### Option 2: Database-Level Locking (PostgreSQL)
+### 選項 2： Database-Level Locking (PostgreSQL)
 
-**Description**: Use PostgreSQL advisory locks or SELECT FOR UPDATE
+**描述**： Use PostgreSQL advisory locks or SELECT FOR UPDATE
 
-**Pros**:
+**優點**：
 
 - ✅ Strong consistency guarantees
 - ✅ No additional infrastructure
-- ✅ ACID transaction support
-- ✅ Simple to implement
+- ✅ ACID transaction 支援
+- ✅ 簡單implement
 
-**Cons**:
+**缺點**：
 
 - ❌ Higher latency (10-50ms)
-- ❌ Increases database load
-- ❌ Doesn't scale well with high concurrency
+- ❌ Increases 資料庫負載
+- ❌ Doesn't scale well 與 high concurrency
 - ❌ Lock contention affects database performance
 - ❌ Limited to single database instance
-- ❌ Deadlock risk with complex transactions
+- ❌ Deadlock risk 與 複雜的 transactions
 
-**Cost**: $0 (existing database)
+**成本**： $0 (existing database)
 
-**Risk**: **Medium** - Performance bottleneck
+**風險**： **Medium** - Performance bottleneck
 
-### Option 3: ZooKeeper Distributed Locks
+### 選項 3： ZooKeeper Distributed Locks
 
-**Description**: Use Apache ZooKeeper for distributed coordination
+**描述**： Use Apache ZooKeeper for distributed coordination
 
-**Pros**:
+**優點**：
 
 - ✅ Strong consistency (CP system)
-- ✅ Proven for distributed coordination
+- ✅ Proven 用於 distributed coordination
 - ✅ Automatic lock release on client failure
-- ✅ Watch mechanism for lock notifications
+- ✅ Watch mechanism 用於 lock notifications
 
-**Cons**:
+**缺點**：
 
 - ❌ Additional infrastructure to manage
-- ❌ Higher operational complexity
+- ❌ Higher operational 複雜的ity
 - ❌ Higher latency (20-50ms)
-- ❌ Overkill for our use case
+- ❌ Overkill 用於 our 使用案例
 - ❌ Requires ZooKeeper cluster (3-5 nodes)
 - ❌ Higher cost ($300-500/month)
 
-**Cost**: $400/month (managed ZooKeeper)
+**成本**： $400/month (managed ZooKeeper)
 
-**Risk**: **Medium** - Operational overhead
+**風險**： **Medium** - Operational overhead
 
-### Option 4: Optimistic Locking Only
+### 選項 4： Optimistic Locking Only
 
-**Description**: Rely solely on database optimistic locking (version fields)
+**描述**： Rely solely on database optimistic locking (version fields)
 
-**Pros**:
+**優點**：
 
-- ✅ Simple to implement
+- ✅ 簡單implement
 - ✅ No additional infrastructure
-- ✅ Works well for low contention
+- ✅ Works well 用於 low contention
 
-**Cons**:
+**缺點**：
 
 - ❌ High retry rate under contention
-- ❌ Poor user experience (frequent failures)
+- ❌ Poor 用戶體驗 (frequent failures)
 - ❌ Doesn't prevent race conditions
-- ❌ Inefficient for high concurrency
-- ❌ No coordination across services
+- ❌ Inefficient 用於 high concurrency
+- ❌ No coordination 跨 services
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **High** - Insufficient for high concurrency
+**風險**： **High** - Insufficient for high concurrency
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Redis Distributed Locks (Redisson)**
+**選擇的選項**： **Redis Distributed Locks (Redisson)**
 
-### Rationale
+### 理由
 
-Redisson was selected for the following reasons:
+Redisson被選擇的原因如下：
 
-1. **Leverages Existing Infrastructure**: Uses Redis already deployed for caching (ADR-004)
+1. **Leverages Existing Infrastructure**: Uses Redis already deployed 用於 caching (ADR-004)
 2. **Performance**: Sub-5ms lock acquisition meets our < 10ms requirement
-3. **Rich Features**: Watchdog, fair locks, read-write locks, semaphores
-4. **Proven**: Used by Netflix, Alibaba, and other large-scale systems
-5. **Spring Integration**: Excellent Spring Boot support
+3. **豐富的 Features**: Watchdog, fair locks, read-write locks, semaphores
+4. **Proven**: Used 透過 Netflix, Alibaba, 和 other 大型的-scale systems
+5. **Spring Integration**: 優秀的 Spring Boot 支援
 6. **Cost-Effective**: No additional infrastructure cost
-7. **Fault Tolerance**: Automatic lock release and renewal
-8. **Scalability**: Handles 1000+ concurrent requests
+7. **Fault Tolerance**: Automatic lock release 和 renewal
+8. **Scalability**: 處理s 1000+ concurrent requests
 
 **Lock Strategy**:
 
-- **Inventory Updates**: Exclusive locks with 30-second timeout
-- **Order Processing**: Fair locks (FIFO) with 60-second timeout
-- **Payment Processing**: Exclusive locks with 30-second timeout
-- **Cache Updates**: Read-write locks for read-heavy operations
-- **Rate Limiting**: Semaphores for concurrent request limits
+- **Inventory Updates**: Exclusive locks 與 30-second timeout
+- **Order Processing**: Fair locks (FIFO) 與 60-second timeout
+- **Payment Processing**: Exclusive locks 與 30-second timeout
+- **Cache Updates**: Read-write locks 用於 read-heavy operations
+- **Rate Limiting**: Semaphores 用於 concurrent request limits
 
-**Why Not Database Locking**: Higher latency and database load, doesn't scale well.
+**為何不選 Database Locking**： Higher latency 和 資料庫負載, doesn't scale well.
 
-**Why Not ZooKeeper**: Overkill for our use case, higher cost and complexity.
+**為何不選 ZooKeeper**： Overkill 用於 our 使用案例, higher cost 和 複雜的ity.
 
-**Why Not Optimistic Locking Only**: Insufficient for high concurrency scenarios.
+**為何不選 Optimistic Locking Only**： Insufficient 用於 high concurrency scenarios.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
 | Development Team | Medium | Need to learn Redisson patterns | Training, code examples, documentation |
 | Operations Team | Low | Monitor lock metrics | Add lock monitoring dashboards |
-| End Users | Positive | Prevents overselling, better consistency | N/A |
+| End Users | Positive | Prevents overselling, 更好的 consistency | N/A |
 | Business | Positive | Prevents revenue loss from overselling | N/A |
-| Database Team | Positive | Reduced database lock contention | N/A |
+| Database Team | Positive | 降低d database lock contention | N/A |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - Inventory bounded context (critical)
 - Order bounded context (critical)
@@ -234,7 +234,7 @@ Affects:
 - Application services (lock annotations)
 - Infrastructure layer (Redisson configuration)
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
@@ -244,19 +244,19 @@ Affects:
 | Lock contention | Medium | Medium | Fair locks, monitoring |
 | Network partition | Low | High | Redis cluster, health checks |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Setup (Week 1)
+### 第 1 階段： Setup （第 1 週）
 
 - [x] Add Redisson dependency to project
-- [x] Configure Redisson client with Redis cluster
-- [x] Set up lock monitoring and metrics
+- [x] Configure Redisson client 與 Redis cluster
+- [x] Set up lock monitoring 和 metrics
 - [x] Create lock utility classes
 - [x] Document lock patterns
 
-### Phase 2: Critical Operations (Week 2-3)
+### 第 2 階段： Critical Operations （第 2-3 週）
 
 - [x] Implement inventory reservation locks
 - [x] Add order processing locks
@@ -264,15 +264,15 @@ Affects:
 - [x] Add lock timeout handling
 - [x] Implement lock retry logic
 
-### Phase 3: Advanced Features (Week 4)
+### 第 3 階段： Advanced Features （第 4 週）
 
-- [x] Implement fair locks for order queue
-- [x] Add read-write locks for cache updates
-- [x] Implement semaphores for rate limiting
-- [x] Add lock metrics and monitoring
+- [x] Implement fair locks 用於 order queue
+- [x] Add read-write locks 用於 cache updates
+- [x] Implement semaphores 用於 速率限制
+- [x] Add lock metrics 和 monitoring
 - [x] Performance testing under load
 
-### Phase 4: Optimization (Week 5)
+### 第 4 階段： Optimization （第 5 週）
 
 - [x] Tune lock timeouts based on metrics
 - [x] Optimize lock granularity
@@ -280,28 +280,28 @@ Affects:
 - [x] Document best practices
 - [x] Team training
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Lock acquisition failure rate > 5%
 - Lock timeout rate > 10%
 - Redis unavailability > 1%
 - Performance degradation > 20%
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Disable distributed locks
 2. Fall back to optimistic locking
-3. Reduce concurrent request limits
-4. Investigate and fix issues
-5. Re-enable gradually
+3. 降低 concurrent request limits
+4. Investigate 和 fix issues
+5. Re-啟用 gradually
 
-**Rollback Time**: < 30 minutes
+**回滾時間**： < 30 minutes
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Lock acquisition time < 10ms (95th percentile)
 - ✅ Lock acquisition success rate > 99%
@@ -310,7 +310,7 @@ Affects:
 - ✅ Lock contention < 5% of requests
 - ✅ System availability > 99.9%
 
-### Monitoring Plan
+### 監控計畫
 
 **Application Metrics**:
 
@@ -336,7 +336,7 @@ public class LockMetrics {
 - Lock contention rate
 - Lock wait time
 
-**Alerts**:
+**告警**：
 
 - Lock acquisition time > 50ms
 - Lock failure rate > 5%
@@ -344,54 +344,54 @@ public class LockMetrics {
 - Active locks > 1000
 - Lock contention > 10%
 
-**Review Schedule**:
+**審查時程**：
 
 - Daily: Check lock metrics
-- Weekly: Review lock patterns and timeouts
+- Weekly: Review lock patterns 和 timeouts
 - Monthly: Lock performance optimization
 - Quarterly: Lock strategy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Data Consistency**: Prevents race conditions and overselling
+- ✅ **Data Consistency**: Prevents race conditions 和 overselling
 - ✅ **Performance**: Sub-10ms lock acquisition
-- ✅ **Scalability**: Supports horizontal scaling
+- ✅ **Scalability**: 支援s horizontal scaling
 - ✅ **Reliability**: Automatic lock release on failure
 - ✅ **Cost-Effective**: Uses existing Redis infrastructure
 - ✅ **Flexibility**: Multiple lock types (exclusive, fair, read-write)
 - ✅ **Monitoring**: Comprehensive lock metrics
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Complexity**: Additional coordination layer
+- ⚠️ **複雜的ity**: Additional coordination layer
 - ⚠️ **Dependency**: Relies on Redis availability
 - ⚠️ **Network**: Network latency affects lock performance
-- ⚠️ **Debugging**: Harder to trace lock-related issues
+- ⚠️ **Debugging**: 更難trace lock-related issues
 - ⚠️ **Learning Curve**: Team needs to learn Redisson patterns
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. Manual lock timeout tuning (can be automated)
+1. Manual lock timeout tuning (可以 be automated)
 2. No automatic deadlock detection (future enhancement)
-3. Simple lock ordering (can add priority locks)
+3. 簡單的 lock ordering (可以 add priority locks)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Implement adaptive lock timeouts
-- **Q3 2026**: Add deadlock detection and resolution
+- **Q3 2026**: Add deadlock detection 和 resolution
 - **Q4 2026**: Implement priority-based lock queues
 
-## Related Decisions
+## 相關決策
 
-- [ADR-004: Use Redis for Distributed Caching](004-use-redis-for-distributed-caching.md) - Redisson uses same Redis infrastructure
-- [ADR-005: Use Apache Kafka for Event Streaming](005-use-kafka-for-event-streaming.md) - Events after lock release
-- [ADR-025: Saga Pattern for Distributed Transactions](025-saga-pattern-distributed-transactions.md) - Locks coordinate saga steps
+- [ADR-004: Use Redis 用於 Distributed Caching](004-use-redis-for-distributed-caching.md) - Redisson uses same Redis infrastructure
+- [ADR-005: Use Apache Kafka 用於 Event Streaming](005-use-kafka-for-event-streaming.md) - Events after lock release
+- [ADR-025: Saga Pattern 用於 Distributed Transactions](025-saga-pattern-distributed-transactions.md) - Locks coordinate saga steps
 
-## Notes
+## 備註
 
 ### Redisson Configuration
 
@@ -548,11 +548,11 @@ Examples:
 | Inventory Reserve | 30s | Database update + validation |
 | Order Processing | 60s | Multiple service calls |
 | Payment Processing | 30s | External API call |
-| Cache Update | 10s | Fast in-memory operation |
+| Cache Update | 10s | Fast 記憶體內 operation |
 | Batch Processing | 300s | Long-running operation |
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

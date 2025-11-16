@@ -2,24 +2,24 @@
 
 ## Symptoms
 
-- Deployment stuck in progress
-- New pods failing to start
-- ImagePullBackOff errors
-- CrashLoopBackOff errors
-- Rollout status shows failure
-- Health checks failing on new pods
+- Deployment 停滯在進行中
+- 新的 pods 無法啟動
+- ImagePullBackOff 錯誤
+- CrashLoopBackOff 錯誤
+- Rollout 狀態顯示失敗
+- 新 pods 的 health checks 失敗
 
 ## Impact
 
-- **Severity**: P1 - High (P0 if production deployment)
-- **Affected Users**: Potentially all users if production deployment fails
-- **Business Impact**: Service disruption, delayed feature releases
+- **Severity**：P1 - High（如果是 production deployment 則為 P0）
+- **Affected Users**：如果 production deployment 失敗，可能影響所有使用者
+- **Business Impact**：服務中斷、功能發布延遲
 
 ## Detection
 
-- **Alert**: `DeploymentFailed` alert fires
-- **Monitoring Dashboard**: Deployment Dashboard > Rollout Status
-- **Log Patterns**:
+- **Alert**：`DeploymentFailed` alert 觸發
+- **Monitoring Dashboard**：Deployment Dashboard > Rollout Status
+- **Log Patterns**：
   - `Failed to pull image`
   - `Back-off restarting failed container`
   - `Readiness probe failed`
@@ -27,7 +27,7 @@
 
 ## Diagnosis
 
-### Step 1: Check Deployment Status
+### 步驟 1：檢查 Deployment 狀態
 
 ```bash
 # Check rollout status
@@ -43,7 +43,7 @@ kubectl get rs -n ${NAMESPACE} -l app=ecommerce-backend
 kubectl get pods -n ${NAMESPACE} -l app=ecommerce-backend
 ```
 
-### Step 2: Identify Failed Pods
+### 步驟 2：識別失敗的 Pods
 
 ```bash
 # Get pods with issues
@@ -56,7 +56,7 @@ kubectl describe pod ${POD_NAME} -n ${NAMESPACE}
 kubectl get events -n ${NAMESPACE} --field-selector involvedObject.name=${POD_NAME} --sort-by='.lastTimestamp'
 ```
 
-### Step 3: Analyze Pod Logs
+### 步驟 3：分析 Pod Logs
 
 ```bash
 # Check current container logs
@@ -72,7 +72,7 @@ kubectl logs ${POD_NAME} -n ${NAMESPACE} -c init-container-name
 kubectl logs -f ${POD_NAME} -n ${NAMESPACE}
 ```
 
-### Step 4: Check Image Issues
+### 步驟 4：檢查 Image 問題
 
 ```bash
 # Verify image exists in ECR
@@ -90,7 +90,7 @@ kubectl get secret ecr-registry-secret -n ${NAMESPACE} -o yaml
 docker pull ${ECR_REGISTRY}/ecommerce-backend:${VERSION}
 ```
 
-### Step 5: Check Configuration Issues
+### 步驟 5：檢查設定問題
 
 ```bash
 # Check ConfigMap
@@ -106,7 +106,7 @@ kubectl exec -it ${POD_NAME} -n ${NAMESPACE} -- env | grep -E "DB_|REDIS_|KAFKA_
 kubectl exec -it ${POD_NAME} -n ${NAMESPACE} -- ls -la /config
 ```
 
-### Step 6: Check Resource Constraints
+### 步驟 6：檢查資源限制
 
 ```bash
 # Check node resources
@@ -122,7 +122,7 @@ kubectl get resourcequota -n ${NAMESPACE}
 kubectl get limitrange -n ${NAMESPACE}
 ```
 
-### Step 7: Check Health Probes
+### 步驟 7：檢查 Health Probes
 
 ```bash
 # Test readiness probe manually
@@ -139,15 +139,15 @@ kubectl get deployment ecommerce-backend -n ${NAMESPACE} -o yaml | grep -A 10 "l
 
 ## Resolution
 
-### Immediate Actions
+### 立即行動
 
-1. **Pause rollout** to prevent further issues:
+1. **暫停 rollout** 以防止進一步問題：
 
 ```bash
 kubectl rollout pause deployment/ecommerce-backend -n ${NAMESPACE}
 ```
 
-1. **Assess impact**:
+1. **評估影響**：
 
 ```bash
 # Check how many pods are healthy
@@ -157,15 +157,15 @@ kubectl get pods -n ${NAMESPACE} -l app=ecommerce-backend | grep "Running.*1/1" 
 curl https://${ENVIRONMENT}.ecommerce.example.com/actuator/health
 ```
 
-1. **Decide on action**:
-   - If enough healthy pods: Fix and resume
-   - If service degraded: Rollback immediately
+1. **決定行動**：
+   - 如果有足夠的健康 pods：修復並恢復
+   - 如果服務降級：立即 rollback
 
-### Root Cause Fixes
+### 根本原因修復
 
-#### If caused by image pull failure
+#### 如果由 image pull 失敗造成
 
-1. **Verify image exists**:
+1. **驗證 image 存在**：
 
 ```bash
 aws ecr describe-images \
@@ -173,7 +173,7 @@ aws ecr describe-images \
   --image-ids imageTag=${VERSION}
 ```
 
-1. **Update image pull secret** if expired:
+1. **更新過期的 image pull secret**：
 
 ```bash
 # Get new ECR token
@@ -191,7 +191,7 @@ kubectl create secret docker-registry ecr-registry-secret \
 kubectl rollout restart deployment/ecommerce-backend -n ${NAMESPACE}
 ```
 
-1. **Fix image tag** if incorrect:
+1. **修復不正確的 image tag**：
 
 ```bash
 kubectl set image deployment/ecommerce-backend \
@@ -199,17 +199,17 @@ kubectl set image deployment/ecommerce-backend \
   -n ${NAMESPACE}
 ```
 
-#### If caused by application startup failure
+#### 如果由 application 啟動失敗造成
 
-1. **Check application logs** for startup errors:
+1. **檢查 application logs** 查找啟動錯誤：
 
 ```bash
 kubectl logs ${POD_NAME} -n ${NAMESPACE} | grep -i "error\|exception\|failed"
 ```
 
-1. **Common startup issues**:
+1. **常見啟動問題**：
 
-**Database connection failure**:
+**Database connection 失敗**：
 
 ```bash
 # Verify database connectivity
@@ -224,7 +224,7 @@ kubectl exec -it ${POD_NAME} -n ${NAMESPACE} -- \
   psql -h ${DB_HOST} -U ${DB_USER} -d ${DB_NAME} -c "SELECT 1"
 ```
 
-**Missing environment variables**:
+**遺失的 environment variables**：
 
 ```bash
 # Check required env vars
@@ -236,7 +236,7 @@ kubectl set env deployment/ecommerce-backend \
   -n ${NAMESPACE}
 ```
 
-**Configuration file issues**:
+**設定檔問題**：
 
 ```bash
 # Check ConfigMap
@@ -252,9 +252,9 @@ kubectl create configmap ecommerce-config \
 kubectl rollout restart deployment/ecommerce-backend -n ${NAMESPACE}
 ```
 
-#### If caused by health check failure
+#### 如果由 health check 失敗造成
 
-1. **Adjust health check timing**:
+1. **調整 health check 時間**：
 
 ```yaml
 # Increase initialDelaySeconds if app needs more time to start
@@ -277,19 +277,19 @@ readinessProbe:
   failureThreshold: 3
 ```
 
-1. **Fix health check endpoint**:
+1. **修復 health check endpoint**：
 
 ```java
 @Component
 public class CustomHealthIndicator implements HealthIndicator {
-    
+
     @Override
     public Health health() {
         try {
             // Check critical dependencies
             checkDatabase();
             checkRedis();
-            
+
             return Health.up()
                 .withDetail("database", "UP")
                 .withDetail("redis", "UP")
@@ -303,15 +303,15 @@ public class CustomHealthIndicator implements HealthIndicator {
 }
 ```
 
-#### If caused by resource constraints
+#### 如果由資源限制造成
 
-1. **Check node capacity**:
+1. **檢查 node 容量**：
 
 ```bash
 kubectl describe nodes | grep -A 5 "Allocated resources"
 ```
 
-1. **Scale cluster** if needed:
+1. **必要時擴展 cluster**：
 
 ```bash
 # Add more nodes
@@ -323,7 +323,7 @@ eksctl scale nodegroup \
   --nodes-max=10
 ```
 
-1. **Adjust resource requests**:
+1. **調整資源 requests**：
 
 ```yaml
 resources:
@@ -335,15 +335,15 @@ resources:
     cpu: "500m"
 ```
 
-#### If caused by database migration failure
+#### 如果由 database migration 失敗造成
 
-1. **Check migration status**:
+1. **檢查 migration 狀態**：
 
 ```bash
 kubectl logs ${POD_NAME} -n ${NAMESPACE} | grep -i "flyway\|migration"
 ```
 
-1. **Fix migration**:
+1. **修復 migration**：
 
 ```bash
 # Connect to database
@@ -354,8 +354,8 @@ kubectl exec -it ${POD_NAME} -n ${NAMESPACE} -- \
 SELECT * FROM flyway_schema_history ORDER BY installed_rank DESC LIMIT 10;
 
 # Mark failed migration as resolved if needed
-UPDATE flyway_schema_history 
-SET success = true 
+UPDATE flyway_schema_history
+SET success = true
 WHERE version = '1.2.3' AND success = false;
 
 # Or repair Flyway
@@ -363,9 +363,9 @@ kubectl exec -it ${POD_NAME} -n ${NAMESPACE} -- \
   ./gradlew flywayRepair
 ```
 
-### Rollback Procedure
+### Rollback 程序
 
-If fixes don't work quickly, rollback:
+如果修復無法快速完成，請 rollback：
 
 ```bash
 # Rollback to previous version
@@ -385,15 +385,15 @@ curl https://${ENVIRONMENT}.ecommerce.example.com/actuator/health
 
 ## Verification
 
-- [ ] All pods are running (1/1 Ready)
-- [ ] Deployment rollout completed successfully
-- [ ] Health checks passing
-- [ ] No error logs in recent logs
-- [ ] API endpoints responding correctly
-- [ ] Smoke tests passing
-- [ ] Metrics showing normal behavior
+- [ ] 所有 pods 都在執行（1/1 Ready）
+- [ ] Deployment rollout 成功完成
+- [ ] Health checks 通過
+- [ ] 最近的 logs 中無錯誤
+- [ ] API endpoints 正確回應
+- [ ] Smoke tests 通過
+- [ ] Metrics 顯示正常行為
 
-### Verification Commands
+### 驗證指令
 
 ```bash
 # Check deployment status
@@ -415,7 +415,7 @@ curl https://${ENVIRONMENT}.ecommerce.example.com/actuator/metrics
 
 ## Prevention
 
-### 1. Pre-Deployment Validation
+### 1. Pre-Deployment 驗證
 
 ```bash
 # Validate deployment manifest
@@ -428,7 +428,7 @@ kubeval deployment.yaml
 ./scripts/test-deployment.sh staging
 ```
 
-### 2. Deployment Best Practices
+### 2. Deployment 最佳實踐
 
 ```yaml
 # Use deployment strategy
@@ -465,7 +465,7 @@ readinessProbe:
   failureThreshold: 3
 ```
 
-### 3. Automated Testing
+### 3. 自動化測試
 
 ```yaml
 # CI/CD pipeline checks
@@ -495,7 +495,7 @@ readinessProbe:
   run: ./scripts/integration-test.sh staging
 ```
 
-### 4. Monitoring and Alerts
+### 4. Monitoring 和 Alerts
 
 ```yaml
 # Set up deployment monitoring
@@ -504,33 +504,33 @@ readinessProbe:
 
   expr: kube_deployment_status_replicas_updated{deployment="ecommerce-backend"} < kube_deployment_spec_replicas{deployment="ecommerce-backend"}
   for: 10m
-  
+
 - alert: PodCrashLooping
 
   expr: rate(kube_pod_container_status_restarts_total{pod=~"ecommerce-backend.*"}[15m]) > 0
   for: 5m
 ```
 
-### 5. Deployment Checklist
+### 5. Deployment 檢查清單
 
-- [ ] All tests passing in CI/CD
-- [ ] Staging deployment successful
-- [ ] Database migrations tested
-- [ ] Configuration validated
-- [ ] Resource limits appropriate
-- [ ] Health checks configured
-- [ ] Rollback plan ready
-- [ ] Monitoring in place
-- [ ] Team notified
+- [ ] 所有測試在 CI/CD 中通過
+- [ ] Staging deployment 成功
+- [ ] Database migrations 已測試
+- [ ] 設定已驗證
+- [ ] 資源限制適當
+- [ ] Health checks 已設定
+- [ ] Rollback plan 準備就緒
+- [ ] Monitoring 已就位
+- [ ] 團隊已通知
 
 ## Escalation
 
-- **L1 Support**: DevOps team (immediate response)
-- **L2 Support**: Backend engineering team (code/config issues)
-- **L3 Support**: Platform team (infrastructure issues)
-- **On-Call Engineer**: Check PagerDuty
+- **L1 Support**：DevOps team（立即回應）
+- **L2 Support**：Backend engineering team（程式碼/設定問題）
+- **L3 Support**：Platform team（基礎設施問題）
+- **On-Call Engineer**：查看 PagerDuty
 
-## Related
+## 相關
 
 - [Rollback Procedures](../deployment/rollback.md)
 - [Service Outage](service-outage.md)
@@ -539,6 +539,6 @@ readinessProbe:
 
 ---
 
-**Last Updated**: 2025-10-25  
-**Owner**: DevOps Team  
-**Review Cycle**: Monthly
+**Last Updated**：2025-10-25
+**Owner**：DevOps Team
+**Review Cycle**：Monthly

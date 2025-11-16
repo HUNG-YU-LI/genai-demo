@@ -12,23 +12,23 @@ affected_perspectives: ["availability", "performance", "evolution"]
 
 # ADR-038: Cross-Region Data Replication Strategy
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-Active-active multi-region architecture (ADR-037) requires data synchronization between Taiwan and Tokyo regions. Different bounded contexts have different consistency requirements:
+Active-active multi-region architecture (ADR-037) 需要data synchronization between Taiwan 和 Tokyo regions. Different bounded contexts have different consistency requirements:
 
 **Challenges**:
 
 - **Consistency vs Availability**: CAP theorem trade-offs
 - **Replication Lag**: Network latency between regions (40-60ms)
 - **Data Conflicts**: Concurrent updates in different regions
-- **Cost**: Cross-region data transfer ($0.09/GB)
-- **Complexity**: Multiple data stores (PostgreSQL, Redis, Kafka, S3)
+- **成本**： Cross-region data transfer ($0.09/GB)
+- **複雜的ity**: Multiple 資料儲存s (PostgreSQL, Redis, Kafka, S3)
 - **Performance**: Replication impact on application performance
 
 **Business Impact**:
@@ -37,57 +37,57 @@ Active-active multi-region architecture (ADR-037) requires data synchronization 
 - Inventory overselling
 - Customer data conflicts
 - Payment processing failures
-- Poor user experience
+- Poor 用戶體驗
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Data consistency for critical operations (orders, payments)
-- High availability for all operations
-- Low latency for read operations
+- Data consistency 用於 critical operations (orders, payments)
+- High availability 用於 all operations
+- Low latency 用於 read operations
 - Cost-effective replication
 - Regulatory compliance (data residency)
 
-**Constraints**:
+**限制條件**：
 
 - Network latency: 40-60ms between Taiwan-Tokyo
-- Budget: $50,000/year for data transfer
-- Replication lag tolerance varies by context
-- Must support bidirectional replication
-- Zero data loss for critical data
+- 預算: $50,000/year 用於 data transfer
+- Replication lag tolerance varies 透過 context
+- 必須 支援 bidirectional replication
+- Zero data loss 用於 關鍵資料
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
 - Single-region deployment
 - No cross-region replication
 - No conflict resolution mechanisms
 
-**Requirements**:
+**需求**：
 
-- Bidirectional replication for all data stores
+- Bidirectional replication 用於 all 資料儲存s
 - Bounded context-specific consistency levels
-- Conflict detection and resolution
+- Conflict detection 和 resolution
 - Replication lag monitoring
 - Cost optimization
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Consistency**: Critical data must be consistent
-2. **Availability**: System must remain available during failures
+1. **Consistency**: Critical data 必須 be consistent
+2. **Availability**: System 必須 remain available 期間 failures
 3. **Performance**: Minimal impact on application performance
-4. **Cost**: Optimize data transfer costs
-5. **Complexity**: Manageable operational complexity
-6. **Scalability**: Support growing data volumes
+4. **成本**： Optimize data transfer costs
+5. **複雜的ity**: Manageable operational 複雜的ity
+6. **Scalability**: 支援 growing data volumes
 7. **Compliance**: Meet data residency requirements
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Tiered Replication Strategy (Recommended)
+### 選項 1： Tiered Replication Strategy (Recommended)
 
-**Description**: Different replication strategies based on bounded context requirements
+**描述**： Different replication strategies based on bounded context requirements
 
 **Tier 1 - Strong Consistency (CP)**:
 
@@ -95,7 +95,7 @@ Active-active multi-region architecture (ADR-037) requires data synchronization 
 - **Strategy**: Quorum write (both regions acknowledge)
 - **Technology**: PostgreSQL synchronous replication
 - **Lag**: < 100ms
-- **Cost**: Higher latency, lower throughput
+- **成本**： Higher latency, lower throughput
 
 **Tier 2 - Eventual Consistency (AP)**:
 
@@ -103,81 +103,81 @@ Active-active multi-region architecture (ADR-037) requires data synchronization 
 - **Strategy**: Asynchronous replication
 - **Technology**: PostgreSQL logical replication
 - **Lag**: 1-5 seconds acceptable
-- **Cost**: Low latency, high throughput
+- **成本**： Low latency, high throughput
 
 **Tier 3 - Regional Isolation**:
 
 - **Contexts**: Shopping Carts, Sessions
 - **Strategy**: Regional data, merge on demand
-- **Technology**: Redis with regional clusters
+- **Technology**: Redis 與 regional clusters
 - **Lag**: N/A (no replication)
-- **Cost**: Lowest
+- **成本**： Lowest
 
-**Pros**:
+**優點**：
 
-- ✅ Optimal balance of consistency and availability
+- ✅ Optimal balance of consistency 和 availability
 - ✅ Cost-effective (only replicate what's needed)
 - ✅ Performance optimized per context
 - ✅ Clear consistency guarantees
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Complexity in managing different strategies
+- ⚠️ 複雜的ity in managing different strategies
 - ⚠️ Requires careful context classification
 
-**Cost**: $40,000/year
+**成本**： $40,000/year
 
-**Risk**: **Low**
+**風險**： **Low**
 
-### Option 2: Full Synchronous Replication
+### 選項 2： Full Synchronous Replication
 
-**Description**: All data synchronously replicated
+**描述**： All data synchronously replicated
 
-**Pros**:
+**優點**：
 
 - ✅ Strong consistency everywhere
-- ✅ Simple to understand
+- ✅ 簡單understand
 
-**Cons**:
+**缺點**：
 
-- ❌ High latency (100ms+ for all writes)
+- ❌ High latency (100ms+ 用於 all writes)
 - ❌ Lower throughput
 - ❌ Availability impact
 - ❌ High cost ($80,000/year)
 
-**Risk**: **High** - Performance impact
+**風險**： **High** - Performance impact
 
-### Option 3: Full Asynchronous Replication
+### 選項 3： Full Asynchronous Replication
 
-**Description**: All data asynchronously replicated
+**描述**： All data asynchronously replicated
 
-**Pros**:
+**優點**：
 
 - ✅ Low latency
 - ✅ High throughput
 - ✅ Low cost ($30,000/year)
 
-**Cons**:
+**缺點**：
 
-- ❌ Consistency issues for critical data
+- ❌ Consistency issues 用於 關鍵資料
 - ❌ Risk of data loss
-- ❌ Complex conflict resolution
+- ❌ 複雜的 conflict resolution
 
-**Risk**: **High** - Data consistency issues
+**風險**： **High** - Data consistency issues
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Tiered Replication Strategy (Option 1)**
+**選擇的選項**： **Tiered Replication Strategy (Option 1)**
 
-### Rationale
+### 理由
 
-Tiered replication provides optimal balance:
+Tiered replication 提供s optimal balance:
 
 1. **Strong Consistency**: Where needed (orders, payments)
 2. **High Availability**: Where acceptable (product catalog)
 3. **Performance**: Optimized per context
-4. **Cost**: Only pay for what's needed
-5. **Flexibility**: Easy to adjust per context
+4. **成本**： Only pay for what's needed
+5. **Flexibility**: 容易adjust per context
 
 ### Bounded Context Classification
 
@@ -195,7 +195,7 @@ Tiered replication provides optimal balance:
 |---------|-------------|------------|-----------|
 | Product Catalog | Async | < 5s | Stale data acceptable |
 | Customer Profiles | Async | < 5s | Profile updates infrequent |
-| Reviews | Async | < 10s | Review display can lag |
+| Reviews | Async | < 10s | Review display 可以 lag |
 | Promotions | Async | < 5s | Promotion changes infrequent |
 | Sellers | Async | < 5s | Seller data changes rare |
 
@@ -243,7 +243,7 @@ CREATE SUBSCRIPTION tokyo_catalog
 
 ### Redis Replication Strategy
 
-**Global Datastore for Critical Data**:
+**Global Datastore 用於 Critical Data**:
 
 ```typescript
 const globalRedis = new elasticache.CfnGlobalReplicationGroup(this, 'GlobalRedis', {
@@ -257,7 +257,7 @@ const globalRedis = new elasticache.CfnGlobalReplicationGroup(this, 'GlobalRedis
 });
 ```
 
-**Regional Clusters for Sessions**:
+**Regional Clusters 用於 Sessions**:
 
 ```typescript
 // Separate clusters, no replication
@@ -359,9 +359,9 @@ public class InventoryConflictResolver {
 }
 ```
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
@@ -370,7 +370,7 @@ public class InventoryConflictResolver {
 | End Users | Low | Transparent replication | Proper conflict resolution |
 | Business | Medium | Data consistency guarantees | Clear SLAs per context |
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|
@@ -379,41 +379,41 @@ public class InventoryConflictResolver {
 | Split-brain | Low | Critical | Quorum, fencing (ADR-040) |
 | Cost overrun | Medium | Medium | Monitoring, optimization |
 
-**Overall Risk Level**: **Medium**
+**整體風險等級**： **Medium**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Foundation (Month 1)
+### 第 1 階段： Foundation (Month 1)
 
 - [ ] Set up PostgreSQL logical replication
 - [ ] Configure Redis Global Datastore
 - [ ] Deploy Kafka MirrorMaker 2.0
 - [ ] Implement replication monitoring
 
-### Phase 2: Tier 1 Implementation (Month 2)
+### 第 2 階段： Tier 1 Implementation (Month 2)
 
-- [ ] Configure synchronous replication for orders
-- [ ] Implement distributed locking for inventory
+- [ ] Configure synchronous replication 用於 orders
+- [ ] Implement 分散式鎖定 用於 inventory
 - [ ] Test quorum writes
 - [ ] Validate consistency
 
-### Phase 3: Tier 2 Implementation (Month 3)
+### 第 3 階段： Tier 2 Implementation (Month 3)
 
-- [ ] Configure async replication for catalog
+- [ ] Configure async replication 用於 catalog
 - [ ] Implement conflict resolution
 - [ ] Test replication lag
 - [ ] Validate eventual consistency
 
-### Phase 4: Production (Month 4)
+### 第 4 階段： Production (Month 4)
 
 - [ ] Gradual rollout
 - [ ] Monitor replication metrics
 - [ ] Tune performance
 - [ ] Document procedures
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
@@ -437,34 +437,34 @@ const metrics = {
 };
 ```
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Optimal Consistency**: Strong where needed, eventual where acceptable
 - ✅ **High Performance**: Minimal latency impact
-- ✅ **Cost-Effective**: $40K/year vs $80K for full sync
-- ✅ **Flexibility**: Easy to adjust per context
+- ✅ **Cost-Effective**: $40K/year vs $80K 用於 full sync
+- ✅ **Flexibility**: 容易adjust per context
 - ✅ **Clear Guarantees**: Well-defined consistency per context
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Complexity**: Multiple replication strategies
+- ⚠️ **複雜的ity**: Multiple replication strategies
 - ⚠️ **Monitoring**: Need comprehensive monitoring
 - ⚠️ **Conflicts**: Require resolution mechanisms
 - ⚠️ **Training**: Team needs to understand strategies
 
-## Related Decisions
+## 相關決策
 
-- [ADR-001: Use PostgreSQL for Primary Database](001-postgresql-primary-database.md)
-- [ADR-004: Use Redis for Distributed Caching](004-redis-distributed-caching.md)
-- [ADR-005: Use Apache Kafka (MSK) for Event Streaming](005-kafka-event-streaming.md)
+- [ADR-001: Use PostgreSQL 用於 Primary Database](001-postgresql-primary-database.md)
+- [ADR-004: Use Redis 用於 Distributed Caching](004-redis-distributed-caching.md)
+- [ADR-005: Use Apache Kafka (MSK) 用於 Event Streaming](005-kafka-event-streaming.md)
 - [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md)
-- [ADR-039: Regional Failover and Failback Strategy](039-regional-failover-failback-strategy.md)
+- [ADR-039: Regional Failover 和 Failback Strategy](039-regional-failover-failback-strategy.md)
 - [ADR-040: Network Partition Handling Strategy](040-network-partition-handling-strategy.md)
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

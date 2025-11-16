@@ -1,22 +1,22 @@
-# IDE Configuration Guide
+# IDE 配置指南
 
-> **Last Updated**: 2025-10-25
+> **最後更新**: 2025-10-25
 
-## Overview
+## 概述
 
-This guide provides detailed instructions for configuring your Integrated Development Environment (IDE) for optimal development experience with the Enterprise E-Commerce Platform. We support both IntelliJ IDEA and Visual Studio Code.
+本指南提供了為企業電商平台配置整合開發環境（IDE）以獲得最佳開發體驗的詳細說明。我們支援 IntelliJ IDEA 和 Visual Studio Code。
 
-## IntelliJ IDEA Configuration
+## IntelliJ IDEA 配置
 
-### Installation
+### 安裝
 
-#### Download and Install
+#### 下載並安裝
 
-1. Download IntelliJ IDEA Ultimate from [JetBrains](https://www.jetbrains.com/idea/download/)
-2. Install the application
-3. Launch IntelliJ IDEA
+1. 從 [JetBrains](https://www.jetbrains.com/idea/download/) 下載 IntelliJ IDEA Ultimate
+2. 安裝應用程式
+3. 啟動 IntelliJ IDEA
 
-**Recommended Version**: IntelliJ IDEA 2024.2 or later
+**推薦版本**: IntelliJ IDEA 2024.2 或更高版本
 
 ### Initial Setup
 

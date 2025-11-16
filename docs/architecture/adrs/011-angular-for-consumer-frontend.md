@@ -1,6 +1,6 @@
 ---
 adr_number: 011
-title: "Angular for Consumer Frontend"
+title: "Angular 用於 Consumer Frontend"
 date: 2025-10-24
 status: "accepted"
 supersedes: []
@@ -10,190 +10,190 @@ affected_viewpoints: ["development"]
 affected_perspectives: ["development-resource", "accessibility", "performance"]
 ---
 
-# ADR-011: Angular for Consumer Frontend
+# ADR-011: Angular 用於 Consumer Frontend
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-24
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires a consumer-facing web application that:
+The Enterprise E-Commerce Platform 需要consumer-facing web application that:
 
-- Provides excellent user experience for customers
-- Handles complex state management (shopping cart, checkout flow)
-- Supports progressive web app (PWA) capabilities
-- Enables offline functionality
-- Provides strong type safety and structure
-- Supports large-scale application development
-- Enables code reusability and maintainability
-- Supports internationalization for global users
+- 提供s 優秀的 用戶體驗 用於 customers
+- 處理s 複雜的 state management (shopping cart, checkout flow)
+- 支援s progressive web app (PWA) capabilities
+- 啟用s offline functionality
+- 提供s strong type safety 和 structure
+- 支援s 大型的-scale application development
+- 啟用s code reusability 和 維持ability
+- 支援s internationalization 用於 global users
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Need for scalable consumer web application
-- Requirement for complex user workflows (product browsing, cart, checkout)
-- Expected high traffic (10K+ concurrent users)
-- Support for multiple languages and regions
-- PWA capabilities for mobile-like experience
-- Long-term maintainability (5+ years)
+- 需要 scalable consumer web application
+- Requirement 用於 複雜的 user workflows (product browsing, cart, checkout)
+- 預期的 high traffic (10K+ concurrent users)
+- 支援 用於 multiple languages 和 regions
+- PWA capabilities 用於 mobile-like experience
+- Long-term 維持ability (5+ 年)
 
-**Constraints**:
+**限制條件**：
 
-- Must integrate with REST API (ADR-009)
-- Budget: No additional frontend infrastructure costs
-- Timeline: 6 months to production
-- Must support modern browsers and mobile devices
-- Team will grow from 3 to 10+ frontend developers
+- 必須 integrate 與 REST API (ADR-009)
+- 預算: No additional frontend infrastructure costs
+- Timeline: 6 個月 to production
+- 必須 支援 modern browsers 和 mobile devices
+- Team 將 grow from 3 to 10+ frontend developers
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- RESTful API with OpenAPI 3.0 (ADR-009)
-- Next.js for CMC (ADR-010)
+- RESTful API 與 OpenAPI 3.0 (ADR-009)
+- Next.js 用於 CMC (ADR-010)
 - Spring Boot backend
 - AWS infrastructure
 
-**Requirements**:
+**需求**：
 
-- Complex state management
-- Form handling and validation
+- 複雜的 state management
+- Form handling 和 validation
 - Real-time updates (cart, inventory)
 - Responsive design
-- PWA support
+- PWA 支援
 - SEO optimization
 - Performance optimization
 - Accessibility (WCAG 2.1)
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Enterprise Scale**: Support large, complex application
+1. **Enterprise Scale**: 支援 大型的, 複雜的 application
 2. **Type Safety**: Strong TypeScript integration
-3. **Structure**: Opinionated framework for consistency
-4. **Team Scalability**: Support growing team
-5. **Long-term Maintainability**: 5+ year lifespan
-6. **PWA Support**: Native PWA capabilities
-7. **Tooling**: Comprehensive CLI and tooling
-8. **Performance**: Optimized for production
+3. **結構**： Opinionated framework for consistency
+4. **Team Scalability**: 支援 growing team
+5. **Long-term 維持ability**: 5+ 年 lifespan
+6. **PWA 支援**: Native PWA capabilities
+7. **Tooling**: Comprehensive CLI 和 tooling
+8. **Performance**: Optimized 用於 production
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Angular 18
+### 選項 1： Angular 18
 
-**Description**: Comprehensive TypeScript framework with full-featured tooling
+**描述**： Comprehensive TypeScript framework with full-featured tooling
 
-**Pros**:
+**優點**：
 
 - ✅ Comprehensive framework (routing, forms, HTTP, etc.)
-- ✅ Strong TypeScript support (built with TypeScript)
-- ✅ Opinionated structure (consistency across team)
-- ✅ Excellent CLI tooling
+- ✅ Strong TypeScript 支援 (built 與 TypeScript)
+- ✅ Opinionated structure (consistency 跨 team)
+- ✅ 優秀的 CLI tooling
 - ✅ Built-in dependency injection
-- ✅ RxJS for reactive programming
-- ✅ Native PWA support
-- ✅ Angular Material for UI components
-- ✅ Signals for reactive state management
+- ✅ RxJS 用於 reactive programming
+- ✅ Native PWA 支援
+- ✅ Angular Material 用於 UI components
+- ✅ Signals 用於 reactive state management
 - ✅ Standalone components (modern approach)
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Steeper learning curve
-- ⚠️ Larger bundle size than React
+- ⚠️ 大型的r bundle size than React
 - ⚠️ More verbose than React
 
-**Cost**: $0 (open source)
+**成本**： $0 (open source)
 
-**Risk**: **Low** - Mature, enterprise-proven
+**風險**： **Low** - Mature, enterprise-proven
 
-### Option 2: React with Next.js (Same as CMC)
+### 選項 2： React with Next.js (Same as CMC)
 
-**Description**: Use Next.js for both CMC and consumer app
+**描述**： Use Next.js for both CMC and consumer app
 
-**Pros**:
+**優點**：
 
-- ✅ Single framework for both apps
+- ✅ Single framework 用於 both apps
 - ✅ Team already learning Next.js
-- ✅ Flexible and lightweight
-- ✅ Large ecosystem
+- ✅ Flexible 和 lightweight
+- ✅ 大型的 ecosystem
 
-**Cons**:
+**缺點**：
 
 - ❌ Less structure (need to choose state management, forms, etc.)
 - ❌ More decisions to make
 - ❌ Less opinionated
-- ❌ Harder to maintain consistency across large team
+- ❌ 更難維持 consistency 跨 大型的 team
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **Medium** - May lack structure for complex app
+**風險**： **Medium** - May lack structure for complex app
 
-### Option 3: Vue.js 3
+### 選項 3： Vue.js 3
 
-**Description**: Progressive JavaScript framework
+**描述**： Progressive JavaScript framework
 
-**Pros**:
+**優點**：
 
-- ✅ Easy to learn
-- ✅ Good performance
+- ✅ 容易learn
+- ✅ 良好的 performance
 - ✅ Composition API
 
-**Cons**:
+**缺點**：
 
 - ❌ Team lacks Vue experience
 - ❌ Smaller ecosystem than React/Angular
 - ❌ Less enterprise adoption
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **Medium** - Team learning curve
+**風險**： **Medium** - Team learning curve
 
-### Option 4: Svelte/SvelteKit
+### 選項 4： Svelte/SvelteKit
 
-**Description**: Compiler-based framework
+**描述**： Compiler-based framework
 
-**Pros**:
+**優點**：
 
-- ✅ Excellent performance
+- ✅ 優秀的 performance
 - ✅ Small bundle size
-- ✅ Simple syntax
+- ✅ 簡單的 syntax
 
-**Cons**:
+**缺點**：
 
 - ❌ Smaller ecosystem
 - ❌ Less enterprise adoption
 - ❌ Team lacks experience
 - ❌ Fewer component libraries
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **High** - Less proven for enterprise
+**風險**： **High** - Less proven for enterprise
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Angular 18**
+**選擇的選項**： **Angular 18**
 
-### Rationale
+### 理由
 
-Angular was selected for the consumer frontend for the following reasons:
+Angular was selected 用於 the consumer frontend 用於 the following reasons:
 
-1. **Enterprise Scale**: Designed for large, complex applications
+1. **Enterprise Scale**: Designed 用於 大型的, 複雜的 applications
 2. **Strong Structure**: Opinionated framework ensures consistency
-3. **TypeScript First**: Built with TypeScript, excellent type safety
+3. **TypeScript First**: Built 與 TypeScript, 優秀的 type safety
 4. **Comprehensive**: Includes routing, forms, HTTP, state management
-5. **Team Scalability**: Clear patterns help large teams collaborate
-6. **Long-term Support**: Google-backed with LTS releases
-7. **PWA Support**: Built-in PWA capabilities
-8. **Tooling**: Excellent CLI and development tools
-9. **Modern Features**: Signals, standalone components, improved DX
+5. **Team Scalability**: Clear patterns help 大型的 teams collaborate
+6. **Long-term 支援**: Google-backed 與 LTS releases
+7. **PWA 支援**: Built-in PWA capabilities
+8. **Tooling**: 優秀的 CLI 和 development tools
+9. **Modern Features**: Signals, standalone components, 改善d DX
 
-**Implementation Strategy**:
+**實作策略**：
 
-**Architecture**:
+**架構**：
 
 ```text
 Angular App (Consumer)
@@ -207,52 +207,52 @@ Angular App (Consumer)
 **Key Features**:
 
 - Standalone components (no NgModules)
-- Signals for reactive state management
-- Angular Material for UI components
-- RxJS for complex async operations
-- Service Workers for PWA
-- Lazy loading for performance
+- Signals 用於 reactive state management
+- Angular Material 用於 UI components
+- RxJS 用於 複雜的 async operations
+- Service Workers 用於 PWA
+- Lazy loading 用於 performance
 
-**Why Not React/Next.js**: While Next.js works well for CMC, Angular's structure and comprehensiveness are better suited for the complex consumer application with a large team.
+**為何不選 React/Next.js**： While Next.js works well 用於 CMC, Angular's structure 和 comprehensiveness are 更好的 suited 用於 the 複雜的 consumer application 與 a 大型的 team.
 
-**Why Not Vue/Svelte**: Team lacks experience and these frameworks have smaller ecosystems for enterprise applications.
+**為何不選 Vue/Svelte**： Team lacks experience 和 these frameworks have smaller ecosystems 用於 enterprise applications.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
 | Frontend Developers | High | Need to learn Angular | Training, documentation, examples |
 | Backend Developers | Low | API integration unchanged | API documentation |
-| End Users | Positive | Better user experience | User testing, feedback |
+| End Users | Positive | 更好的 用戶體驗 | User testing, feedback |
 | QA Team | Medium | New testing framework | Testing guides, tools |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **Bounded Context**
+**選擇的影響半徑**： **Bounded Context**
 
-Affects:
+影響：
 
 - Consumer frontend application
 - Deployment infrastructure
 - Development workflow
 - Testing strategy
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | Angular learning curve | High | Medium | Training, examples, pair programming |
 | Bundle size concerns | Medium | Medium | Lazy loading, tree shaking, optimization |
 | Performance issues | Low | High | Performance monitoring, optimization |
-| Team adoption resistance | Medium | Medium | Demonstrate benefits, provide support |
+| Team adoption resistance | Medium | Medium | Demonstrate benefits, 提供 支援 |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Project Setup (Week 1)
+### 第 1 階段： Project Setup （第 1 週）
 
 - [ ] Create Angular project
 
@@ -302,7 +302,7 @@ Affects:
   └── angular.json
   ```
 
-### Phase 2: Core Services (Week 1-2)
+### 第 2 階段： Core Services （第 1-2 週）
 
 - [ ] Create API service
 
@@ -398,9 +398,9 @@ Affects:
   };
   ```
 
-### Phase 3: State Management (Week 2-3)
+### 第 3 階段： State Management （第 2-3 週）
 
-- [ ] Create cart service with signals
+- [ ] Create cart service 與 signals
 
   ```typescript
   // src/app/core/services/cart.service.ts
@@ -475,7 +475,7 @@ Affects:
   }
   ```
 
-### Phase 4: UI Components (Week 3-5)
+### 第 4 階段： UI Components （第 3-5 週）
 
 - [ ] Install Angular Material
 
@@ -551,9 +551,9 @@ Affects:
 - [ ] Create checkout flow components
 - [ ] Create user account components
 
-### Phase 5: PWA Setup (Week 5-6)
+### Phase 5: PWA Setup （第 5-6 週）
 
-- [ ] Add PWA support
+- [ ] Add PWA 支援
 
   ```bash
   ng add @angular/pwa
@@ -604,7 +604,7 @@ Affects:
   }
   ```
 
-### Phase 6: Testing (Week 6-8)
+### Phase 6: Testing （第 6-8 週）
 
 - [ ] Set up testing
 
@@ -646,31 +646,31 @@ Affects:
   });
   ```
 
-- [ ] Write unit tests for services
+- [ ] Write unit tests 用於 services
 - [ ] Write component tests
-- [ ] Set up E2E tests with Playwright
+- [ ] Set up E2E tests 與 Playwright
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Team unable to adopt Angular
 - Performance issues
 - Development velocity decreases > 30%
-- Bundle size too large
+- Bundle size too 大型的
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Migrate to Next.js (same as CMC)
 2. Reuse components where possible
 3. Simplify state management
 4. Re-evaluate after addressing issues
 
-**Rollback Time**: 4 weeks
+**回滾時間**： 4 weeks
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Page load time < 3 seconds
 - ✅ Lighthouse score > 85
@@ -679,60 +679,60 @@ Affects:
 - ✅ Developer satisfaction > 4/5
 - ✅ Bundle size < 1MB (initial load)
 
-### Monitoring Plan
+### 監控計畫
 
 **Performance Metrics**:
 
 - Core Web Vitals
 - Bundle size
-- API response times
+- API 回應時間
 - Error rates
 
-**Review Schedule**:
+**審查時程**：
 
 - Weekly: Performance review
 - Monthly: Dependency updates
 - Quarterly: Architecture review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Enterprise Scale**: Handles complex application
-- ✅ **Strong Structure**: Consistent patterns across team
-- ✅ **Type Safety**: Excellent TypeScript support
+- ✅ **Enterprise Scale**: 處理s 複雜的 application
+- ✅ **Strong Structure**: Consistent patterns 跨 team
+- ✅ **Type Safety**: 優秀的 TypeScript 支援
 - ✅ **Comprehensive**: All tools included
-- ✅ **PWA Support**: Native PWA capabilities
-- ✅ **Long-term Support**: Google-backed LTS
+- ✅ **PWA 支援**: Native PWA capabilities
+- ✅ **Long-term 支援**: Google-backed LTS
 - ✅ **Modern Features**: Signals, standalone components
 
-### Negative Consequences
+### 負面後果
 
 - ⚠️ **Learning Curve**: Steeper than React
-- ⚠️ **Bundle Size**: Larger than React
+- ⚠️ **Bundle Size**: 大型的r than React
 - ⚠️ **Verbosity**: More code than React
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. No E2E tests initially (acceptable for MVP)
+1. No E2E tests initially (acceptable 用於 MVP)
 2. Limited accessibility testing (future enhancement)
 3. No internationalization yet (future requirement)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q1 2026**: Implement comprehensive E2E tests
 - **Q2 2026**: Add accessibility testing
 - **Q3 2026**: Implement internationalization
 - **Q4 2026**: Optimize bundle size
 
-## Related Decisions
+## 相關決策
 
-- [ADR-009: RESTful API Design with OpenAPI](009-restful-api-design-with-openapi.md) - API integration
-- [ADR-010: Next.js for CMC Frontend](010-nextjs-for-cmc-frontend.md) - CMC frontend
+- [ADR-009: RESTful API Design 與 OpenAPI](009-restful-api-design-with-openapi.md) - API integration
+- [ADR-010: Next.js 用於 CMC Frontend](010-nextjs-for-cmc-frontend.md) - CMC frontend
 
-## Notes
+## 備註
 
 ### Key Dependencies
 
@@ -753,6 +753,6 @@ Affects:
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-24  
-**Next Review**: 2026-01-24 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-24  
+**下次審查**： 2026-01-24 （每季）

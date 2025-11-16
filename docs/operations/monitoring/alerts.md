@@ -1,23 +1,23 @@
-# Alert Configuration Guide
+# Alert 配置指南
 
-## Overview
+## 概述
 
-This document describes all alert configurations, thresholds, and escalation procedures for the Enterprise E-Commerce Platform.
+本文件描述企業電商平台的所有 alert 配置、閾值和升級程序。
 
-## Alert Severity Levels
+## Alert 嚴重性等級
 
-| Severity | Response Time | Notification | Escalation |
+| 嚴重性 | 回應時間 | 通知方式 | 升級時機 |
 |----------|---------------|--------------|------------|
-| P0 - Critical | Immediate | PagerDuty + SMS + Phone | After 5 minutes |
-| P1 - High | < 15 minutes | PagerDuty + Email | After 30 minutes |
-| P2 - Medium | < 1 hour | Email + Slack | After 2 hours |
-| P3 - Low | < 4 hours | Slack only | Next business day |
+| P0 - Critical | 立即 | PagerDuty + SMS + 電話 | 5 分鐘後 |
+| P1 - High | < 15 分鐘 | PagerDuty + Email | 30 分鐘後 |
+| P2 - Medium | < 1 小時 | Email + Slack | 2 小時後 |
+| P3 - Low | < 4 小時 | 僅 Slack | 下個工作日 |
 
-## Application Alerts
+## 應用程式 Alert
 
-### API Performance Alerts
+### API 效能 Alert
 
-#### High Error Rate
+#### 高錯誤率
 
 ```yaml
 alert: HighErrorRate

@@ -1,10 +1,10 @@
 # Remaining Contexts Events
 
-## Overview
+## 概述
 
-This document consolidates domain events for the remaining bounded contexts: Promotion, Notification, Review, Shopping Cart, Pricing, Seller, and Delivery.
+本文件整合了其餘 bounded contexts 的 domain events：Promotion、Notification、Review、Shopping Cart、Pricing、Seller 和 Delivery。
 
-**Last Updated**: 2025-10-25
+**最後更新**: 2025-10-25
 
 ---
 
@@ -57,7 +57,7 @@ public record NotificationSentEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -91,7 +91,7 @@ public record ReviewCreatedEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -124,7 +124,7 @@ public record ItemAddedToCartEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -175,7 +175,7 @@ public record PriceCalculatedEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -281,7 +281,7 @@ public record DeliveryCompletedEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -298,30 +298,30 @@ public record DeliveryCompletedEvent(
 
 ---
 
-## Event Summary by Context
+## 依 Context 的事件摘要
 
-| Context | Events | Key Use Cases |
+| Context | 事件數 | 主要使用案例 |
 |---------|--------|---------------|
-| Promotion | 4 | Discount management, promotion tracking |
-| Notification | 3 | Customer communication, alerts |
-| Review | 4 | Product feedback, ratings |
-| Shopping Cart | 5 | Cart management, checkout |
-| Pricing | 3 | Price calculation, tax computation |
-| Seller | 5 | Seller onboarding, product listing |
-| Delivery | 5 | Last-mile delivery tracking |
+| Promotion | 4 | 折扣管理、促銷追蹤 |
+| Notification | 3 | 客戶溝通、警示 |
+| Review | 4 | 產品回饋、評分 |
+| Shopping Cart | 5 | 購物車管理、結帳 |
+| Pricing | 3 | 價格計算、稅金計算 |
+| Seller | 5 | 賣家上架、產品列表 |
+| Delivery | 5 | 最後一哩配送追蹤 |
 
 ---
 
-## Related Documentation
+## 相關文件
 
-- **Event Catalog**: [event-catalog.md](../event-catalog.md)
-- **Customer Events**: [customer-events.md](customer-events.md)
-- **Order Events**: [order-events.md](order-events.md)
-- **Product Events**: [product-events.md](product-events.md)
-- **Payment Events**: [payment-events.md](payment-events.md)
+- **Event Catalog**：[event-catalog.md](../event-catalog.md)
+- **Customer Events**：[customer-events.md](customer-events.md)
+- **Order Events**：[order-events.md](order-events.md)
+- **Product Events**：[product-events.md](product-events.md)
+- **Payment Events**：[payment-events.md](payment-events.md)
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2025-10-25  
-**Owner**: Architecture Team
+**文件版本**: 1.0
+**最後更新**: 2025-10-25
+**負責人**: 架構團隊

@@ -1,32 +1,32 @@
-# Runbook: High Memory Usage
+# Runbook: 高記憶體使用率
 
-## Symptoms
+## 症狀
 
-- Memory utilization > 90% for extended period
-- OutOfMemoryError in application logs
-- Pods being killed by OOMKiller
-- Slow garbage collection
-- Application unresponsiveness
-- Increased swap usage
+- 記憶體使用率持續超過 90%
+- 應用程式日誌中出現 OutOfMemoryError
+- Pod 被 OOMKiller 終止
+- Garbage collection 緩慢
+- 應用程式無回應
+- Swap 使用量增加
 
-## Impact
+## 影響
 
-- **Severity**: P0 - Critical
-- **Affected Users**: All users may experience service interruption
-- **Business Impact**: Service crashes, data loss risk, complete outage
+- **嚴重性**: P0 - Critical
+- **受影響使用者**: 所有使用者可能會遇到服務中斷
+- **業務影響**: 服務崩潰、資料遺失風險、完全中斷
 
-## Detection
+## 偵測
 
-- **Alert**: `HighMemoryUsage` alert fires
+- **Alert**: `HighMemoryUsage` alert 觸發
 - **Monitoring Dashboard**: Operations Dashboard > Infrastructure > Memory Utilization
 - **Log Patterns**:
   - `java.lang.OutOfMemoryError`
   - `GC overhead limit exceeded`
-  - `OOMKilled` in pod events
+  - pod events 中出現 `OOMKilled`
 
-## Diagnosis
+## 診斷
 
-### Step 1: Identify Memory Usage Pattern
+### 步驟 1: 識別記憶體使用模式
 
 ```bash
 # Check current memory usage
@@ -39,7 +39,7 @@ kubectl describe pod ${POD_NAME} -n production | grep -A 10 "Limits\|Requests"
 kubectl get events -n production --field-selector involvedObject.name=${POD_NAME} | grep OOM
 ```
 
-### Step 2: Analyze Heap Memory
+### 步驟 2: 分析 Heap Memory
 
 ```bash
 # Get heap dump (WARNING: This will pause the application briefly)
@@ -55,7 +55,7 @@ kubectl exec -it ${POD_NAME} -n production -- \
   jmap -histo:live 1 | head -50
 ```
 
-### Step 3: Check Garbage Collection
+### 步驟 3: 檢查 Garbage Collection
 
 ```bash
 # Check GC logs
@@ -70,7 +70,7 @@ kubectl exec -it ${POD_NAME} -n production -- \
   jstat -gccause 1
 ```
 
-### Step 4: Analyze Application Metrics
+### 步驟 4: 分析應用程式 Metrics
 
 ```bash
 # Check JVM memory metrics
@@ -86,7 +86,7 @@ curl http://localhost:8080/actuator/metrics/jvm.memory.used?tag=id:PS\ Eden\ Spa
 curl http://localhost:8080/actuator/metrics/jvm.memory.used?tag=id:PS\ Old\ Gen
 ```
 
-### Step 5: Identify Memory Leaks
+### 步驟 5: 識別記憶體洩漏
 
 ```bash
 # Check for common leak patterns in logs
@@ -101,11 +101,11 @@ kubectl exec -it ${POD_NAME} -n production -- \
   jstack 1 > thread-dump-$(date +%Y%m%d-%H%M%S).txt
 ```
 
-## Resolution
+## 解決方案
 
-### Immediate Actions
+### 立即行動
 
-1. **Restart affected pod** (temporary relief):
+1. **重啟受影響的 pod** (暫時緩解):
 
 ```bash
 # Delete pod to trigger restart
@@ -115,25 +115,25 @@ kubectl delete pod ${POD_NAME} -n production
 kubectl rollout restart deployment/ecommerce-backend -n production
 ```
 
-1. **Scale horizontally** to distribute load:
+1. **水平擴展** 以分散負載:
 
 ```bash
 # Increase replica count
 kubectl scale deployment/ecommerce-backend --replicas=8 -n production
 ```
 
-1. **Force garbage collection** (if pod is still responsive):
+1. **強制 garbage collection** (如果 pod 仍有回應):
 
 ```bash
 kubectl exec -it ${POD_NAME} -n production -- \
   jcmd 1 GC.run
 ```
 
-### Root Cause Fixes
+### 根本原因修復
 
-#### If caused by insufficient memory allocation
+#### 如果是由記憶體配置不足引起
 
-1. **Increase memory limits**:
+1. **增加記憶體限制**:
 
 ```yaml
 # Update deployment
@@ -144,7 +144,7 @@ resources:
     memory: "4Gi"    # Increase from 2Gi
 ```
 
-1. **Adjust JVM heap settings**:
+1. **調整 JVM heap 設定**:
 
 ```yaml
 env:
@@ -154,28 +154,28 @@ env:
     value: "-Xms2g -Xmx3g -XX:MaxMetaspaceSize=512m"
 ```
 
-1. **Apply changes**:
+1. **套用變更**:
 
 ```bash
 kubectl apply -f deployment.yaml
 kubectl rollout status deployment/ecommerce-backend -n production
 ```
 
-#### If caused by memory leak
+#### 如果是由記憶體洩漏引起
 
-1. **Analyze heap dump** using tools like:
+1. **分析 heap dump** 使用工具如:
    - Eclipse Memory Analyzer (MAT)
    - VisualVM
    - JProfiler
 
-2. **Common leak patterns to look for**:
-   - Unclosed database connections
-   - Unbounded caches
-   - Static collections growing indefinitely
-   - Event listeners not removed
-   - ThreadLocal variables not cleaned
+2. **常見的洩漏模式**:
+   - 未關閉的資料庫連線
+   - 無界限的 cache
+   - 無限增長的 static collection
+   - 未移除的 event listener
+   - 未清理的 ThreadLocal 變數
 
-3. **Fix identified leaks**:
+3. **修復已識別的洩漏**:
 
 ```java
 // Example: Fix cache leak
@@ -196,10 +196,10 @@ public class CacheConfiguration {
 }
 ```
 
-#### If caused by large object allocation
+#### 如果是由大型物件配置引起
 
-1. **Identify large objects** from heap histogram
-2. **Optimize data structures**:
+1. **從 heap histogram 識別大型物件**
+2. **最佳化資料結構**:
 
 ```java
 // Example: Stream large datasets instead of loading all
@@ -218,9 +218,9 @@ public void processOrders(LocalDate date) {
 }
 ```
 
-#### If caused by inefficient garbage collection
+#### 如果是由 garbage collection 效率不佳引起
 
-1. **Tune GC parameters**:
+1. **調整 GC 參數**:
 
 ```yaml
 env:
@@ -239,7 +239,7 @@ env:
       -Xloggc:/var/log/gc.log
 ```
 
-1. **Monitor GC performance**:
+1. **監控 GC 效能**:
 
 ```bash
 # Analyze GC logs
@@ -247,17 +247,17 @@ kubectl logs ${POD_NAME} -n production | grep "GC" > gc.log
 # Use GCViewer or similar tool to analyze
 ```
 
-## Verification
+## 驗證
 
-- [ ] Memory usage drops below 80%
-- [ ] No OOMKilled events
-- [ ] GC pause times acceptable (< 200ms)
-- [ ] Application responding normally
-- [ ] No memory-related errors in logs
-- [ ] Heap usage stable over time
-- [ ] No memory leak detected in monitoring
+- [ ] 記憶體使用率降至 80% 以下
+- [ ] 無 OOMKilled 事件
+- [ ] GC 暫停時間可接受 (< 200ms)
+- [ ] 應用程式正常回應
+- [ ] 日誌中無記憶體相關錯誤
+- [ ] Heap 使用率隨時間穩定
+- [ ] 監控中未偵測到記憶體洩漏
 
-### Verification Commands
+### 驗證指令
 
 ```bash
 # Monitor memory usage over time
@@ -273,9 +273,9 @@ kubectl logs ${POD_NAME} -n production | grep "GC" | tail -20
 curl http://localhost:8080/actuator/health
 ```
 
-## Prevention
+## 預防措施
 
-### 1. Proper Memory Configuration
+### 1. 正確的記憶體配置
 
 ```yaml
 # Set appropriate resource limits
@@ -300,7 +300,7 @@ env:
       -XX:MaxGCPauseMillis=200
 ```
 
-### 2. Code Best Practices
+### 2. 程式碼最佳實踐
 
 ```java
 // Use try-with-resources for auto-cleanup
@@ -330,7 +330,7 @@ public void processLargeDataset() {
 }
 ```
 
-### 3. Monitoring and Alerting
+### 3. 監控與告警
 
 ```yaml
 # Set up memory monitoring alerts
@@ -350,7 +350,7 @@ public void processLargeDataset() {
     summary: "High GC time detected"
 ```
 
-### 4. Regular Memory Profiling
+### 4. 定期記憶體分析
 
 ```bash
 # Schedule regular heap dumps during low traffic
@@ -361,7 +361,7 @@ public void processLargeDataset() {
 ./scripts/analyze-memory-usage.sh
 ```
 
-### 5. Load Testing
+### 5. 負載測試
 
 ```bash
 # Regular load testing to identify memory issues
@@ -371,21 +371,21 @@ public void processLargeDataset() {
 watch -n 10 'kubectl top pods -n staging'
 ```
 
-## Escalation
+## 升級程序
 
-- **L1 Support**: DevOps team (immediate restart)
-- **L2 Support**: Backend engineering team (memory leak investigation)
-- **L3 Support**: Senior architect (JVM tuning, architecture review)
-- **On-Call Engineer**: Check PagerDuty
+- **L1 Support**: DevOps team (立即重啟)
+- **L2 Support**: Backend engineering team (記憶體洩漏調查)
+- **L3 Support**: Senior architect (JVM 調校、架構檢視)
+- **On-Call Engineer**: 查看 PagerDuty
 
-## Related
+## 相關文件
 
 - [High CPU Usage](high-cpu-usage.md)
 - [Pod Restart Loop](pod-restart-loop.md)
 - [Slow API Responses](slow-api-responses.md)
 - [Service Outage](service-outage.md)
 
-## Additional Resources
+## 額外資源
 
 - [Java Memory Management Guide](https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/)
 - [G1GC Tuning Guide](https://www.oracle.com/technical-resources/articles/java/g1gc.html)
@@ -394,6 +394,6 @@ watch -n 10 'kubectl top pods -n staging'
 
 ---
 
-**Last Updated**: 2025-10-25  
-**Owner**: DevOps Team  
+**Last Updated**: 2025-10-25
+**Owner**: DevOps Team
 **Review Cycle**: Monthly

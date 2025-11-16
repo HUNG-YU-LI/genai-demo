@@ -1,6 +1,6 @@
 ---
 adr_number: 056
-title: "Network Segmentation and Isolation Strategy"
+title: "Network Segmentation 和 Isolation Strategy"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,129 +10,129 @@ affected_viewpoints: ["deployment", "operational"]
 affected_perspectives: ["security", "availability"]
 ---
 
-# ADR-056: Network Segmentation and Isolation Strategy
+# ADR-056: Network Segmentation 和 Isolation Strategy
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires comprehensive network segmentation and isolation to:
+The Enterprise E-Commerce Platform 需要comprehensive network segmentation 和 isolation to:
 
 - Limit the blast radius of security breaches
-- Prevent lateral movement by attackers
-- Isolate sensitive workloads and data
-- Comply with security best practices (Zero Trust)
+- Prevent lateral movement 透過 attackers
+- Isolate sensitive workloads 和 data
+- Comply 與 security best practices (Zero Trust)
 - Protect against network-based attacks
-- Enable defense-in-depth security architecture
+- 啟用 defense-in-depth security architecture
 
 Taiwan's cyber security environment presents unique challenges:
 
 - Sophisticated APT attacks targeting e-commerce platforms
-- Need for defense-in-depth against state-sponsored threats
-- Regulatory requirements for network security (Taiwan Cyber Security Management Act)
-- Protection of customer data and payment information
+- 需要 defense-in-depth against state-sponsored threats
+- Regulatory requirements 用於 network security (Taiwan Cyber Security Management Act)
+- Protection of customer data 和 payment information
 - High-value target requiring maximum security
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Protect customer data and business operations
+- Protect customer data 和 business operations
 - Minimize impact of security breaches
-- Comply with PCI-DSS network segmentation requirements
-- Enable secure multi-tenant architecture
-- Maintain platform availability and reputation
+- Comply 與 PCI-DSS network segmentation requirements
+- 啟用 secure multi-tenant architecture
+- 維持 platform availability 和 reputation
 
-**Constraints**:
+**限制條件**：
 
-- Must not impact application performance (< 5ms latency)
-- Cannot disrupt existing services during implementation
-- Must support microservices architecture
-- Budget: $2,000/month for network security tools
+- 必須 not impact application performance (< 5ms latency)
+- 可以not disrupt existing services 期間 implementation
+- 必須 支援 microservices architecture
+- 預算: $2,000/month 用於 network security tools
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- Basic VPC with public and private subnets
-- Simple security groups with broad rules
+- Basic VPC 與 public 和 private subnets
+- 簡單的 security groups 與 broad rules
 - No network segmentation between services
 - No micro-segmentation
 - Limited network monitoring
 - No service mesh
 
-**Requirements**:
+**需求**：
 
 - Multi-tier network segmentation
 - Micro-segmentation between services
 - Zero Trust network architecture
-- Network traffic monitoring and logging
+- Network traffic monitoring 和 logging
 - Automated security policy enforcement
 - Service-to-service authentication
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Security**: Minimize attack surface and limit breach impact
+1. **Security**: Minimize attack surface 和 limit breach impact
 2. **Compliance**: Meet PCI-DSS network segmentation requirements
 3. **Performance**: Minimal latency overhead (< 5ms)
-4. **Scalability**: Support growing number of services
+4. **Scalability**: 支援 growing number of services
 5. **Automation**: Automated policy enforcement
 6. **Visibility**: Comprehensive network traffic monitoring
-7. **Cost**: Optimize operational costs
-8. **Flexibility**: Support microservices evolution
+7. **成本**： Optimize operational costs
+8. **Flexibility**: 支援 microservices evolution
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Multi-Layer Network Segmentation with Service Mesh (Recommended)
+### 選項 1： Multi-Layer Network Segmentation with Service Mesh (Recommended)
 
-**Description**: Comprehensive network segmentation using VPC subnets, security groups, NACLs, and Istio service mesh for micro-segmentation
+**描述**： Comprehensive network segmentation using VPC subnets, security groups, NACLs, and Istio service mesh for micro-segmentation
 
 **Components**:
 
-- **VPC Segmentation**: Separate subnets for different tiers (public, private, database, management)
+- **VPC Segmentation**: Separate subnets 用於 different tiers (public, private, database, management)
 - **Security Groups**: Stateful firewall rules at instance level
 - **Network ACLs**: Stateless firewall rules at subnet level
-- **Service Mesh (Istio)**: Micro-segmentation with mTLS between services
+- **Service Mesh (Istio)**: Micro-segmentation 與 mTLS between services
 - **VPC Flow Logs**: Network traffic monitoring
 - **AWS PrivateLink**: Secure access to AWS services
 
-**Pros**:
+**優點**：
 
-- ✅ Defense-in-depth with multiple security layers
+- ✅ Defense-in-depth 與 multiple security layers
 - ✅ Micro-segmentation between services
-- ✅ mTLS for service-to-service authentication
+- ✅ mTLS 用於 service-to-service authentication
 - ✅ Comprehensive traffic monitoring
 - ✅ Automated policy enforcement
 - ✅ Zero Trust architecture
 - ✅ PCI-DSS compliant
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Implementation complexity
+- ⚠️ Implementation 複雜的ity
 - ⚠️ Service mesh learning curve
 - ⚠️ Additional latency (3-5ms)
 - ⚠️ Operational overhead
 
-**Cost**: $2,000/month (Istio infrastructure, monitoring)
+**成本**： $2,000/month (Istio infrastructure, monitoring)
 
-**Risk**: **Low** - Industry best practices
+**風險**： **Low** - Industry best practices
 
-### Option 2: Basic VPC Segmentation Only
+### 選項 2： Basic VPC Segmentation Only
 
-**Description**: Simple network segmentation using VPC subnets and security groups
+**描述**： Simple network segmentation using VPC subnets and security groups
 
-**Pros**:
+**優點**：
 
-- ✅ Simple to implement
-- ✅ Low operational overhead
+- ✅ 簡單implement
+- ✅ Low 營運開銷
 - ✅ No additional latency
 - ✅ Low cost
 
-**Cons**:
+**缺點**：
 
 - ❌ No micro-segmentation
 - ❌ No service-to-service authentication
@@ -140,46 +140,46 @@ Taiwan's cyber security environment presents unique challenges:
 - ❌ Compliance gaps
 - ❌ Vulnerable to lateral movement
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **High** - Insufficient for production security
+**風險**： **High** - Insufficient for production security
 
-### Option 3: Third-Party Network Security Platform
+### 選項 3： Third-Party Network Security Platform
 
-**Description**: Deploy enterprise network security platform (Palo Alto, Cisco)
+**描述**： Deploy enterprise network security platform (Palo Alto, Cisco)
 
-**Pros**:
+**優點**：
 
 - ✅ Advanced security features
 - ✅ Proven enterprise solution
-- ✅ Professional support
+- ✅ Professional 支援
 
-**Cons**:
+**缺點**：
 
 - ❌ Very high cost ($10,000-20,000/month)
-- ❌ Complex deployment
+- ❌ 複雜的 deployment
 - ❌ Performance overhead
 - ❌ Vendor lock-in
 
-**Cost**: $15,000/month
+**成本**： $15,000/month
 
-**Risk**: **Medium** - High cost and complexity
+**風險**： **Medium** - High cost and complexity
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Multi-Layer Network Segmentation with Service Mesh (Option 1)**
+**選擇的選項**： **Multi-Layer Network Segmentation with Service Mesh (Option 1)**
 
-### Rationale
+### 理由
 
-Multi-layer network segmentation with service mesh was selected for the following reasons:
+Multi-layer network segmentation 與 service mesh被選擇的原因如下：
 
-1. **Defense-in-Depth**: Multiple security layers provide comprehensive protection
-2. **Zero Trust**: Service mesh enables Zero Trust architecture
+1. **Defense-in-Depth**: Multiple security layers 提供 comprehensive protection
+2. **Zero Trust**: Service mesh 啟用s Zero Trust architecture
 3. **Compliance**: Meets PCI-DSS network segmentation requirements
 4. **Micro-Segmentation**: Granular control over service-to-service communication
 5. **Visibility**: Comprehensive network traffic monitoring
-6. **Cost-Effective**: $2,000/month vs $15,000+ for enterprise solutions
-7. **Cloud-Native**: Leverages AWS and Kubernetes native capabilities
+6. **Cost-Effective**: $2,000/month vs $15,000+ 用於 enterprise solutions
+7. **Cloud-Native**: Leverages AWS 和 Kubernetes native capabilities
 
 ### VPC Network Segmentation
 
@@ -224,9 +224,9 @@ Multi-layer network segmentation with service mesh was selected for the followin
 **Subnet Design Principles**:
 
 - **Public Subnet**: Internet-facing resources only (ALB, NAT Gateway)
-- **Private Subnet**: Application workloads with no direct internet access
-- **Database Subnet**: Isolated database tier with no internet access
-- **Management Subnet**: Administrative access with strict controls
+- **Private Subnet**: Application workloads 與 no direct internet access
+- **Database Subnet**: Isolated database tier 與 no internet access
+- **Management Subnet**: Administrative access 與 strict controls
 
 **Implementation**:
 
@@ -275,7 +275,7 @@ const vpc = new ec2.Vpc(this, 'ECommerceVPC', {
 **Security Group Strategy**:
 
 - **Least Privilege**: Only allow required traffic
-- **Deny by Default**: Explicit allow rules only
+- **Deny 透過 Default**: Explicit allow rules only
 - **Stateful**: Automatic return traffic handling
 - **Service-Specific**: Separate security groups per service
 
@@ -398,7 +398,7 @@ mgmtSecurityGroup.addIngressRule(
 **NACL Strategy**:
 
 - **Subnet-Level Protection**: Additional layer beyond security groups
-- **Stateless**: Explicit inbound and outbound rules
+- **Stateless**: Explicit inbound 和 outbound rules
 - **Block Known Threats**: Block malicious IP ranges
 - **Compliance**: Meet regulatory requirements
 
@@ -469,7 +469,7 @@ dbNacl.addEntry('DenyAllOtherInbound', {
 
 - **mTLS**: Automatic mutual TLS between services
 - **Fine-Grained Authorization**: Service-level access control
-- **Traffic Management**: Intelligent routing and load balancing
+- **Traffic Management**: Intelligent routing 和 load balancing
 - **Observability**: Detailed service-to-service metrics
 - **Zero Trust**: Verify every service-to-service call
 
@@ -693,7 +693,7 @@ ORDER BY total_bytes DESC;
 
 ### AWS PrivateLink
 
-**PrivateLink for AWS Services**:
+**PrivateLink 用於 AWS Services**:
 
 ```typescript
 // VPC Endpoints for AWS services (no internet gateway needed)
@@ -718,9 +718,9 @@ vpc.addGatewayEndpoint('S3Endpoint', {
 });
 ```
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
@@ -730,42 +730,42 @@ vpc.addGatewayEndpoint('S3Endpoint', {
 | End Users | None | Transparent network security | N/A |
 | Compliance Team | Positive | PCI-DSS compliance | Automated compliance reporting |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All network traffic
-- All services and applications
+- All services 和 applications
 - Deployment processes
-- Monitoring and logging
+- Monitoring 和 logging
 - Security policies
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
-| Service mesh complexity | Medium | Medium | Training, documentation, gradual rollout |
+| Service mesh 複雜的ity | Medium | Medium | Training, documentation, gradual rollout |
 | Performance overhead | Low | Medium | Performance testing, optimization |
 | Misconfiguration | Medium | High | Automated validation, testing |
 | Service disruption | Low | High | Gradual rollout, rollback plan |
 | Operational overhead | Medium | Medium | Automation, monitoring tools |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: VPC Segmentation (Week 1-2)
+### 第 1 階段： VPC Segmentation （第 1-2 週）
 
 - [ ] Design VPC architecture
 - [ ] Create subnets (public, private, database, management)
 - [ ] Configure route tables
 - [ ] Set up NAT gateways
-- [ ] Enable VPC Flow Logs
+- [ ] 啟用 VPC Flow Logs
 - [ ] Test connectivity
 
-### Phase 2: Security Groups and NACLs (Week 3-4)
+### 第 2 階段： Security Groups and NACLs （第 3-4 週）
 
 - [ ] Define security group rules
 - [ ] Create security groups
@@ -773,15 +773,15 @@ Affects:
 - [ ] Test security rules
 - [ ] Document network policies
 
-### Phase 3: Service Mesh Deployment (Week 5-6)
+### 第 3 階段： Service Mesh Deployment （第 5-6 週）
 
 - [ ] Install Istio on EKS
-- [ ] Enable sidecar injection
+- [ ] 啟用 sidecar injection
 - [ ] Configure mTLS
 - [ ] Create authorization policies
 - [ ] Test service-to-service communication
 
-### Phase 4: Monitoring and Validation (Week 7-8)
+### 第 4 階段： Monitoring and Validation （第 7-8 週）
 
 - [ ] Set up flow log analysis
 - [ ] Configure Istio observability
@@ -790,28 +790,28 @@ Affects:
 - [ ] Conduct penetration testing
 - [ ] Document procedures
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Service disruption > 5 minutes
 - Performance degradation > 10%
 - Critical security policy misconfiguration
 - Service mesh instability
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Disable Istio authorization policies
 2. Revert to previous security group rules
 3. Remove service mesh sidecars
 4. Restore original network configuration
-5. Investigate and fix issues
+5. Investigate 和 fix issues
 
-**Rollback Time**: < 30 minutes
+**回滾時間**： < 30 minutes
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Network segmentation: 100% of services isolated
 - ✅ mTLS coverage: 100% of service-to-service communication
@@ -820,17 +820,17 @@ Affects:
 - ✅ Zero lateral movement incidents
 - ✅ PCI-DSS compliance: 100%
 
-### Monitoring Plan
+### 監控計畫
 
 **CloudWatch Metrics**:
 
-- `network.traffic.volume` (bytes by subnet)
-- `network.connections.rejected` (count by security group)
+- `network.traffic.volume` (bytes 透過 subnet)
+- `network.connections.rejected` (count 透過 security group)
 - `servicemesh.mtls.success` (percentage)
-- `servicemesh.authz.denied` (count by service)
+- `servicemesh.authz.denied` (count 透過 service)
 - `network.latency` (histogram)
 
-**Alerts**:
+**告警**：
 
 - Unusual network traffic pattern
 - Security group rule violation
@@ -838,80 +838,80 @@ Affects:
 - Authorization policy denial spike
 - VPC Flow Log anomaly
 
-**Review Schedule**:
+**審查時程**：
 
 - Daily: Review security policy violations
 - Weekly: Analyze network traffic patterns
 - Monthly: Security policy review
 - Quarterly: Penetration testing
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Defense-in-Depth**: Multiple security layers
-- ✅ **Zero Trust**: Service-level authentication and authorization
+- ✅ **Zero Trust**: Service-level authentication 和 authorization
 - ✅ **Compliance**: Meets PCI-DSS requirements
 - ✅ **Visibility**: Comprehensive network monitoring
 - ✅ **Micro-Segmentation**: Granular service isolation
-- ✅ **Automated**: Policy enforcement with minimal overhead
+- ✅ **Automated**: Policy enforcement 與 minimal overhead
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Complexity**: Service mesh adds operational complexity
+- ⚠️ **複雜的ity**: Service mesh adds operational 複雜的ity
 - ⚠️ **Learning Curve**: Team needs Istio training
 - ⚠️ **Performance**: 3-5ms latency overhead
-- ⚠️ **Operational Overhead**: Policy management and monitoring
-- ⚠️ **Cost**: $2,000/month for infrastructure and tools
+- ⚠️ **Operational Overhead**: Policy management 和 monitoring
+- ⚠️ **成本**： $2,000/month for infrastructure and tools
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Manual security policy creation (acceptable initially)
 2. Basic flow log analysis (rule-based)
 3. No automated policy testing
 4. Limited network simulation
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Implement automated policy generation
 - **Q3 2026**: ML-powered flow log analysis
 - **Q4 2026**: Automated policy testing framework
-- **2027**: Advanced network simulation and chaos engineering
+- **2027**: Advanced network simulation 和 chaos engineering
 
-## Related Decisions
+## 相關決策
 
-- [ADR-018: Container Orchestration with AWS EKS](018-container-orchestration-eks.md) - EKS networking
+- [ADR-018: Container Orchestration 與 AWS EKS](018-container-orchestration-eks.md) - EKS networking
 - [ADR-048: DDoS Protection Strategy](048-ddos-protection-strategy.md) - Network protection
-- [ADR-049: Web Application Firewall (WAF) Rules and Policies](049-waf-rules-policies.md) - Application layer protection
-- [ADR-050: API Security and Rate Limiting Strategy](050-api-security-rate-limiting.md) - API protection
+- [ADR-049: Web Application Firewall (WAF) Rules 和 Policies](049-waf-rules-policies.md) - Application layer protection
+- [ADR-050: API Security 和 Rate Limiting Strategy](050-api-security-rate-limiting.md) - API protection
 
-## Notes
+## 備註
 
 ### Zero Trust Principles
 
-1. **Verify Explicitly**: Always authenticate and authorize
+1. **Verify Explicitly**: Always authenticate 和 authorize
 2. **Least Privilege**: Minimum access required
 3. **Assume Breach**: Verify every transaction
 
 ### PCI-DSS Network Segmentation Requirements
 
-- **Requirement 1.2.1**: Restrict inbound and outbound traffic
+- **Requirement 1.2.1**: Restrict inbound 和 outbound traffic
 - **Requirement 1.3**: Prohibit direct public access to cardholder data
 - **Requirement 1.3.1**: Implement DMZ to limit inbound traffic
 - **Requirement 1.3.2**: Limit inbound internet traffic to DMZ
 
 ### Service Mesh Best Practices
 
-1. **Start Simple**: Begin with mTLS, add policies gradually
+1. **Start 簡單的**: Begin 與 mTLS, add policies gradually
 2. **Test Thoroughly**: Test policies in staging first
-3. **Monitor Closely**: Watch for authorization denials
-4. **Document Well**: Document all policies and rationale
-5. **Automate**: Use GitOps for policy management
+3. **Monitor Closely**: Watch 用於 authorization denials
+4. **Document Well**: Document all policies 和 rationale
+5. **Automate**: Use GitOps 用於 policy management
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

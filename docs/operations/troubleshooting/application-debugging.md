@@ -1,24 +1,24 @@
-# Application Debugging Guide
+# 應用程式除錯指南
 
-## Overview
+## 概述
 
-This guide provides comprehensive debugging workflows, diagnostic procedures, and analysis techniques for troubleshooting application issues in the Enterprise E-Commerce Platform.
+本指南提供全面的除錯工作流程、診斷程序和分析技術,用於企業電商平台應用程式問題的疑難排解。
 
-**Purpose**: Detailed step-by-step debugging procedures for complex application issues  
-**Audience**: DevOps engineers, SREs, backend developers  
-**Prerequisites**: Access to production environment, kubectl, JDK tools
+**目的**: 針對複雜應用程式問題提供詳細的逐步除錯程序
+**受眾**: DevOps engineer、SRE、後端開發人員
+**先決條件**: 存取 production 環境、kubectl、JDK 工具
 
 ---
 
-## Table of Contents
+## 目錄
 
-1. [Debugging Workflow Overview](#debugging-workflow-overview)
-2. [Memory Issues](#memory-issues)
-3. [Thread Issues](#thread-issues)
-4. [Performance Issues](#performance-issues)
-5. [JVM Tuning](#jvm-tuning)
-6. [Profiling Techniques](#profiling-techniques)
-7. [Diagnostic Tools Reference](#diagnostic-tools-reference)
+1. [除錯工作流程概述](#debugging-workflow-overview)
+2. [記憶體問題](#memory-issues)
+3. [Thread 問題](#thread-issues)
+4. [效能問題](#performance-issues)
+5. [JVM 調校](#jvm-tuning)
+6. [Profiling 技術](#profiling-techniques)
+7. [診斷工具參考](#diagnostic-tools-reference)
 
 ---
 

@@ -8,206 +8,206 @@ stakeholders: ["Architects", "Developers", "Operations Team", "Performance Engin
 
 # Concurrency Viewpoint Overview
 
-> **Viewpoint**: Concurrency  
-> **Purpose**: Describe how the system handles concurrent operations and manages shared resources  
+> **Viewpoint**: Concurrency
+> **Purpose**: 描述系統如何處理並行操作和管理共享資源
 > **Audience**: Architects, Developers, Operations Team, Performance Engineers
 
-## Purpose
+## 目的
 
-The Concurrency Viewpoint describes how the E-Commerce Platform manages concurrent operations, handles multiple simultaneous requests, and ensures data consistency in a distributed environment. This viewpoint is critical for understanding system scalability, performance, and reliability.
+Concurrency Viewpoint 描述 E-Commerce Platform 如何管理並行操作、處理多個同時的請求,以及確保分散式環境中的資料一致性。這個觀點對於理解系統可擴展性、效能和可靠性至關重要。
 
-## Key Concerns
+## 關鍵關注點
 
-This viewpoint addresses the following concerns:
+此觀點處理以下關注點:
 
-1. **Concurrent Request Handling**: How the system processes multiple simultaneous user requests
-2. **Data Consistency**: How the system maintains data integrity under concurrent access
-3. **Resource Contention**: How the system manages access to shared resources
-4. **Synchronization Mechanisms**: What techniques are used to coordinate concurrent operations
-5. **State Management**: How the system manages state in a distributed environment
-6. **Performance Under Load**: How concurrency affects system performance and scalability
+1. **並行請求處理**: 系統如何處理多個同時的使用者請求
+2. **資料一致性**: 系統如何在並行存取下維護資料完整性
+3. **資源競爭**: 系統如何管理對共享資源的存取
+4. **同步機制**: 使用哪些技術來協調並行操作
+5. **狀態管理**: 系統如何在分散式環境中管理狀態
+6. **負載下的效能**: 並行性如何影響系統效能和可擴展性
 
-## Concurrency Model Overview
+## Concurrency Model 概述
 
-### Event-Driven Architecture
+### 事件驅動架構
 
-The E-Commerce Platform uses an **event-driven architecture** as its primary concurrency model. This approach provides:
+E-Commerce Platform 使用**事件驅動架構**作為其主要的 concurrency model。這種方法提供:
 
-- **Loose Coupling**: Components communicate through events, reducing direct dependencies
-- **Asynchronous Processing**: Non-critical operations are processed asynchronously
-- **Scalability**: Event consumers can be scaled independently
-- **Resilience**: Failures in one component don't cascade to others
+- **鬆散耦合**: 元件透過事件溝通,減少直接依賴
+- **非同步處理**: 非關鍵操作非同步處理
+- **可擴展性**: Event consumers 可以獨立擴展
+- **韌性**: 一個元件的失敗不會串聯到其他元件
 
 ![Concurrency Model](../../diagrams/generated/concurrency/concurrency-model.png)
 
-*Figure 1: Overall concurrency model showing synchronous, asynchronous, and event-driven processing layers*
+*圖 1: 整體 concurrency model 顯示同步、非同步和事件驅動處理層*
 
-### Hybrid Synchronous-Asynchronous Model
+### 混合同步-非同步模型
 
-The system employs a hybrid model that combines:
+系統採用混合模型,結合:
 
-**Synchronous Operations** (Request-Response):
+**同步操作** (Request-Response):
 
-- User-facing API calls requiring immediate response
-- Payment processing requiring real-time confirmation
-- Inventory checks requiring immediate availability status
-- Order submission requiring immediate validation
+- 需要立即回應的使用者介面 API 呼叫
+- 需要即時確認的付款處理
+- 需要立即可用性狀態的庫存檢查
+- 需要立即驗證的訂單提交
 
-**Asynchronous Operations** (Event-Driven):
+**非同步操作** (Event-Driven):
 
-- Email and SMS notifications
-- Analytics and reporting
-- Inventory synchronization with external systems
-- Background data processing
+- Email 和 SMS 通知
+- 分析和報告
+- 與外部系統的庫存同步
+- 背景資料處理
 
-### Concurrency Levels
+### Concurrency 層級
 
-The system handles concurrency at multiple levels:
+系統在多個層級處理並行性:
 
-1. **Application Level**
-   - Spring Boot thread pools for HTTP request handling
-   - Async task executors for background processing
-   - Kafka consumers for event processing
+1. **應用程式層級**
+   - Spring Boot thread pools 用於 HTTP 請求處理
+   - Async task executors 用於背景處理
+   - Kafka consumers 用於事件處理
 
-2. **Database Level**
+2. **資料庫層級**
    - Connection pooling (HikariCP)
    - Transaction isolation levels
-   - Optimistic and pessimistic locking
+   - Optimistic 和 pessimistic locking
 
-3. **Distributed Level**
+3. **分散式層級**
    - Redis distributed locks
-   - Event-driven coordination via Kafka
-   - API rate limiting and throttling
+   - 透過 Kafka 的事件驅動協調
+   - API rate limiting 和 throttling
 
-## Concurrency Challenges
+## Concurrency 挑戰
 
-### Challenge 1: Inventory Management
+### 挑戰 1: 庫存管理
 
-**Problem**: Multiple customers attempting to purchase the last item in stock simultaneously.
+**問題**: 多個客戶同時嘗試購買庫存中的最後一件商品。
 
-**Solution**:
+**解決方案**:
 
-- Distributed locking (Redis) for inventory reservation
-- Optimistic locking with version numbers
-- Inventory reservation timeout mechanism
-- Compensation logic for failed orders
+- Distributed locking (Redis) 用於庫存保留
+- Optimistic locking 搭配版本號碼
+- 庫存保留逾時機制
+- 失敗訂單的補償邏輯
 
-### Challenge 2: Order Processing
+### 挑戰 2: 訂單處理
 
-**Problem**: Ensuring order processing steps execute in correct sequence without race conditions.
+**問題**: 確保訂單處理步驟按正確順序執行,避免 race conditions。
 
-**Solution**:
+**解決方案**:
 
-- Saga pattern for distributed transactions
-- Event sourcing for order state tracking
-- Idempotent event handlers
-- Retry mechanisms with exponential backoff
+- Saga pattern 用於分散式交易
+- Event sourcing 用於訂單狀態追蹤
+- 冪等 event handlers
+- Exponential backoff 的重試機制
 
-### Challenge 3: Payment Processing
+### 挑戰 3: 付款處理
 
-**Problem**: Preventing duplicate payment charges for the same order.
+**問題**: 防止同一訂單的重複付款收費。
 
-**Solution**:
+**解決方案**:
 
-- Idempotency keys for payment API calls
-- Database unique constraints
-- Distributed locks during payment processing
-- Payment status reconciliation
+- Payment API 呼叫的 idempotency keys
+- 資料庫 unique constraints
+- 付款處理期間的 distributed locks
+- Payment status 調解
 
-### Challenge 4: Shopping Cart Consistency
+### 挑戰 4: 購物車一致性
 
-**Problem**: Maintaining cart consistency across multiple user sessions and devices.
+**問題**: 在多個使用者工作階段和裝置間維護購物車一致性。
 
-**Solution**:
+**解決方案**:
 
 - Redis-based session storage
-- Optimistic locking for cart updates
-- Cart merge strategy for multi-device access
-- Periodic cart cleanup for abandoned carts
+- Optimistic locking 用於購物車更新
+- 多裝置存取的購物車合併策略
+- 定期清理被放棄的購物車
 
-## Concurrency Strategies
+## Concurrency 策略
 
-### 1. Stateless Design
+### 1. 無狀態設計
 
-**Principle**: Application services are stateless to enable horizontal scaling.
+**原則**: 應用程式服務是無狀態的以實現水平擴展。
 
-**Implementation**:
+**實作**:
 
-- No in-memory session state in application servers
-- JWT tokens for authentication (stateless)
-- Redis for distributed session storage
-- Database for persistent state
+- 應用程式伺服器中無記憶體內 session state
+- 驗證使用 JWT tokens (無狀態)
+- Redis 用於 distributed session storage
+- 資料庫用於持久狀態
 
-**Benefits**:
+**優點**:
 
-- Easy horizontal scaling
-- No session affinity required
-- Simplified deployment and rollback
-- Better fault tolerance
+- 容易水平擴展
+- 不需要 session affinity
+- 簡化部署和回滾
+- 更好的容錯能力
 
-### 2. Optimistic Concurrency Control
+### 2. 樂觀並行控制
 
-**Principle**: Assume conflicts are rare; detect and resolve when they occur.
+**原則**: 假設衝突很少發生;發生時檢測並解決。
 
-**Implementation**:
+**實作**:
 
-- JPA `@Version` annotation for entity versioning
-- Version checking before updates
-- Retry logic for version conflicts
-- User-friendly conflict resolution
+- JPA `@Version` annotation 用於 entity versioning
+- 更新前檢查版本
+- 版本衝突的重試邏輯
+- 使用者友善的衝突解決
 
-**Use Cases**:
+**使用案例**:
 
-- Product catalog updates
-- Customer profile updates
-- Shopping cart modifications
-- Non-critical inventory updates
+- Product catalog 更新
+- Customer profile 更新
+- Shopping cart 修改
+- 非關鍵庫存更新
 
-### 3. Pessimistic Concurrency Control
+### 3. 悲觀並行控制
 
-**Principle**: Prevent conflicts by locking resources before access.
+**原則**: 存取前鎖定資源以防止衝突。
 
-**Implementation**:
+**實作**:
 
-- Database row-level locks (`SELECT ... FOR UPDATE`)
+- 資料庫 row-level locks (`SELECT ... FOR UPDATE`)
 - Redis distributed locks (Redisson)
-- Lock timeout configuration
-- Deadlock detection and prevention
+- Lock timeout 設定
+- Deadlock 檢測和預防
 
-**Use Cases**:
+**使用案例**:
 
-- Critical inventory operations
-- Payment processing
-- Order finalization
-- High-contention resources
+- 關鍵庫存操作
+- 付款處理
+- 訂單確定
+- 高競爭資源
 
-### 4. Event-Driven Coordination
+### 4. 事件驅動協調
 
-**Principle**: Coordinate distributed operations through domain events.
+**原則**: 透過 domain events 協調分散式操作。
 
-**Implementation**:
+**實作**:
 
-- Kafka for event streaming
-- Event sourcing for audit trail
-- Idempotent event handlers
-- Dead letter queues for failed events
+- Kafka 用於 event streaming
+- Event sourcing 用於稽核軌跡
+- 冪等 event handlers
+- Failed events 的 dead letter queues
 
-**Use Cases**:
+**使用案例**:
 
-- Cross-context communication
-- Asynchronous notifications
-- Analytics and reporting
-- Workflow orchestration
+- 跨 context 溝通
+- 非同步通知
+- 分析和報告
+- Workflow 編排
 
-## Thread Management
+## Thread 管理
 
 ![Thread Pool Configuration](../../diagrams/generated/concurrency/thread-pool-configuration.png)
 
-*Figure 2: Thread pool configuration for different processing layers*
+*圖 2: 不同處理層的 thread pool 設定*
 
-### HTTP Request Handling
+### HTTP 請求處理
 
-**Configuration**:
+**設定**:
 
 ```yaml
 server:
@@ -219,16 +219,16 @@ server:
     max-connections: 10000
 ```
 
-**Characteristics**:
+**特性**:
 
-- One thread per HTTP request
-- Thread pool managed by Tomcat
-- Blocking I/O for synchronous operations
-- Non-blocking I/O for async operations
+- 每個 HTTP 請求一個 thread
+- Thread pool 由 Tomcat 管理
+- 同步操作使用 blocking I/O
+- 非同步操作使用 non-blocking I/O
 
-### Asynchronous Task Execution
+### 非同步任務執行
 
-**Configuration**:
+**設定**:
 
 ```java
 @Configuration
@@ -247,20 +247,20 @@ public class AsyncConfiguration {
 }
 ```
 
-**Use Cases**:
+**使用案例**:
 
-- Email sending
-- SMS notifications
-- Report generation
-- Data export
+- Email 發送
+- SMS 通知
+- 報告生成
+- 資料匯出
 
-### Kafka Event Processing
+### Kafka 事件處理
 
 ![Event Processing Concurrency](../../diagrams/generated/concurrency/event-processing-concurrency.png)
 
-*Figure 3: Event processing concurrency model with partition assignment and consumer groups*
+*圖 3: Event processing concurrency model with partition assignment and consumer groups*
 
-**Configuration**:
+**設定**:
 
 ```yaml
 spring:
@@ -272,54 +272,54 @@ spring:
       concurrency: 5    # Concurrent listeners
 ```
 
-**Characteristics**:
+**特性**:
 
-- Multiple consumer threads per topic
-- Parallel event processing
-- Ordered processing within partition
-- Automatic offset management
+- 每個 topic 多個 consumer threads
+- 平行事件處理
+- Partition 內的有序處理
+- 自動 offset 管理
 
-## Transaction Management
+## Transaction 管理
 
-### Transaction Boundaries
+### Transaction 邊界
 
-**Principle**: Keep transactions short and focused.
+**原則**: 保持 transactions 簡短和專注。
 
-**Implementation**:
+**實作**:
 
-- `@Transactional` at application service level
-- Read-only transactions for queries
-- Separate transactions for independent operations
-- Avoid distributed transactions when possible
+- Application service 層級的 `@Transactional`
+- 查詢使用唯讀 transactions
+- 獨立操作使用分開的 transactions
+- 盡可能避免分散式 transactions
 
 ### Transaction Isolation Levels
 
-**Default**: `READ_COMMITTED`
+**預設**: `READ_COMMITTED`
 
-**Rationale**:
+**理由**:
 
-- Prevents dirty reads
-- Allows concurrent reads
-- Good balance between consistency and performance
-- Suitable for most e-commerce operations
+- 防止 dirty reads
+- 允許並行讀取
+- 一致性和效能的良好平衡
+- 適合大多數電子商務操作
 
-**Special Cases**:
+**特殊案例**:
 
-- `SERIALIZABLE` for critical financial operations
-- `READ_UNCOMMITTED` for analytics (read-only)
+- `SERIALIZABLE` 用於關鍵財務操作
+- `READ_UNCOMMITTED` 用於分析 (唯讀)
 
-### Distributed Transaction Handling
+### 分散式 Transaction 處理
 
-**Approach**: Saga Pattern (Choreography-based)
+**方法**: Saga Pattern (Choreography-based)
 
-**Implementation**:
+**實作**:
 
-1. Each service publishes domain events
-2. Other services react to events
-3. Compensation events for rollback
-4. Eventual consistency across contexts
+1. 每個服務發佈 domain events
+2. 其他服務回應事件
+3. 回滾的補償事件
+4. Contexts 間的最終一致性
 
-**Example**: Order Processing Saga
+**範例**: Order Processing Saga
 
 ```mermaid
 graph TD
@@ -343,13 +343,13 @@ graph TD
     N4 --> N8
 ```
 
-## State Management
+## 狀態管理
 
 ### Session State
 
-**Storage**: Redis (distributed session store)
+**儲存**: Redis (distributed session store)
 
-**Configuration**:
+**設定**:
 
 ```yaml
 spring:
@@ -360,49 +360,49 @@ spring:
       flush-mode: on-save
 ```
 
-**Characteristics**:
+**特性**:
 
-- Shared across all application instances
-- Automatic expiration
-- Serializable session attributes
-- High availability with Redis cluster
+- 在所有應用程式實例間共享
+- 自動過期
+- 可序列化的 session attributes
+- Redis cluster 的高可用性
 
 ### Application State
 
-**Principle**: Minimize mutable shared state.
+**原則**: 最小化可變的共享狀態。
 
-**Guidelines**:
+**指南**:
 
-- Use immutable value objects
-- Avoid static mutable fields
-- Use thread-safe collections when needed
-- Prefer stateless services
+- 使用 immutable value objects
+- 避免 static mutable fields
+- 需要時使用 thread-safe collections
+- 偏好無狀態服務
 
 ### Cache State
 
-**Storage**: Redis (distributed cache)
+**儲存**: Redis (distributed cache)
 
-**Strategy**:
+**策略**:
 
 - Cache-aside pattern
 - TTL-based expiration
-- Cache invalidation via events
-- Fallback to database on cache miss
+- 透過事件的 cache invalidation
+- Cache miss 時回退到資料庫
 
-## Synchronization Mechanisms
+## 同步機制
 
 ### Distributed Locking
 
-**Technology**: Redis with Redisson
+**技術**: Redis with Redisson
 
-**Use Cases**:
+**使用案例**:
 
-- Inventory reservation
-- Order processing
-- Payment processing
-- Critical resource access
+- 庫存保留
+- 訂單處理
+- 付款處理
+- 關鍵資源存取
 
-**Configuration**:
+**設定**:
 
 ```java
 @Configuration
@@ -419,7 +419,7 @@ public class RedissonConfiguration {
 }
 ```
 
-### Database Locking
+### 資料庫鎖定
 
 **Optimistic Locking**:
 
@@ -440,59 +440,59 @@ public class Product {
 Inventory findByProductIdForUpdate(@Param("productId") String productId);
 ```
 
-### Event-Based Synchronization
+### 基於事件的同步
 
-**Mechanism**: Kafka topics with ordered partitions
+**機制**: Kafka topics with ordered partitions
 
-**Guarantees**:
+**保證**:
 
-- Events in same partition are processed in order
+- 同一 partition 中的事件按順序處理
 - At-least-once delivery
-- Idempotent event handlers
-- Dead letter queue for failures
+- 冪等 event handlers
+- 失敗的 dead letter queue
 
-## Performance Considerations
+## 效能考量
 
-### Concurrency vs. Performance Trade-offs
+### Concurrency vs. 效能權衡
 
-**High Concurrency Benefits**:
+**高並行性優點**:
 
-- Better resource utilization
-- Higher throughput
-- Improved scalability
+- 更好的資源利用
+- 更高的吞吐量
+- 改善的可擴展性
 
-**High Concurrency Costs**:
+**高並行性成本**:
 
-- Increased context switching
+- 增加的 context switching
 - Lock contention
-- Memory overhead
-- Complexity in debugging
+- 記憶體開銷
+- 除錯複雜性
 
-### Optimization Strategies
+### 最佳化策略
 
-1. **Minimize Lock Scope**
-   - Lock only what's necessary
-   - Release locks as soon as possible
-   - Use fine-grained locking
+1. **最小化 Lock 範圍**
+   - 只鎖定必要的部分
+   - 盡快釋放 locks
+   - 使用細粒度鎖定
 
-2. **Reduce Lock Contention**
-   - Partition data to reduce conflicts
-   - Use optimistic locking when possible
-   - Implement retry with backoff
+2. **減少 Lock Contention**
+   - 分割資料以減少衝突
+   - 盡可能使用 optimistic locking
+   - 實作帶 backoff 的重試
 
-3. **Asynchronous Processing**
-   - Offload non-critical operations
-   - Use message queues
-   - Batch processing for efficiency
+3. **非同步處理**
+   - 卸載非關鍵操作
+   - 使用 message queues
+   - 批次處理以提高效率
 
 4. **Connection Pooling**
-   - Reuse database connections
-   - Configure appropriate pool sizes
-   - Monitor pool utilization
+   - 重用資料庫連線
+   - 設定適當的 pool sizes
+   - 監控 pool 利用率
 
-## Monitoring and Observability
+## 監控和可觀察性
 
-### Key Metrics
+### 關鍵指標
 
 **Thread Pool Metrics**:
 
@@ -522,7 +522,7 @@ Inventory findByProductIdForUpdate(@Param("productId") String productId);
 - Failed event count
 - Dead letter queue size
 
-### Monitoring Tools
+### 監控工具
 
 - **Micrometer**: Application metrics
 - **CloudWatch**: AWS infrastructure metrics
@@ -530,22 +530,22 @@ Inventory findByProductIdForUpdate(@Param("productId") String productId);
 - **Grafana**: Visualization dashboards
 - **Prometheus**: Metrics collection
 
-## Related Documentation
+## 相關文件
 
-### Detailed Documentation
+### 詳細文件
 
 - [Synchronous vs Asynchronous Operations](sync-async-operations.md) - Operation classification →
 - [Synchronization Mechanisms](synchronization.md) - Detailed synchronization techniques →
 - [State Management](state-management.md) - State handling strategies →
 
-### Related Viewpoints
+### 相關 Viewpoints
 
 - [Functional Viewpoint](../functional/overview.md) - System capabilities
 - [Information Viewpoint](../information/overview.md) - Data management
 - [Deployment Viewpoint](../deployment/overview.md) - Infrastructure
 - [Operational Viewpoint](../operational/overview.md) - Operations
 
-### Related Perspectives
+### 相關 Perspectives
 
 - [Performance Perspective](../../perspectives/performance/overview.md) - Performance requirements
 - [Availability Perspective](../../perspectives/availability/overview.md) - Reliability requirements
@@ -553,7 +553,7 @@ Inventory findByProductIdForUpdate(@Param("productId") String productId);
 
 ---
 
-**Document Status**: Active  
-**Last Review**: 2025-10-23  
-**Next Review**: 2025-11-23  
+**Document Status**: Active
+**Last Review**: 2025-10-23
+**Next Review**: 2025-11-23
 **Owner**: Architecture Team

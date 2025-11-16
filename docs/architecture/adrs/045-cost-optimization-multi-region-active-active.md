@@ -1,6 +1,6 @@
 ---
 adr_number: 045
-title: "Cost Optimization for Multi-Region Active-Active"
+title: "Cost Optimization 用於 Multi-Region Active-Active"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,26 +10,26 @@ affected_viewpoints: ["deployment", "operational"]
 affected_perspectives: ["performance", "evolution"]
 ---
 
-# ADR-045: Cost Optimization for Multi-Region Active-Active
+# ADR-045: Cost Optimization 用於 Multi-Region Active-Active
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-Active-active multi-region architecture incurs significant costs that must be optimized:
+Active-active multi-region architecture incurs signifi可以t costs that 必須 be optimized:
 
 **Cost Challenges**:
 
-- **Compute Costs**: Duplicate infrastructure across regions
+- **Compute Costs**: Duplicate infrastructure 跨 regions
 - **Data Transfer**: Cross-region data transfer fees
 - **Storage Costs**: Replicated data storage
 - **Database Costs**: Multi-region database replication
 - **Monitoring Costs**: Observability infrastructure
-- **Operational Costs**: Increased operational complexity
+- **Operational Costs**: Increased operational 複雜的ity
 
 **Current Cost Structure** (Estimated Annual):
 
@@ -43,63 +43,63 @@ Active-active multi-region architecture incurs significant costs that must be op
 
 **Optimization Targets**:
 
-- Reduce costs by 20-30% ($100,000-$150,000/year)
-- Maintain 99.9% availability SLO
+- 降低 costs 透過 20-30% ($100,000-$150,000/year)
+- 維持 99.9% availability SLO
 - No performance degradation
 - Preserve disaster recovery capabilities
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Cost efficiency and profitability
+- Cost efficiency 和 profitability
 - Competitive pricing
 - Resource optimization
 - Sustainable growth
-- ROI improvement
+- ROI 改善ment
 
-**Constraints**:
+**限制條件**：
 
-- Cannot compromise availability (99.9% SLO)
-- Cannot compromise performance (< 2s response time)
-- Cannot compromise security or compliance
-- Must maintain disaster recovery capabilities
+- 可以not compromise availability (99.9% SLO)
+- 可以not compromise performance (< 2s 回應時間)
+- 可以not compromise security 或 compliance
+- 必須 維持 disaster recovery capabilities
 - Limited engineering resources
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- Full active-active in Taiwan and Tokyo
+- Full active-active in Taiwan 和 Tokyo
 - No cost optimization measures
 - Over-provisioned resources
 - Inefficient data transfer
 - No reserved instances
 
-**Requirements**:
+**需求**：
 
-- Cost visibility and tracking
+- Cost visibility 和 tracking
 - Automated cost optimization
 - Right-sizing recommendations
 - Reserved capacity planning
 - Data transfer optimization
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **Cost Reduction**: Achieve 20-30% cost savings
-2. **Availability**: Maintain 99.9% SLO
+2. **Availability**: 維持 99.9% SLO
 3. **Performance**: No degradation
 4. **Automation**: Automated optimization
 5. **Visibility**: Clear cost attribution
-6. **Flexibility**: Support business growth
+6. **Flexibility**: 支援 business growth
 7. **Sustainability**: Long-term cost efficiency
 8. **ROI**: Maximize return on investment
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Comprehensive Cost Optimization Strategy (Recommended)
+### 選項 1： Comprehensive Cost Optimization Strategy (Recommended)
 
-**Description**: Multi-faceted cost optimization approach across all infrastructure layers
+**描述**： Multi-faceted cost optimization approach across all infrastructure layers
 
 **Optimization Strategies**:
 
@@ -180,7 +180,7 @@ interface ReservedCapacityStrategy {
 }
 ```
 
-**Spot Instances for Non-Critical Workloads**:
+**Spot Instances 用於 Non-Critical Workloads**:
 
 ```typescript
 interface SpotInstanceStrategy {
@@ -386,7 +386,7 @@ interface AutomatedOptimization {
 }
 ```
 
-**Cost Allocation and Tagging**:
+**Cost Allocation 和 Tagging**:
 
 ```typescript
 interface CostAllocation {
@@ -446,36 +446,36 @@ const costOptimizationSummary = {
 };
 ```
 
-**Pros**:
+**優點**：
 
-- ✅ Significant cost savings (41.6%)
-- ✅ Maintains availability and performance
+- ✅ Signifi可以t cost savings (41.6%)
+- ✅ 維持s availability 和 performance
 - ✅ Automated optimization
 - ✅ Clear cost visibility
 - ✅ Sustainable long-term
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Initial implementation effort
 - ⚠️ Requires ongoing monitoring
 - ⚠️ Some manual decisions needed
 
-**Cost**: $292,000/year (vs $500,000 current)
+**成本**： $292,000/year (vs $500,000 current)
 
 **Savings**: $208,000/year (41.6%)
 
-**Risk**: **Low** - Proven strategies
+**風險**： **Low** - Proven strategies
 
-### Option 2: Minimal Optimization
+### 選項 2： Minimal Optimization
 
-**Description**: Basic cost optimization (RI only)
+**描述**： Basic cost optimization (RI only)
 
-**Pros**:
+**優點**：
 
-- ✅ Simple implementation
+- ✅ 簡單的 implementation
 - ✅ Low effort
 
-**Cons**:
+**缺點**：
 
 - ❌ Limited savings (15%)
 - ❌ Misses opportunities
@@ -483,17 +483,17 @@ const costOptimizationSummary = {
 
 **Savings**: $75,000/year (15%)
 
-**Risk**: **Medium** - Insufficient optimization
+**風險**： **Medium** - Insufficient optimization
 
-### Option 3: Aggressive Optimization
+### 選項 3： Aggressive Optimization
 
-**Description**: Maximum cost cutting including availability compromises
+**描述**： Maximum cost cutting including availability compromises
 
-**Pros**:
+**優點**：
 
 - ✅ Maximum savings (50%)
 
-**Cons**:
+**缺點**：
 
 - ❌ Compromises availability
 - ❌ Performance degradation
@@ -501,23 +501,23 @@ const costOptimizationSummary = {
 
 **Savings**: $250,000/year (50%)
 
-**Risk**: **High** - Unacceptable trade-offs
+**風險**： **High** - Unacceptable trade-offs
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Comprehensive Cost Optimization Strategy (Option 1)**
+**選擇的選項**： **Comprehensive Cost Optimization Strategy (Option 1)**
 
-### Rationale
+### 理由
 
-Comprehensive optimization achieves significant savings (41.6%) while maintaining availability, performance, and disaster recovery capabilities.
+Comprehensive optimization achieves signifi可以t savings (41.6%) while 維持ing availability, performance, 和 disaster recovery capabilities.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Finance Team | High | Significant cost savings, budget reallocation | Regular cost reports, ROI analysis |
+| Finance Team | High | Signifi可以t cost savings, 預算 reallocation | Regular cost reports, ROI analysis |
 | Engineering Team | Medium | Implement optimizations, monitor performance | Training, automation, documentation |
 | Operations Team | High | Manage cost optimization tools, monitor savings | Automation, dashboards, training |
 | Management | High | Approve strategy, track ROI | Executive dashboards, quarterly reviews |
@@ -525,9 +525,9 @@ Comprehensive optimization achieves significant savings (41.6%) while maintainin
 
 ### Impact Radius Assessment
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All infrastructure components
 - Compute resources (EKS, EC2)
@@ -535,23 +535,23 @@ Affects:
 - Storage resources (S3, EBS)
 - Network resources (data transfer)
 - Monitoring infrastructure
-- Cost allocation and tracking
+- Cost allocation 和 tracking
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | Performance degradation | Low | High | Gradual rollout, performance monitoring |
-| Availability impact | Low | Critical | Test in staging, maintain SLO monitoring |
-| Cost overruns | Medium | Medium | Budget alerts, monthly reviews |
+| Availability impact | Low | Critical | Test in staging, 維持 SLO monitoring |
+| Cost overruns | Medium | Medium | 預算 alerts, 月ly reviews |
 | Reserved instance waste | Low | Medium | Careful capacity planning, flexible RIs |
-| Optimization complexity | Medium | Low | Automation, clear documentation |
+| Optimization 複雜的ity | Medium | Low | Automation, clear documentation |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Analysis & Planning (Month 1)
+### 第 1 階段： Analysis & Planning (Month 1)
 
 **Objectives**:
 
@@ -562,12 +562,12 @@ Affects:
 
 **Tasks**:
 
-- [ ] Analyze current costs by service, region, team
+- [ ] Analyze current costs 透過 service, region, team
 - [ ] Identify top cost drivers
 - [ ] Benchmark against industry standards
 - [ ] Create cost optimization roadmap
 - [ ] Set up AWS Cost Explorer
-- [ ] Configure AWS Budgets
+- [ ] Configure AWS 預算s
 - [ ] Implement cost allocation tags
 - [ ] Create cost tracking dashboard
 - [ ] Define success metrics
@@ -576,26 +576,26 @@ Affects:
 
 - Complete cost analysis documented
 - Optimization opportunities identified
-- Roadmap approved by management
+- Roadmap approved 透過 management
 - Cost tracking operational
 
-### Phase 2: Quick Wins (Month 2-3)
+### 第 2 階段： Quick Wins (Month 2-3)
 
 **Objectives**:
 
 - Implement high-impact, low-risk optimizations
 - Achieve initial cost savings
-- Build momentum for larger changes
+- Build momentum 用於 大型的r changes
 
 **Tasks**:
 
-- [ ] Purchase 1-year Reserved Instances for baseline compute
+- [ ] Purchase 1-year Reserved Instances 用於 baseline compute
 - [ ] Purchase 1-year RDS Reserved Instances
 - [ ] Right-size obviously over-provisioned instances
 - [ ] Terminate unused resources
 - [ ] Implement cost allocation tags on all resources
-- [ ] Configure budget alerts
-- [ ] Set up weekly cost reports
+- [ ] Configure 預算 alerts
+- [ ] Set up 週ly cost reports
 - [ ] Measure initial savings
 
 **Success Criteria**:
@@ -603,11 +603,11 @@ Affects:
 - Reserved Instances purchased (60% coverage)
 - 10-15% cost reduction achieved
 - All resources tagged
-- Budget alerts operational
+- 預算 alerts operational
 
-**Expected Savings**: $50,000-$75,000/year
+**預期的 Savings**: $50,000-$75,000/year
 
-### Phase 3: Compute Optimization (Month 4-5)
+### 第 3 階段： Compute Optimization (Month 4-5)
 
 **Objectives**:
 
@@ -619,9 +619,9 @@ Affects:
 
 - [ ] Analyze EKS node utilization
 - [ ] Right-size node groups
-- [ ] Implement Spot instances for non-critical workloads
+- [ ] Implement Spot instances 用於 non-critical workloads
 - [ ] Configure Cluster Autoscaler
-- [ ] Implement Karpenter for advanced scheduling
+- [ ] Implement Karpenter 用於 advanced scheduling
 - [ ] Optimize pod resource requests/limits
 - [ ] Configure Horizontal Pod Autoscaler
 - [ ] Test performance under load
@@ -630,24 +630,24 @@ Affects:
 **Success Criteria**:
 
 - Node utilization > 70%
-- Spot instance coverage > 30% for eligible workloads
+- Spot instance coverage > 30% 用於 eligible workloads
 - Auto-scaling working correctly
 - No performance degradation
 
-**Expected Savings**: $40,000/year
+**預期的 Savings**: $40,000/year
 
-### Phase 4: Data Transfer Optimization (Month 6-7)
+### 第 4 階段： Data Transfer Optimization (Month 6-7)
 
 **Objectives**:
 
-- Reduce cross-region data transfer
+- 降低 cross-region data transfer
 - Implement caching strategies
 - Optimize routing
 
 **Tasks**:
 
 - [ ] Analyze data transfer patterns
-- [ ] Implement CloudFront for static content
+- [ ] Implement CloudFront 用於 static content
 - [ ] Deploy regional Redis caches
 - [ ] Configure cache warming strategies
 - [ ] Implement data compression
@@ -658,12 +658,12 @@ Affects:
 
 **Success Criteria**:
 
-- Cross-region transfer reduced by 50%
+- Cross-region transfer 降低d 透過 50%
 - Cache hit rate > 80%
-- API payload sizes reduced by 30%
+- API payload sizes 降低d 透過 30%
 - No latency increase
 
-**Expected Savings**: $35,000/year
+**預期的 Savings**: $35,000/year
 
 ### Phase 5: Database Optimization (Month 8-9)
 
@@ -689,11 +689,11 @@ Affects:
 **Success Criteria**:
 
 - Database utilization > 60%
-- Storage costs reduced by 40%
-- Read replica costs reduced by 50%
-- Query performance maintained
+- Storage costs 降低d 透過 40%
+- Read replica costs 降低d 透過 50%
+- Query performance 維持ed
 
-**Expected Savings**: $45,000/year
+**預期的 Savings**: $45,000/year
 
 ### Phase 6: Storage Optimization (Month 10-11)
 
@@ -701,7 +701,7 @@ Affects:
 
 - Implement S3 lifecycle policies
 - Optimize storage classes
-- Reduce storage footprint
+- 降低 storage footprint
 
 **Tasks**:
 
@@ -718,11 +718,11 @@ Affects:
 **Success Criteria**:
 
 - 60% of data in lower-cost tiers
-- Storage costs reduced by 40%
+- Storage costs 降低d 透過 40%
 - No data access issues
-- Compliance maintained
+- Compliance 維持ed
 
-**Expected Savings**: $18,000/year
+**預期的 Savings**: $18,000/year
 
 ### Phase 7: Monitoring Optimization (Month 12)
 
@@ -730,7 +730,7 @@ Affects:
 
 - Optimize observability costs
 - Implement intelligent sampling
-- Reduce log volume
+- 降低 log volume
 
 **Tasks**:
 
@@ -745,20 +745,20 @@ Affects:
 
 **Success Criteria**:
 
-- Monitoring costs reduced by 40%
+- Monitoring costs 降低d 透過 40%
 - No visibility loss
-- Query performance maintained
-- Alert accuracy maintained
+- Query performance 維持ed
+- Alert accuracy 維持ed
 
-**Expected Savings**: $25,000/year
+**預期的 Savings**: $25,000/year
 
 ### Phase 8: Automation & Continuous Optimization (Ongoing)
 
 **Objectives**:
 
 - Automate cost optimization
-- Establish continuous improvement
-- Maintain savings
+- Establish continuous 改善ment
+- 維持 savings
 
 **Tasks**:
 
@@ -767,7 +767,7 @@ Affects:
 - [ ] Set up cost anomaly detection
 - [ ] Implement automated tagging
 - [ ] Create cost optimization dashboard
-- [ ] Establish monthly cost review process
+- [ ] Establish 月ly cost review process
 - [ ] Configure automated reports
 - [ ] Train teams on cost awareness
 
@@ -776,18 +776,18 @@ Affects:
 - Automated optimization operational
 - Monthly cost reviews established
 - Team cost awareness high
-- Continuous savings maintained
+- Continuous savings 維持ed
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Performance degradation > 10%
 - Availability SLO breach
 - Customer complaints
 - Cost savings not realized
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. **Immediate**: Revert recent changes
 2. **Scale Up**: Increase resources if needed
@@ -795,11 +795,11 @@ Affects:
 4. **Fix**: Address issues
 5. **Retry**: Gradual re-implementation
 
-**Rollback Time**: < 2 hours
+**回滾時間**： < 2 hours
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
@@ -811,7 +811,7 @@ Affects:
 | Reserved Instance Coverage | > 90% | AWS Cost Explorer |
 | Spot Instance Coverage | > 30% | AWS Cost Explorer |
 | Cost Anomalies Detected | < 5/month | AWS Cost Anomaly Detection |
-| Budget Variance | < 5% | AWS Budgets |
+| 預算 Variance | < 5% | AWS 預算s |
 | Resource Utilization | > 70% | CloudWatch metrics |
 | Cost per Transaction | Decreasing trend | Custom metrics |
 | ROI | > 200% | Financial analysis |
@@ -860,18 +860,18 @@ const costOptimizationMetrics = {
 
 **Executive Cost Dashboard**:
 
-- Total monthly cost trend
+- Total 月ly cost trend
 - Cost savings achieved
-- Cost by category (pie chart)
-- Cost by region (bar chart)
-- Budget vs actual
+- Cost 透過 category (pie chart)
+- Cost 透過 region (bar chart)
+- 預算 vs actual
 - ROI calculation
 
 **Operations Cost Dashboard**:
 
-- Cost by service
-- Cost by team
-- Cost by environment
+- Cost 透過 service
+- Cost 透過 team
+- Cost 透過 environment
 - Resource utilization
 - Optimization opportunities
 - Anomaly alerts
@@ -882,73 +882,73 @@ const costOptimizationMetrics = {
 - Spot Instance usage
 - Right-sizing recommendations
 - Unused resources
-- Cost allocation by tags
+- Cost allocation 透過 tags
 - Forecast vs actual
 
 ### Review Schedule
 
 - **Daily**: Cost anomaly review
 - **Weekly**: Cost trend analysis, optimization opportunities
-- **Monthly**: Comprehensive cost review, budget variance analysis
+- **Monthly**: Comprehensive cost review, 預算 variance analysis
 - **Quarterly**: Strategy review, ROI analysis, optimization planning
 - **Annually**: Long-term planning, reserved instance renewal
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Significant Cost Savings**: $208,000/year (41.6% reduction)
+- ✅ **Signifi可以t Cost Savings**: $208,000/year (41.6% reduction)
 - ✅ **Exceeds Target**: Surpasses 20-30% target
-- ✅ **Improved Cost Visibility**: Clear cost attribution and tracking
-- ✅ **Automated Optimization**: Reduces manual effort
+- ✅ **改善d Cost Visibility**: Clear cost attribution 和 tracking
+- ✅ **Automated Optimization**: 降低s manual effort
 - ✅ **Sustainable Cost Structure**: Long-term cost efficiency
-- ✅ **Better ROI**: Improved return on infrastructure investment
-- ✅ **Maintains Performance**: No degradation in system performance
-- ✅ **Maintains Availability**: 99.9% SLO preserved
-- ✅ **Competitive Advantage**: Lower costs enable competitive pricing
-- ✅ **Resource Efficiency**: Better utilization of resources
+- ✅ **更好的 ROI**: 改善d return on infrastructure investment
+- ✅ **維持s Performance**: No degradation in system performance
+- ✅ **維持s Availability**: 99.9% SLO preserved
+- ✅ **Competitive Advantage**: Lower costs 啟用 competitive pricing
+- ✅ **Resource Efficiency**: 更好的 utilization of resources
 
-### Negative Consequences
+### 負面後果
 
 - ⚠️ **Implementation Effort**: 12-month implementation timeline
 - ⚠️ **Ongoing Monitoring**: Requires continuous cost monitoring
-- ⚠️ **Complexity Added**: More tools and processes to manage
-- ⚠️ **Team Training**: Learning curve for cost optimization tools
+- ⚠️ **複雜的ity Added**: More tools 和 processes to manage
+- ⚠️ **Team Training**: Learning curve 用於 cost optimization tools
 - ⚠️ **Reserved Instance Risk**: Commitment risk if usage patterns change
-- ⚠️ **Spot Instance Interruptions**: Need to handle spot interruptions
-- ⚠️ **Initial Investment**: Time and resources for implementation
+- ⚠️ **Spot Instance Interruptions**: Need to 處理 spot interruptions
+- ⚠️ **Initial Investment**: Time 和 resources 用於 implementation
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. Manual cost analysis and reporting
+1. Manual cost analysis 和 reporting
 2. Basic right-sizing recommendations
 3. Limited automated optimization
 4. Manual reserved instance planning
 5. Basic cost allocation tagging
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: AI-powered cost optimization recommendations
-- **Q3 2026**: Automated right-sizing and scaling
+- **Q3 2026**: Automated right-sizing 和 scaling
 - **Q4 2026**: Predictive cost forecasting
 - **2027**: Fully automated FinOps platform
 
-## Related Decisions
+## 相關決策
 
 - [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md)
 - [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md)
-- [ADR-041: Data Residency and Sovereignty Strategy](041-data-residency-sovereignty-strategy.md)
+- [ADR-041: Data Residency 和 Sovereignty Strategy](041-data-residency-sovereignty-strategy.md)
 - [ADR-044: Business Continuity Plan](044-business-continuity-plan-geopolitical-risks.md)
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）
 
-## Notes
+## 備註
 
 ### Cost Optimization Best Practices
 
@@ -956,7 +956,7 @@ const costOptimizationMetrics = {
 
 1. **Teams need to collaborate**: Engineering, Finance, Operations
 2. **Everyone takes ownership**: Cost is everyone's responsibility
-3. **Decisions are driven by business value**: Not just cost reduction
+3. **Decisions are driven 透過 business value**: Not just cost reduction
 4. **Take advantage of variable cost model**: Cloud flexibility
 5. **A centralized team drives FinOps**: Dedicated FinOps team
 
@@ -965,12 +965,12 @@ const costOptimizationMetrics = {
 1. **Eliminate**: Remove unused resources
 2. **Right-size**: Match resources to actual needs
 3. **Reserve**: Commit to long-term usage
-4. **Optimize**: Improve efficiency
+4. **Optimize**: 改善 efficiency
 5. **Automate**: Continuous optimization
 
 ### Reserved Instance Strategy
 
-**Coverage Targets by Service**:
+**Coverage Targets 透過 Service**:
 
 - **EC2/EKS**: 60% Reserved, 30% Spot, 10% On-Demand
 - **RDS**: 80% Reserved, 20% On-Demand
@@ -981,13 +981,13 @@ const costOptimizationMetrics = {
 
 - **1-Year**: For predictable baseline workload
 - **3-Year**: For stable, long-term workload (maximum savings)
-- **Payment**: All Upfront for maximum discount
+- **Payment**: All Upfront 用於 maximum discount
 
 **Flexibility**:
 
-- Use Convertible RIs for flexibility
-- Regional RIs for multi-AZ flexibility
-- Size flexibility for instance family
+- Use Convertible RIs 用於 flexibility
+- Regional RIs 用於 multi-AZ flexibility
+- Size flexibility 用於 instance family
 
 ### Spot Instance Best Practices
 
@@ -1012,7 +1012,7 @@ const costOptimizationMetrics = {
 - Use multiple instance types
 - Implement graceful shutdown
 - Use Spot Instance interruption notices
-- Maintain on-demand fallback
+- 維持 on-demand fallback
 
 ### Data Transfer Cost Optimization
 
@@ -1026,10 +1026,10 @@ const costOptimizationMetrics = {
 **Optimization Strategies**:
 
 1. **Minimize Cross-Region**: Use regional caching
-2. **Compress Data**: Reduce transfer size
-3. **Batch Transfers**: Reduce transfer count
+2. **Compress Data**: 降低 transfer size
+3. **Batch Transfers**: 降低 transfer count
 4. **Use CloudFront**: Cache at edge
-5. **Optimize APIs**: Reduce payload sizes
+5. **Optimize APIs**: 降低 payload sizes
 
 ### Storage Cost Optimization
 
@@ -1075,11 +1075,11 @@ const costOptimizationMetrics = {
 **RDS Optimization Checklist**:
 
 - [ ] Right-size instance based on actual usage
-- [ ] Use Reserved Instances for baseline
+- [ ] Use Reserved Instances 用於 baseline
 - [ ] Migrate to GP3 storage
 - [ ] Optimize IOPS allocation
 - [ ] Right-size read replicas
-- [ ] Use Aurora Serverless for variable workloads
+- [ ] Use Aurora Serverless 用於 variable workloads
 - [ ] Implement query optimization
 - [ ] Configure automated backups efficiently
 
@@ -1097,7 +1097,7 @@ const costOptimizationMetrics = {
 **CloudWatch Optimization**:
 
 - Filter low-value metrics
-- Use metric math for derived metrics
+- Use metric math 用於 derived metrics
 - Optimize log retention
 - Use log sampling
 - Implement log filtering
@@ -1128,8 +1128,8 @@ const requiredTags = {
 
 1. **Spike**: Sudden cost increase
 2. **Trend**: Gradual cost increase
-3. **Seasonal**: Expected periodic changes
-4. **Unexpected**: Unusual patterns
+3. **Seasonal**: 預期的 periodic changes
+4. **Un預期的**: Unusual patterns
 
 **Alert Configuration**:
 
@@ -1154,10 +1154,10 @@ ROI = ($624,000 - $50,000) / $50,000 × 100 = 1,148%
 
 **Business Impact**:
 
-- Improved profit margins
+- 改善d profit margins
 - Competitive pricing capability
-- Increased R&D budget
-- Better resource allocation
+- Increased R&D 預算
+- 更好的 resource allocation
 
 ### Continuous Optimization Process
 
@@ -1174,22 +1174,22 @@ ROI = ($624,000 - $50,000) / $50,000 × 100 = 1,148%
 **Quarterly Optimization**:
 
 - [ ] Comprehensive cost analysis
-- [ ] Strategy review and adjustment
+- [ ] Strategy review 和 adjustment
 - [ ] RI renewal planning
 - [ ] Team training updates
 - [ ] Tool evaluation
 - [ ] ROI calculation
 
-### Tools and Resources
+### Tools 和 Resources
 
 **AWS Native Tools**:
 
 - AWS Cost Explorer
-- AWS Budgets
+- AWS 預算s
 - AWS Cost Anomaly Detection
 - AWS Compute Optimizer
 - AWS Trusted Advisor
-- AWS Cost and Usage Report
+- AWS Cost 和 Usage Report
 
 **Third-Party Tools** (Optional):
 
@@ -1215,7 +1215,7 @@ ROI = ($624,000 - $50,000) / $50,000 × 100 = 1,148%
 
 **Key Success Factors**:
 
-1. Executive support and commitment
+1. Executive 支援 和 commitment
 2. Cross-functional collaboration
 3. Automated optimization
 4. Continuous monitoring
@@ -1239,6 +1239,6 @@ ROI = ($624,000 - $50,000) / $50,000 × 100 = 1,148%
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

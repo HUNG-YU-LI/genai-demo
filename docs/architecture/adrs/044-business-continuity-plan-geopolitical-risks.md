@@ -1,6 +1,6 @@
 ---
 adr_number: 044
-title: "Business Continuity Plan (BCP) for Geopolitical Risks"
+title: "Business Continuity Plan (BCP) 用於 Geopolitical Risks"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,30 +10,30 @@ affected_viewpoints: ["deployment", "operational"]
 affected_perspectives: ["availability", "security", "location"]
 ---
 
-# ADR-044: Business Continuity Plan (BCP) for Geopolitical Risks
+# ADR-044: Business Continuity Plan (BCP) 用於 Geopolitical Risks
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-Active-active multi-region architecture in Taiwan and Tokyo faces geopolitical risks that could impact business continuity:
+Active-active multi-region architecture in Taiwan 和 Tokyo faces geopolitical risks that could impact business continuity:
 
 **Geopolitical Risk Scenarios**:
 
-- **Taiwan Strait Tensions**: Military conflict or blockade
+- **Taiwan Strait Tensions**: Military conflict 或 blockade
 - **Regional Conflicts**: Escalation affecting multiple regions
 - **Cyber Warfare**: State-sponsored attacks on infrastructure
-- **Trade Restrictions**: Sanctions or embargoes
+- **Trade Restrictions**: Sanctions 或 embargoes
 - **Natural Disasters**: Earthquakes, typhoons affecting regions
 - **Political Instability**: Government changes affecting operations
 
 **Business Impact**:
 
-- Complete region unavailability (days to months)
+- Complete region unavailability (days to 個月)
 - Data access restrictions
 - Supply chain disruptions
 - Regulatory changes
@@ -43,40 +43,40 @@ Active-active multi-region architecture in Taiwan and Tokyo faces geopolitical r
 **Current Gaps**:
 
 - No geopolitical risk assessment
-- No contingency plans for extended outages
+- No contingency plans 用於 extended outages
 - Limited geographic diversity
 - No alternative region strategy
 - Unclear escalation procedures
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - Business continuity (mandatory)
-- Customer trust and reliability
+- Customer trust 和 reliability
 - Regulatory compliance
 - Risk mitigation
 - Market expansion opportunities
 
-**Constraints**:
+**限制條件**：
 
-- Budget: $100,000/year for BCP infrastructure
-- Must maintain 99.9% availability
+- 預算: $100,000/year 用於 BCP infrastructure
+- 必須 維持 99.9% availability
 - Data sovereignty requirements
 - Limited alternative regions
 - Cost optimization
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- Active-active in Taiwan and Tokyo
+- Active-active in Taiwan 和 Tokyo
 - No third region
 - No geopolitical monitoring
 - Basic disaster recovery
 - Manual failover procedures
 
-**Requirements**:
+**需求**：
 
 - Third region capability
 - Automated failover
@@ -85,24 +85,24 @@ Active-active multi-region architecture in Taiwan and Tokyo faces geopolitical r
 - Clear escalation procedures
 - Regular BCP testing
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Continuity**: Maintain business operations during crises
-2. **Availability**: Meet 99.9% SLO even during regional issues
+1. **Continuity**: 維持 business operations 期間 crises
+2. **Availability**: Meet 99.9% SLO even 期間 regional issues
 3. **Compliance**: Meet data sovereignty requirements
-4. **Cost**: Optimize BCP infrastructure costs
+4. **成本**： Optimize BCP infrastructure costs
 5. **Speed**: Fast activation of contingency plans
-6. **Flexibility**: Support multiple risk scenarios
+6. **Flexibility**: 支援 multiple risk scenarios
 7. **Testing**: Regular BCP validation
 8. **Communication**: Clear stakeholder communication
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Three-Region Active-Active with Geopolitical Monitoring (Recommended)
+### 選項 1： Three-Region Active-Active with Geopolitical Monitoring (Recommended)
 
-**Description**: Add third region (Singapore) with geopolitical risk monitoring and automated response
+**描述**： Add third region (Singapore) with geopolitical risk monitoring and automated response
 
-**Architecture**:
+**架構**：
 
 ```text
 Primary Regions (Active-Active):
@@ -122,7 +122,7 @@ Geopolitical Monitoring:
 
 ```
 
-**Risk Scenarios and Response**:
+**Risk Scenarios 和 Response**:
 
 **Scenario 1: Taiwan Region Unavailable (High Risk)**
 
@@ -131,31 +131,31 @@ Geopolitical Monitoring:
 - **Response**:
   1. Automatic failover to Tokyo (< 5 minutes)
   2. Activate Singapore warm standby (< 30 minutes)
-  3. Scale Tokyo and Singapore to 100% capacity
-  4. Notify customers and stakeholders
-  5. Monitor situation and plan recovery
+  3. Scale Tokyo 和 Singapore to 100% capacity
+  4. Notify customers 和 stakeholders
+  5. Monitor situation 和 plan recovery
 
-**Scenario 2: Both Taiwan and Tokyo Unavailable (Low Risk)**
+**Scenario 2: Both Taiwan 和 Tokyo Unavailable (Low Risk)**
 
 - **Trigger**: Regional conflict, massive natural disaster
 - **Impact**: Complete primary region loss
 - **Response**:
   1. Activate Singapore as primary (< 30 minutes)
-  2. Activate backup region (Seoul or Mumbai) (< 2 hours)
+  2. Activate backup region (Seoul 或 Mumbai) (< 2 hours)
   3. Restore from backups
   4. Implement emergency procedures
-  5. Communicate with all stakeholders
+  5. Communicate 與 all stakeholders
 
 **Scenario 3: Cyber Warfare (Medium Risk)**
 
 - **Trigger**: State-sponsored DDoS, infrastructure attacks
-- **Impact**: Service degradation or outage
+- **Impact**: Service degradation 或 outage
 - **Response**:
   1. Activate DDoS protection
   2. Isolate affected regions
   3. Failover to unaffected regions
   4. Engage security response team
-  5. Coordinate with authorities
+  5. Coordinate 與 authorities
 
 **Scenario 4: Trade Restrictions (Low Risk)**
 
@@ -165,7 +165,7 @@ Geopolitical Monitoring:
   1. Assess legal implications
   2. Implement compliance measures
   3. Adjust operations as needed
-  4. Communicate with customers
+  4. Communicate 與 customers
   5. Explore alternative arrangements
 
 **Geopolitical Risk Monitoring**:
@@ -352,7 +352,7 @@ interface CommunicationPlan {
 }
 ```
 
-**Pros**:
+**優點**：
 
 - ✅ Geographic diversity
 - ✅ Automated risk monitoring
@@ -361,64 +361,64 @@ interface CommunicationPlan {
 - ✅ Regular testing
 - ✅ Compliance-ready
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Additional region costs
-- ⚠️ Complexity
+- ⚠️ 複雜的ity
 - ⚠️ Maintenance overhead
 
-**Cost**: $100,000/year
+**成本**： $100,000/year
 
-**Risk**: **Low** - Comprehensive coverage
+**風險**： **Low** - Comprehensive coverage
 
-### Option 2: Two-Region with Manual BCP
+### 選項 2： Two-Region with Manual BCP
 
-**Description**: Maintain current two regions with manual BCP procedures
+**描述**： Maintain current two regions with manual BCP procedures
 
-**Pros**:
+**優點**：
 
 - ✅ Lower cost
-- ✅ Simpler operations
+- ✅ 簡單的r operations
 
-**Cons**:
+**缺點**：
 
 - ❌ No geographic diversity
 - ❌ Manual procedures
 - ❌ Slower response
 - ❌ Higher risk
 
-**Cost**: $30,000/year
+**成本**： $30,000/year
 
-**Risk**: **High** - Insufficient coverage
+**風險**： **High** - Insufficient coverage
 
-### Option 3: Multi-Cloud Strategy
+### 選項 3： Multi-Cloud Strategy
 
-**Description**: Deploy across AWS, Azure, and GCP
+**描述**： Deploy across AWS, Azure, and GCP
 
-**Pros**:
+**優點**：
 
 - ✅ Maximum diversity
-- ✅ Cloud provider independence
+- ✅ Cloud 提供r independence
 
-**Cons**:
+**缺點**：
 
 - ❌ Very high cost ($300,000/year)
-- ❌ Extreme complexity
+- ❌ Extreme 複雜的ity
 - ❌ Operational burden
 
-**Cost**: $300,000/year
+**成本**： $300,000/year
 
-**Risk**: **Medium** - Operational complexity
+**風險**： **Medium** - Operational complexity
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Three-Region Active-Active with Geopolitical Monitoring (Option 1)**
+**選擇的選項**： **Three-Region Active-Active with Geopolitical Monitoring (Option 1)**
 
-### Rationale
+### 理由
 
-Three-region architecture with automated monitoring provides optimal balance of risk mitigation, cost, and operational feasibility.
+Three-region architecture 與 automated monitoring 提供s optimal balance of risk mitigation, cost, 和 operational feasibility.
 
-**Data Replication Strategy for Singapore**:
+**Data Replication Strategy 用於 Singapore**:
 
 ```typescript
 interface SingaporeReplicationStrategy {
@@ -508,40 +508,40 @@ interface DisasterRecoveryTiers {
 }
 ```
 
-**Pros**:
+**優點**：
 
 - ✅ Geographic diversity (3 regions)
 - ✅ Automated risk monitoring
 - ✅ Fast failover capability (< 30 minutes)
-- ✅ Clear procedures and runbooks
+- ✅ Clear procedures 和 runbooks
 - ✅ Regular testing (quarterly drills)
 - ✅ Compliance-ready (data sovereignty)
 - ✅ Multiple backup options
 - ✅ Cost-effective ($100K/year)
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Additional region costs
-- ⚠️ Operational complexity
+- ⚠️ Operational 複雜的ity
 - ⚠️ Maintenance overhead
 - ⚠️ Data sovereignty constraints
 - ⚠️ Testing disruption
 
-**Cost**: $100,000/year
+**成本**： $100,000/year
 
-**Risk**: **Low** - Comprehensive coverage
+**風險**： **Low** - Comprehensive coverage
 
-### Option 2: Two-Region with Manual BCP
+### 選項 2： Two-Region with Manual BCP
 
-**Description**: Maintain current two regions with manual BCP procedures
+**描述**： Maintain current two regions with manual BCP procedures
 
-**Pros**:
+**優點**：
 
 - ✅ Lower cost ($30K/year)
-- ✅ Simpler operations
+- ✅ 簡單的r operations
 - ✅ No additional regions
 
-**Cons**:
+**缺點**：
 
 - ❌ No geographic diversity
 - ❌ Manual procedures (slow)
@@ -549,68 +549,68 @@ interface DisasterRecoveryTiers {
 - ❌ Higher risk exposure
 - ❌ Single point of failure
 
-**Cost**: $30,000/year
+**成本**： $30,000/year
 
-**Risk**: **High** - Insufficient coverage
+**風險**： **High** - Insufficient coverage
 
-### Option 3: Multi-Cloud Strategy
+### 選項 3： Multi-Cloud Strategy
 
-**Description**: Deploy across AWS, Azure, and GCP
+**描述**： Deploy across AWS, Azure, and GCP
 
-**Pros**:
+**優點**：
 
 - ✅ Maximum diversity
-- ✅ Cloud provider independence
+- ✅ Cloud 提供r independence
 - ✅ Ultimate resilience
 
-**Cons**:
+**缺點**：
 
 - ❌ Very high cost ($300,000/year)
-- ❌ Extreme operational complexity
+- ❌ Extreme operational 複雜的ity
 - ❌ Multi-cloud expertise required
 - ❌ Data synchronization challenges
-- ❌ Compliance complexity
+- ❌ Compliance 複雜的ity
 
-**Cost**: $300,000/year
+**成本**： $300,000/year
 
-**Risk**: **Medium** - Operational complexity
+**風險**： **Medium** - Operational complexity
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Three-Region Active-Active with Geopolitical Monitoring (Option 1)**
+**選擇的選項**： **Three-Region Active-Active with Geopolitical Monitoring (Option 1)**
 
-### Rationale
+### 理由
 
-Three-region architecture with automated monitoring provides optimal balance of:
+Three-region architecture 與 automated monitoring 提供s optimal balance of:
 
-1. **Risk Mitigation**: Geographic diversity reduces single-region risk
-2. **Cost**: $100K/year is reasonable for business continuity
+1. **Risk Mitigation**: Geographic diversity 降低s single-region risk
+2. **成本**： $100K/year is reasonable for business continuity
 3. **Speed**: < 30 minute activation meets RTO requirements
-4. **Automation**: Automated monitoring reduces manual effort
-5. **Compliance**: Maintains data sovereignty requirements
-6. **Flexibility**: Supports multiple failure scenarios
+4. **Automation**: Automated monitoring 降低s manual effort
+5. **Compliance**: 維持s data sovereignty requirements
+6. **Flexibility**: 支援s multiple failure scenarios
 7. **Testing**: Regular drills ensure readiness
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
 | Executive Team | High | Business continuity assurance, cost approval | ROI analysis, risk assessment |
-| Operations Team | High | Implement and maintain BCP infrastructure | Training, automation, runbooks |
-| Development Team | Medium | Support BCP testing and procedures | Documentation, training |
+| Operations Team | High | Implement 和 維持 BCP infrastructure | Training, automation, runbooks |
+| Development Team | Medium | 支援 BCP testing 和 procedures | Documentation, training |
 | Legal/Compliance | High | Ensure regulatory compliance | Legal review, compliance checks |
 | Customers | Low | Transparent failover, minimal disruption | Communication plan, status page |
-| Partners | Medium | Coordinate during incidents | Partner communication plan |
+| Partners | Medium | Coordinate 期間 incidents | Partner communication plan |
 
 ### Impact Radius Assessment
 
-**Selected Impact Radius**: **Enterprise**
+**選擇的影響半徑**： **Enterprise**
 
-Affects:
+影響：
 
-- All regions and services
+- All regions 和 services
 - Infrastructure architecture
 - Data replication strategy
 - Incident response procedures
@@ -618,7 +618,7 @@ Affects:
 - Compliance requirements
 - Cost structure
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
@@ -626,14 +626,14 @@ Affects:
 | False positive alerts | Medium | Low | Tuned thresholds, human verification |
 | BCP activation failure | Low | Critical | Regular testing, automated procedures |
 | Data sovereignty violation | Low | Critical | Automated compliance checks |
-| Cost overruns | Medium | Medium | Budget monitoring, cost controls |
+| Cost overruns | Medium | Medium | 預算 monitoring, cost controls |
 | Team readiness | Medium | High | Regular training, drills |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Singapore Region Setup (Month 1-3)
+### 第 1 階段： Singapore Region Setup (Month 1-3)
 
 **Objectives**:
 
@@ -660,7 +660,7 @@ Affects:
 - Failover test successful (< 30 minutes)
 - Team trained on procedures
 
-### Phase 2: Geopolitical Monitoring (Month 4-5)
+### 第 2 階段： Geopolitical Monitoring (Month 4-5)
 
 **Objectives**:
 
@@ -684,11 +684,11 @@ Affects:
 **Success Criteria**:
 
 - Risk monitoring operational
-- Alerts configured and tested
+- Alerts configured 和 tested
 - Escalation procedures documented
-- Team trained and ready
+- Team trained 和 ready
 
-### Phase 3: BCP Procedures (Month 6-7)
+### 第 3 階段： BCP Procedures (Month 6-7)
 
 **Objectives**:
 
@@ -700,7 +700,7 @@ Affects:
 **Tasks**:
 
 - [ ] Document BCP activation procedures
-- [ ] Create runbooks for each scenario
+- [ ] Create runbooks 用於 each scenario
 - [ ] Define communication templates
 - [ ] Establish war room procedures
 - [ ] Create decision trees
@@ -711,18 +711,18 @@ Affects:
 **Success Criteria**:
 
 - All procedures documented
-- Runbooks complete and tested
+- Runbooks complete 和 tested
 - Communication plans established
 - All teams trained
 
-### Phase 4: Testing & Validation (Month 8-12)
+### 第 4 階段： Testing & Validation (Month 8-12)
 
 **Objectives**:
 
 - Quarterly BCP drills
 - Annual full-scale test
 - Update procedures
-- Continuous improvement
+- Continuous 改善ment
 
 **Tasks**:
 
@@ -733,14 +733,14 @@ Affects:
 - [ ] Document lessons learned
 - [ ] Update procedures based on findings
 - [ ] Refine automation
-- [ ] Improve monitoring
+- [ ] 改善 monitoring
 
 **Success Criteria**:
 
 - All drills completed successfully
 - RTO < 30 minutes achieved
 - RPO < 5 minutes achieved
-- Procedures refined and updated
+- Procedures refined 和 updated
 
 ### Phase 5: Backup Region Preparation (Month 13-15)
 
@@ -752,7 +752,7 @@ Affects:
 
 **Tasks**:
 
-- [ ] Create IaC templates for Seoul
+- [ ] Create IaC templates 用於 Seoul
 - [ ] Set up backup storage in Seoul
 - [ ] Configure backup replication
 - [ ] Test infrastructure deployment
@@ -762,18 +762,18 @@ Affects:
 
 **Success Criteria**:
 
-- Seoul can be activated < 2 hours
+- Seoul 可以 be activated < 2 hours
 - Backup restoration tested
 - Team trained on procedures
 
-### Phase 6: Continuous Improvement (Ongoing)
+### Phase 6: Continuous 改善ment (Ongoing)
 
 **Objectives**:
 
-- Regular testing and updates
+- Regular testing 和 updates
 - Monitor geopolitical situation
 - Refine procedures
-- Maintain readiness
+- 維持 readiness
 
 **Tasks**:
 
@@ -781,27 +781,27 @@ Affects:
 - [ ] Quarterly BCP drills
 - [ ] Annual full-scale test
 - [ ] Update procedures as needed
-- [ ] Monitor cost and optimize
-- [ ] Review and update runbooks
-- [ ] Maintain team training
+- [ ] Monitor cost 和 optimize
+- [ ] Review 和 update runbooks
+- [ ] 維持 team training
 
 **Success Criteria**:
 
-- Continuous readiness maintained
+- Continuous readiness 維持ed
 - Procedures up-to-date
 - Team confidence high
 - Costs optimized
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - BCP activation causes more issues than it solves
 - Data integrity concerns
 - Compliance violations
 - Cost overruns
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. **Immediate**: Stop BCP activation
 2. **Assess**: Evaluate current state
@@ -810,23 +810,23 @@ Affects:
 5. **Fix**: Address issues
 6. **Retry**: Attempt activation again
 
-**Rollback Time**: < 1 hour
+**回滾時間**： < 1 hour
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
 | BCP Activation Time | < 30 minutes | Drill results, actual incidents |
-| System Availability During Crisis | > 99.9% | Monitoring during BCP activation |
+| System Availability During Crisis | > 99.9% | Monitoring 期間 BCP activation |
 | Risk Assessment Frequency | Every 4 hours | Monitoring logs |
 | BCP Drill Frequency | Quarterly | Schedule compliance |
 | Team Readiness | 100% trained | Training records, drill participation |
 | RTO Achievement | < 30 minutes | Actual failover time |
 | RPO Achievement | < 5 minutes | Data loss measurement |
 | Communication Timeliness | < 15 minutes | Time to first customer communication |
-| Drill Success Rate | > 95% | Drill completion without major issues |
+| Drill Success Rate | > 95% | Drill completion 沒有 major issues |
 | Procedure Accuracy | 100% | Procedures followed correctly |
 
 ### Key Metrics
@@ -865,11 +865,11 @@ const bcpSuccessMetrics = {
 
 **BCP Readiness Dashboard**:
 
-- Current risk levels by region
+- Current risk levels 透過 region
 - Team training status
 - Infrastructure readiness
 - Procedure update status
-- Drill schedule and results
+- Drill schedule 和 results
 
 **BCP Activation Dashboard**:
 
@@ -887,34 +887,34 @@ const bcpSuccessMetrics = {
 - **Quarterly**: BCP drill execution, comprehensive review
 - **Annually**: Full-scale test, strategy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Business Continuity Assured**: Can operate during regional crises
-- ✅ **Geographic Risk Mitigation**: Three-region strategy reduces single-region risk
+- ✅ **Business Continuity Assured**: 可以 operate 期間 regional crises
+- ✅ **Geographic Risk Mitigation**: Three-region strategy 降低s single-region risk
 - ✅ **Customer Confidence**: Demonstrated resilience builds trust
 - ✅ **Regulatory Compliance**: Meets business continuity requirements
 - ✅ **Competitive Advantage**: Reliability differentiator
-- ✅ **Fast Recovery**: < 30 minute RTO for critical services
+- ✅ **Fast Recovery**: < 30 minute RTO 用於 critical services
 - ✅ **Data Protection**: < 5 minute RPO minimizes data loss
-- ✅ **Automated Response**: Reduces manual intervention
+- ✅ **Automated Response**: 降低s manual intervention
 - ✅ **Clear Procedures**: Well-documented runbooks
 - ✅ **Regular Testing**: Quarterly drills ensure readiness
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Additional Costs**: $100,000/year for BCP infrastructure
-- ⚠️ **Operational Complexity**: More regions to manage
-- ⚠️ **Maintenance Overhead**: Regular testing and updates required
+- ⚠️ **Additional Costs**: $100,000/year 用於 BCP infrastructure
+- ⚠️ **Operational 複雜的ity**: More regions to manage
+- ⚠️ **Maintenance Overhead**: Regular testing 和 updates required
 - ⚠️ **Team Training**: Ongoing training commitment
 - ⚠️ **Testing Disruption**: Quarterly drills may impact operations
 - ⚠️ **False Positives**: Risk monitoring may generate false alerts
-- ⚠️ **Data Sovereignty**: Constraints on data movement during crisis
+- ⚠️ **Data Sovereignty**: Constraints on data movement 期間 crisis
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Manual risk assessment (not fully automated)
 2. Basic geopolitical monitoring (no AI/ML)
@@ -922,31 +922,31 @@ const bcpSuccessMetrics = {
 4. Manual communication processes
 5. Basic backup region preparation
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: AI-powered geopolitical risk assessment
 - **Q3 2026**: Automated communication workflows
 - **Q4 2026**: Expanded drill scenarios
-- **2027**: Fully automated BCP activation for common scenarios
+- **2027**: Fully automated BCP activation 用於 common scenarios
 
-## Related Decisions
+## 相關決策
 
 - [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md)
 - [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md)
 - [ADR-040: Network Partition Handling Strategy](040-network-partition-handling-strategy.md)
-- [ADR-043: Observability for Multi-Region Operations](043-observability-multi-region-operations.md)
+- [ADR-043: Observability 用於 Multi-Region Operations](043-observability-multi-region-operations.md)
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）
 
-## Notes
+## 備註
 
 ### Geopolitical Risk Assessment Framework
 
-**Risk Indicators by Category**:
+**Risk Indicators 透過 Category**:
 
 **Military Activity**:
 
@@ -994,7 +994,7 @@ const bcpSuccessMetrics = {
 |------------|-----------|---------|----------|
 | **GREEN** | Normal operations | Monitor continuously | N/A |
 | **YELLOW** | Elevated tensions | Increase monitoring, notify team | N/A |
-| **ORANGE** | Significant threat | Prepare for activation, test procedures | 24 hours |
+| **ORANGE** | Signifi可以t threat | Prepare 用於 activation, test procedures | 24 hours |
 | **RED** | Imminent crisis | Activate BCP immediately | < 30 minutes |
 
 ### Communication Templates
@@ -1080,7 +1080,7 @@ Thank you for your patience and understanding.
   - Isolate affected systems
   - Activate Singapore
   - Restore from backups
-  - Coordinate with security team
+  - Coordinate 與 security team
 - **Success Criteria**:
   - Containment < 15 minutes
   - Service restoration < 1 hour
@@ -1094,19 +1094,19 @@ Thank you for your patience and understanding.
   - Assess infrastructure damage
   - Failover to Tokyo
   - Activate Singapore if needed
-  - Coordinate with local teams
+  - Coordinate 與 local teams
 - **Success Criteria**:
   - Failover < 30 minutes
   - Team safety confirmed
-  - Business continuity maintained
+  - Business continuity 維持ed
 
-### Legal and Compliance Considerations
+### Legal 和 Compliance Considerations
 
 **Data Sovereignty During Crisis**:
 
 - Customer PII remains in home region unless consent obtained
 - Emergency data transfer procedures documented
-- Legal basis for emergency transfers established
+- Legal basis 用於 emergency transfers established
 - Compliance team notified immediately
 
 **Regulatory Notifications**:
@@ -1116,7 +1116,7 @@ Thank you for your patience and understanding.
 - Industry regulators
 - Government agencies (as required)
 
-**Insurance and Liability**:
+**Insurance 和 Liability**:
 
 - Business interruption insurance
 - Cyber insurance
@@ -1125,19 +1125,19 @@ Thank you for your patience and understanding.
 
 ### Partner Coordination
 
-**Cloud Provider (AWS)**:
+**Cloud 提供r (AWS)**:
 
-- Enterprise support escalation
+- Enterprise 支援 escalation
 - Regional account team contacts
-- Emergency support procedures
+- Emergency 支援 procedures
 - Service health dashboard monitoring
 
 **Third-Party Services**:
 
 - Payment processors
-- Shipping providers
+- Shipping 提供rs
 - Email services
-- CDN providers
+- CDN 提供rs
 
 **Government Agencies**:
 
@@ -1166,26 +1166,26 @@ Thank you for your patience and understanding.
 - Backup storage: $1,500
 - Network: $500
 
-**Testing and Drills** ($5,000/quarter):
+**Testing 和 Drills** ($5,000/quarter):
 
 - Drill execution: $3,000
 - Team time: $2,000
 
 **Total Annual Cost**: $100,000
 
-### Success Stories and Lessons Learned
+### Success Stories 和 Lessons Learned
 
 **Industry Examples**:
 
-- **2011 Japan Earthquake**: Companies with multi-region architecture maintained operations
-- **2020 COVID-19**: Remote work and geographic distribution proved critical
+- **2011 Japan Earthquake**: Companies 與 multi-region architecture 維持ed operations
+- **2020 COVID-19**: Remote work 和 geographic distribution proved critical
 - **2021 Texas Freeze**: Multi-region cloud deployments avoided outages
 
 **Key Lessons**:
 
 1. **Test Regularly**: Untested plans fail when needed
 2. **Automate**: Manual procedures are error-prone under stress
-3. **Communicate**: Clear communication reduces panic
+3. **Communicate**: Clear communication 降低s panic
 4. **Document**: Detailed runbooks are essential
 5. **Train**: Team readiness is critical
 
@@ -1194,19 +1194,19 @@ Thank you for your patience and understanding.
 **Phase 2 (2026)**:
 
 - AI-powered risk prediction
-- Automated failover for all scenarios
+- Automated failover 用於 all scenarios
 - Real-time geopolitical intelligence
 - Advanced simulation capabilities
 
 **Phase 3 (2027)**:
 
 - Multi-cloud BCP strategy
-- Quantum-safe encryption for crisis scenarios
+- Quantum-safe encryption 用於 crisis scenarios
 - Autonomous BCP activation
 - Predictive crisis management
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

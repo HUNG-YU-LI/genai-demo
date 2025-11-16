@@ -12,206 +12,206 @@ affected_perspectives: ["performance", "security", "availability"]
 
 # ADR-023: API Rate Limiting Strategy (Token Bucket vs Leaky Bucket)
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform needs rate limiting to:
+企業電子商務平台需要速率限制來：
 
-- Protect backend services from overload and abuse
+- Protect backend services from overload 和 abuse
 - Ensure fair resource allocation among users
-- Prevent DDoS attacks and API abuse
-- Maintain system stability during traffic spikes
-- Support different rate limits for different user tiers (free, premium, enterprise)
-- Provide graceful degradation under high load
-- Enable burst traffic handling for legitimate use cases
+- Prevent DDoS attacks 和 API abuse
+- 維持 system stability 期間 流量尖峰
+- 支援 different rate limits 用於 different user tiers (free, premium, enterprise)
+- 提供 graceful degradation under high load
+- 啟用 burst traffic handling 用於 legitimate 使用案例s
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - Protect system from malicious traffic (DDoS, scraping)
-- Ensure fair usage across all customers
-- Support tiered pricing model (different limits per tier)
-- Maintain 99.9% availability during traffic spikes
+- Ensure fair usage 跨 all customers
+- 支援 tiered pricing model (different limits per tier)
+- 維持 99.9% availability 期間 流量尖峰
 - Prevent resource exhaustion from single user
-- Enable burst capacity for legitimate peak usage
+- 啟用 burst capacity 用於 legitimate peak usage
 
 **Business Constraints**:
 
-- Must not impact legitimate user experience
-- Different limits for different API endpoints
-- Support for API key-based rate limiting
+- 必須 not impact legitimate 用戶體驗
+- Different limits 用於 different API endpoints
+- 支援 用於 API key-based 速率限制
 - Real-time rate limit feedback to clients
 - Cost-effective implementation
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
 - RESTful API design (ADR-009)
-- Redis distributed caching (ADR-004)
+- Redis 分散式快取 (ADR-004)
 - Distributed locking (ADR-022)
 - API security strategy (ADR-050)
-- Multiple application instances (horizontal scaling)
+- Multiple 應用程式實例 (horizontal scaling)
 
-**Requirements**:
+**需求**：
 
-- Multi-level rate limiting (global, per-user, per-IP, per-endpoint)
-- Support for burst traffic (allow temporary spikes)
-- Distributed rate limiting across instances
+- Multi-level 速率限制 (global, per-user, per-IP, per-endpoint)
+- 支援 用於 burst traffic (allow temporary spikes)
+- Distributed 速率限制 跨 instances
 - Low latency (< 5ms overhead)
-- Real-time limit tracking and feedback
+- Real-time limit tracking 和 feedback
 - Configurable limits per user tier
 - Rate limit headers in responses
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **Burst Handling**: Allow legitimate burst traffic
 2. **Fairness**: Prevent single user from monopolizing resources
 3. **Performance**: < 5ms overhead per request
-4. **Flexibility**: Different limits for different endpoints/users
-5. **Distributed**: Work across multiple instances
+4. **Flexibility**: Different limits 用於 different endpoints/users
+5. **Distributed**: Work 跨 multiple instances
 6. **User Experience**: Clear feedback on rate limits
-7. **Cost**: Leverage existing infrastructure
-8. **Security**: Protect against DDoS and abuse
+7. **成本**： Leverage existing infrastructure
+8. **Security**: Protect against DDoS 和 abuse
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Token Bucket Algorithm (Recommended)
+### 選項 1： Token Bucket Algorithm (Recommended)
 
-**Description**: Users accumulate tokens at a fixed rate, consume tokens per request, allows burst traffic
+**描述**： Users accumulate tokens at a fixed rate, consume tokens per request, allows burst traffic
 
-**Pros**:
+**優點**：
 
 - ✅ Allows burst traffic (accumulated tokens)
 - ✅ Flexible rate control (different token costs)
-- ✅ Better user experience (smooth traffic)
+- ✅ 更好的 用戶體驗 (smooth traffic)
 - ✅ Industry standard (AWS, Google, Stripe)
-- ✅ Simple to implement with Redis
-- ✅ Supports different user tiers easily
+- ✅ 簡單implement 與 Redis
+- ✅ 支援s different user tiers easily
 - ✅ Predictable behavior
 - ✅ Low latency (< 5ms)
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Can allow large bursts if bucket is full
+- ⚠️ 可以 allow 大型的 bursts if bucket is full
 - ⚠️ Requires token refill logic
-- ⚠️ More complex than fixed window
+- ⚠️ More 複雜的 than fixed window
 
-**Cost**:
+**成本**：
 
 - Development: 5 person-days
 - Infrastructure: $0 (uses existing Redis)
 - Maintenance: Low
 
-**Risk**: **Low** - Well-understood algorithm
+**風險**： **Low** - Well-understood algorithm
 
-**Implementation Complexity**: Medium
+**Implementation 複雜的ity**: Medium
 
-### Option 2: Leaky Bucket Algorithm
+### 選項 2： Leaky Bucket Algorithm
 
-**Description**: Requests enter a queue, processed at fixed rate, excess requests overflow
+**描述**： Requests enter a queue, processed at fixed rate, excess requests overflow
 
-**Pros**:
+**優點**：
 
 - ✅ Smooth, constant output rate
 - ✅ Prevents burst traffic completely
-- ✅ Simple conceptual model
+- ✅ 簡單的 conceptual model
 - ✅ Predictable resource usage
 
-**Cons**:
+**缺點**：
 
-- ❌ No burst traffic support (poor UX)
+- ❌ No burst traffic 支援 (poor UX)
 - ❌ Requests queued (increased latency)
-- ❌ Queue management complexity
-- ❌ Memory overhead for queue
-- ❌ Harder to implement distributed
-- ❌ Less flexible for different endpoints
+- ❌ Queue management 複雜的ity
+- ❌ Memory overhead 用於 queue
+- ❌ 更難implement distributed
+- ❌ Less flexible 用於 different endpoints
 
-**Cost**:
+**成本**：
 
 - Development: 8 person-days
 - Infrastructure: $0 (uses existing Redis)
 - Maintenance: Medium
 
-**Risk**: **Medium** - Queue management complexity
+**風險**： **Medium** - Queue management complexity
 
-**Implementation Complexity**: High
+**Implementation 複雜的ity**: High
 
-### Option 3: Fixed Window Counter
+### 選項 3： Fixed Window Counter
 
-**Description**: Count requests in fixed time windows (e.g., per minute)
+**描述**： Count requests in fixed time windows (e.g., per minute)
 
-**Pros**:
+**優點**：
 
-- ✅ Very simple to implement
+- ✅ Very 簡單的 to implement
 - ✅ Low memory usage
 - ✅ Fast (< 2ms)
-- ✅ Easy to understand
+- ✅ 容易understand
 
-**Cons**:
+**缺點**：
 
 - ❌ Burst at window boundaries (2x limit possible)
 - ❌ Unfair (early requests get priority)
-- ❌ Poor user experience
+- ❌ Poor 用戶體驗
 - ❌ No burst handling
 
-**Cost**:
+**成本**：
 
 - Development: 2 person-days
 - Infrastructure: $0
 - Maintenance: Low
 
-**Risk**: **Medium** - Boundary burst problem
+**風險**： **Medium** - Boundary burst problem
 
-**Implementation Complexity**: Low
+**Implementation 複雜的ity**: Low
 
-### Option 4: Sliding Window Log
+### 選項 4： Sliding Window Log
 
-**Description**: Track timestamp of each request, count requests in sliding window
+**描述**： Track timestamp of each request, count requests in sliding window
 
-**Pros**:
+**優點**：
 
-- ✅ Accurate rate limiting
+- ✅ Accurate 速率限制
 - ✅ No boundary burst problem
 - ✅ Fair distribution
 
-**Cons**:
+**缺點**：
 
 - ❌ High memory usage (store all timestamps)
-- ❌ Expensive to compute (scan all timestamps)
+- ❌ Expensive to compute (s可以 all timestamps)
 - ❌ Doesn't scale well
-- ❌ No burst support
+- ❌ No burst 支援
 
-**Cost**:
+**成本**：
 
 - Development: 6 person-days
 - Infrastructure: Higher Redis memory
 - Maintenance: High
 
-**Risk**: **High** - Scalability concerns
+**風險**： **High** - Scalability concerns
 
-**Implementation Complexity**: High
+**Implementation 複雜的ity**: High
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Token Bucket Algorithm**
+**選擇的選項**： **Token Bucket Algorithm**
 
-### Rationale
+### 理由
 
-Token Bucket was selected for the following reasons:
+Token Bucket被選擇的原因如下：
 
-1. **Burst Support**: Allows legitimate burst traffic (accumulated tokens)
-2. **User Experience**: Smooth traffic handling, better than strict limits
-3. **Industry Standard**: Used by AWS, Google Cloud, Stripe, GitHub
-4. **Flexibility**: Easy to configure different limits per endpoint/user
-5. **Performance**: Low latency (< 5ms) with Redis implementation
-6. **Distributed**: Works well across multiple instances
+1. **Burst 支援**: Allows legitimate burst traffic (accumulated tokens)
+2. **User Experience**: Smooth traffic handling, 更好的 than strict limits
+3. **Industry Standard**: Used 透過 AWS, Google Cloud, Stripe, GitHub
+4. **Flexibility**: 容易configure different limits per endpoint/user
+5. **Performance**: Low latency (< 5ms) 與 Redis implementation
+6. **Distributed**: Works well 跨 multiple instances
 7. **Cost-Effective**: Uses existing Redis infrastructure
 8. **Proven**: Battle-tested in production systems
 
@@ -234,70 +234,70 @@ Token Bucket was selected for the following reasons:
 
 - **Bucket Capacity**: 1.5x rate limit (allows 50% burst)
 - **Refill Rate**: Rate limit per minute
-- **Token Cost**: 1 token per request (can vary by endpoint)
+- **Token Cost**: 1 token per request (可以 vary 透過 endpoint)
 
-**Why Not Leaky Bucket**: No burst support, poor user experience, higher complexity.
+**為何不選 Leaky Bucket**： No burst 支援, poor 用戶體驗, higher 複雜的ity.
 
-**Why Not Fixed Window**: Boundary burst problem, unfair distribution.
+**為何不選 Fixed Window**： Boundary burst problem, unfair distribution.
 
-**Why Not Sliding Window Log**: High memory usage, doesn't scale well.
+**為何不選 Sliding Window Log**： High memory usage, doesn't scale well.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Development Team | Medium | Implement rate limiting logic | Code examples, library support |
-| Operations Team | Low | Monitor rate limit metrics | Dashboards and alerts |
+| Development Team | Medium | Implement 速率限制 logic | Code examples, library 支援 |
+| Operations Team | Low | Monitor rate limit metrics | Dashboards 和 alerts |
 | End Users | Low | May see 429 errors if exceeded | Clear error messages, retry-after headers |
-| API Consumers | Medium | Need to handle rate limits | Documentation, SDKs with retry logic |
+| API Consumers | Medium | Need to 處理 rate limits | Documentation, SDKs 與 retry logic |
 | Business | Positive | Protected from abuse, fair usage | N/A |
 | Security Team | Positive | DDoS protection | N/A |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
-- All API endpoints (rate limiting middleware)
+- All API endpoints (速率限制 middleware)
 - Authentication layer (user tier identification)
 - Infrastructure layer (Redis rate limit storage)
 - API Gateway (rate limit enforcement)
-- Monitoring and alerting (rate limit metrics)
+- Monitoring 和 alerting (rate limit metrics)
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | False positives | Medium | Medium | Generous burst capacity, monitoring |
-| Redis unavailability | Low | High | Fallback to in-memory, circuit breaker |
+| Redis unavailability | Low | High | Fallback to 記憶體內, circuit breaker |
 | Distributed clock skew | Low | Low | Use Redis time, not local time |
 | Rate limit bypass | Low | High | Multiple enforcement layers |
 | Performance impact | Low | Medium | Optimize Redis operations, caching |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Core Implementation (Week 1-2)
+### 第 1 階段： Core Implementation （第 1-2 週）
 
-- [x] Implement Token Bucket algorithm with Redis
+- [x] Implement Token Bucket algorithm 與 Redis
 - [x] Create rate limiter service
 - [x] Add rate limit middleware
-- [x] Implement multi-level rate limiting
+- [x] Implement multi-level 速率限制
 - [x] Add rate limit headers to responses
 
-### Phase 2: User Tier Support (Week 3)
+### 第 2 階段： User Tier Support （第 3 週）
 
 - [x] Implement user tier identification
 - [x] Configure limits per tier
-- [x] Add API key-based rate limiting
+- [x] Add API key-based 速率限制
 - [x] Implement endpoint-specific limits
-- [x] Add rate limit bypass for internal services
+- [x] Add rate limit bypass 用於 internal services
 
-### Phase 3: Monitoring & Feedback (Week 4)
+### 第 3 階段： Monitoring & Feedback （第 4 週）
 
 - [x] Add rate limit metrics
 - [x] Create rate limit dashboards
@@ -305,45 +305,45 @@ Affects:
 - [x] Add rate limit logging
 - [x] Create rate limit documentation
 
-### Phase 4: Optimization (Week 5)
+### 第 4 階段： Optimization （第 5 週）
 
-- [x] Performance testing and tuning
+- [x] Performance testing 和 tuning
 - [x] Optimize Redis operations
 - [x] Add rate limit caching
 - [x] Implement graceful degradation
-- [x] Load testing with rate limits
+- [x] Load testing 與 rate limits
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Rate limiter latency > 10ms
 - False positive rate > 5%
 - Redis errors > 1%
 - User complaints > threshold
 
-**Rollback Steps**:
+**回滾步驟**：
 
-1. Disable rate limiting middleware
+1. Disable 速率限制 middleware
 2. Allow all requests through
-3. Investigate and fix issues
-4. Re-enable with higher limits
+3. Investigate 和 fix issues
+4. Re-啟用 與 higher limits
 5. Gradually tighten limits
 
-**Rollback Time**: < 15 minutes
+**回滾時間**： < 15 minutes
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Rate limiter latency < 5ms (95th percentile)
 - ✅ False positive rate < 1%
 - ✅ DDoS attack mitigation > 99%
-- ✅ System availability maintained at 99.9%
+- ✅ System availability 維持ed at 99.9%
 - ✅ User complaints < 0.1% of requests
 - ✅ Rate limit bypass attempts detected
 
-### Monitoring Plan
+### 監控計畫
 
 **Application Metrics**:
 
@@ -364,11 +364,11 @@ public class RateLimitMetrics {
 - Rate limit checks per second
 - Rate limit exceeded count
 - Rate limit check latency
-- Active rate limits by user/IP
+- Active rate limits 透過 user/IP
 - Burst usage percentage
 - Token bucket fill rate
 
-**Alerts**:
+**告警**：
 
 - Rate limit check latency > 10ms
 - Rate limit exceeded spike (> 100/min)
@@ -376,55 +376,55 @@ public class RateLimitMetrics {
 - Burst capacity exhausted > 80%
 - Suspicious rate limit patterns
 
-**Review Schedule**:
+**審查時程**：
 
 - Daily: Check rate limit metrics
 - Weekly: Review rate limit patterns
 - Monthly: Adjust limits based on usage
 - Quarterly: Rate limit strategy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Protection**: Prevents DDoS and API abuse
+- ✅ **Protection**: Prevents DDoS 和 API abuse
 - ✅ **Fairness**: Ensures fair resource allocation
-- ✅ **Stability**: Maintains system stability under load
-- ✅ **Flexibility**: Supports different user tiers
+- ✅ **Stability**: 維持s system stability under load
+- ✅ **Flexibility**: 支援s different user tiers
 - ✅ **User Experience**: Allows burst traffic
 - ✅ **Cost Control**: Prevents resource exhaustion
 - ✅ **Security**: Additional security layer
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Complexity**: Additional middleware layer
+- ⚠️ **複雜的ity**: Additional middleware layer
 - ⚠️ **Latency**: 2-5ms overhead per request
 - ⚠️ **False Positives**: Legitimate users may be limited
 - ⚠️ **Monitoring**: Need to track rate limit metrics
 - ⚠️ **Documentation**: Users need to understand limits
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. Static rate limits (can be dynamic based on load)
-2. Simple token cost (can vary by endpoint complexity)
+1. Static rate limits (可以 be dynamic based on load)
+2. 簡單的 token cost (可以 vary 透過 endpoint 複雜的ity)
 3. No automatic limit adjustment (future enhancement)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Implement dynamic rate limits based on system load
 - **Q3 2026**: Add endpoint-specific token costs
 - **Q4 2026**: Implement ML-based anomaly detection
 
-## Related Decisions
+## 相關決策
 
-- [ADR-004: Use Redis for Distributed Caching](004-use-redis-for-distributed-caching.md) - Redis stores rate limit state
-- [ADR-009: RESTful API Design with OpenAPI 3.0](009-restful-api-design-with-openapi.md) - Rate limits in API design
-- [ADR-022: Distributed Locking with Redis](022-distributed-locking-with-redis.md) - Redisson for distributed operations
-- [ADR-050: API Security and Rate Limiting Strategy](050-api-security-and-rate-limiting-strategy.md) - Overall API security
+- [ADR-004: Use Redis 用於 Distributed Caching](004-use-redis-for-distributed-caching.md) - Redis stores rate limit state
+- [ADR-009: RESTful API Design 與 OpenAPI 3.0](009-restful-api-design-with-openapi.md) - Rate limits in API design
+- [ADR-022: Distributed Locking 與 Redis](022-distributed-locking-with-redis.md) - Redisson 用於 distributed operations
+- [ADR-050: API Security 和 Rate Limiting Strategy](050-api-security-and-rate-limiting-strategy.md) - Overall API security
 
-## Notes
+## 備註
 
 ### Token Bucket Implementation
 
@@ -598,6 +598,6 @@ Examples:
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

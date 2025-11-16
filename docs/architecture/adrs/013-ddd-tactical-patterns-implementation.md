@@ -12,183 +12,183 @@ affected_perspectives: ["evolution", "development-resource"]
 
 # ADR-013: DDD Tactical Patterns Implementation
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-24
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires a structured approach to domain modeling that:
+The Enterprise E-Commerce Platform 需要structured approach to domain modeling that:
 
-- Captures complex business logic in a maintainable way
-- Provides clear boundaries between different business concepts
+- Captures 複雜的 business logic in a 維持able way
+- 提供s clear boundaries between different business concepts
 - Ensures consistency within business transactions
-- Enables rich domain models with behavior
-- Supports ubiquitous language from business domain
-- Facilitates collaboration between domain experts and developers
-- Provides patterns for common domain modeling challenges
-- Enables evolution of the domain model over time
+- 啟用s 豐富的 domain models 與 behavior
+- 支援s ubiquitous language from business domain
+- Facilitates collaboration between domain experts 和 developers
+- 提供s patterns 用於 common domain modeling challenges
+- 啟用s evolution of the domain model over time
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Complex business rules for e-commerce operations
-- Need for clear business logic encapsulation
-- Requirement for data consistency in transactions
-- Support for evolving business requirements
-- Collaboration between business and technical teams
-- Long-term maintainability of business logic
+- 複雜的 business rules 用於 e-commerce operations
+- 需要 clear business logic encapsulation
+- Requirement 用於 資料一致性 in transactions
+- 支援 用於 evolving business requirements
+- Collaboration between business 和 technical teams
+- Long-term 維持ability of business logic
 
-**Constraints**:
+**限制條件**：
 
 - Team has limited DDD experience
 - Hexagonal Architecture already adopted (ADR-002)
-- Domain events for cross-context communication (ADR-003)
-- Must integrate with existing Spring Boot stack
-- Timeline: 3 months to establish DDD practices
+- Domain events 用於 cross-context communication (ADR-003)
+- 必須 integrate 與 existing Spring Boot stack
+- Timeline: 3 個月 to establish DDD practices
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
 - Spring Boot 3.4.5 + Java 21
 - Hexagonal Architecture (ADR-002)
 - Domain events (ADR-003)
-- BDD with Cucumber (ADR-012)
+- BDD 與 Cucumber (ADR-012)
 - 13 bounded contexts identified
 
-**Requirements**:
+**需求**：
 
-- Rich domain models with behavior
+- 豐富的 domain models 與 behavior
 - Clear aggregate boundaries
 - Consistency guarantees within aggregates
-- Value objects for domain concepts
-- Repository pattern for persistence
-- Domain services for cross-aggregate logic
-- Factory pattern for complex object creation
-- Specification pattern for business rules
+- Value objects 用於 domain concepts
+- Repository pattern 用於 persistence
+- Domain services 用於 cross-aggregate logic
+- Factory pattern 用於 複雜的 object creation
+- Specification pattern 用於 business rules
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **Business Logic Encapsulation**: Keep business rules in domain layer
 2. **Consistency Boundaries**: Clear transactional boundaries
 3. **Ubiquitous Language**: Code reflects business language
-4. **Maintainability**: Easy to understand and modify
+4. **維持ability**: 容易understand 和 modify
 5. **Testability**: Domain logic testable in isolation
-6. **Evolution**: Support changing business requirements
+6. **Evolution**: 支援 changing business requirements
 7. **Team Collaboration**: Patterns facilitate communication
 8. **Industry Standards**: Follow proven DDD patterns
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Full DDD Tactical Patterns
+### 選項 1： Full DDD Tactical Patterns
 
-**Description**: Implement complete set of DDD tactical patterns (Aggregates, Entities, Value Objects, Repositories, Domain Services, Factories, Specifications)
+**描述**： Implement complete set of DDD tactical patterns (Aggregates, Entities, Value Objects, Repositories, Domain Services, Factories, Specifications)
 
-**Pros**:
+**優點**：
 
-- ✅ Rich domain models with behavior
+- ✅ 豐富的 domain models 與 behavior
 - ✅ Clear aggregate boundaries
 - ✅ Strong consistency guarantees
-- ✅ Value objects for type safety
+- ✅ Value objects 用於 type safety
 - ✅ Testable domain logic
 - ✅ Ubiquitous language in code
 - ✅ Well-documented patterns
-- ✅ Supports complex business logic
+- ✅ 支援s 複雜的 business logic
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Learning curve for team
+- ⚠️ Learning curve 用於 team
 - ⚠️ More initial design effort
-- ⚠️ Can be over-engineering for simple CRUD
+- ⚠️ 可以 be over-engineering 用於 簡單的 CRUD
 
-**Cost**: $0 (patterns, not tools)
+**成本**： $0 (patterns, not tools)
 
-**Risk**: **Low** - Proven patterns
+**風險**： **Low** - Proven patterns
 
-### Option 2: Anemic Domain Model
+### 選項 2： Anemic Domain Model
 
-**Description**: Simple data objects with getters/setters, business logic in services
+**描述**： Simple data objects with getters/setters, business logic in services
 
-**Pros**:
+**優點**：
 
-- ✅ Simple to understand
+- ✅ 簡單understand
 - ✅ Familiar to most developers
 - ✅ Quick to implement
 
-**Cons**:
+**缺點**：
 
-- ❌ Business logic scattered across services
+- ❌ Business logic scattered 跨 services
 - ❌ No encapsulation
-- ❌ Difficult to maintain complex logic
+- ❌ 難以維持 複雜的 logic
 - ❌ No consistency guarantees
 - ❌ Poor testability
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **High** - Technical debt accumulates
+**風險**： **High** - Technical debt accumulates
 
-### Option 3: Transaction Script Pattern
+### 選項 3： Transaction Script Pattern
 
-**Description**: Procedural code organized by use cases
+**描述**： Procedural code organized by use cases
 
-**Pros**:
+**優點**：
 
-- ✅ Simple for simple use cases
-- ✅ Easy to understand
+- ✅ 簡單的 用於 簡單的 使用案例s
+- ✅ 容易understand
 
-**Cons**:
+**缺點**：
 
-- ❌ Doesn't scale to complex domains
+- ❌ Doesn't scale to 複雜的 domains
 - ❌ Code duplication
 - ❌ No reusability
-- ❌ Difficult to test
+- ❌ 難以test
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **High** - Not suitable for complex domain
+**風險**： **High** - Not suitable for complex domain
 
-### Option 4: Partial DDD (Aggregates Only)
+### 選項 4： Partial DDD (Aggregates Only)
 
-**Description**: Use only aggregates and entities, skip value objects and other patterns
+**描述**： Use only aggregates and entities, skip value objects and other patterns
 
-**Pros**:
+**優點**：
 
 - ✅ Some benefits of DDD
 - ✅ Lower learning curve
 
-**Cons**:
+**缺點**：
 
 - ❌ Missing type safety from value objects
 - ❌ Incomplete pattern implementation
 - ❌ Confusion about which patterns to use
 - ❌ Less benefit than full DDD
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **Medium** - Incomplete benefits
+**風險**： **Medium** - Incomplete benefits
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Full DDD Tactical Patterns**
+**選擇的選項**： **Full DDD Tactical Patterns**
 
-### Rationale
+### 理由
 
-Full DDD tactical patterns were selected for the following reasons:
+Full DDD tactical patterns被選擇的原因如下：
 
-1. **Complex Domain**: E-commerce has complex business rules that benefit from rich domain models
-2. **Consistency**: Aggregates provide clear transactional boundaries
+1. **複雜的 Domain**: E-commerce has 複雜的 business rules that benefit from 豐富的 domain models
+2. **Consistency**: Aggregates 提供 clear transactional boundaries
 3. **Type Safety**: Value objects prevent primitive obsession
-4. **Testability**: Domain logic can be tested without infrastructure
-5. **Maintainability**: Clear patterns make code easier to understand
-6. **Evolution**: Patterns support changing requirements
-7. **Hexagonal Architecture Fit**: DDD patterns align perfectly with hexagonal architecture
-8. **Industry Proven**: Patterns are well-documented and proven in production
+4. **Testability**: Domain logic 可以 be tested 沒有 infrastructure
+5. **維持ability**: Clear patterns make code easier to understand
+6. **Evolution**: Patterns 支援 changing requirements
+7. **Hexagonal Architecture Fit**: DDD patterns align perfectly 與 hexagonal architecture
+8. **Industry Proven**: Patterns are well-documented 和 proven in production
 
-**Implementation Strategy**:
+**實作策略**：
 
 **Core Patterns**:
 
@@ -467,15 +467,15 @@ if (eligibleForDiscount.isSatisfiedBy(order)) {
 }
 ```
 
-**Why Not Anemic Domain Model**: Scatters business logic across services, making it hard to maintain and test.
+**為何不選 Anemic Domain Model**： Scatters business logic 跨 services, making it hard to 維持 和 test.
 
-**Why Not Transaction Script**: Doesn't scale to complex domains, leads to code duplication.
+**為何不選 Transaction Script**： Doesn't scale to 複雜的 domains, leads to code duplication.
 
-**Why Not Partial DDD**: Missing key benefits like type safety from value objects and clear patterns.
+**為何不選 Partial DDD**： Missing key benefits like type safety from value objects 和 clear patterns.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
@@ -484,11 +484,11 @@ if (eligibleForDiscount.isSatisfiedBy(order)) {
 | Business Experts | Medium | Participate in domain modeling | Workshops, ubiquitous language sessions |
 | QA Team | Medium | Test domain logic in isolation | Testing guides, examples |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All bounded contexts
 - Domain layer structure
@@ -496,21 +496,21 @@ Affects:
 - Development workflow
 - Code review process
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | DDD learning curve | High | Medium | Training, examples, pair programming, code reviews |
-| Over-engineering simple features | Medium | Low | Pragmatic approach, allow simpler patterns for CRUD |
+| Over-engineering 簡單的 features | Medium | Low | Pragmatic approach, allow 簡單的r patterns 用於 CRUD |
 | Aggregate boundary mistakes | Medium | High | Domain modeling workshops, architecture reviews |
 | Performance concerns | Low | Medium | Performance testing, optimization where needed |
 | Team resistance | Medium | Medium | Demonstrate benefits, involve team in decisions |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Training and Setup (Week 1-2)
+### 第 1 階段： Training and Setup （第 1-2 週）
 
 - [ ] Conduct DDD training
   - Tactical patterns overview
@@ -519,7 +519,7 @@ Affects:
   - Repository pattern
   - Domain services vs application services
 
-- [ ] Create base classes and interfaces
+- [ ] Create base classes 和 interfaces
 
   ```java
   public abstract class AggregateRootBase implements AggregateRootInterface {
@@ -566,7 +566,7 @@ Affects:
   }
   ```
 
-### Phase 2: Customer Bounded Context (Week 2-4)
+### 第 2 階段： Customer Bounded Context （第 2-4 週）
 
 - [ ] Design Customer aggregate
 
@@ -678,7 +678,7 @@ Affects:
 - [ ] Implement repository
 - [ ] Write unit tests
 
-### Phase 3: Order Bounded Context (Week 4-6)
+### 第 3 階段： Order Bounded Context （第 4-6 週）
 
 - [ ] Design Order aggregate (as shown in examples above)
 - [ ] Create value objects (OrderId, Money, etc.)
@@ -687,21 +687,21 @@ Affects:
 - [ ] Implement specifications
 - [ ] Write unit tests
 
-### Phase 4: Product Bounded Context (Week 6-8)
+### 第 4 階段： Product Bounded Context （第 6-8 週）
 
 - [ ] Design Product aggregate
 - [ ] Create value objects
 - [ ] Implement repository
 - [ ] Write unit tests
 
-### Phase 5: Remaining Bounded Contexts (Week 8-12)
+### Phase 5: Remaining Bounded Contexts （第 8-12 週）
 
 - [ ] Implement remaining 10 bounded contexts
 - [ ] Follow established patterns
 - [ ] Conduct code reviews
 - [ ] Write comprehensive tests
 
-### Phase 6: ArchUnit Validation (Week 12)
+### Phase 6: ArchUnit Validation （第 12 週）
 
 - [ ] Create ArchUnit tests
 
@@ -731,38 +731,38 @@ Affects:
       .resideInAnyPackage("..domain..", "java..", "org.springframework..");
   ```
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
-- Team unable to adopt DDD after 6 months
+- Team unable to adopt DDD after 6 個月
 - Development velocity decreases > 40%
 - Aggregate boundaries causing major issues
 - Over-engineering becomes problematic
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Simplify to anemic domain model
 2. Move business logic to application services
-3. Keep value objects for type safety
+3. Keep value objects 用於 type safety
 4. Simplify aggregate boundaries
 5. Document lessons learned
 
-**Rollback Time**: 4 weeks
+**回滾時間**： 4 weeks
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ 100% of aggregates follow DDD patterns
 - ✅ Value objects used instead of primitives > 90%
-- ✅ Domain logic testable without infrastructure
+- ✅ Domain logic testable 沒有 infrastructure
 - ✅ ArchUnit tests pass 100%
 - ✅ Code review compliance > 95%
 - ✅ Developer satisfaction > 4/5
-- ✅ Business logic bugs decrease by 50%
+- ✅ Business logic bugs decrease 透過 50%
 
-### Monitoring Plan
+### 監控計畫
 
 **Code Quality Metrics**:
 
@@ -772,55 +772,55 @@ Affects:
 - ArchUnit test pass rate
 - Code review findings
 
-**Review Schedule**:
+**審查時程**：
 
 - Weekly: Domain modeling sessions
 - Monthly: Architecture review
 - Quarterly: DDD practice retrospective
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Rich Domain Models**: Business logic encapsulated in domain objects
+- ✅ **豐富的 Domain Models**: Business logic encapsulated in domain objects
 - ✅ **Type Safety**: Value objects prevent primitive obsession
 - ✅ **Consistency**: Aggregates enforce invariants
 - ✅ **Testability**: Domain logic testable in isolation
-- ✅ **Maintainability**: Clear patterns make code easier to understand
+- ✅ **維持ability**: Clear patterns make code easier to understand
 - ✅ **Ubiquitous Language**: Code reflects business language
-- ✅ **Evolution**: Patterns support changing requirements
+- ✅ **Evolution**: Patterns 支援 changing requirements
 - ✅ **Clear Boundaries**: Aggregates define transactional boundaries
 
-### Negative Consequences
+### 負面後果
 
 - ⚠️ **Learning Curve**: Team needs to learn DDD patterns
 - ⚠️ **Initial Overhead**: More design effort upfront
 - ⚠️ **Verbosity**: More classes than anemic model
-- ⚠️ **Can Over-Engineer**: Risk of over-engineering simple features
+- ⚠️ **可以 Over-Engineer**: Risk of over-engineering 簡單的 features
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. Some aggregates may have incorrect boundaries initially (will refine)
+1. Some aggregates may have incorrect boundaries initially (將 refine)
 2. Not all value objects implemented yet (gradual adoption)
-3. Some domain services may be in wrong layer (will refactor)
+3. Some domain services may be in wrong layer (將 refactor)
 4. Limited specification pattern usage (future enhancement)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q1 2026**: Refine aggregate boundaries based on experience
 - **Q2 2026**: Complete value object adoption
-- **Q3 2026**: Review and refactor domain services
+- **Q3 2026**: Review 和 refactor domain services
 - **Q4 2026**: Expand specification pattern usage
 
-## Related Decisions
+## 相關決策
 
 - [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - DDD in domain layer
-- [ADR-003: Use Domain Events for Cross-Context Communication](003-use-domain-events-for-cross-context-communication.md) - Events from aggregates
-- [ADR-012: BDD with Cucumber](012-bdd-with-cucumber-for-requirements.md) - BDD scenarios test aggregates
+- [ADR-003: Use Domain Events 用於 Cross-Context Communication](003-use-domain-events-for-cross-context-communication.md) - Events from aggregates
+- [ADR-012: BDD 與 Cucumber](012-bdd-with-cucumber-for-requirements.md) - BDD scenarios test aggregates
 
-## Notes
+## 備註
 
 ### Aggregate Design Guidelines
 
@@ -828,17 +828,17 @@ Affects:
 
 - Keep aggregates small
 - Design around business invariants
-- Use value objects for concepts
+- Use value objects 用於 concepts
 - Enforce invariants in constructor
-- Use domain events for side effects
+- Use domain events 用於 side effects
 - Make aggregates testable
 
 **DON'T**:
 
-- Create large aggregates
+- Create 大型的 aggregates
 - Reference other aggregates directly
 - Expose internal collections
-- Use setters for state changes
+- Use setters 用於 state changes
 - Put infrastructure concerns in domain
 
 ### Value Object Benefits
@@ -847,7 +847,7 @@ Affects:
 2. **Validation**: Centralized validation logic
 3. **Immutability**: Thread-safe, no side effects
 4. **Expressiveness**: Clear intent in code
-5. **Reusability**: Used across aggregates
+5. **Reusability**: Used 跨 aggregates
 
 ### Common Patterns
 
@@ -867,18 +867,18 @@ Affects:
 
 **Factory Pattern**:
 
-- Complex object creation
+- 複雜的 object creation
 - Enforces creation rules
-- Hides construction complexity
+- Hides construction 複雜的ity
 
 **Specification Pattern**:
 
 - Encapsulates business rules
-- Reusable and composable
+- Reusable 和 composable
 - Testable in isolation
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-24  
-**Next Review**: 2026-01-24 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-24  
+**下次審查**： 2026-01-24 （每季）

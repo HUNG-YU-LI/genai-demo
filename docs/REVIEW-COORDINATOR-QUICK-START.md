@@ -1,242 +1,238 @@
-# Review Coordinator Quick Start Guide
+# Review Coordinator 快速入門指南
 
-**Purpose**: Quick reference for executing the stakeholder review process
-**Full Details**: See `docs/STAKEHOLDER-REVIEW-PLAN.md`
-
----
-
-## Pre-Review Checklist (1 Week Before)
-
-- [ ] Identify specific reviewers from each stakeholder group
-- [ ] Book review session rooms/video calls
-- [ ] Test access to all documentation
-- [ ] Prepare review packages with links
-- [ ] Send save-the-date notices
+**目的**: 執行 stakeholder 審查流程的快速參考
+**完整詳情**: 參見 `docs/STAKEHOLDER-REVIEW-PLAN.md`
 
 ---
 
-## Review Week 1 Checklist
+## 審查前檢查清單（提前 1 週）
 
-### Days 1-2: Preparation
-
-- [ ] **Day 1 Morning**: Create review packages
-  - Developer package: Links to development docs, API docs, examples
-  - Operations package: Links to operational docs, runbooks, deployment guides
-  - Architecture package: Links to all viewpoints, perspectives, ADRs, diagrams
-  - Business package: Links to functional and context viewpoints
-
-- [ ] **Day 1 Afternoon**: Send invitations
-  - Use email template from STAKEHOLDER-REVIEW-PLAN.md
-  - Include review package links
-  - Include feedback form links
-  - Include review session calendar invites
-
-- [ ] **Day 2**: Answer questions and confirm attendance
-
-### Days 3-4: Developer & Operations Reviews
-
-- [ ] **Day 3 Morning**: Developer review session (2 hours)
-  - Present development documentation overview (15 min)
-  - Discuss hands-on testing results (30 min)
-  - Review code examples (20 min)
-  - Review API documentation (20 min)
-  - Review onboarding guide (15 min)
-  - Q&A (20 min)
-
-- [ ] **Day 3 Afternoon**: Operations review session (2 hours)
-  - Present operational documentation overview (15 min)
-  - Discuss runbook validation (30 min)
-  - Review deployment procedures (20 min)
-  - Review monitoring and alerting (20 min)
-  - Review troubleshooting guides (15 min)
-  - Q&A (20 min)
-
-- [ ] **Day 4**: Monitor feedback submission, send reminders
-
-### Day 5: Architecture & Business Reviews
-
-- [ ] **Day 5 Morning**: Architecture review session (3 hours)
-  - Present architecture documentation overview (20 min)
-  - Review viewpoints (60 min)
-  - Review perspectives (40 min)
-  - Review ADRs (30 min)
-  - Review diagrams (20 min)
-  - Q&A (10 min)
-
-- [ ] **Day 5 Afternoon**: Business stakeholder review session (1.5 hours)
-  - Present business documentation overview (15 min)
-  - Review functional viewpoint (30 min)
-  - Review context viewpoint (20 min)
-  - Review use cases and bounded contexts (15 min)
-  - Q&A (10 min)
+- [ ] 從每個 stakeholder 群組識別特定審查者
+- [ ] 預訂審查會議室/視訊通話
+- [ ] 測試所有 documentation 的存取權限
+- [ ] 準備包含連結的審查套件
+- [ ] 發送預告通知
 
 ---
 
-## Review Week 2 Checklist
+## 審查第 1 週檢查清單
 
-### Days 1-2: Feedback Consolidation
+### 第 1-2 天：準備
 
-- [ ] **Day 1**: Consolidate all feedback
-  - Collect all feedback forms
-  - Categorize by priority (Critical, High, Medium, Low)
-  - Identify common themes
-  - Create action item list
+- [ ] **第 1 天上午**: 建立審查套件
+  - Developer 套件：Development docs, API docs, examples 的連結
+  - Operations 套件：Operational docs, runbooks, deployment guides 的連結
+  - Architecture 套件：所有 viewpoints, perspectives, ADRs, diagrams 的連結
+  - Business 套件：Functional 和 context viewpoints 的連結
 
-- [ ] **Day 2**: Create response plan
-  - Assign action items to team members
-  - Estimate effort for each change
-  - Create implementation timeline
-  - Send response plan to stakeholders
+- [ ] **第 1 天下午**: 發送邀請
+  - 使用 STAKEHOLDER-REVIEW-PLAN.md 中的電子郵件範本
+  - 包含審查套件連結
+  - 包含回饋表單連結
+  - 包含審查會議日曆邀請
 
-### Days 3-5: Implementation
+- [ ] **第 2 天**: 回答問題並確認出席
 
-- [ ] **Days 3-4**: Implement changes
-  - Address all critical issues
-  - Address high-priority issues
-  - Update documentation
-  - Update diagrams if needed
+### 第 3-4 天：Developer 與 Operations 審查
 
-- [ ] **Day 5 Morning**: Quality checks
-  - Run link validation: `./scripts/validate-cross-references.py`
-  - Run diagram validation: `./scripts/validate-diagrams.py`
-  - Run completeness check: `./scripts/validate-documentation-completeness.py`
-  - Run quality checks: `./scripts/run-quality-checks.sh`
+- [ ] **第 3 天上午**: Developer 審查會議（2 小時）
+  - 展示 development documentation 概述（15 分鐘）
+  - 討論實作測試結果（30 分鐘）
+  - 審查程式碼範例（20 分鐘）
+  - 審查 API documentation（20 分鐘）
+  - 審查入職指南（15 分鐘）
+  - 問答（20 分鐘）
 
-- [ ] **Day 5 Afternoon**: Final validation session (2 hours)
-  - Present changes made (30 min)
-  - Demonstrate improvements (30 min)
-  - Address remaining concerns (30 min)
-  - Obtain sign-off (15 min)
-  - Discuss maintenance plan (15 min)
+- [ ] **第 3 天下午**: Operations 審查會議（2 小時）
+  - 展示 operational documentation 概述（15 分鐘）
+  - 討論 runbook 驗證（30 分鐘）
+  - 審查部署程序（20 分鐘）
+  - 審查監控和警報（20 分鐘）
+  - 審查故障排除指南（15 分鐘）
+  - 問答（20 分鐘）
+
+- [ ] **第 4 天**: 監控回饋提交，發送提醒
+
+### 第 5 天：Architecture 與 Business 審查
+
+- [ ] **第 5 天上午**: Architecture 審查會議（3 小時）
+  - 展示 architecture documentation 概述（20 分鐘）
+  - 審查 viewpoints（60 分鐘）
+  - 審查 perspectives（40 分鐘）
+  - 審查 ADRs（30 分鐘）
+  - 審查 diagrams（20 分鐘）
+  - 問答（10 分鐘）
+
+- [ ] **第 5 天下午**: Business stakeholder 審查會議（1.5 小時）
+  - 展示 business documentation 概述（15 分鐘）
+  - 審查 functional viewpoint（30 分鐘）
+  - 審查 context viewpoint（20 分鐘）
+  - 審查 use cases 和 bounded contexts（15 分鐘）
+  - 問答（10 分鐘）
 
 ---
 
-## Stakeholder Contact Template
+## 審查第 2 週檢查清單
+
+### 第 1-2 天：回饋整合
+
+- [ ] **第 1 天**: 整合所有回饋
+  - 收集所有回饋表單
+  - 按優先級分類（Critical, High, Medium, Low）
+  - 識別共同主題
+  - 建立行動項目清單
+
+- [ ] **第 2 天**: 建立回應計劃
+  - 分配行動項目給團隊成員
+  - 估算每個變更的工作量
+  - 建立實施時程表
+  - 將回應計劃發送給 stakeholders
+
+### 第 3-5 天：實施
+
+- [ ] **第 3-4 天**: 實施變更
+  - 處理所有 critical issues
+  - 處理高優先級 issues
+  - 更新 documentation
+  - 如需要則更新 diagrams
+
+- [ ] **第 5 天上午**: 品質檢查
+  - 執行連結驗證：`./scripts/validate-cross-references.py`
+  - 執行 diagram 驗證：`./scripts/validate-diagrams.py`
+  - 執行完整性檢查：`./scripts/validate-documentation-completeness.py`
+  - 執行品質檢查：`./scripts/run-quality-checks.sh`
+
+- [ ] **第 5 天下午**: 最終驗證會議（2 小時）
+  - 展示所做的變更（30 分鐘）
+  - 展示改進（30 分鐘）
+  - 處理剩餘問題（30 分鐘）
+  - 獲取簽核（15 分鐘）
+  - 討論維護計劃（15 分鐘）
+
+---
+
+## Stakeholder 聯絡範本
 
 ### Developer Team
 - **Primary Contact**: _______________
 - **Email**: _______________
-- **Reviewers**: _______________ (5-7 people)
+- **Reviewers**: _______________ (5-7 人)
 
 ### Operations Team
 - **Primary Contact**: _______________
 - **Email**: _______________
-- **Reviewers**: _______________ (5-7 people)
+- **Reviewers**: _______________ (5-7 人)
 
 ### Architecture Team
 - **Primary Contact**: _______________
 - **Email**: _______________
-- **Reviewers**: _______________ (5-7 people)
+- **Reviewers**: _______________ (5-7 人)
 
 ### Business Stakeholders
 - **Primary Contact**: _______________
 - **Email**: _______________
-- **Reviewers**: _______________ (3-4 people)
+- **Reviewers**: _______________ (3-4 人)
 
 ---
 
-## Email Templates
+## 電子郵件範本
 
-### Initial Invitation Email
+### 初始邀請電子郵件
 
 ```
-Subject: Documentation Review Request - [Stakeholder Group]
+主旨：Documentation 審查請求 - [Stakeholder Group]
 
-Dear [Stakeholder Group],
+親愛的 [Stakeholder Group]，
 
-We have completed the comprehensive documentation redesign project and need 
-your expertise to review the documentation relevant to your role.
+我們已完成全面的 documentation 重新設計專案，需要您的專業知識來審查與您角色相關的 documentation。
 
-📋 Review Package: [Link to documentation]
-📝 Feedback Form: [Link to form]
-📅 Review Session: [Date/Time/Location]
-⏰ Deadline: [Date]
+📋 審查套件：[Documentation 連結]
+📝 回饋表單：[表單連結]
+📅 審查會議：[日期/時間/地點]
+⏰ 截止日期：[日期]
 
-Please review the documentation and complete the feedback form by [Date]. 
-We will conduct a review session to discuss your feedback and answer questions.
+請在 [日期] 前審查 documentation 並完成回饋表單。我們將舉行審查會議來討論您的回饋並回答問題。
 
-What we need from you:
-- Review the documentation in your area
-- Complete the feedback form
-- Attend the review session
-- Provide constructive feedback
+我們需要您的協助：
+- 審查您領域的 documentation
+- 完成回饋表單
+- 參加審查會議
+- 提供建設性回饋
 
-Estimated time: 2-3 hours for review + 1.5-3 hours for session
+預估時間：2-3 小時審查 + 1.5-3 小時會議
 
-Thank you for your time and valuable input!
+感謝您的時間和寶貴意見！
 
-Best regards,
+最誠摯的問候，
 [Your Name]
 Documentation Team Lead
 ```
 
-### Reminder Email (Day -1)
+### 提醒電子郵件（前一天）
 
 ```
-Subject: Reminder: Documentation Review Tomorrow
+主旨：提醒：明天 Documentation 審查
 
-Dear [Stakeholder Group],
+親愛的 [Stakeholder Group]，
 
-This is a friendly reminder about tomorrow's documentation review session.
+這是關於明天 documentation 審查會議的友善提醒。
 
-📅 Session: [Date/Time/Location]
-📋 Review Package: [Link]
-📝 Feedback Form: [Link]
+📅 會議：[日期/時間/地點]
+📋 審查套件：[連結]
+📝 回饋表單：[連結]
 
-If you haven't completed your review yet, please try to do so before the 
-session. If you need more time, please let me know.
+如果您還沒有完成審查，請在會議前盡量完成。如果您需要更多時間，請告訴我。
 
-See you tomorrow!
+明天見！
 
-Best regards,
+最誠摯的問候，
 [Your Name]
 ```
 
-### Thank You Email
+### 感謝電子郵件
 
 ```
-Subject: Thank You - Documentation Review
+主旨：感謝您 - Documentation 審查
 
-Dear [Stakeholder Group],
+親愛的 [Stakeholder Group]，
 
-Thank you for participating in the documentation review! Your feedback is 
-invaluable in ensuring our documentation meets your needs.
+感謝您參與 documentation 審查！您的回饋對於確保我們的 documentation 符合您的需求非常寶貴。
 
-Next steps:
-- We will consolidate all feedback by [Date]
-- We will share a response plan by [Date]
-- We will implement changes by [Date]
-- Final validation session: [Date/Time]
+後續步驟：
+- 我們將在 [日期] 前整合所有回饋
+- 我們將在 [日期] 前分享回應計劃
+- 我們將在 [日期] 前實施變更
+- 最終驗證會議：[日期/時間]
 
-If you have any additional feedback, please don't hesitate to reach out.
+如果您有任何其他回饋，請隨時與我們聯繫。
 
-Best regards,
+最誠摯的問候，
 [Your Name]
 ```
 
 ---
 
-## Feedback Consolidation Template
+## 回饋整合範本
 
-### Critical Issues (Must Fix)
-
-| Issue | Stakeholder | Document | Action | Owner | ETA | Status |
-|-------|-------------|----------|--------|-------|-----|--------|
-| | | | | | | |
-
-### High Priority (Should Fix)
+### Critical Issues（必須修復）
 
 | Issue | Stakeholder | Document | Action | Owner | ETA | Status |
 |-------|-------------|----------|--------|-------|-----|--------|
 | | | | | | | |
 
-### Medium Priority (Nice to Fix)
+### High Priority（應該修復）
 
 | Issue | Stakeholder | Document | Action | Owner | ETA | Status |
 |-------|-------------|----------|--------|-------|-----|--------|
 | | | | | | | |
 
-### Low Priority (Future)
+### Medium Priority（建議修復）
+
+| Issue | Stakeholder | Document | Action | Owner | ETA | Status |
+|-------|-------------|----------|--------|-------|-----|--------|
+| | | | | | | |
+
+### Low Priority（未來）
 
 | Issue | Stakeholder | Document | Action | Owner | ETA | Status |
 |-------|-------------|----------|--------|-------|-----|--------|
@@ -244,20 +240,20 @@ Best regards,
 
 ---
 
-## Sign-off Checklist
+## 簽核檢查清單
 
-- [ ] Developer team approves development documentation
-- [ ] Operations team approves operational documentation
-- [ ] Architecture team approves architecture documentation
-- [ ] Business stakeholders approve functional documentation
-- [ ] All critical issues addressed
-- [ ] All high-priority issues addressed
-- [ ] Quality checks passing
-- [ ] Final validation session completed
+- [ ] Developer team 批准 development documentation
+- [ ] Operations team 批准 operational documentation
+- [ ] Architecture team 批准 architecture documentation
+- [ ] Business stakeholders 批准 functional documentation
+- [ ] 所有 critical issues 已處理
+- [ ] 所有高優先級 issues 已處理
+- [ ] 品質檢查通過
+- [ ] 最終驗證會議已完成
 
 ---
 
-## Emergency Contacts
+## 緊急聯絡人
 
 **Documentation Team Lead**: _______________
 **Technical Writer**: _______________
@@ -265,9 +261,9 @@ Best regards,
 
 ---
 
-## Quick Links
+## 快速連結
 
-- **Full Review Plan**: `docs/STAKEHOLDER-REVIEW-PLAN.md`
+- **完整審查計劃**: `docs/STAKEHOLDER-REVIEW-PLAN.md`
 - **Developer Feedback Form**: `docs/feedback-forms/developer-feedback-form.md`
 - **Operations Feedback Form**: `docs/feedback-forms/operations-feedback-form.md`
 - **Architecture Feedback Form**: `docs/feedback-forms/architecture-feedback-form.md`
@@ -275,19 +271,18 @@ Best regards,
 
 ---
 
-## Tips for Success
+## 成功秘訣
 
-1. **Start Early**: Begin preparation 2 weeks before reviews
-2. **Be Flexible**: Accommodate stakeholder schedules
-3. **Stay Organized**: Use checklists and track progress
-4. **Communicate Often**: Keep stakeholders informed
-5. **Be Responsive**: Answer questions quickly
-6. **Document Everything**: Keep records of all feedback
-7. **Follow Up**: Ensure all action items are completed
-8. **Celebrate Success**: Thank reviewers and celebrate completion
+1. **提早開始**: 審查前 2 週開始準備
+2. **保持彈性**: 配合 stakeholder 的時程
+3. **保持組織**: 使用檢查清單並追蹤進度
+4. **經常溝通**: 讓 stakeholders 知情
+5. **快速回應**: 快速回答問題
+6. **記錄所有事項**: 保留所有回饋的記錄
+7. **後續追蹤**: 確保所有行動項目都已完成
+8. **慶祝成功**: 感謝審查者並慶祝完成
 
 ---
 
-**Last Updated**: 2025-01-17
-**Version**: 1.0
-
+**最後更新**: 2025-01-17
+**版本**: 1.0

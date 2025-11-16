@@ -1,201 +1,201 @@
-# Runbook: Slow API Responses
+# Runbook: API 回應緩慢
 
-## Symptoms
+## 症狀
 
-- API response time > 2s (95th percentile)
-- Timeout errors from clients
-- Increased request queue length
-- User complaints about slow page loads
-- High latency in distributed traces
+- API 回應時間 > 2s（95th percentile）
+- 客戶端 timeout 錯誤
+- 請求佇列長度增加
+- 使用者抱怨頁面載入緩慢
+- Distributed traces 中的高延遲
 
-## Impact
+## 影響
 
-- **Severity**: P1 - High
-- **Affected Users**: All users experience degraded performance
-- **Business Impact**: Poor user experience, potential cart abandonment, revenue loss
+- **嚴重程度**：P1 - High
+- **受影響使用者**：所有使用者體驗效能下降
+- **業務影響**：不良的使用者體驗、可能的購物車放棄、收入損失
 
-## Detection
+## 偵測
 
-- **Alert**: `SlowAPIResponseTime` alert fires
-- **Monitoring Dashboard**: Operations Dashboard > Performance > API Response Times
-- **Log Patterns**:
+- **Alert**：`SlowAPIResponseTime` alert 觸發
+- **Monitoring Dashboard**：Operations Dashboard > Performance > API Response Times
+- **Log 模式**：
   - `Request took longer than expected`
   - `Slow query detected`
   - `Timeout waiting for response`
 
-## Diagnosis
+## 診斷
 
-### Step 1: Identify Slow Endpoints
+### 步驟 1：識別慢速 Endpoints
 
 ```bash
-# Check response times by endpoint
+# 檢查各 endpoint 的回應時間
 curl http://localhost:8080/actuator/metrics/http.server.requests | jq '.measurements'
 
-# Get detailed metrics for specific endpoint
+# 取得特定 endpoint 的詳細 metrics
 curl "http://localhost:8080/actuator/metrics/http.server.requests?tag=uri:/api/v1/orders" | jq
 
-# Check Prometheus metrics
+# 檢查 Prometheus metrics
 curl -g 'http://prometheus:9090/api/v1/query?query=histogram_quantile(0.95,rate(http_request_duration_seconds_bucket[5m]))' | jq
 ```
 
-### Step 2: Analyze Request Patterns
+### 步驟 2：分析請求模式
 
 ```bash
-# Check request rate
+# 檢查請求速率
 kubectl logs deployment/ecommerce-backend -n production --tail=1000 | \
   grep "HTTP" | awk '{print $1}' | uniq -c | sort -rn
 
-# Identify slow requests in logs
+# 在 logs 中識別慢速請求
 kubectl logs deployment/ecommerce-backend -n production --tail=5000 | \
   grep -i "slow\|timeout" | head -50
 
-# Check for specific slow endpoints
+# 檢查特定慢速 endpoints
 kubectl logs deployment/ecommerce-backend -n production --tail=5000 | \
   grep "duration" | awk '$NF > 2000' | head -20
 ```
 
-### Step 3: Check Database Performance
+### 步驟 3：檢查 Database Performance
 
 ```bash
-# Check active database queries
+# 檢查活動的 database 查詢
 kubectl exec -it ${POD_NAME} -n production -- \
   psql -h ${DB_HOST} -U ${DB_USER} -d ${DB_NAME} -c \
-  "SELECT pid, now() - query_start as duration, state, query 
-   FROM pg_stat_activity 
-   WHERE state != 'idle' 
-   ORDER BY duration DESC 
+  "SELECT pid, now() - query_start as duration, state, query
+   FROM pg_stat_activity
+   WHERE state != 'idle'
+   ORDER BY duration DESC
    LIMIT 20;"
 
-# Check for slow queries
+# 檢查慢速查詢
 kubectl exec -it ${POD_NAME} -n production -- \
   psql -h ${DB_HOST} -U ${DB_USER} -d ${DB_NAME} -c \
-  "SELECT query, calls, total_time, mean_time, max_time 
-   FROM pg_stat_statements 
-   ORDER BY mean_time DESC 
+  "SELECT query, calls, total_time, mean_time, max_time
+   FROM pg_stat_statements
+   ORDER BY mean_time DESC
    LIMIT 20;"
 
-# Check for table locks
+# 檢查 table locks
 kubectl exec -it ${POD_NAME} -n production -- \
   psql -h ${DB_HOST} -U ${DB_USER} -d ${DB_NAME} -c \
-  "SELECT locktype, relation::regclass, mode, granted, pid 
-   FROM pg_locks 
-   WHERE NOT granted 
+  "SELECT locktype, relation::regclass, mode, granted, pid
+   FROM pg_locks
+   WHERE NOT granted
    ORDER BY pid;"
 
-# Check database connection pool
+# 檢查 database connection pool
 curl http://localhost:8080/actuator/metrics/hikaricp.connections.active
 curl http://localhost:8080/actuator/metrics/hikaricp.connections.pending
 ```
 
-### Step 4: Check Cache Performance
+### 步驟 4：檢查 Cache Performance
 
 ```bash
-# Check cache hit rate
+# 檢查 cache hit rate
 curl http://localhost:8080/actuator/metrics/cache.gets?tag=result:hit
 curl http://localhost:8080/actuator/metrics/cache.gets?tag=result:miss
 
-# Calculate hit rate
+# 計算 hit rate
 HIT=$(curl -s http://localhost:8080/actuator/metrics/cache.gets?tag=result:hit | jq '.measurements[0].value')
 MISS=$(curl -s http://localhost:8080/actuator/metrics/cache.gets?tag=result:miss | jq '.measurements[0].value')
 echo "Cache hit rate: $(echo "scale=2; $HIT / ($HIT + $MISS) * 100" | bc)%"
 
-# Check Redis performance
+# 檢查 Redis performance
 kubectl exec -it redis-0 -n production -- redis-cli INFO stats | grep -E "keyspace_hits|keyspace_misses"
 kubectl exec -it redis-0 -n production -- redis-cli INFO stats | grep instantaneous_ops_per_sec
 kubectl exec -it redis-0 -n production -- redis-cli SLOWLOG GET 10
 ```
 
-### Step 5: Analyze Distributed Traces
+### 步驟 5：分析 Distributed Traces
 
 ```bash
-# Get trace IDs for slow requests
+# 取得慢速請求的 trace IDs
 kubectl logs deployment/ecommerce-backend -n production --tail=1000 | \
   grep "duration.*[3-9][0-9][0-9][0-9]" | \
   grep -oP 'traceId=\K[a-f0-9]+'
 
-# View trace in X-Ray console or use AWS CLI
+# 在 X-Ray console 中查看 trace 或使用 AWS CLI
 aws xray get-trace-summaries \
   --start-time $(date -u -d '1 hour ago' +%s) \
   --end-time $(date -u +%s) \
   --filter-expression 'duration > 2'
 
-# Get detailed trace
+# 取得詳細 trace
 aws xray batch-get-traces --trace-ids ${TRACE_ID}
 ```
 
-### Step 6: Check External Dependencies
+### 步驟 6：檢查外部依賴
 
 ```bash
-# Check external API response times
+# 檢查外部 API 回應時間
 kubectl logs deployment/ecommerce-backend -n production --tail=1000 | \
   grep "external" | grep "duration"
 
-# Test payment gateway
+# 測試 payment gateway
 curl -w "@curl-format.txt" -o /dev/null -s https://payment-gateway.example.com/health
 
-# Test email service
+# 測試 email service
 curl -w "@curl-format.txt" -o /dev/null -s https://email-service.example.com/health
 
-# Check Kafka lag
+# 檢查 Kafka lag
 kubectl exec -it kafka-0 -n production -- \
   kafka-consumer-groups --bootstrap-server localhost:9092 \
   --describe --group ecommerce-consumer
 ```
 
-### Step 7: Check Resource Utilization
+### 步驟 7：檢查資源使用率
 
 ```bash
-# Check CPU and memory
+# 檢查 CPU 和 memory
 kubectl top pods -n production -l app=ecommerce-backend
 
-# Check network I/O
+# 檢查 network I/O
 kubectl exec -it ${POD_NAME} -n production -- \
   cat /proc/net/dev
 
-# Check disk I/O
+# 檢查 disk I/O
 kubectl exec -it ${POD_NAME} -n production -- \
   iostat -x 1 5
 ```
 
-## Resolution
+## 解決方案
 
-### Immediate Actions
+### 即時行動
 
-1. **Scale horizontally** if resource-constrained:
+1. **水平擴充**（如果資源受限）：
 
 ```bash
 kubectl scale deployment/ecommerce-backend --replicas=8 -n production
 ```
 
-1. **Clear cache** if stale data causing issues:
+2. **清除 cache**（如果過時資料導致問題）：
 
 ```bash
-# Clear application cache
+# 清除 application cache
 curl -X POST http://localhost:8080/actuator/caches/products -d '{"action":"clear"}'
 
-# Clear Redis cache
+# 清除 Redis cache
 kubectl exec -it redis-0 -n production -- redis-cli FLUSHDB
 ```
 
-1. **Kill slow queries** if blocking others:
+3. **終止慢速查詢**（如果阻塞其他查詢）：
 
 ```bash
 kubectl exec -it ${POD_NAME} -n production -- \
   psql -h ${DB_HOST} -U ${DB_USER} -d ${DB_NAME} -c \
-  "SELECT pg_terminate_backend(pid) 
-   FROM pg_stat_activity 
-   WHERE state = 'active' 
+  "SELECT pg_terminate_backend(pid)
+   FROM pg_stat_activity
+   WHERE state = 'active'
    AND now() - query_start > interval '30 seconds';"
 ```
 
-### Root Cause Fixes
+### 根本原因修復
 
-#### If caused by slow database queries
+#### 如果由慢速 database 查詢引起
 
-1. **Identify slow queries**:
+1. **識別慢速查詢**：
 
 ```sql
--- Get slowest queries
+-- 取得最慢的查詢
 SELECT query, calls, total_time, mean_time, max_time,
        stddev_time, rows
 FROM pg_stat_statements
@@ -203,7 +203,7 @@ ORDER BY mean_time DESC
 LIMIT 20;
 ```
 
-1. **Analyze query execution plan**:
+2. **分析查詢執行計畫**：
 
 ```sql
 EXPLAIN ANALYZE
@@ -213,24 +213,24 @@ JOIN customers c ON o.customer_id = c.id
 WHERE o.created_at > NOW() - INTERVAL '7 days';
 ```
 
-1. **Add missing indexes**:
+3. **新增缺少的索引**：
 
 ```sql
--- Create index on frequently queried columns
-CREATE INDEX CONCURRENTLY idx_orders_created_at 
+-- 在常查詢的欄位上創建索引
+CREATE INDEX CONCURRENTLY idx_orders_created_at
 ON orders(created_at);
 
-CREATE INDEX CONCURRENTLY idx_orders_customer_id_created_at 
+CREATE INDEX CONCURRENTLY idx_orders_customer_id_created_at
 ON orders(customer_id, created_at);
 
--- Verify index usage
+-- 驗證索引使用情況
 EXPLAIN ANALYZE [your query];
 ```
 
-1. **Optimize query**:
+4. **優化查詢**：
 
 ```java
-// Before: N+1 query problem
+// 之前：N+1 query 問題
 public List<OrderDTO> getOrders() {
     List<Order> orders = orderRepository.findAll();
     return orders.stream()
@@ -241,30 +241,30 @@ public List<OrderDTO> getOrders() {
         .collect(Collectors.toList());
 }
 
-// After: Use JOIN FETCH
+// 之後：使用 JOIN FETCH
 @Query("SELECT o FROM Order o JOIN FETCH o.customer WHERE o.createdAt > :date")
 List<Order> findRecentOrdersWithCustomer(@Param("date") LocalDateTime date);
 ```
 
-#### If caused by inefficient caching
+#### 如果由無效率的 caching 引起
 
-1. **Implement caching for frequently accessed data**:
+1. **對頻繁存取的資料實施 caching**：
 
 ```java
 @Service
 public class ProductService {
-    
+
     @Cacheable(value = "products", key = "#id", unless = "#result == null")
     public Product findById(String id) {
         return productRepository.findById(id)
             .orElseThrow(() -> new ProductNotFoundException(id));
     }
-    
+
     @Cacheable(value = "productList", key = "#category")
     public List<Product> findByCategory(String category) {
         return productRepository.findByCategory(category);
     }
-    
+
     @CacheEvict(value = "products", key = "#product.id")
     public Product updateProduct(Product product) {
         return productRepository.save(product);
@@ -272,59 +272,57 @@ public class ProductService {
 }
 ```
 
-1. **Configure cache TTL**:
+2. **配置 cache TTL**：
 
 ```yaml
 spring:
   cache:
     redis:
-      time-to-live: 1800000  # 30 minutes
+      time-to-live: 1800000  # 30 分鐘
     cache-names:
-
       - products
       - customers
       - categories
-
 ```
 
-1. **Implement cache warming**:
+3. **實施 cache warming**：
 
 ```java
 @Component
 public class CacheWarmer {
-    
-    @Scheduled(cron = "0 0 * * * *")  // Every hour
+
+    @Scheduled(cron = "0 0 * * * *")  // 每小時
     public void warmCache() {
-        // Pre-load frequently accessed data
+        // 預載入頻繁存取的資料
         List<Product> popularProducts = productRepository.findPopularProducts();
-        popularProducts.forEach(product -> 
+        popularProducts.forEach(product ->
             cacheManager.getCache("products").put(product.getId(), product)
         );
     }
 }
 ```
 
-#### If caused by external API slowness
+#### 如果由外部 API 緩慢引起
 
-1. **Implement timeout and circuit breaker**:
+1. **實施 timeout 和 circuit breaker**：
 
 ```java
 @Service
 public class PaymentService {
-    
+
     private final CircuitBreaker circuitBreaker;
-    
+
     @CircuitBreaker(name = "paymentGateway", fallbackMethod = "paymentFallback")
     @Retry(name = "paymentGateway", fallbackMethod = "paymentFallback")
     @TimeLimiter(name = "paymentGateway")
     public CompletableFuture<PaymentResult> processPayment(PaymentRequest request) {
-        return CompletableFuture.supplyAsync(() -> 
+        return CompletableFuture.supplyAsync(() ->
             paymentGatewayClient.process(request)
         );
     }
-    
+
     public CompletableFuture<PaymentResult> paymentFallback(PaymentRequest request, Exception ex) {
-        // Return cached result or queue for later processing
+        // 返回 cached 結果或將其排隊以供稍後處理
         return CompletableFuture.completedFuture(
             PaymentResult.pending("Payment queued for processing")
         );
@@ -332,7 +330,7 @@ public class PaymentService {
 }
 ```
 
-1. **Configure resilience4j**:
+2. **配置 resilience4j**：
 
 ```yaml
 resilience4j:
@@ -343,69 +341,69 @@ resilience4j:
         failureRateThreshold: 50
         waitDurationInOpenState: 10000
         permittedNumberOfCallsInHalfOpenState: 3
-  
+
   retry:
     instances:
       paymentGateway:
         maxAttempts: 3
         waitDuration: 1000
         exponentialBackoffMultiplier: 2
-  
+
   timelimiter:
     instances:
       paymentGateway:
         timeoutDuration: 5s
 ```
 
-#### If caused by inefficient code
+#### 如果由無效率的程式碼引起
 
-1. **Profile application**:
+1. **分析 application**：
 
 ```bash
-# Get CPU profile
+# 取得 CPU profile
 kubectl exec -it ${POD_NAME} -n production -- \
   async-profiler.sh -d 60 -f /tmp/profile.html 1
 
-# Copy profile locally
+# 本地複製 profile
 kubectl cp production/${POD_NAME}:/tmp/profile.html ./profile.html
 ```
 
-1. **Optimize hot paths**:
+2. **優化 hot paths**：
 
 ```java
-// Before: Inefficient
+// 之前：無效率
 public List<OrderDTO> getOrders() {
     return orderRepository.findAll().stream()
         .map(this::convertToDTO)
         .collect(Collectors.toList());
 }
 
-// After: Use projection
+// 之後：使用 projection
 @Query("SELECT new com.example.OrderDTO(o.id, o.total, c.name) " +
        "FROM Order o JOIN o.customer c")
 List<OrderDTO> findAllOrderDTOs();
 
-// Or use database view
+// 或使用 database view
 @Query(value = "SELECT * FROM order_summary_view", nativeQuery = true)
 List<OrderSummaryDTO> findOrderSummaries();
 ```
 
-1. **Implement pagination**:
+3. **實施 pagination**：
 
 ```java
 @GetMapping("/orders")
 public Page<OrderDTO> getOrders(
     @RequestParam(defaultValue = "0") int page,
     @RequestParam(defaultValue = "20") int size) {
-    
+
     Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
     return orderService.findOrders(pageable);
 }
 ```
 
-#### If caused by connection pool exhaustion
+#### 如果由 connection pool 耗盡引起
 
-1. **Increase connection pool size**:
+1. **增加 connection pool 大小**：
 
 ```yaml
 spring:
@@ -417,110 +415,107 @@ spring:
       idle-timeout: 300000
 ```
 
-1. **Fix connection leaks**:
+2. **修復 connection 洩漏**：
 
 ```java
-// Ensure proper resource cleanup
+// 確保適當的資源清理
 @Transactional
 public void processOrder(Order order) {
     try {
-        // Process order
+        // 處理訂單
         orderRepository.save(order);
     } catch (Exception e) {
-        // Handle exception
+        // 處理 exception
         throw new OrderProcessingException("Failed to process order", e);
     }
-    // Transaction automatically closed
+    // Transaction 自動關閉
 }
 ```
 
-## Verification
+## 驗證
 
-- [ ] API response time < 2s (95th percentile)
-- [ ] No timeout errors
-- [ ] Database query times normal
+- [ ] API 回應時間 < 2s（95th percentile）
+- [ ] 沒有 timeout 錯誤
+- [ ] Database 查詢時間正常
 - [ ] Cache hit rate > 80%
-- [ ] No slow query alerts
-- [ ] External API calls within SLA
-- [ ] Resource utilization normal
-- [ ] User experience improved
+- [ ] 沒有 slow query alerts
+- [ ] 外部 API 呼叫在 SLA 內
+- [ ] 資源使用率正常
+- [ ] 使用者體驗改善
 
-### Verification Commands
+### 驗證指令
 
 ```bash
-# Monitor response times
+# 監控回應時間
 watch -n 5 'curl -s http://localhost:8080/actuator/metrics/http.server.requests | jq ".measurements[0].value"'
 
-# Check database performance
+# 檢查 database performance
 kubectl exec -it ${POD_NAME} -n production -- \
   psql -h ${DB_HOST} -U ${DB_USER} -d ${DB_NAME} -c \
   "SELECT max(now() - query_start) as max_duration FROM pg_stat_activity WHERE state = 'active';"
 
-# Verify cache hit rate
+# 驗證 cache hit rate
 curl -s http://localhost:8080/actuator/metrics/cache.gets | jq
 ```
 
-## Prevention
+## 預防
 
-### 1. Performance Testing
+### 1. Performance 測試
 
 ```bash
-# Regular load testing
+# 定期 load 測試
 ./scripts/load-test.sh --duration=30m --users=500
 
-# Performance regression testing
+# Performance regression 測試
 ./scripts/performance-test.sh --baseline=v1.0.0 --current=v1.1.0
 ```
 
-### 2. Database Optimization
+### 2. Database 優化
 
 ```sql
--- Regular maintenance
+-- 定期維護
 VACUUM ANALYZE;
 REINDEX DATABASE ecommerce_production;
 
--- Monitor index usage
+-- 監控索引使用情況
 SELECT schemaname, tablename, indexname, idx_scan, idx_tup_read, idx_tup_fetch
 FROM pg_stat_user_indexes
 WHERE idx_scan = 0
 ORDER BY schemaname, tablename;
 ```
 
-### 3. Monitoring and Alerting
+### 3. Monitoring 和 Alerting
 
 ```yaml
-# Set up performance alerts
-
+# 設定 performance alerts
 - alert: APIResponseTimeDegrading
-
   expr: rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m]) > 1
   for: 10m
-  
-- alert: DatabaseQuerySlow
 
+- alert: DatabaseQuerySlow
   expr: rate(pg_stat_statements_mean_exec_time_seconds[5m]) > 0.5
   for: 5m
 ```
 
 ### 4. Code Review Checklist
 
-- [ ] Database queries optimized
-- [ ] Proper indexing in place
-- [ ] Caching implemented where appropriate
-- [ ] No N+1 query problems
-- [ ] Pagination for large datasets
-- [ ] Connection pooling configured
-- [ ] Timeouts set for external calls
-- [ ] Circuit breakers implemented
+- [ ] Database 查詢已優化
+- [ ] 適當的索引已建立
+- [ ] 在適當位置實施 caching
+- [ ] 沒有 N+1 query 問題
+- [ ] 大型資料集的 pagination
+- [ ] Connection pooling 已配置
+- [ ] 外部呼叫設定 timeouts
+- [ ] Circuit breakers 已實施
 
-## Escalation
+## 升級處理
 
-- **L1 Support**: DevOps team (scaling, cache clearing)
-- **L2 Support**: Backend engineering team (query optimization, code fixes)
-- **L3 Support**: Database administrator (database tuning)
-- **On-Call Engineer**: Check PagerDuty
+- **L1 Support**：DevOps team（scaling、cache 清除）
+- **L2 Support**：Backend engineering team（query 優化、程式碼修復）
+- **L3 Support**：Database administrator（database 調校）
+- **On-Call Engineer**：查看 PagerDuty
 
-## Related
+## 相關
 
 - [High CPU Usage](high-cpu-usage.md)
 - [Database Connection Issues](database-connection-issues.md)
@@ -529,6 +524,6 @@ ORDER BY schemaname, tablename;
 
 ---
 
-**Last Updated**: 2025-10-25  
-**Owner**: DevOps Team  
-**Review Cycle**: Monthly
+**Last Updated**：2025-10-25
+**Owner**：DevOps Team
+**Review Cycle**：Monthly

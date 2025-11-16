@@ -12,61 +12,61 @@ affected_perspectives: ["availability", "performance", "location"]
 
 # ADR-037: Active-Active Multi-Region Architecture (TPE-Tokyo)
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform faces critical geopolitical and operational risks:
+The Enterprise E-Commerce Platform faces critical geopolitical 和 operational risks:
 
 **Geopolitical Risks**:
 
-- **Taiwan-China Tensions**: Escalating military tensions with potential for conflict
+- **Taiwan-China Tensions**: Escalating military tensions 與 potential 用於 conflict
 - **Missile Attack Risk**: Taiwan within range of Chinese missile systems
 - **Submarine Cable Vulnerability**: 99% of Taiwan's internet traffic via undersea cables
-- **Cyber Warfare**: Frequent DDoS attacks and APT campaigns from state actors
-- **Economic Sanctions**: Potential for trade restrictions affecting operations
+- **Cyber Warfare**: Frequent DDoS attacks 和 APT campaigns from state actors
+- **Economic Sanctions**: Potential 用於 trade restrictions affecting operations
 
 **Operational Risks**:
 
-- **Natural Disasters**: Taiwan in earthquake and typhoon zones
+- **Natural Disasters**: Taiwan in earthquake 和 typhoon zones
 - **Single Point of Failure**: Single-region deployment creates business continuity risk
 - **Latency**: Customers in Japan experience higher latency
-- **Regulatory**: Data sovereignty requirements for different markets
+- **Regulatory**: Data sovereignty requirements 用於 different markets
 
 **Business Impact**:
 
-- Revenue loss during regional outages
+- Revenue loss 期間 regional outages
 - Customer trust erosion
 - Regulatory non-compliance
 - Competitive disadvantage
-- Insurance and liability issues
+- Insurance 和 liability issues
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Business continuity during geopolitical crises
-- Disaster recovery for natural disasters
+- Business continuity 期間 geopolitical crises
+- Disaster recovery 用於 natural disasters
 - Market expansion to Japan
 - Regulatory compliance (data residency)
-- Customer experience improvement (lower latency)
+- Customer experience 改善ment (lower latency)
 - Competitive advantage (99.99% availability)
 
-**Constraints**:
+**限制條件**：
 
-- Budget: $500,000/year for multi-region infrastructure
-- Timeline: 6 months for initial deployment
-- Existing Taiwan infrastructure must remain operational
+- 預算: $500,000/year 用於 multi-region infrastructure
+- Timeline: 6 個月 用於 initial deployment
+- Existing Taiwan infrastructure 必須 remain operational
 - Zero downtime migration required
-- Data consistency requirements vary by bounded context
+- Data consistency 需求各異 透過 bounded context
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
 - Single region deployment in Taiwan (ap-northeast-3)
 - No disaster recovery capability
@@ -74,34 +74,34 @@ The Enterprise E-Commerce Platform faces critical geopolitical and operational r
 - RTO: 4+ hours, RPO: 1+ hour
 - No geographic load distribution
 
-**Requirements**:
+**需求**：
 
 - Active-active deployment in two regions
 - Automatic failover capability
 - RTO: < 5 minutes
 - RPO: < 1 minute
 - Geographic load distribution
-- Data consistency across regions
+- Data consistency 跨 regions
 - Cost-effective solution
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **Geopolitical Resilience**: Survive Taiwan-China conflict scenarios
-2. **Business Continuity**: Maintain operations during regional disasters
-3. **Performance**: Reduce latency for Japanese customers
+2. **Business Continuity**: 維持 operations 期間 regional disasters
+3. **Performance**: 降低 latency 用於 Japanese customers
 4. **Availability**: Achieve 99.99% uptime SLA
-5. **Cost**: Optimize infrastructure costs
-6. **Complexity**: Manageable operational complexity
-7. **Data Consistency**: Balance consistency with availability
+5. **成本**： Optimize infrastructure costs
+6. **複雜的ity**: Manageable operational 複雜的ity
+7. **Data Consistency**: Balance consistency 與 availability
 8. **Regulatory**: Meet data residency requirements
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Active-Active Multi-Region (TPE + Tokyo) - Recommended
+### 選項 1： Active-Active Multi-Region (TPE + Tokyo) - Recommended
 
-**Description**: Deploy fully operational infrastructure in both Taipei (ap-northeast-3) and Tokyo (ap-northeast-1) with active traffic serving from both regions
+**描述**： Deploy fully operational infrastructure in both Taipei (ap-northeast-3) and Tokyo (ap-northeast-1) with active traffic serving from both regions
 
-**Architecture**:
+**架構**：
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -132,94 +132,94 @@ The Enterprise E-Commerce Platform faces critical geopolitical and operational r
 **Data Replication**:
 
 - **PostgreSQL**: Logical replication (quasi-synchronous)
-- **Redis**: Redis Cluster with cross-region replication
-- **Kafka**: MirrorMaker 2.0 for event streaming
+- **Redis**: Redis Cluster 與 cross-region replication
+- **Kafka**: MirrorMaker 2.0 用於 event streaming
 - **S3**: Cross-Region Replication (CRR)
 
-**Pros**:
+**優點**：
 
 - ✅ Survives complete Taiwan region failure
-- ✅ Low latency for both markets
-- ✅ True high availability (99.99%+)
+- ✅ Low latency 用於 both markets
+- ✅ True 高可用性 (99.99%+)
 - ✅ Automatic failover (< 5 minutes)
-- ✅ Load distribution reduces costs
-- ✅ Supports market expansion
+- ✅ Load distribution 降低s costs
+- ✅ 支援s market expansion
 - ✅ Meets data residency requirements
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Higher infrastructure cost (2x compute)
-- ⚠️ Data consistency complexity
+- ⚠️ Data consistency 複雜的ity
 - ⚠️ Cross-region data transfer costs
-- ⚠️ Operational complexity
+- ⚠️ Operational 複雜的ity
 
-**Cost**:
+**成本**：
 
 - Infrastructure: $400,000/year (2x compute, storage)
 - Data Transfer: $50,000/year (cross-region)
 - Operations: $50,000/year (additional staff)
 - **Total**: $500,000/year
 
-**Risk**: **Low** - Proven architecture pattern
+**風險**： **Low** - Proven architecture pattern
 
-### Option 2: Active-Passive (TPE Primary + Tokyo DR)
+### 選項 2： Active-Passive (TPE Primary + Tokyo DR)
 
-**Description**: Taiwan as primary region, Tokyo as cold/warm standby
+**描述**： Taiwan as primary region, Tokyo as cold/warm standby
 
-**Pros**:
+**優點**：
 
 - ✅ Lower cost ($250,000/year)
-- ✅ Simpler operations
-- ✅ Easier data consistency
+- ✅ 簡單的r operations
+- ✅ Easier 資料一致性
 
-**Cons**:
+**缺點**：
 
 - ❌ Manual failover required (RTO: 30+ minutes)
-- ❌ No latency improvement for Japan
+- ❌ No latency 改善ment 用於 Japan
 - ❌ Underutilized DR resources
 - ❌ Higher RPO (5-15 minutes)
 - ❌ No load distribution
 
-**Cost**: $250,000/year
+**成本**： $250,000/year
 
-**Risk**: **Medium** - Manual failover unreliable
+**風險**： **Medium** - Manual failover unreliable
 
-### Option 3: Multi-Region with Third Region (TPE + Tokyo + Singapore)
+### 選項 3： Multi-Region with Third Region (TPE + Tokyo + Singapore)
 
-**Description**: Three-region deployment for maximum resilience
+**描述**： Three-region deployment for maximum resilience
 
-**Pros**:
+**優點**：
 
 - ✅ Survives dual-region failure
 - ✅ Southeast Asia coverage
 - ✅ Maximum resilience
 
-**Cons**:
+**缺點**：
 
 - ❌ Very high cost ($750,000/year)
-- ❌ High complexity
-- ❌ Overkill for current needs
+- ❌ High 複雜的ity
+- ❌ Overkill 用於 current needs
 - ❌ Data consistency challenges
 
-**Cost**: $750,000/year
+**成本**： $750,000/year
 
-**Risk**: **Low** - But unnecessary complexity
+**風險**： **Low** - But unnecessary complexity
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Active-Active Multi-Region (TPE + Tokyo) - Option 1**
+**選擇的選項**： **Active-Active Multi-Region (TPE + Tokyo) - Option 1**
 
-### Rationale
+### 理由
 
-Active-active multi-region architecture was selected for the following critical reasons:
+Active-active multi-region architecture was selected 用於 the following critical reasons:
 
 1. **Geopolitical Resilience**: Survives complete Taiwan region failure due to military conflict
-2. **Business Continuity**: Maintains operations during natural disasters (earthquakes, typhoons)
-3. **Performance**: 50-70ms latency reduction for Japanese customers
+2. **Business Continuity**: 維持s operations 期間 natural disasters (earthquakes, typhoons)
+3. **Performance**: 50-70ms latency reduction 用於 Japanese customers
 4. **Availability**: Achieves 99.99% uptime (52 minutes downtime/year)
-5. **Cost-Effective**: Load distribution reduces per-region costs vs single region
-6. **Market Expansion**: Supports Japan market growth
-7. **Automatic Failover**: < 5 minute RTO without manual intervention
+5. **Cost-Effective**: Load distribution 降低s per-region costs vs single region
+6. **Market Expansion**: 支援s Japan market growth
+7. **Automatic Failover**: < 5 minute RTO 沒有 manual intervention
 
 ### Region Selection Rationale
 
@@ -227,19 +227,19 @@ Active-active multi-region architecture was selected for the following critical 
 
 - Primary market (60% of customers)
 - Existing infrastructure
-- Lower latency for Taiwan/Hong Kong/SEA customers
-- Data residency for Taiwan customers
+- Lower latency 用於 Taiwan/Hong Kong/SEA customers
+- Data residency 用於 Taiwan customers
 
 **Tokyo (ap-northeast-1)**:
 
 - Geographically separated from Taiwan (2,100 km)
 - Politically stable
-- Excellent AWS infrastructure
-- Low latency for Japan/Korea customers (20-30ms)
-- Data residency for Japanese customers
+- 優秀的 AWS infrastructure
+- Low latency 用於 Japan/Korea customers (20-30ms)
+- Data residency 用於 Japanese customers
 - Submarine cable diversity
 
-**Why Not Other Regions**:
+**為何不選 Other Regions**：
 
 - **Singapore**: Too far from Taiwan (3,300 km), higher latency
 - **Seoul**: Too close to North Korea, geopolitical risk
@@ -328,7 +328,7 @@ const tokyoHealthCheck = new route53.CfnHealthCheck(this, 'TokyoHealth', {
 
 **Strong Consistency (CP - Consistency + Partition Tolerance)**:
 
-- **Orders**: Quorum write (both regions must acknowledge)
+- **Orders**: Quorum write (both regions 必須 acknowledge)
 - **Payments**: Synchronous replication
 - **Inventory**: Distributed locks + dual-write
 
@@ -462,56 +462,56 @@ public class InventoryConflictResolver {
 }
 ```
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Development Team | High | Multi-region code complexity, data consistency | Training, patterns, tools |
+| Development Team | High | Multi-region code 複雜的ity, 資料一致性 | Training, patterns, tools |
 | Operations Team | High | Multi-region monitoring, incident response | Automation, runbooks, training |
-| End Users | Low | Improved latency, higher availability | Transparent migration |
-| Business | Medium | Higher infrastructure cost, better resilience | ROI analysis, phased rollout |
+| End Users | Low | 改善d latency, higher availability | Transparent migration |
+| Business | Medium | Higher infrastructure cost, 更好的 resilience | ROI analysis, phased rollout |
 | Security Team | Medium | Cross-region security, compliance | Security controls, audits |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **Enterprise**
+**選擇的影響半徑**： **Enterprise**
 
-Affects:
+影響：
 
 - All application services
-- All databases and caches
+- All databases 和 caches
 - All message queues
-- All monitoring and logging
+- All monitoring 和 logging
 - All deployment pipelines
 - All disaster recovery procedures
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | Data inconsistency | Medium | High | Conflict resolution, monitoring, alerts |
 | Cross-region latency | Low | Medium | Optimize replication, caching |
 | Increased costs | High | Medium | Cost monitoring, optimization |
-| Operational complexity | Medium | High | Automation, training, documentation |
+| Operational 複雜的ity | Medium | High | Automation, training, documentation |
 | Split-brain scenario | Low | Critical | Quorum-based consensus, fencing |
 
-**Overall Risk Level**: **Medium**
+**整體風險等級**： **Medium**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Foundation (Month 1-2)
+### 第 1 階段： Foundation (Month 1-2)
 
 **Objectives**:
 
 - Set up Tokyo region infrastructure
 - Establish cross-region networking
-- Deploy monitoring and observability
+- Deploy monitoring 和 observability
 
 **Tasks**:
 
-- [ ] Provision Tokyo VPC and networking
+- [ ] Provision Tokyo VPC 和 networking
 - [ ] Set up VPC peering between regions
 - [ ] Deploy EKS cluster in Tokyo
 - [ ] Set up cross-region monitoring
@@ -524,7 +524,7 @@ Affects:
 - Cross-region connectivity verified
 - Monitoring dashboards functional
 
-### Phase 2: Data Replication (Month 3-4)
+### 第 2 階段： Data Replication (Month 3-4)
 
 **Objectives**:
 
@@ -547,7 +547,7 @@ Affects:
 - Conflict resolution working
 - Zero data loss in tests
 
-### Phase 3: Application Deployment (Month 5)
+### 第 3 階段： Application Deployment (Month 5)
 
 **Objectives**:
 
@@ -561,7 +561,7 @@ Affects:
 - [ ] Configure Route 53 geolocation routing
 - [ ] Test traffic distribution
 - [ ] Perform failover drills
-- [ ] Validate data consistency
+- [ ] Validate 資料一致性
 - [ ] Load testing
 
 **Success Criteria**:
@@ -570,7 +570,7 @@ Affects:
 - Traffic routing working correctly
 - Failover < 5 minutes
 
-### Phase 4: Production Cutover (Month 6)
+### 第 4 階段： Production Cutover (Month 6)
 
 **Objectives**:
 
@@ -581,11 +581,11 @@ Affects:
 **Tasks**:
 
 - [ ] Migrate 10% traffic to Tokyo
-- [ ] Monitor and validate
+- [ ] Monitor 和 validate
 - [ ] Migrate 50% traffic to Tokyo
-- [ ] Monitor and validate
-- [ ] Enable full active-active
-- [ ] 24/7 monitoring for 2 weeks
+- [ ] Monitor 和 validate
+- [ ] 啟用 full active-active
+- [ ] 24/7 monitoring 用於 2 週
 
 **Success Criteria**:
 
@@ -594,16 +594,16 @@ Affects:
 - RPO < 1 minute validated
 - No data inconsistencies
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Data consistency issues
 - Failover failures
 - Performance degradation > 20%
 - Critical bugs in multi-region code
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. **Immediate**: Route all traffic to Taiwan region
 2. **Data**: Stop replication, validate Taiwan data integrity
@@ -611,11 +611,11 @@ Affects:
 4. **Verification**: Validate single-region operation
 5. **Investigation**: Root cause analysis
 
-**Rollback Time**: < 30 minutes
+**回滾時間**： < 30 minutes
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
@@ -627,7 +627,7 @@ Affects:
 | Data sync lag | < 5 seconds | Replication monitoring |
 | Failover success | 100% | Quarterly drills |
 
-### Monitoring Plan
+### 監控計畫
 
 **Key Metrics**:
 
@@ -657,7 +657,7 @@ const metrics = {
 };
 ```
 
-**Alerts**:
+**告警**：
 
 - **P0 Critical**: Region failure, failover failure
 - **P1 High**: Replication lag > 10s, data conflicts
@@ -679,54 +679,54 @@ const metrics = {
 - **Monthly**: Failover drill, capacity planning
 - **Quarterly**: Architecture review, optimization
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Resilience**: Survives Taiwan region failure (war, disaster)
 - ✅ **Availability**: 99.99% uptime (52 min downtime/year)
-- ✅ **Performance**: 50-70ms latency reduction for Japan
-- ✅ **Business Continuity**: Operations continue during crises
-- ✅ **Market Expansion**: Supports Japan market growth
+- ✅ **Performance**: 50-70ms latency reduction 用於 Japan
+- ✅ **Business Continuity**: Operations continue 期間 crises
+- ✅ **Market Expansion**: 支援s Japan market growth
 - ✅ **Competitive Advantage**: Superior availability vs competitors
 - ✅ **Customer Trust**: Demonstrates commitment to reliability
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Cost**: $500,000/year infrastructure cost (2x single region)
-- ⚠️ **Complexity**: Multi-region operations complexity
+- ⚠️ **成本**： $500,000/year infrastructure cost (2x single region)
+- ⚠️ **複雜的ity**: Multi-region operations 複雜的ity
 - ⚠️ **Data Consistency**: Eventual consistency challenges
 - ⚠️ **Cross-Region Costs**: $50,000/year data transfer
 - ⚠️ **Operational Overhead**: 24/7 monitoring required
 - ⚠️ **Development Effort**: Multi-region aware code
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. Manual conflict resolution for some scenarios
+1. Manual conflict resolution 用於 some scenarios
 2. Basic traffic distribution (no intelligent routing)
 3. Limited automated failover testing
 4. Manual capacity planning
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q2 2026**: Automated conflict resolution for all scenarios
+- **Q2 2026**: Automated conflict resolution 用於 all scenarios
 - **Q3 2026**: Intelligent traffic routing based on load
 - **Q4 2026**: Automated failover testing (chaos engineering)
 - **2027**: ML-powered capacity prediction
 
-## Related Decisions
+## 相關決策
 
-- [ADR-017: Multi-Region Deployment Strategy](017-multi-region-deployment-strategy.md) - Superseded by this ADR
-- [ADR-018: Container Orchestration with AWS EKS](018-container-orchestration-eks.md) - EKS in both regions
-- [ADR-035: Disaster Recovery Strategy](035-disaster-recovery-strategy.md) - DR integrated with multi-region
+- [ADR-017: Multi-Region Deployment Strategy](017-multi-region-deployment-strategy.md) - Superseded 透過 this ADR
+- [ADR-018: Container Orchestration 與 AWS EKS](018-container-orchestration-eks.md) - EKS in both regions
+- [ADR-035: Disaster Recovery Strategy](035-disaster-recovery-strategy.md) - DR integrated 與 multi-region
 - [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md) - Detailed replication design
-- [ADR-039: Regional Failover and Failback Strategy](039-regional-failover-failback-strategy.md) - Failover procedures
+- [ADR-039: Regional Failover 和 Failback Strategy](039-regional-failover-failback-strategy.md) - Failover procedures
 - [ADR-040: Network Partition Handling Strategy](040-network-partition-handling-strategy.md) - Split-brain prevention
-- [ADR-041: Data Residency and Sovereignty Strategy](041-data-residency-sovereignty-strategy.md) - Compliance requirements
+- [ADR-041: Data Residency 和 Sovereignty Strategy](041-data-residency-sovereignty-strategy.md) - Compliance requirements
 
-## Notes
+## 備註
 
 ### Geopolitical Risk Assessment
 
@@ -744,7 +744,7 @@ const metrics = {
 **Infrastructure Costs** ($400,000/year):
 
 - EKS: $100,000/year (2 clusters)
-- RDS: $120,000/year (2 primary databases)
+- RDS: $120,000/year (2 主要資料庫s)
 - ElastiCache: $60,000/year (2 clusters)
 - MSK: $80,000/year (2 clusters)
 - Load Balancers: $20,000/year
@@ -758,25 +758,25 @@ const metrics = {
 **Operations** ($50,000/year):
 
 - Additional DevOps staff
-- Training and tools
-- Monitoring and alerting
+- Training 和 tools
+- Monitoring 和 alerting
 
 ### Performance Benchmarks
 
-**Latency Improvements**:
+**Latency 改善ments**:
 
 - Taiwan customers: 20-30ms (no change)
-- Japan customers: 150ms → 30ms (80% improvement)
-- Korea customers: 180ms → 50ms (72% improvement)
+- Japan customers: 150ms → 30ms (80% 改善ment)
+- Korea customers: 180ms → 50ms (72% 改善ment)
 
 **Availability Calculation**:
 
 - Single region: 99.9% (8.76 hours downtime/year)
 - Active-active: 99.99% (52 minutes downtime/year)
-- Improvement: 10x reduction in downtime
+- 改善ment: 10x reduction in downtime
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

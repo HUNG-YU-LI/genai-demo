@@ -1,6 +1,6 @@
 ---
 adr_number: 020
-title: "Database Migration Strategy with Flyway"
+title: "Database Migration Strategy 與 Flyway"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,67 +10,67 @@ affected_viewpoints: ["information", "deployment", "operational"]
 affected_perspectives: ["availability", "evolution"]
 ---
 
-# ADR-020: Database Migration Strategy with Flyway
+# ADR-020: Database Migration Strategy 與 Flyway
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires a robust database migration strategy to:
+The Enterprise E-Commerce Platform 需要robust database migration strategy to:
 
 **Business Requirements**:
 
-- **Zero Downtime**: Database changes must not cause service interruptions
-- **Version Control**: All schema changes must be tracked and versioned
+- **Zero Downtime**: Database changes 必須 not cause service interruptions
+- **Version Control**: All schema changes 必須 be tracked 和 versioned
 - **Rollback Safety**: Ability to rollback failed migrations
-- **Multi-Environment**: Consistent migrations across dev, staging, production
+- **Multi-Environment**: Consistent migrations 跨 dev, staging, production
 - **Audit Trail**: Complete history of all database changes
 - **Team Collaboration**: Multiple developers making schema changes
 
 **Technical Challenges**:
 
-- Complex schema with 13 bounded contexts
+- 複雜的 schema 與 13 bounded contexts
 - High transaction volume (10,000+ TPS)
 - Multiple database instances (RDS primary + read replicas)
-- Concurrent deployments across regions
-- Schema evolution with backward compatibility
-- Data migration for large tables
-- Coordination with application deployments
+- Concurrent deployments 跨 regions
+- Schema evolution 與 backward compatibility
+- Data migration 用於 大型的 tables
+- Coordination 與 application deployments
 
-**Current State**:
+**目前狀態**：
 
 - Manual SQL scripts
-- No version control for schema
-- Inconsistent schemas across environments
+- No version control 用於 schema
+- Inconsistent schemas 跨 environments
 - Risky manual migrations
 - No rollback strategy
-- Difficult to track changes
+- 難以track changes
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Enable continuous delivery
-- Reduce deployment risk
-- Improve database reliability
-- Support rapid feature development
+- 啟用 continuous delivery
+- 降低 deployment risk
+- 改善 database reliability
+- 支援 rapid feature development
 - Ensure data integrity
 - Meet compliance requirements
 
-**Constraints**:
+**限制條件**：
 
-- Budget: $30,000 for implementation
-- Timeline: 6 weeks
+- 預算: $30,000 用於 implementation
+- Timeline: 6 週
 - Team: 2 database engineers, 3 developers
-- Must work with existing PostgreSQL RDS
-- Cannot cause downtime
-- Must support multi-region
+- 必須 work 與 existing PostgreSQL RDS
+- 可以not cause downtime
+- 必須 支援 multi-region
 
-### Technical Context
+### 技術上下文
 
 **Current Database**:
 
@@ -87,22 +87,22 @@ The Enterprise E-Commerce Platform requires a robust database migration strategy
 - Automated rollback capability
 - Multi-environment consistency
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **Reliability**: Ensure migrations succeed consistently
-2. **Safety**: Prevent data loss or corruption
+2. **Safety**: Prevent data loss 或 corruption
 3. **Automation**: Minimize manual intervention
 4. **Versioning**: Track all schema changes
 5. **Rollback**: Quick recovery from failed migrations
 6. **Performance**: Minimize migration impact on production
-7. **Simplicity**: Easy for developers to use
-8. **Integration**: Work with existing CI/CD pipeline
+7. **Simplicity**: Easy 用於 developers to use
+8. **Integration**: Work 與 existing CI/CD pipeline
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Flyway (Recommended)
+### 選項 1： Flyway (Recommended)
 
-**Description**: Industry-standard database migration tool with version control and automation
+**描述**： Industry-standard database migration tool with version control and automation
 
 **Migration Structure**:
 
@@ -464,7 +464,7 @@ class DatabaseMigrationTest {
 }
 ```
 
-**Monitoring and Alerting**:
+**Monitoring 和 Alerting**:
 
 ```java
 @Component
@@ -504,84 +504,84 @@ public class FlywayMigrationMonitor {
 }
 ```
 
-**Pros**:
+**優點**：
 
-- ✅ Industry standard with large community
-- ✅ Excellent Spring Boot integration
-- ✅ Version control for schema changes
+- ✅ Industry standard 與 大型的 community
+- ✅ 優秀的Spring Boot整合
+- ✅ Version control 用於 schema changes
 - ✅ Automatic migration on startup
-- ✅ Rollback support with undo migrations
-- ✅ Repeatable migrations for views/procedures
+- ✅ Rollback 支援 與 undo migrations
+- ✅ Repeatable migrations 用於 views/procedures
 - ✅ Comprehensive validation
-- ✅ Multi-environment support
-- ✅ Good documentation
+- ✅ Multi-environment 支援
+- ✅ 良好的 documentation
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Learning curve for team
+- ⚠️ Learning curve 用於 team
 - ⚠️ Requires discipline in migration writing
 - ⚠️ Undo migrations need manual creation
-- ⚠️ Large data migrations can be slow
+- ⚠️ 大型的 data migrations 可以 be slow
 
-**Cost**: $30,000 implementation + $2,000/year (support)
+**成本**： $30,000 implementation + $2,000/year (support)
 
-**Risk**: **Low** - Proven, widely adopted solution
+**風險**： **Low** - Proven, widely adopted solution
 
-### Option 2: Liquibase
+### 選項 2： Liquibase
 
-**Description**: XML/YAML-based database migration tool
+**描述**： XML/YAML-based database migration tool
 
-**Pros**:
+**優點**：
 
 - ✅ Database-agnostic
 - ✅ XML/YAML format
 - ✅ Automatic rollback generation
 - ✅ Change set tracking
 
-**Cons**:
+**缺點**：
 
-- ❌ More complex configuration
+- ❌ More 複雜的 configuration
 - ❌ XML verbosity
 - ❌ Steeper learning curve
 - ❌ Less intuitive than SQL
 
-**Cost**: $35,000 implementation + $3,000/year
+**成本**： $35,000 implementation + $3,000/year
 
-**Risk**: **Medium** - More complex
+**風險**： **Medium** - More complex
 
-### Option 3: Custom Migration Scripts
+### 選項 3： Custom Migration Scripts
 
-**Description**: Manual SQL scripts with custom versioning
+**描述**： Manual SQL scripts with custom versioning
 
-**Pros**:
+**優點**：
 
 - ✅ Full control
 - ✅ No external dependencies
-- ✅ Simple for small projects
+- ✅ 簡單的 用於 small projects
 
-**Cons**:
+**缺點**：
 
 - ❌ No automation
 - ❌ Error-prone
 - ❌ No version tracking
-- ❌ Difficult to maintain
-- ❌ No rollback support
+- ❌ 難以維持
+- ❌ No rollback 支援
 
-**Cost**: $10,000 implementation
+**成本**： $10,000 implementation
 
-**Risk**: **High** - Unreliable, not scalable
+**風險**： **High** - Unreliable, not scalable
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Flyway (Option 1)**
+**選擇的選項**： **Flyway (Option 1)**
 
-### Rationale
+### 理由
 
-Flyway provides the optimal balance of simplicity, reliability, and features for database migration management, with excellent Spring Boot integration and industry-proven track record.
+Flyway 提供s the optimal balance of simplicity, reliability, 和 features 用於 database migration management, 與 優秀的 Spring Boot integration 和 industry-proven track record.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
@@ -593,9 +593,9 @@ Flyway provides the optimal balance of simplicity, reliability, and features for
 
 ### Impact Radius Assessment
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All database schema changes
 - Application deployments
@@ -603,7 +603,7 @@ Affects:
 - Development workflow
 - Testing procedures
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
@@ -613,11 +613,11 @@ Affects:
 | Team adoption | Medium | Medium | Training, documentation |
 | Performance impact | Low | Medium | Batch processing, off-peak |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Setup and Configuration (Week 1-2)
+### 第 1 階段： Setup and Configuration （第 1-2 週）
 
 **Tasks**:
 
@@ -630,11 +630,11 @@ Affects:
 
 **Success Criteria**:
 
-- Flyway configured and working
+- Flyway configured 和 working
 - Baseline migration applied
 - CI/CD pipeline updated
 
-### Phase 2: Migration Templates and Guidelines (Week 3)
+### 第 2 階段： Migration Templates and Guidelines （第 3 週）
 
 **Tasks**:
 
@@ -650,7 +650,7 @@ Affects:
 - Guidelines documented
 - Validation working
 
-### Phase 3: Team Training (Week 4)
+### 第 3 階段： Team Training （第 4 週）
 
 **Tasks**:
 
@@ -665,7 +665,7 @@ Affects:
 - Examples created
 - Procedures documented
 
-### Phase 4: Production Rollout (Week 5-6)
+### 第 4 階段： Production Rollout （第 5-6 週）
 
 **Tasks**:
 
@@ -679,17 +679,17 @@ Affects:
 
 - Production using Flyway
 - All migrations tracked
-- Team comfortable with process
+- Team comfortable 與 process
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Migration failures
 - Data corruption
 - Performance issues
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Stop application
 2. Restore database backup
@@ -697,11 +697,11 @@ Affects:
 4. Test in staging
 5. Reapply migration
 
-**Rollback Time**: < 30 minutes
+**回滾時間**： < 30 minutes
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
@@ -717,54 +717,54 @@ Affects:
 - **Monthly**: Process optimization
 - **Quarterly**: Strategy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Version Control**: All schema changes tracked
 - ✅ **Automation**: Migrations run automatically
-- ✅ **Consistency**: Same schema across environments
+- ✅ **Consistency**: Same schema 跨 environments
 - ✅ **Rollback**: Quick recovery from failures
 - ✅ **Audit Trail**: Complete migration history
 - ✅ **Safety**: Validation before production
-- ✅ **Collaboration**: Multiple developers can work safely
+- ✅ **Collaboration**: Multiple developers 可以 work safely
 
-### Negative Consequences
+### 負面後果
 
 - ⚠️ **Learning Curve**: Team needs training
-- ⚠️ **Discipline Required**: Must follow conventions
-- ⚠️ **Migration Complexity**: Large data migrations need care
+- ⚠️ **Discipline Required**: 必須 follow conventions
+- ⚠️ **Migration 複雜的ity**: 大型的 data migrations need care
 - ⚠️ **Undo Migrations**: Manual creation required
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Existing schema not in Flyway
 2. No automated rollback testing
 3. Manual undo migration creation
-4. Limited large data migration patterns
+4. Limited 大型的 data migration patterns
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q1 2026**: Baseline all existing schemas
 - **Q2 2026**: Automated rollback testing
-- **Q3 2026**: Large data migration framework
+- **Q3 2026**: 大型的 data migration framework
 - **Q4 2026**: Automated undo generation
 
-## Related Decisions
+## 相關決策
 
 - [ADR-019: Progressive Deployment Strategy](019-progressive-deployment-strategy.md)
-- [ADR-021: Event Sourcing for Critical Aggregates](021-event-sourcing-critical-aggregates.md)
-- [ADR-025: Saga Pattern for Distributed Transactions](025-saga-pattern-distributed-transactions.md)
+- [ADR-021: Event Sourcing 用於 Critical Aggregates](021-event-sourcing-critical-aggregates.md)
+- [ADR-025: Saga Pattern 用於 Distributed Transactions](025-saga-pattern-distributed-transactions.md)
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）
 
-## Notes
+## 備註
 
 ### Migration Best Practices
 
@@ -774,16 +774,16 @@ Affects:
 - ✅ Test migrations in staging first
 - ✅ Create backups before production
 - ✅ Use descriptive migration names
-- ✅ Keep migrations small and focused
-- ✅ Document complex migrations
-- ✅ Use transactions for safety
+- ✅ Keep migrations small 和 focused
+- ✅ Document 複雜的 migrations
+- ✅ Use transactions 用於 safety
 
 **DON'T**:
 
 - ❌ Modify existing migrations
 - ❌ Skip version numbers
 - ❌ Use out-of-order migrations
-- ❌ Make breaking changes without grace period
+- ❌ Make breaking changes 沒有 grace period
 - ❌ Run migrations manually in production
 - ❌ Ignore validation errors
 

@@ -1,230 +1,230 @@
-# Monitoring Strategy
+# Monitoring 策略
 
-## Overview
+## 概述
 
-This document describes the comprehensive monitoring strategy for the Enterprise E-Commerce Platform, including key metrics, dashboards, and monitoring tools.
+本文件描述 Enterprise E-Commerce Platform 的全面 monitoring 策略，包括關鍵 metrics、dashboards 和 monitoring 工具。
 
-## Monitoring Objectives
+## Monitoring 目標
 
-- **Availability**: Ensure 99.9% uptime SLA
-- **Performance**: Maintain response times < 2s (95th percentile)
-- **Reliability**: Detect and resolve issues before customer impact
-- **Capacity**: Proactively manage resource utilization
-- **Business**: Track key business metrics and KPIs
+- **可用性**：確保 99.9% uptime SLA
+- **效能**：維持回應時間 < 2s（95th percentile）
+- **可靠性**：在影響客戶前偵測並解決問題
+- **容量**：主動管理資源使用率
+- **業務**：追蹤關鍵業務 metrics 和 KPIs
 
 ## Monitoring Stack
 
-### Tools and Services
+### 工具和服務
 
-| Tool | Purpose | Environment |
-|------|---------|-------------|
-| AWS CloudWatch | Metrics, logs, alarms | All |
+| 工具 | 用途 | 環境 |
+|------|------|------|
+| AWS CloudWatch | Metrics、logs、alarms | All |
 | AWS X-Ray | Distributed tracing | All |
-| Grafana | Visualization and dashboards | All |
-| Prometheus | Metrics collection | Staging, Production |
-| ELK Stack | Log aggregation and analysis | Production |
-| PagerDuty | Incident management and alerting | Production |
+| Grafana | 視覺化和 dashboards | All |
+| Prometheus | Metrics 收集 | Staging、Production |
+| ELK Stack | Log aggregation 和分析 | Production |
+| PagerDuty | Incident 管理和 alerting | Production |
 
-## Key Metrics
+## 關鍵 Metrics
 
 ### Application Metrics
 
 #### API Performance Metrics
 
-| Metric | Description | Target | Alert Threshold |
-|--------|-------------|--------|-----------------|
-| Response Time (p50) | Median API response time | < 500ms | > 1s |
-| Response Time (p95) | 95th percentile response time | < 2s | > 3s |
-| Response Time (p99) | 99th percentile response time | < 5s | > 10s |
-| Request Rate | Requests per second | N/A | Baseline ±50% |
-| Error Rate | Percentage of failed requests | < 0.1% | > 1% |
-| Success Rate | Percentage of successful requests | > 99.9% | < 99% |
+| Metric | 描述 | 目標 | Alert 閾值 |
+|--------|------|------|-----------|
+| Response Time (p50) | 中位數 API 回應時間 | < 500ms | > 1s |
+| Response Time (p95) | 95th percentile 回應時間 | < 2s | > 3s |
+| Response Time (p99) | 99th percentile 回應時間 | < 5s | > 10s |
+| Request Rate | 每秒請求數 | N/A | Baseline ±50% |
+| Error Rate | 失敗請求百分比 | < 0.1% | > 1% |
+| Success Rate | 成功請求百分比 | > 99.9% | < 99% |
 
 #### Business Metrics
 
-| Metric | Description | Target | Alert Threshold |
-|--------|-------------|--------|-----------------|
-| Orders per Minute | Order creation rate | N/A | < 50% of baseline |
-| Payment Success Rate | Successful payment percentage | > 98% | < 95% |
-| Cart Abandonment Rate | Abandoned carts percentage | < 70% | > 80% |
-| Average Order Value | Mean order value | N/A | < 80% of baseline |
-| Customer Registration Rate | New customer signups | N/A | < 50% of baseline |
+| Metric | 描述 | 目標 | Alert 閾值 |
+|--------|------|------|-----------|
+| Orders per Minute | 訂單建立速率 | N/A | < 50% of baseline |
+| Payment Success Rate | 成功付款百分比 | > 98% | < 95% |
+| Cart Abandonment Rate | 放棄購物車百分比 | < 70% | > 80% |
+| Average Order Value | 平均訂單金額 | N/A | < 80% of baseline |
+| Customer Registration Rate | 新客戶註冊數 | N/A | < 50% of baseline |
 
 ### Infrastructure Metrics
 
 #### Compute Metrics
 
-| Metric | Description | Target | Alert Threshold |
-|--------|-------------|--------|-----------------|
-| CPU Utilization | Pod CPU usage | < 70% | > 80% |
-| Memory Utilization | Pod memory usage | < 80% | > 90% |
-| Pod Count | Number of running pods | N/A | < min replicas |
-| Pod Restart Count | Number of pod restarts | 0 | > 3 in 15 min |
-| Node CPU | Node-level CPU usage | < 70% | > 85% |
-| Node Memory | Node-level memory usage | < 80% | > 90% |
+| Metric | 描述 | 目標 | Alert 閾值 |
+|--------|------|------|-----------|
+| CPU Utilization | Pod CPU 使用率 | < 70% | > 80% |
+| Memory Utilization | Pod memory 使用率 | < 80% | > 90% |
+| Pod Count | 運行中的 pod 數量 | N/A | < min replicas |
+| Pod Restart Count | Pod 重啟次數 | 0 | > 3 in 15 min |
+| Node CPU | Node 層級 CPU 使用率 | < 70% | > 85% |
+| Node Memory | Node 層級 memory 使用率 | < 80% | > 90% |
 
 #### Database Metrics
 
-| Metric | Description | Target | Alert Threshold |
-|--------|-------------|--------|-----------------|
-| Connection Count | Active database connections | < 80% of max | > 90% of max |
-| Query Duration (p95) | 95th percentile query time | < 100ms | > 500ms |
-| Slow Query Count | Queries > 1s | 0 | > 10 per minute |
+| Metric | 描述 | 目標 | Alert 閾值 |
+|--------|------|------|-----------|
+| Connection Count | 活動 database 連線數 | < 80% of max | > 90% of max |
+| Query Duration (p95) | 95th percentile 查詢時間 | < 100ms | > 500ms |
+| Slow Query Count | 查詢 > 1s | 0 | > 10 per minute |
 | Replication Lag | Read replica lag | < 1s | > 5s |
 | Deadlock Count | Database deadlocks | 0 | > 1 per hour |
-| Database CPU | RDS CPU utilization | < 70% | > 80% |
-| Database Storage | Storage utilization | < 80% | > 90% |
+| Database CPU | RDS CPU 使用率 | < 70% | > 80% |
+| Database Storage | Storage 使用率 | < 80% | > 90% |
 
 #### Cache Metrics
 
-| Metric | Description | Target | Alert Threshold |
-|--------|-------------|--------|-----------------|
-| Cache Hit Rate | Percentage of cache hits | > 80% | < 70% |
-| Cache Miss Rate | Percentage of cache misses | < 20% | > 30% |
-| Eviction Rate | Cache evictions per second | < 100 | > 500 |
-| Memory Usage | Redis memory utilization | < 80% | > 90% |
-| Connection Count | Active Redis connections | < 80% of max | > 90% of max |
+| Metric | 描述 | 目標 | Alert 閾值 |
+|--------|------|------|-----------|
+| Cache Hit Rate | Cache hits 百分比 | > 80% | < 70% |
+| Cache Miss Rate | Cache misses 百分比 | < 20% | > 30% |
+| Eviction Rate | 每秒 cache evictions | < 100 | > 500 |
+| Memory Usage | Redis memory 使用率 | < 80% | > 90% |
+| Connection Count | 活動 Redis 連線數 | < 80% of max | > 90% of max |
 
 #### Message Queue Metrics
 
-| Metric | Description | Target | Alert Threshold |
-|--------|-------------|--------|-----------------|
-| Message Lag | Consumer lag in messages | < 1000 | > 10000 |
-| Consumer Lag Time | Time lag in seconds | < 10s | > 60s |
-| Message Rate | Messages per second | N/A | Baseline ±50% |
-| Error Rate | Failed message processing | < 0.1% | > 1% |
-| Partition Count | Number of partitions | N/A | Changes detected |
+| Metric | 描述 | 目標 | Alert 閾值 |
+|--------|------|------|-----------|
+| Message Lag | Consumer lag（訊息數） | < 1000 | > 10000 |
+| Consumer Lag Time | 時間 lag（秒） | < 10s | > 60s |
+| Message Rate | 每秒訊息數 | N/A | Baseline ±50% |
+| Error Rate | 失敗的訊息處理 | < 0.1% | > 1% |
+| Partition Count | Partition 數量 | N/A | Changes detected |
 
 ## Monitoring Dashboards
 
 ### Executive Dashboard
 
-**Purpose**: High-level system health for management
+**用途**：管理層的高階系統健康狀態
 
-**Metrics**:
+**Metrics**：
 
-- System availability (uptime percentage)
-- Total requests per minute
-- Error rate
-- Active users
-- Orders per hour
-- Revenue per hour
+- 系統可用性（uptime 百分比）
+- 每分鐘總請求數
+- 錯誤率
+- 活動使用者
+- 每小時訂單數
+- 每小時收入
 
-**Refresh Rate**: 1 minute
+**更新率**：1 分鐘
 
 ### Operations Dashboard
 
-**Purpose**: Real-time operational monitoring
+**用途**：即時營運監控
 
-**Panels**:
+**Panels**：
 
-1. **System Health**
-   - Service status (up/down)
-   - Pod health
-   - Database status
-   - Cache status
+1. **系統健康狀態**
+   - Service 狀態（up/down）
+   - Pod 健康狀態
+   - Database 狀態
+   - Cache 狀態
 
-2. **Performance**
-   - API response times (p50, p95, p99)
-   - Request rate
-   - Error rate
-   - Success rate
+2. **效能**
+   - API 回應時間（p50、p95、p99）
+   - 請求速率
+   - 錯誤率
+   - 成功率
 
-3. **Infrastructure**
-   - CPU utilization
-   - Memory utilization
+3. **基礎設施**
+   - CPU 使用率
+   - Memory 使用率
    - Network I/O
    - Disk I/O
 
 4. **Alerts**
-   - Active alerts
-   - Recent incidents
-   - Alert history
+   - 活動 alerts
+   - 最近 incidents
+   - Alert 歷史
 
-**Refresh Rate**: 30 seconds
+**更新率**：30 秒
 
 ### Application Dashboard
 
-**Purpose**: Application-specific metrics
+**用途**：Application 特定 metrics
 
-**Panels**:
+**Panels**：
 
 1. **API Endpoints**
-   - Response time by endpoint
-   - Request count by endpoint
-   - Error rate by endpoint
+   - 依 endpoint 的回應時間
+   - 依 endpoint 的請求數
+   - 依 endpoint 的錯誤率
 
 2. **Business Metrics**
-   - Orders per minute
-   - Payment success rate
-   - Cart operations
-   - Customer registrations
+   - 每分鐘訂單數
+   - 付款成功率
+   - 購物車操作
+   - 客戶註冊
 
-3. **Dependencies**
-   - Database query performance
+3. **依賴關係**
+   - Database 查詢效能
    - Cache hit rate
-   - External API response times
+   - 外部 API 回應時間
 
-**Refresh Rate**: 1 minute
+**更新率**：1 分鐘
 
 ### Database Dashboard
 
-**Purpose**: Database performance monitoring
+**用途**：Database performance 監控
 
-**Panels**:
+**Panels**：
 
-1. **Connections**
-   - Active connections
-   - Idle connections
-   - Connection pool usage
+1. **連線**
+   - 活動連線
+   - 閒置連線
+   - Connection pool 使用率
 
-2. **Performance**
-   - Query duration (p50, p95, p99)
-   - Slow queries
+2. **效能**
+   - 查詢時間（p50、p95、p99）
+   - 慢速查詢
    - Deadlocks
    - Lock waits
 
-3. **Resources**
-   - CPU utilization
-   - Memory usage
-   - Storage usage
+3. **資源**
+   - CPU 使用率
+   - Memory 使用率
+   - Storage 使用率
    - IOPS
 
 4. **Replication**
    - Replication lag
-   - Replica status
+   - Replica 狀態
 
-**Refresh Rate**: 1 minute
+**更新率**：1 分鐘
 
-## Monitoring Implementation
+## Monitoring 實施
 
 ### CloudWatch Metrics
 
 ```java
 @Component
 public class MetricsPublisher {
-    
+
     private final MeterRegistry meterRegistry;
-    
+
     @Autowired
     public MetricsPublisher(MeterRegistry meterRegistry) {
         this.meterRegistry = meterRegistry;
     }
-    
+
     public void recordApiRequest(String endpoint, long duration, int statusCode) {
         Timer.builder("api.request.duration")
             .tag("endpoint", endpoint)
             .tag("status", String.valueOf(statusCode))
             .register(meterRegistry)
             .record(duration, TimeUnit.MILLISECONDS);
-        
+
         Counter.builder("api.request.count")
             .tag("endpoint", endpoint)
             .tag("status", String.valueOf(statusCode))
             .register(meterRegistry)
             .increment();
     }
-    
+
     public void recordBusinessMetric(String metricName, double value) {
         Gauge.builder("business." + metricName, () -> value)
             .register(meterRegistry);
@@ -237,27 +237,27 @@ public class MetricsPublisher {
 ```java
 @Component
 public class TracingInterceptor implements HandlerInterceptor {
-    
+
     private final Tracer tracer;
-    
+
     @Override
-    public boolean preHandle(HttpServletRequest request, 
-                            HttpServletResponse response, 
+    public boolean preHandle(HttpServletRequest request,
+                            HttpServletResponse response,
                             Object handler) {
         Span span = tracer.nextSpan()
             .name(request.getMethod() + " " + request.getRequestURI())
             .tag("http.method", request.getMethod())
             .tag("http.url", request.getRequestURI())
             .start();
-        
+
         request.setAttribute("span", span);
         return true;
     }
-    
+
     @Override
-    public void afterCompletion(HttpServletRequest request, 
-                               HttpServletResponse response, 
-                               Object handler, 
+    public void afterCompletion(HttpServletRequest request,
+                               HttpServletResponse response,
+                               Object handler,
                                Exception ex) {
         Span span = (Span) request.getAttribute("span");
         if (span != null) {
@@ -280,33 +280,21 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
-
   - job_name: 'ecommerce-backend'
-
     kubernetes_sd_configs:
-
       - role: pod
-
         namespaces:
           names:
-
             - production
-
     relabel_configs:
-
       - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
-
         action: keep
         regex: true
-
       - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
-
         action: replace
         target_label: __metrics_path__
         regex: (.+)
-
       - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
-
         action: replace
         regex: ([^:]+)(?::\d+)?;(\d+)
         replacement: $1:$2
@@ -317,13 +305,13 @@ scrape_configs:
 
 ### Log Levels
 
-| Level | Usage | Examples |
-|-------|-------|----------|
-| ERROR | System errors requiring immediate attention | Exceptions, failed operations |
-| WARN | Potential issues or degraded performance | Slow queries, high memory usage |
-| INFO | Important business events | Order created, payment processed |
-| DEBUG | Detailed execution flow | Method entry/exit, variable values |
-| TRACE | Very detailed debugging | SQL queries, HTTP requests |
+| Level | 使用 | 範例 |
+|-------|------|------|
+| ERROR | 需要立即關注的系統錯誤 | Exceptions、失敗的操作 |
+| WARN | 潛在問題或效能下降 | 慢速查詢、高 memory 使用率 |
+| INFO | 重要的業務事件 | 訂單已創建、付款已處理 |
+| DEBUG | 詳細的執行流程 | 方法進入/退出、變數值 |
+| TRACE | 非常詳細的除錯 | SQL 查詢、HTTP 請求 |
 
 ### Structured Logging
 
@@ -331,7 +319,7 @@ scrape_configs:
 @Slf4j
 @Component
 public class StructuredLogger {
-    
+
     public void logBusinessEvent(String event, Map<String, Object> context) {
         log.info("Business event: {}",
             kv("event", event),
@@ -339,7 +327,7 @@ public class StructuredLogger {
             kv("traceId", getCurrentTraceId()),
             kv("context", context));
     }
-    
+
     public void logError(String message, Exception ex, Map<String, Object> context) {
         log.error("Error occurred: {}",
             kv("message", message),
@@ -357,22 +345,14 @@ public class StructuredLogger {
 ```yaml
 # Filebeat configuration
 filebeat.inputs:
-
   - type: container
-
     paths:
-
       - '/var/log/containers/*.log'
-
     processors:
-
       - add_kubernetes_metadata:
-
           host: ${NODE_NAME}
           matchers:
-
             - logs_path:
-
                 logs_path: "/var/log/containers/"
 
 output.elasticsearch:
@@ -387,19 +367,19 @@ output.elasticsearch:
 ```java
 @Component
 public class CustomHealthIndicator implements HealthIndicator {
-    
+
     @Override
     public Health health() {
         try {
-            // Check database
+            // 檢查 database
             checkDatabase();
-            
-            // Check Redis
+
+            // 檢查 Redis
             checkRedis();
-            
-            // Check Kafka
+
+            // 檢查 Kafka
             checkKafka();
-            
+
             return Health.up()
                 .withDetail("database", "UP")
                 .withDetail("redis", "UP")
@@ -438,64 +418,64 @@ readinessProbe:
   failureThreshold: 3
 ```
 
-## Monitoring Best Practices
+## Monitoring 最佳實踐
 
-### Metric Collection
+### Metric 收集
 
-- **Use consistent naming**: Follow naming conventions
-- **Add context with tags**: Include environment, service, endpoint
-- **Avoid high cardinality**: Don't use user IDs or timestamps as tags
-- **Set appropriate intervals**: Balance detail vs overhead
+- **使用一致的命名**：遵循命名慣例
+- **使用 tags 增加上下文**：包含 environment、service、endpoint
+- **避免高基數**：不要使用 user IDs 或 timestamps 作為 tags
+- **設定適當的間隔**：平衡詳細程度與開銷
 
-### Dashboard Design
+### Dashboard 設計
 
-- **Keep it simple**: Focus on key metrics
-- **Use appropriate visualizations**: Choose right chart types
-- **Set meaningful thresholds**: Use red/yellow/green indicators
-- **Group related metrics**: Organize logically
+- **保持簡單**：專注於關鍵 metrics
+- **使用適當的視覺化**：選擇正確的圖表類型
+- **設定有意義的閾值**：使用紅/黃/綠指標
+- **分組相關 metrics**：邏輯組織
 
-### Alert Configuration
+### Alert 配置
 
-- **Avoid alert fatigue**: Only alert on actionable issues
-- **Use appropriate thresholds**: Based on historical data
-- **Set escalation policies**: Define who gets notified when
-- **Include context**: Provide enough information to act
+- **避免 alert fatigue**：僅對可操作的問題發出 alert
+- **使用適當的閾值**：基於歷史資料
+- **設定升級政策**：定義何時通知誰
+- **包含上下文**：提供足夠的資訊以採取行動
 
 ## Monitoring Checklist
 
-### Daily Monitoring
+### 每日 Monitoring
 
-- [ ] Check system health dashboard
-- [ ] Review error rates
-- [ ] Check resource utilization
-- [ ] Review recent alerts
-- [ ] Check business metrics
+- [ ] 檢查系統健康狀態 dashboard
+- [ ] 審查錯誤率
+- [ ] 檢查資源使用率
+- [ ] 審查最近的 alerts
+- [ ] 檢查業務 metrics
 
-### Weekly Monitoring
+### 每週 Monitoring
 
-- [ ] Review performance trends
-- [ ] Analyze slow queries
-- [ ] Check capacity planning metrics
-- [ ] Review alert effectiveness
-- [ ] Update dashboards as needed
+- [ ] 審查效能趨勢
+- [ ] 分析慢速查詢
+- [ ] 檢查容量規劃 metrics
+- [ ] 審查 alert 有效性
+- [ ] 根據需要更新 dashboards
 
-### Monthly Monitoring
+### 每月 Monitoring
 
-- [ ] Review SLA compliance
-- [ ] Analyze long-term trends
-- [ ] Update alert thresholds
-- [ ] Review monitoring coverage
-- [ ] Conduct monitoring retrospective
+- [ ] 審查 SLA 合規性
+- [ ] 分析長期趨勢
+- [ ] 更新 alert 閾值
+- [ ] 審查 monitoring 覆蓋範圍
+- [ ] 進行 monitoring 回顧
 
-## Related Documentation
+## 相關文件
 
-- [Alert Configuration](alerts.md)
-- [Troubleshooting Guide](../troubleshooting/common-issues.md)
+- [Alert 配置](alerts.md)
+- [疑難排解指南](../troubleshooting/common-issues.md)
 - [Runbooks](../runbooks/README.md)
-- [Deployment Process](../deployment/deployment-process.md)
+- [Deployment 流程](../deployment/deployment-process.md)
 
 ---
 
-**Last Updated**: 2025-10-25  
-**Owner**: DevOps Team  
-**Review Cycle**: Quarterly
+**Last Updated**：2025-10-25
+**Owner**：DevOps Team
+**Review Cycle**：Quarterly

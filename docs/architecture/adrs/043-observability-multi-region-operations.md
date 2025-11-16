@@ -1,6 +1,6 @@
 ---
 adr_number: 043
-title: "Observability for Multi-Region Operations"
+title: "Observability 用於 Multi-Region Operations"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,23 +10,23 @@ affected_viewpoints: ["operational", "deployment"]
 affected_perspectives: ["availability", "performance"]
 ---
 
-# ADR-043: Observability for Multi-Region Operations
+# ADR-043: Observability 用於 Multi-Region Operations
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-Active-active multi-region architecture requires comprehensive observability to ensure operational excellence:
+Active-active multi-region architecture 需要comprehensive observability to ensure operational excellence:
 
 **Observability Challenges**:
 
-- **Distributed Tracing**: Track requests across multiple regions
+- **Distributed Tracing**: Track requests 跨 multiple regions
 - **Unified Monitoring**: Aggregate metrics from all regions
-- **Cross-Region Correlation**: Correlate events across regions
+- **Cross-Region Correlation**: Correlate events 跨 regions
 - **Performance Analysis**: Identify regional performance issues
 - **Incident Detection**: Detect issues before customer impact
 - **Root Cause Analysis**: Quickly identify failure causes
@@ -35,7 +35,7 @@ Active-active multi-region architecture requires comprehensive observability to 
 
 - Regional monitoring silos
 - No cross-region request tracing
-- Difficult to correlate regional events
+- 難以correlate regional events
 - Limited visibility into data replication
 - Manual log aggregation
 - Reactive incident response
@@ -48,9 +48,9 @@ Active-active multi-region architecture requires comprehensive observability to 
 - Operational inefficiency
 - Compliance violations
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - MTTD (Mean Time To Detect): < 1 minute
 - MTTR (Mean Time To Resolve): < 15 minutes
@@ -58,17 +58,17 @@ Active-active multi-region architecture requires comprehensive observability to 
 - Customer experience monitoring
 - Operational efficiency
 
-**Constraints**:
+**限制條件**：
 
-- Budget: $60,000/year for observability tools
-- Data retention: 30 days hot, 1 year cold
+- 預算: $60,000/year 用於 observability tools
+- Data retention: 30 天 hot, 1 年 cold
 - Query performance: < 5 seconds
 - Alert latency: < 30 seconds
 - Compliance requirements (data privacy)
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
 - Regional CloudWatch monitoring
 - Basic application metrics
@@ -76,31 +76,31 @@ Active-active multi-region architecture requires comprehensive observability to 
 - Manual log analysis
 - Limited cross-region visibility
 
-**Requirements**:
+**需求**：
 
 - Unified observability platform
-- Distributed tracing across regions
+- Distributed tracing 跨 regions
 - Real-time metrics aggregation
 - Centralized log management
 - Automated alerting
 - Performance analytics
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Visibility**: Complete system visibility across regions
-2. **Speed**: Fast incident detection and resolution
+1. **Visibility**: Complete system visibility 跨 regions
+2. **Speed**: Fast incident detection 和 resolution
 3. **Correlation**: Cross-region event correlation
-4. **Performance**: Query performance and data retention
-5. **Cost**: Optimize observability costs
+4. **Performance**: Query performance 和 data retention
+5. **成本**： Optimize observability costs
 6. **Compliance**: Meet data privacy requirements
-7. **Automation**: Automated alerting and analysis
-8. **Scalability**: Handle growing data volumes
+7. **Automation**: Automated alerting 和 analysis
+8. **Scalability**: 處理 growing data volumes
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Unified Observability Platform with AWS Native Tools (Recommended)
+### 選項 1： Unified Observability Platform with AWS Native Tools (Recommended)
 
-**Description**: Comprehensive observability using AWS native tools with centralized aggregation
+**描述**： Comprehensive observability using AWS native tools with centralized aggregation
 
 **Three Pillars of Observability**:
 
@@ -300,7 +300,7 @@ const exampleTrace: CrossRegionTrace = {
 };
 ```
 
-**Pros**:
+**優點**：
 
 - ✅ AWS native integration
 - ✅ Unified cross-region view
@@ -309,65 +309,65 @@ const exampleTrace: CrossRegionTrace = {
 - ✅ Scalable
 - ✅ Compliance-ready
 
-**Cons**:
+**缺點**：
 
 - ⚠️ AWS vendor lock-in
 - ⚠️ Learning curve
-- ⚠️ Initial setup complexity
+- ⚠️ Initial setup 複雜的ity
 
-**Cost**: $60,000/year
+**成本**： $60,000/year
 
-**Risk**: **Low** - AWS managed services
+**風險**： **Low** - AWS managed services
 
-### Option 2: Third-Party Observability Platform
+### 選項 2： Third-Party Observability Platform
 
-**Description**: Use Datadog or New Relic for unified observability
+**描述**： Use Datadog or New Relic for unified observability
 
-**Pros**:
+**優點**：
 
-- ✅ Feature-rich
+- ✅ Feature-豐富的
 - ✅ Easy setup
 - ✅ Great UX
 
-**Cons**:
+**缺點**：
 
 - ❌ High cost ($150,000/year)
 - ❌ Data egress costs
 - ❌ Vendor lock-in
 
-**Cost**: $150,000/year
+**成本**： $150,000/year
 
-**Risk**: **Medium** - Cost and vendor dependency
+**風險**： **Medium** - Cost and vendor dependency
 
-### Option 3: Open Source Stack
+### 選項 3： Open Source Stack
 
-**Description**: Self-managed Prometheus, Grafana, Jaeger
+**描述**： Self-managed Prometheus, Grafana, Jaeger
 
-**Pros**:
+**優點**：
 
 - ✅ No vendor lock-in
 - ✅ Full control
 - ✅ Lower licensing costs
 
-**Cons**:
+**缺點**：
 
-- ❌ High operational overhead
+- ❌ High 營運開銷
 - ❌ Scaling challenges
 - ❌ Maintenance burden
 
-**Cost**: $80,000/year (infrastructure + ops)
+**成本**： $80,000/year (infrastructure + ops)
 
-**Risk**: **High** - Operational complexity
+**風險**： **High** - Operational complexity
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Unified Observability Platform with AWS Native Tools (Option 1)**
+**選擇的選項**： **Unified Observability Platform with AWS Native Tools (Option 1)**
 
-### Rationale
+### 理由
 
-AWS native tools provide optimal balance of cost, integration, and capabilities for multi-region observability.
+AWS native tools 提供 optimal balance of cost, integration, 和 capabilities 用於 multi-region observability.
 
-**4. Alerting and Incident Management**:
+**4. Alerting 和 Incident Management**:
 
 **Multi-Level Alerting Strategy**:
 
@@ -489,7 +489,7 @@ interface AnomalyDetection {
 }
 ```
 
-**5. Dashboards and Visualization**:
+**5. Dashboards 和 Visualization**:
 
 **Executive Dashboard**:
 
@@ -724,7 +724,7 @@ interface PerformanceAnalytics {
 }
 ```
 
-**8. Compliance and Audit**:
+**8. Compliance 和 Audit**:
 
 **Audit Logging**:
 
@@ -785,13 +785,13 @@ interface ComplianceMonitoring {
 }
 ```
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| SRE Team | High | Implement and maintain observability platform | Training, automation, documentation |
+| SRE Team | High | Implement 和 維持 observability platform | Training, automation, documentation |
 | Development Team | Medium | Instrument applications, use dashboards | SDK integration, training |
 | Operations Team | High | Monitor systems, respond to alerts | Runbooks, training, automation |
 | Security Team | Medium | Monitor security events, audit logs | Automated alerts, dashboards |
@@ -800,45 +800,45 @@ interface ComplianceMonitoring {
 
 ### Impact Radius Assessment
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
-- All services and applications
+- All services 和 applications
 - Infrastructure monitoring
-- Database and cache monitoring
+- Database 和 cache monitoring
 - Network monitoring
 - Security monitoring
 - Compliance monitoring
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
-| Data volume exceeds budget | Medium | Medium | Implement sampling, filtering, lifecycle policies |
+| Data volume exceeds 預算 | Medium | Medium | Implement sampling, filtering, lifecycle policies |
 | Alert fatigue | High | Medium | Tune alert thresholds, implement anomaly detection |
 | Query performance issues | Low | Medium | Optimize queries, implement caching |
 | Compliance violations | Low | High | Automated compliance checks, audit trails |
-| Tool complexity | Medium | Low | Training, documentation, automation |
+| Tool 複雜的ity | Medium | Low | Training, documentation, automation |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Metrics Foundation (Month 1-2)
+### 第 1 階段： Metrics Foundation (Month 1-2)
 
 **Objectives**:
 
 - Deploy metrics collection infrastructure
-- Implement key business and technical metrics
+- Implement key business 和 technical metrics
 - Set up basic dashboards
 
 **Tasks**:
 
 - [ ] Deploy CloudWatch agents to all EC2 instances
 - [ ] Configure Prometheus in each region
-- [ ] Set up Prometheus federation for cross-region aggregation
-- [ ] Deploy Grafana for visualization
+- [ ] Set up Prometheus federation 用於 cross-region aggregation
+- [ ] Deploy Grafana 用於 visualization
 - [ ] Implement application metrics (Spring Boot Actuator)
 - [ ] Create executive dashboard
 - [ ] Create operations dashboard
@@ -851,7 +851,7 @@ Affects:
 - Basic alerts configured
 - Team trained on dashboards
 
-### Phase 2: Centralized Logging (Month 3-4)
+### 第 2 階段： Centralized Logging (Month 3-4)
 
 **Objectives**:
 
@@ -877,12 +877,12 @@ Affects:
 - Log search operational
 - Log-based alerts working
 
-### Phase 3: Distributed Tracing (Month 5-6)
+### 第 3 階段： Distributed Tracing (Month 5-6)
 
 **Objectives**:
 
 - Implement distributed tracing
-- Enable cross-region trace correlation
+- 啟用 cross-region trace correlation
 - Create service maps
 
 **Tasks**:
@@ -890,7 +890,7 @@ Affects:
 - [ ] Deploy X-Ray daemon in each region
 - [ ] Integrate X-Ray SDK in applications
 - [ ] Configure automatic instrumentation
-- [ ] Implement manual spans for critical paths
+- [ ] Implement manual spans 用於 critical paths
 - [ ] Configure adaptive sampling
 - [ ] Create service map dashboards
 - [ ] Implement trace-based alerts
@@ -903,7 +903,7 @@ Affects:
 - Service maps accurate
 - Team trained on tracing
 
-### Phase 4: Alerting & Analytics (Month 7-8)
+### 第 4 階段： Alerting & Analytics (Month 7-8)
 
 **Objectives**:
 
@@ -913,11 +913,11 @@ Affects:
 
 **Tasks**:
 
-- [ ] Configure CloudWatch alarms for all critical metrics
-- [ ] Integrate PagerDuty for on-call management
+- [ ] Configure CloudWatch alarms 用於 all critical metrics
+- [ ] Integrate PagerDuty 用於 on-call management
 - [ ] Configure Slack notifications
 - [ ] Implement anomaly detection
-- [ ] Deploy AWS Lookout for Metrics
+- [ ] Deploy AWS Lookout 用於 Metrics
 - [ ] Create incident response runbooks
 - [ ] Set up alert escalation policies
 - [ ] Train teams on incident response
@@ -955,13 +955,13 @@ Affects:
 - Costs optimized
 - ROI demonstrated
 
-### Phase 6: Continuous Improvement (Month 11-12)
+### Phase 6: Continuous 改善ment (Month 11-12)
 
 **Objectives**:
 
-- Optimize and refine observability
-- Establish continuous improvement process
-- Measure and improve MTTD/MTTR
+- Optimize 和 refine observability
+- Establish continuous 改善ment process
+- Measure 和 改善 MTTD/MTTR
 
 **Tasks**:
 
@@ -970,40 +970,40 @@ Affects:
 - [ ] Refine dashboards based on feedback
 - [ ] Implement additional custom metrics
 - [ ] Create advanced correlation rules
-- [ ] Establish monthly review process
+- [ ] Establish 月ly review process
 - [ ] Document lessons learned
-- [ ] Plan next phase improvements
+- [ ] Plan next phase 改善ments
 
 **Success Criteria**:
 
 - MTTD < 1 minute achieved
 - MTTR < 15 minutes achieved
 - Team satisfaction high
-- Continuous improvement process established
+- Continuous 改善ment process established
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Observability platform unavailable
 - Performance impact on production
 - Cost overruns
 - Data privacy violations
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. **Immediate**: Disable non-critical monitoring
-2. **Reduce**: Scale back to essential metrics only
+2. **降低**: Scale back to essential metrics only
 3. **Fallback**: Use regional monitoring only
 4. **Investigate**: Root cause analysis
 5. **Fix**: Address issues
-6. **Redeploy**: Gradual re-enablement
+6. **Redeploy**: Gradual re-啟用ment
 
-**Rollback Time**: < 1 hour
+**回滾時間**： < 1 hour
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
@@ -1011,8 +1011,8 @@ Affects:
 | MTTR (Mean Time To Resolve) | < 15 minutes | Incident resolution time |
 | Query Performance | < 5 seconds | Query execution metrics |
 | Alert Latency | < 30 seconds | Alert delivery time |
-| Data Retention (Hot) | 30 days | Storage metrics |
-| Data Retention (Cold) | 1 year | Archive metrics |
+| Data Retention (Hot) | 30 天 | Storage metrics |
+| Data Retention (Cold) | 1 年 | Archive metrics |
 | Dashboard Load Time | < 3 seconds | User experience metrics |
 | Trace Sampling Coverage | > 95% | Sampling metrics |
 | Log Ingestion Rate | > 99.9% | Ingestion success rate |
@@ -1054,7 +1054,7 @@ const observabilitySuccessMetrics = {
 
 **Observability Health Dashboard**:
 
-- Platform availability and performance
+- Platform availability 和 performance
 - Data ingestion rates
 - Query performance
 - Alert delivery metrics
@@ -1066,7 +1066,7 @@ const observabilitySuccessMetrics = {
 - MTTD/MTTR trends
 - On-call status
 - Escalation metrics
-- Resolution time by severity
+- Resolution time 透過 severity
 
 ### Review Schedule
 
@@ -1076,62 +1076,62 @@ const observabilitySuccessMetrics = {
 - **Quarterly**: Platform assessment, strategy review
 - **Annually**: Technology evaluation, roadmap planning
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Complete Visibility**: Full system observability across all regions
-- ✅ **Fast Detection**: MTTD < 1 minute for critical issues
-- ✅ **Quick Resolution**: MTTR < 15 minutes with proper tooling
+- ✅ **Complete Visibility**: Full system observability 跨 all regions
+- ✅ **Fast Detection**: MTTD < 1 minute 用於 critical issues
+- ✅ **Quick Resolution**: MTTR < 15 minutes 與 proper tooling
 - ✅ **Cross-Region Correlation**: Unified view of distributed system
 - ✅ **Automated Alerting**: Proactive issue detection
-- ✅ **Cost-Effective**: $60,000/year vs $150,000 for third-party
-- ✅ **Compliance-Ready**: Audit trails and compliance monitoring
+- ✅ **Cost-Effective**: $60,000/year vs $150,000 用於 third-party
+- ✅ **Compliance-Ready**: Audit trails 和 compliance monitoring
 - ✅ **Performance Analytics**: Deep insights into system performance
-- ✅ **Scalable**: Handles growing data volumes
-- ✅ **AWS Integration**: Native integration with AWS services
+- ✅ **Scalable**: 處理s growing data volumes
+- ✅ **AWS Integration**: Native integration 與 AWS services
 
-### Negative Consequences
+### 負面後果
 
 - ⚠️ **AWS Vendor Lock-in**: Tied to AWS ecosystem
 - ⚠️ **Initial Setup Effort**: 12-month implementation timeline
-- ⚠️ **Team Training Required**: Learning curve for new tools
-- ⚠️ **Operational Complexity**: Additional systems to maintain
+- ⚠️ **Team Training Required**: Learning curve 用於 new tools
+- ⚠️ **Operational 複雜的ity**: Additional systems to 維持
 - ⚠️ **Data Volume Management**: Need to manage growing data volumes
-- ⚠️ **Alert Tuning**: Ongoing effort to reduce false positives
-- ⚠️ **Cost Management**: Need to monitor and optimize costs
+- ⚠️ **Alert Tuning**: Ongoing effort to 降低 false positives
+- ⚠️ **Cost Management**: Need to monitor 和 optimize costs
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. Manual dashboard creation and maintenance
+1. Manual dashboard creation 和 maintenance
 2. Basic anomaly detection (statistical only)
 3. Limited automated remediation
-4. Manual correlation for complex incidents
+4. Manual correlation 用於 複雜的 incidents
 5. Basic cost optimization
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Automated dashboard generation from service metadata
 - **Q3 2026**: Advanced ML-based anomaly detection
-- **Q4 2026**: Automated remediation for common issues
-- **2027**: AI-powered root cause analysis and correlation
+- **Q4 2026**: Automated remediation 用於 common issues
+- **2027**: AI-powered root cause analysis 和 correlation
 
-## Related Decisions
+## 相關決策
 
 - [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md)
 - [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md)
-- [ADR-042: Chaos Engineering and Resilience Testing](042-chaos-engineering-resilience-testing.md)
+- [ADR-042: Chaos Engineering 和 Resilience Testing](042-chaos-engineering-resilience-testing.md)
 - [ADR-044: Business Continuity Plan](044-business-continuity-plan.md)
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）
 
-## Notes
+## 備註
 
 ### Observability Best Practices
 
@@ -1151,23 +1151,23 @@ const observabilitySuccessMetrics = {
 **USE Method** (for resources):
 
 - **Utilization**: Percentage of time resource is busy
-- **Saturation**: Amount of work resource cannot service
+- **Saturation**: Amount of work resource 可以not service
 - **Errors**: Count of error events
 
 ### Tool Selection Rationale
 
 **Why AWS Native Tools**:
 
-1. **Cost**: $60K/year vs $150K for Datadog
+1. **成本**： $60K/year vs $150K for Datadog
 2. **Integration**: Native AWS service integration
 3. **Data Locality**: No data egress costs
 4. **Compliance**: Data stays in AWS regions
 5. **Scalability**: AWS-managed scaling
-6. **Support**: AWS enterprise support
+6. **支援**: AWS enterprise 支援
 
 **Trade-offs Accepted**:
 
-1. **Vendor Lock-in**: Acceptable for cost savings
+1. **Vendor Lock-in**: Acceptable 用於 cost savings
 2. **Feature Set**: Slightly less features than Datadog
 3. **Learning Curve**: Team needs AWS training
 4. **Customization**: More DIY than SaaS solutions
@@ -1192,14 +1192,14 @@ const observabilitySuccessMetrics = {
 - `environment`: prod/staging/dev
 - `version`: Application version
 
-### Log Levels and Usage
+### Log Levels 和 Usage
 
 | Level | Usage | Retention | Examples |
 |-------|-------|-----------|----------|
-| ERROR | System errors, exceptions | 30 days | Payment failures, database errors |
-| WARN | Potential issues, degradation | 30 days | High latency, retry attempts |
-| INFO | Important business events | 7 days | Order created, user login |
-| DEBUG | Detailed execution flow | 3 days | Function entry/exit, variable values |
+| ERROR | System errors, exceptions | 30 天 | Payment failures, database errors |
+| WARN | Potential issues, degradation | 30 天 | High latency, retry attempts |
+| INFO | Important business events | 7 天 | Order created, user login |
+| DEBUG | Detailed execution flow | 3 天 | Function entry/exit, variable values |
 
 ### Trace Sampling Strategy
 
@@ -1212,23 +1212,23 @@ const observabilitySuccessMetrics = {
 
 **Cost Optimization**:
 
-- Reduces trace volume by 95%
-- Maintains visibility into issues
-- Estimated cost: $10,000/year vs $50,000 for 100% sampling
+- 降低s trace volume 透過 95%
+- 維持s visibility into issues
+- Estimated cost: $10,000/year vs $50,000 用於 100% sampling
 
 ### Dashboard Design Principles
 
 1. **Hierarchy**: Executive → Operations → Service-specific
-2. **Actionable**: Every metric should drive action
-3. **Context**: Provide context for metrics
+2. **Actionable**: Every metric 應該 drive action
+3. **Context**: 提供 context 用於 metrics
 4. **Trends**: Show trends over time
 5. **Thresholds**: Display SLO/SLA thresholds
-6. **Drill-down**: Enable drill-down to details
+6. **Drill-down**: 啟用 drill-down to details
 
 ### Alert Design Principles
 
-1. **Actionable**: Every alert requires action
-2. **Contextual**: Provide context in alert
+1. **Actionable**: Every alert 需要action
+2. **Contextual**: 提供 context in alert
 3. **Severity**: Appropriate severity level
 4. **Runbook**: Link to runbook
 5. **Escalation**: Clear escalation path
@@ -1238,15 +1238,15 @@ const observabilitySuccessMetrics = {
 
 **GDPR/PDPA Compliance**:
 
-- PII in logs must be masked or encrypted
+- PII in logs 必須 be masked 或 encrypted
 - Log retention policies documented
 - Access controls on sensitive logs
-- Audit trail for log access
+- Audit trail 用於 log access
 
 **PCI-DSS Compliance**:
 
 - Payment card data never logged
-- Audit logs for payment transactions
+- Audit logs 用於 payment transactions
 - Log integrity protection
 - Secure log transmission
 
@@ -1256,14 +1256,14 @@ const observabilitySuccessMetrics = {
 
 - Filter low-value metrics
 - Aggregate similar metrics
-- Use metric math for derived metrics
+- Use metric math 用於 derived metrics
 - Implement metric retention policies
 
 **Log Optimization**:
 
 - Filter debug logs in production
 - Compress logs before storage
-- Use log sampling for high-volume logs
+- Use log sampling 用於 high-volume logs
 - Implement log lifecycle policies
 
 **Trace Optimization**:
@@ -1291,6 +1291,6 @@ const observabilitySuccessMetrics = {
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

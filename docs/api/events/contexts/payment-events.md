@@ -1,28 +1,28 @@
 # Payment Context Events
 
-## Overview
+## 概述
 
-This document describes all domain events published by the Payment bounded context. These events capture payment processing, refunds, and transaction management.
+本文件描述 Payment bounded context 發佈的所有 domain events。這些事件捕獲付款處理、退款和交易管理。
 
-**Last Updated**: 2025-10-25
+**最後更新**: 2025-10-25
 
 ---
 
-## Event List
+## 事件列表
 
-| Event Name | Trigger | Frequency | Priority |
+| 事件名稱 | 觸發條件 | 頻率 | 優先級 |
 |------------|---------|-----------|----------|
-| `PaymentInitiatedEvent` | Payment start | Very High | P0 |
-| `PaymentProcessedEvent` | Payment success | Very High | P0 |
-| `PaymentFailedEvent` | Payment failure | Medium | P0 |
-| `PaymentRefundedEvent` | Refund processing | Low | P1 |
-| `PaymentCancelledEvent` | Payment cancellation | Low | P1 |
+| `PaymentInitiatedEvent` | 開始付款 | 極高 | P0 |
+| `PaymentProcessedEvent` | 付款成功 | 極高 | P0 |
+| `PaymentFailedEvent` | 付款失敗 | 中 | P0 |
+| `PaymentRefundedEvent` | 處理退款 | 低 | P1 |
+| `PaymentCancelledEvent` | 取消付款 | 低 | P1 |
 
 ---
 
 ## PaymentInitiatedEvent
 
-### Event Structure
+### 事件結構
 
 ```java
 public record PaymentInitiatedEvent(
@@ -36,7 +36,7 @@ public record PaymentInitiatedEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -56,15 +56,15 @@ public record PaymentInitiatedEvent(
 
 ### Event Handlers
 
-- `PaymentGatewayHandler`: Process payment with gateway
-- `PaymentTimeoutHandler`: Set payment timeout
-- `FraudDetectionHandler`: Check for fraud
+- `PaymentGatewayHandler`：使用 gateway 處理付款
+- `PaymentTimeoutHandler`：設定付款逾時
+- `FraudDetectionHandler`：檢查詐欺
 
 ---
 
 ## PaymentProcessedEvent
 
-### Event Structure
+### 事件結構
 
 ```java
 public record PaymentProcessedEvent(
@@ -80,7 +80,7 @@ public record PaymentProcessedEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -102,15 +102,15 @@ public record PaymentProcessedEvent(
 
 ### Event Handlers
 
-- `OrderConfirmationHandler`: Confirm order
-- `PaymentReceiptHandler`: Generate receipt
-- `AccountingHandler`: Record transaction
+- `OrderConfirmationHandler`：確認訂單
+- `PaymentReceiptHandler`：產生收據
+- `AccountingHandler`：記錄交易
 
 ---
 
 ## PaymentFailedEvent
 
-### Event Structure
+### 事件結構
 
 ```java
 public record PaymentFailedEvent(
@@ -126,7 +126,7 @@ public record PaymentFailedEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -148,15 +148,15 @@ public record PaymentFailedEvent(
 
 ### Event Handlers
 
-- `OrderCancellationHandler`: Cancel order
-- `PaymentRetryHandler`: Schedule retry if applicable
-- `CustomerNotificationHandler`: Notify customer
+- `OrderCancellationHandler`：取消訂單
+- `PaymentRetryHandler`：安排重試（如果適用）
+- `CustomerNotificationHandler`：通知客戶
 
 ---
 
 ## PaymentRefundedEvent
 
-### Event Structure
+### 事件結構
 
 ```java
 public record PaymentRefundedEvent(
@@ -172,7 +172,7 @@ public record PaymentRefundedEvent(
 ) implements DomainEvent { }
 ```
 
-### Example JSON
+### 範例 JSON
 
 ```json
 {
@@ -194,12 +194,12 @@ public record PaymentRefundedEvent(
 
 ### Event Handlers
 
-- `RefundNotificationHandler`: Notify customer
-- `AccountingHandler`: Record refund transaction
-- `OrderStatusHandler`: Update order status
+- `RefundNotificationHandler`：通知客戶
+- `AccountingHandler`：記錄退款交易
+- `OrderStatusHandler`：更新訂單狀態
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2025-10-25  
-**Owner**: Payment Domain Team
+**文件版本**: 1.0
+**最後更新**: 2025-10-25
+**負責人**: Payment Domain Team

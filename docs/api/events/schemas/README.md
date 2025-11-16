@@ -1,25 +1,25 @@
 # Event Schemas
 
-## Overview
+## 概述
 
-This directory contains JSON Schema definitions for all domain events in the system. These schemas can be used for:
+此目錄包含系統中所有 domain events 的 JSON Schema 定義。這些 schemas 可用於：
 
-- **Event Validation**: Validate event payloads before publishing
-- **Code Generation**: Generate event classes from schemas
-- **Documentation**: Auto-generate event documentation
-- **Contract Testing**: Verify event contracts between services
+- **事件驗證**：在發佈前驗證事件 payloads
+- **程式碼生成**：從 schemas 生成事件類別
+- **文件產生**：自動產生事件文件
+- **Contract 測試**：驗證服務之間的事件 contracts
 
-**Last Updated**: 2025-10-25
+**最後更新**: 2025-10-25
 
 ---
 
-## Schema Organization
+## Schema 組織
 
-Schemas are organized by bounded context:
+Schemas 依 bounded context 組織：
 
 ```text
 schemas/
-├── README.md (this file)
+├── README.md (本文件)
 ├── customer/
 │   ├── CustomerCreatedEvent.json
 │   ├── CustomerProfileUpdatedEvent.json
@@ -35,7 +35,7 @@ schemas/
 │   ├── PaymentProcessedEvent.json
 │   └── ...
 └── common/
-    ├── DomainEvent.json (base schema)
+    ├── DomainEvent.json (基礎 schema)
     ├── Money.json
     ├── Address.json
     └── ...
@@ -43,15 +43,15 @@ schemas/
 
 ---
 
-## Schema Standards
+## Schema 標準
 
-### JSON Schema Version
+### JSON Schema 版本
 
-All schemas use **JSON Schema Draft 2020-12**.
+所有 schemas 使用 **JSON Schema Draft 2020-12**。
 
-### Common Fields
+### 共通欄位
 
-All domain events must include these fields:
+所有 domain events 必須包含這些欄位：
 
 ```json
 {
@@ -62,17 +62,17 @@ All domain events must include these fields:
 }
 ```
 
-### Naming Conventions
+### 命名慣例
 
-- **Schema Files**: `{EventName}.json` (e.g., `CustomerCreatedEvent.json`)
-- **Event Types**: PascalCase (e.g., `CustomerCreated`)
-- **Field Names**: camelCase (e.g., `customerId`, `orderTotal`)
+- **Schema 檔案**：`{EventName}.json`（例如：`CustomerCreatedEvent.json`）
+- **事件類型**：PascalCase（例如：`CustomerCreated`）
+- **欄位名稱**：camelCase（例如：`customerId`、`orderTotal`）
 
 ---
 
-## Using Schemas
+## 使用 Schemas
 
-### Validation Example (Java)
+### 驗證範例 (Java)
 
 ```java
 import com.networknt.schema.JsonSchema;
@@ -80,19 +80,19 @@ import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 
 public class EventValidator {
-    
-    private final JsonSchemaFactory factory = 
+
+    private final JsonSchemaFactory factory =
         JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012);
-    
+
     public void validateEvent(String eventJson, String schemaPath) {
         JsonSchema schema = factory.getSchema(
             getClass().getResourceAsStream(schemaPath)
         );
-        
+
         Set<ValidationMessage> errors = schema.validate(
             new ObjectMapper().readTree(eventJson)
         );
-        
+
         if (!errors.isEmpty()) {
             throw new EventValidationException(errors);
         }
@@ -100,10 +100,10 @@ public class EventValidator {
 }
 ```
 
-### Code Generation Example
+### 程式碼生成範例
 
 ```bash
-# Using quicktype to generate Java classes from schemas
+# 使用 quicktype 從 schemas 生成 Java 類別
 quicktype \
   --src schemas/customer/CustomerCreatedEvent.json \
   --lang java \
@@ -112,31 +112,31 @@ quicktype \
 
 ---
 
-## Schema Examples
+## Schema 範例
 
-### Base Domain Event Schema
+### 基礎 Domain Event Schema
 
-See [common/DomainEvent.json](common/DomainEvent.json) for the base schema that all events extend.
+參見 [common/DomainEvent.json](common/DomainEvent.json) 取得所有事件繼承的基礎 schema。
 
 ### Customer Event Schema
 
-See [customer/CustomerCreatedEvent.json](customer/CustomerCreatedEvent.json) for a complete example.
+參見 [customer/CustomerCreatedEvent.json](customer/CustomerCreatedEvent.json) 取得完整範例。
 
 ### Order Event Schema
 
-See [order/OrderSubmittedEvent.json](order/OrderSubmittedEvent.json) for a complex event with nested objects.
+參見 [order/OrderSubmittedEvent.json](order/OrderSubmittedEvent.json) 取得包含巢狀物件的複雜事件範例。
 
 ---
 
-## Schema Versioning
+## Schema 版本控制
 
-### Version Strategy
+### 版本策略
 
-- **Major Version**: Breaking changes (field removal, type changes)
-- **Minor Version**: Additive changes (new optional fields)
-- **Patch Version**: Documentation updates, clarifications
+- **主要版本**：Breaking changes（欄位移除、類型變更）
+- **次要版本**：累加性變更（新增選填欄位）
+- **修訂版本**：文件更新、說明
 
-### Version in Schema
+### Schema 中的版本
 
 ```json
 {
@@ -147,50 +147,50 @@ See [order/OrderSubmittedEvent.json](order/OrderSubmittedEvent.json) for a compl
 }
 ```
 
-### Backward Compatibility
+### 向後相容性
 
-- New fields must be optional
-- Existing fields cannot be removed
-- Field types cannot change
-- Breaking changes require new event type
+- 新欄位必須是選填的
+- 現有欄位不能被移除
+- 欄位類型不能變更
+- Breaking changes 需要新的事件類型
 
 ---
 
-## Validation Tools
+## 驗證工具
 
-### Online Validators
+### 線上驗證工具
 
 - [JSON Schema Validator](https://www.jsonschemavalidator.net/)
 - [JSON Schema Lint](https://jsonschemalint.com/)
 
-### CLI Tools
+### CLI 工具
 
 ```bash
-# Install ajv-cli
+# 安裝 ajv-cli
 npm install -g ajv-cli
 
-# Validate event against schema
+# 驗證事件是否符合 schema
 ajv validate \
   -s schemas/customer/CustomerCreatedEvent.json \
   -d examples/customer-created-example.json
 ```
 
-### IDE Integration
+### IDE 整合
 
-- **VS Code**: Install "JSON Schema Validator" extension
-- **IntelliJ IDEA**: Built-in JSON Schema support
-- **Eclipse**: Install "JSON Editor Plugin"
+- **VS Code**：安裝 "JSON Schema Validator" 擴充套件
+- **IntelliJ IDEA**：內建 JSON Schema 支援
+- **Eclipse**：安裝 "JSON Editor Plugin"
 
 ---
 
-## Schema Registry Integration
+## Schema Registry 整合
 
 ### Kafka Schema Registry
 
 ```java
 @Configuration
 public class SchemaRegistryConfig {
-    
+
     @Bean
     public SchemaRegistryClient schemaRegistryClient() {
         return new CachedSchemaRegistryClient(
@@ -198,7 +198,7 @@ public class SchemaRegistryConfig {
             100
         );
     }
-    
+
     @Bean
     public KafkaAvroSerializer avroSerializer() {
         return new KafkaAvroSerializer(schemaRegistryClient());
@@ -206,17 +206,17 @@ public class SchemaRegistryConfig {
 }
 ```
 
-### Schema Evolution Rules
+### Schema 演進規則
 
-1. **Forward Compatible**: New consumers can read old data
-2. **Backward Compatible**: Old consumers can read new data
-3. **Full Compatible**: Both forward and backward compatible
+1. **Forward Compatible**：新的 consumers 可以讀取舊資料
+2. **Backward Compatible**：舊的 consumers 可以讀取新資料
+3. **Full Compatible**：同時具備 forward 和 backward compatible
 
 ---
 
-## Testing with Schemas
+## 使用 Schemas 進行測試
 
-### Contract Testing
+### Contract 測試
 
 ```java
 @Test
@@ -224,19 +224,19 @@ void customer_created_event_should_match_schema() {
     // Given
     CustomerCreatedEvent event = createTestEvent();
     String eventJson = objectMapper.writeValueAsString(event);
-    
+
     // When
     Set<ValidationMessage> errors = validateAgainstSchema(
         eventJson,
         "schemas/customer/CustomerCreatedEvent.json"
     );
-    
+
     // Then
     assertThat(errors).isEmpty();
 }
 ```
 
-### Property-Based Testing
+### Property-Based 測試
 
 ```java
 @Property
@@ -250,36 +250,36 @@ void all_customer_events_should_have_valid_structure(
 
 ---
 
-## Related Documentation
+## 相關文件
 
-- **Event Catalog**: [../event-catalog.md](../event-catalog.md)
-- **Event Documentation**: [../README.md](../README.md)
-- **Domain Events Guide**: `.kiro/steering/domain-events.md`
-
----
-
-## Contributing
-
-### Adding New Schemas
-
-1. Create schema file in appropriate context directory
-2. Extend base `DomainEvent.json` schema
-3. Add examples in `examples/` directory
-4. Update this README with new schema reference
-5. Run validation tests
-
-### Schema Review Checklist
-
-- [ ] Follows JSON Schema Draft 2020-12
-- [ ] Extends base DomainEvent schema
-- [ ] All required fields documented
-- [ ] Field descriptions are clear
-- [ ] Examples provided
-- [ ] Validation tests pass
-- [ ] Backward compatibility maintained
+- **Event Catalog**：[../event-catalog.md](../event-catalog.md)
+- **Event 文件**：[../README.md](../README.md)
+- **Domain Events 指南**：`.kiro/steering/domain-events.md`
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2025-10-25  
-**Owner**: Architecture Team
+## 貢獻
+
+### 新增 Schemas
+
+1. 在適當的 context 目錄中建立 schema 檔案
+2. 繼承基礎 `DomainEvent.json` schema
+3. 在 `examples/` 目錄中新增範例
+4. 更新此 README，加入新 schema 參考
+5. 執行驗證測試
+
+### Schema 審查檢查清單
+
+- [ ] 遵循 JSON Schema Draft 2020-12
+- [ ] 繼承基礎 DomainEvent schema
+- [ ] 所有必填欄位都有文件
+- [ ] 欄位描述清楚
+- [ ] 提供範例
+- [ ] 驗證測試通過
+- [ ] 維持向後相容性
+
+---
+
+**文件版本**: 1.0
+**最後更新**: 2025-10-25
+**負責人**: 架構團隊

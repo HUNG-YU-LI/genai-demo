@@ -8,44 +8,44 @@ stakeholders: ["Architects", "DevOps Engineers", "Operations Team", "Security Te
 
 # Deployment Viewpoint Overview
 
-> **Viewpoint**: Deployment  
-> **Purpose**: Describe the physical infrastructure and deployment architecture of the E-Commerce Platform  
+> **Viewpoint**: Deployment
+> **Purpose**: 描述 E-Commerce Platform 的實體基礎設施和部署架構
 > **Audience**: Architects, DevOps Engineers, Operations Team, Security Team
 
-## Purpose
+## 目的
 
-The Deployment Viewpoint describes how the E-Commerce Platform is deployed on AWS infrastructure, including the physical architecture, network topology, and deployment processes. This viewpoint is essential for understanding system scalability, availability, security, and operational requirements.
+Deployment Viewpoint 描述 E-Commerce Platform 如何部署在 AWS 基礎設施上,包括實體架構、網路拓撲和部署流程。這個觀點對於理解系統可擴展性、可用性、安全性和營運需求至關重要。
 
-## Key Concerns
+## 關鍵關注點
 
-This viewpoint addresses the following concerns:
+此觀點處理以下關注點:
 
-1. **Infrastructure Architecture**: How AWS services are configured and integrated
-2. **High Availability**: How the system achieves 99.9% uptime SLO
-3. **Scalability**: How the system scales to handle varying loads
-4. **Security**: How network security and access control are implemented
-5. **Disaster Recovery**: How the system recovers from failures
-6. **Deployment Process**: How code changes are deployed to production
-7. **Cost Optimization**: How infrastructure costs are managed
+1. **基礎設施架構**: AWS 服務如何設定和整合
+2. **高可用性**: 系統如何達成 99.9% uptime SLO
+3. **可擴展性**: 系統如何擴展以處理不同負載
+4. **安全性**: 網路安全和存取控制如何實作
+5. **災難復原**: 系統如何從故障中復原
+6. **部署流程**: 程式碼變更如何部署到生產環境
+7. **成本最佳化**: 基礎設施成本如何管理
 
-## Deployment Model
+## 部署模型
 
-### Cloud-Native Architecture
+### Cloud-Native 架構
 
-The E-Commerce Platform is deployed as a **cloud-native application** on AWS, leveraging managed services for scalability, reliability, and operational efficiency.
+E-Commerce Platform 部署為 AWS 上的 **cloud-native application**,利用 managed services 來實現可擴展性、可靠性和營運效率。
 
-**Key Characteristics**:
+**關鍵特性**:
 
-- **Containerized Microservices**: Applications run in Docker containers on EKS
-- **Managed Databases**: PostgreSQL on RDS for relational data
-- **Managed Caching**: Redis on ElastiCache for distributed caching
-- **Managed Messaging**: Kafka on MSK for event streaming
-- **Infrastructure as Code**: AWS CDK for infrastructure provisioning
-- **GitOps**: GitHub Actions for CI/CD automation
+- **容器化 Microservices**: 應用程式在 EKS 上的 Docker containers 中執行
+- **Managed Databases**: PostgreSQL on RDS 用於關聯式資料
+- **Managed Caching**: Redis on ElastiCache 用於分散式快取
+- **Managed Messaging**: Kafka on MSK 用於 event streaming
+- **Infrastructure as Code**: AWS CDK 用於基礎設施供應
+- **GitOps**: GitHub Actions 用於 CI/CD 自動化
 
-### Multi-Environment Strategy
+### Multi-Environment 策略
 
-The platform maintains three environments with progressive deployment:
+平台維護三個環境,採用漸進式部署:
 
 ```mermaid
 graph TD
@@ -60,41 +60,41 @@ graph TD
     N3 --> N4
 ```
 
-**Environment Characteristics**:
+**環境特性**:
 
-| Environment | Purpose | Infrastructure | Data | Deployment |
+| 環境 | 目的 | 基礎設施 | 資料 | 部署 |
 |-------------|---------|----------------|------|------------|
-| **Development** | Feature development and testing | Minimal resources, single AZ | Synthetic test data | Automatic on merge to `develop` |
-| **Staging** | Integration testing and validation | Production-like, multi-AZ | Anonymized production data | Manual approval required |
-| **Production** | Live customer traffic | Full redundancy, multi-AZ | Real customer data | Manual approval + canary deployment |
+| **Development** | 功能開發和測試 | 最小資源, 單一 AZ | 合成測試資料 | 合併到 `develop` 時自動部署 |
+| **Staging** | 整合測試和驗證 | 類生產, 多 AZ | 匿名化的生產資料 | 需要手動核准 |
+| **Production** | 即時客戶流量 | 完整冗餘, 多 AZ | 真實客戶資料 | 手動核准 + canary deployment |
 
-## Infrastructure Components
+## 基礎設施元件
 
 ### 1. Compute Layer (Amazon EKS)
 
-**Purpose**: Run containerized microservices with automatic scaling
+**目的**: 執行容器化 microservices 並自動擴展
 
-**Configuration**:
+**設定**:
 
-- **Cluster**: Multi-AZ EKS cluster with managed node groups
+- **Cluster**: 跨多 AZ 的 EKS cluster 搭配 managed node groups
 - **Node Groups**:
   - General purpose (t3.large): 3-10 nodes
   - Memory optimized (r5.xlarge): 2-5 nodes for data-intensive services
 - **Auto-scaling**: Cluster Autoscaler + Horizontal Pod Autoscaler
-- **Namespaces**: Logical separation by bounded context
+- **Namespaces**: 依 bounded context 邏輯分離
 
-**Key Features**:
+**關鍵功能**:
 
-- Rolling updates with zero downtime
-- Pod disruption budgets for high availability
-- Resource quotas and limits per namespace
-- Network policies for pod-to-pod communication
+- 零停機時間的 rolling updates
+- 高可用性的 pod disruption budgets
+- 每個 namespace 的 resource quotas and limits
+- Pod-to-pod 通訊的 network policies
 
 ### 2. Database Layer (Amazon RDS)
 
-**Purpose**: Persistent storage for transactional data
+**目的**: 交易資料的持久儲存
 
-**Configuration**:
+**設定**:
 
 - **Engine**: PostgreSQL 15.x
 - **Instance**: db.r5.xlarge (primary), db.r5.large (replicas)
@@ -103,18 +103,18 @@ graph TD
 - **Storage**: 500GB GP3 SSD with auto-scaling up to 2TB
 - **Backup**: Automated daily backups with 7-day retention
 
-**Key Features**:
+**關鍵功能**:
 
-- Automatic failover in < 2 minutes
-- Point-in-time recovery up to 7 days
+- < 2 分鐘的自動 failover
+- 最多 7 天的 point-in-time recovery
 - Encryption at rest (AES-256)
 - Encryption in transit (TLS 1.2+)
 
 ### 3. Caching Layer (Amazon ElastiCache)
 
-**Purpose**: Distributed caching and session storage
+**目的**: 分散式快取和 session 儲存
 
-**Configuration**:
+**設定**:
 
 - **Engine**: Redis 7.x
 - **Cluster Mode**: Enabled with 3 shards
@@ -122,18 +122,18 @@ graph TD
 - **Deployment**: Multi-AZ with automatic failover
 - **Persistence**: AOF (Append-Only File) enabled
 
-**Key Features**:
+**關鍵功能**:
 
 - Sub-millisecond latency
-- Automatic failover and recovery
+- 自動 failover 和 recovery
 - Data encryption at rest and in transit
 - Backup and restore capabilities
 
 ### 4. Messaging Layer (Amazon MSK)
 
-**Purpose**: Event streaming and asynchronous communication
+**目的**: Event streaming 和非同步通訊
 
-**Configuration**:
+**設定**:
 
 - **Kafka Version**: 3.5.x
 - **Brokers**: 3 brokers across 3 AZs
@@ -141,18 +141,18 @@ graph TD
 - **Storage**: 1TB EBS per broker
 - **Replication**: Factor of 3 for durability
 
-**Key Features**:
+**關鍵功能**:
 
-- High throughput (MB/s per broker)
-- Automatic broker replacement
+- 高吞吐量 (MB/s per broker)
+- 自動 broker replacement
 - Topic-level encryption
-- Integration with CloudWatch for monitoring
+- 與 CloudWatch 整合以進行監控
 
 ### 5. Load Balancing (Application Load Balancer)
 
-**Purpose**: Distribute traffic and provide SSL termination
+**目的**: 分配流量並提供 SSL termination
 
-**Configuration**:
+**設定**:
 
 - **Type**: Application Load Balancer (Layer 7)
 - **Deployment**: Multi-AZ for high availability
@@ -160,18 +160,18 @@ graph TD
 - **Health Checks**: HTTP health checks every 30 seconds
 - **Stickiness**: Session affinity for stateful operations
 
-**Key Features**:
+**關鍵功能**:
 
 - Path-based routing to microservices
 - Host-based routing for multi-tenant support
 - WebSocket support for real-time features
 - WAF integration for security
 
-## High Availability Design
+## 高可用性設計
 
 ### Multi-AZ Deployment
 
-All critical components are deployed across **3 Availability Zones** in the same region:
+所有關鍵元件部署在同一區域的 **3 個 Availability Zones**:
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -187,9 +187,9 @@ All critical components are deployed across **3 Availability Zones** in the same
 └─────────────────────┴─────────────────────┴─────────────────┘
 ```
 
-### Failure Scenarios and Recovery
+### 故障場景和復原
 
-| Component | Failure Scenario | Recovery Mechanism | RTO | RPO |
+| 元件 | 故障場景 | 復原機制 | RTO | RPO |
 |-----------|------------------|-------------------|-----|-----|
 | **EKS Node** | Node failure | Auto-scaling replaces node, pods rescheduled | < 5 min | 0 (stateless) |
 | **RDS Primary** | Database failure | Automatic failover to standby | < 2 min | 0 (synchronous replication) |
@@ -198,14 +198,14 @@ All critical components are deployed across **3 Availability Zones** in the same
 | **ALB** | Load balancer failure | AWS-managed automatic recovery | < 1 min | N/A |
 | **AZ Failure** | Entire AZ down | Traffic routed to healthy AZs | < 5 min | 0 |
 
-## Scalability Strategy
+## 可擴展性策略
 
-### Horizontal Scaling
+### 水平擴展
 
 **Application Layer (EKS)**:
 
-- **Cluster Autoscaler**: Adds/removes nodes based on pending pods
-- **Horizontal Pod Autoscaler (HPA)**: Scales pods based on CPU/memory/custom metrics
+- **Cluster Autoscaler**: 根據待處理 pods 新增/移除 nodes
+- **Horizontal Pod Autoscaler (HPA)**: 根據 CPU/memory/custom metrics 擴展 pods
 - **Target Metrics**:
   - CPU utilization: 70%
   - Memory utilization: 80%
@@ -213,23 +213,23 @@ All critical components are deployed across **3 Availability Zones** in the same
 
 **Database Layer (RDS)**:
 
-- **Read Scaling**: Add read replicas (up to 5)
-- **Write Scaling**: Vertical scaling of primary instance
+- **Read Scaling**: 新增 read replicas (最多 5 個)
+- **Write Scaling**: Primary instance 的垂直擴展
 - **Connection Pooling**: HikariCP with max 20 connections per service
 
 **Caching Layer (ElastiCache)**:
 
-- **Horizontal Scaling**: Add shards to cluster
-- **Vertical Scaling**: Upgrade node types
-- **Read Scaling**: Add replicas per shard
+- **Horizontal Scaling**: 新增 shards to cluster
+- **Vertical Scaling**: 升級 node types
+- **Read Scaling**: 每個 shard 新增 replicas
 
 **Messaging Layer (MSK)**:
 
-- **Broker Scaling**: Add brokers to cluster
-- **Partition Scaling**: Increase partitions per topic
-- **Consumer Scaling**: Add consumer instances
+- **Broker Scaling**: 新增 brokers to cluster
+- **Partition Scaling**: 增加每個 topic 的 partitions
+- **Consumer Scaling**: 新增 consumer instances
 
-### Auto-Scaling Configuration
+### Auto-Scaling 設定
 
 ```yaml
 # Example HPA configuration
@@ -245,17 +245,13 @@ spec:
   minReplicas: 3
   maxReplicas: 20
   metrics:
-
   - type: Resource
-
     resource:
       name: cpu
       target:
         type: Utilization
         averageUtilization: 70
-
   - type: Resource
-
     resource:
       name: memory
       target:
@@ -265,24 +261,20 @@ spec:
     scaleUp:
       stabilizationWindowSeconds: 60
       policies:
-
       - type: Percent
-
         value: 50
         periodSeconds: 60
     scaleDown:
       stabilizationWindowSeconds: 300
       policies:
-
       - type: Percent
-
         value: 10
         periodSeconds: 60
 ```
 
-## Security Architecture
+## 安全架構
 
-### Network Security
+### 網路安全
 
 **Defense in Depth**:
 
@@ -299,7 +291,7 @@ spec:
 - **Redis Security Group**: Allow Redis (6379) from EKS nodes only
 - **MSK Security Group**: Allow Kafka (9092) from EKS nodes only
 
-### Data Encryption
+### 資料加密
 
 **At Rest**:
 
@@ -316,9 +308,9 @@ spec:
 - Application to Redis: TLS 1.2+ enabled
 - Application to Kafka: TLS 1.2+ with SASL authentication
 
-## Disaster Recovery
+## 災難復原
 
-### Backup Strategy
+### 備份策略
 
 **RDS Backups**:
 
@@ -342,51 +334,51 @@ spec:
 - **Configuration**: Stored in Git and AWS Systems Manager Parameter Store
 - **Secrets**: Stored in AWS Secrets Manager with automatic rotation
 
-### Recovery Procedures
+### 復原程序
 
-**RTO/RPO Targets**:
+**RTO/RPO 目標**:
 
 - **RTO (Recovery Time Objective)**: < 1 hour
 - **RPO (Recovery Point Objective)**: < 5 minutes
 
-**Recovery Scenarios**:
+**復原場景**:
 
-1. **Service Failure**: Automatic pod restart and rescheduling
-2. **Database Failure**: Automatic failover to standby
-3. **AZ Failure**: Traffic routed to healthy AZs
-4. **Region Failure**: Manual failover to DR region (not implemented in Phase 1)
+1. **Service Failure**: 自動 pod restart and rescheduling
+2. **Database Failure**: 自動 failover to standby
+3. **AZ Failure**: 流量路由到健康的 AZs
+4. **Region Failure**: 手動 failover to DR region (Phase 1 未實作)
 
-## Cost Optimization
+## 成本最佳化
 
-### Resource Optimization
+### 資源最佳化
 
 **Compute**:
 
-- Use Spot Instances for non-critical workloads (up to 70% savings)
-- Right-size instances based on actual usage
-- Use Savings Plans for predictable workloads
+- 使用 Spot Instances 用於非關鍵工作負載 (最多節省 70%)
+- 根據實際使用量調整 instances 大小
+- 對可預測工作負載使用 Savings Plans
 
 **Storage**:
 
-- Use GP3 instead of GP2 for EBS volumes (20% savings)
-- Enable S3 Intelligent-Tiering for infrequently accessed data
-- Clean up old snapshots and unused volumes
+- 對 EBS volumes 使用 GP3 而非 GP2 (節省 20%)
+- 對不常存取的資料啟用 S3 Intelligent-Tiering
+- 清理舊 snapshots 和未使用的 volumes
 
 **Networking**:
 
-- Use VPC endpoints to avoid NAT Gateway costs
-- Optimize data transfer between AZs
-- Use CloudFront CDN for static content
+- 使用 VPC endpoints 以避免 NAT Gateway 成本
+- 最佳化 AZs 間的資料傳輸
+- 對靜態內容使用 CloudFront CDN
 
-### Cost Monitoring
+### 成本監控
 
-**Tools**:
+**工具**:
 
 - AWS Cost Explorer for cost analysis
 - AWS Budgets for cost alerts
 - Custom CloudWatch dashboards for resource utilization
 
-**Monthly Cost Estimate** (Production):
+**每月成本估算** (Production):
 
 - EKS Cluster: $150 (control plane) + $800 (nodes) = $950
 - RDS: $600 (primary) + $400 (replicas) = $1,000
@@ -396,49 +388,49 @@ spec:
 - Data Transfer: $200
 - **Total**: ~$3,250/month
 
-## Deployment Process
+## 部署流程
 
 ### CI/CD Pipeline
 
-**Stages**:
+**階段**:
 
-1. **Build**: Compile code, run unit tests, build Docker images
-2. **Test**: Run integration tests, security scans
-3. **Deploy to Dev**: Automatic deployment on merge to `develop`
-4. **Deploy to Staging**: Manual approval required
-5. **Deploy to Production**: Manual approval + canary deployment
+1. **Build**: 編譯程式碼, 執行 unit tests, 建置 Docker images
+2. **Test**: 執行 integration tests, security scans
+3. **Deploy to Dev**: 合併到 `develop` 時自動部署
+4. **Deploy to Staging**: 需要手動核准
+5. **Deploy to Production**: 手動核准 + canary deployment
 
-**Deployment Strategies**:
+**部署策略**:
 
-- **Rolling Deployment**: Default for most services (zero downtime)
-- **Blue-Green Deployment**: For major updates (instant rollback)
-- **Canary Deployment**: For high-risk changes (gradual rollout)
+- **Rolling Deployment**: 大多數服務的預設 (零停機時間)
+- **Blue-Green Deployment**: 用於重大更新 (即時回滾)
+- **Canary Deployment**: 用於高風險變更 (漸進式推出)
 
-### Rollback Procedures
+### 回滾程序
 
-**Automatic Rollback Triggers**:
+**自動回滾觸發條件**:
 
 - Error rate > 5% for 5 minutes
 - Response time > 3s (p95) for 5 minutes
 - Health check failures > 50%
 
-**Manual Rollback**:
+**手動回滾**:
 
-- One-click rollback to previous version
-- Rollback time: < 5 minutes
+- 一鍵回滾到先前版本
+- 回滾時間: < 5 minutes
 
-## Monitoring and Observability
+## 監控和可觀察性
 
-### Key Metrics
+### 關鍵指標
 
-**Infrastructure Metrics**:
+**基礎設施指標**:
 
 - EKS: Node CPU/memory, pod count, cluster health
 - RDS: CPU/memory, connections, replication lag
 - ElastiCache: CPU/memory, cache hit rate, evictions
 - MSK: Broker CPU/memory, partition count, consumer lag
 
-**Application Metrics**:
+**應用程式指標**:
 
 - Request rate, error rate, response time
 - Business metrics (orders, revenue, conversions)
@@ -450,7 +442,7 @@ spec:
 - Grafana dashboards for application metrics
 - Custom dashboards for business metrics
 
-## Related Documentation
+## 相關文件
 
 - [Physical Architecture](physical-architecture.md) - Detailed component configurations
 - [Network Architecture](network-architecture.md) - VPC and security group details
@@ -459,6 +451,6 @@ spec:
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2025-10-23  
+**Document Version**: 1.0
+**Last Updated**: 2025-10-23
 **Owner**: DevOps Team

@@ -1,6 +1,6 @@
 ---
 adr_number: 042
-title: "Chaos Engineering and Resilience Testing Strategy"
+title: "Chaos Engineering 和 Resilience Testing Strategy"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,71 +10,71 @@ affected_viewpoints: ["deployment", "operational"]
 affected_perspectives: ["availability", "performance"]
 ---
 
-# ADR-042: Chaos Engineering and Resilience Testing Strategy
+# ADR-042: Chaos Engineering 和 Resilience Testing Strategy
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-Active-active multi-region architecture requires systematic resilience testing to ensure system reliability:
+Active-active multi-region architecture 需要systematic resilience testing to ensure system reliability:
 
 **Resilience Challenges**:
 
-- **Complex Failure Modes**: Multiple failure scenarios in distributed systems
+- **複雜的 Failure Modes**: Multiple failure scenarios in distributed systems
 - **Unknown Weaknesses**: Hidden vulnerabilities in system design
-- **Cascading Failures**: Failures that propagate across components
+- **Cascading Failures**: Failures that propagate 跨 components
 - **Recovery Validation**: Unproven recovery procedures
 - **Confidence Gap**: Uncertainty about system behavior under stress
 
 **Testing Gaps**:
 
 - Traditional testing doesn't cover distributed system failures
-- Manual testing is time-consuming and incomplete
+- Manual testing is time-consuming 和 incomplete
 - Production incidents reveal unknown weaknesses
 - Recovery procedures untested until needed
 - No systematic approach to resilience validation
 
 **Business Impact**:
 
-- Unexpected downtime (target: 99.9% availability)
-- Revenue loss during outages
+- Un預期的 downtime (target: 99.9% availability)
+- Revenue loss 期間 outages
 - Customer trust erosion
 - Incident response delays
 - Compliance violations
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - Availability SLO: 99.9% (8.76 hours downtime/year)
-- RTO: 5 minutes for critical services
-- RPO: 1 minute for transactional data
-- Customer trust and satisfaction
+- RTO: 5 minutes 用於 critical services
+- RPO: 1 minute 用於 transactional data
+- Customer trust 和 satisfaction
 - Competitive advantage (reliability)
 
-**Constraints**:
+**限制條件**：
 
-- Budget: $50,000/year for chaos engineering tools
-- Cannot disrupt production during business hours
-- Must maintain customer experience
-- Limited team capacity for testing
+- 預算: $50,000/year 用於 chaos engineering tools
+- 可以not disrupt production 期間 business hours
+- 必須 維持 customer experience
+- Limited team capacity 用於 testing
 - Regulatory compliance requirements
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- Active-active architecture in Taiwan and Tokyo
+- Active-active architecture in Taiwan 和 Tokyo
 - Manual failover testing (quarterly)
 - No systematic chaos testing
 - Limited failure scenario coverage
 - Reactive incident response
 
-**Requirements**:
+**需求**：
 
 - Automated chaos experiments
 - Comprehensive failure scenario coverage
@@ -82,22 +82,22 @@ Active-active multi-region architecture requires systematic resilience testing t
 - Continuous resilience validation
 - Measurable resilience metrics
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **Reliability**: Achieve 99.9% availability SLO
 2. **Confidence**: Validate system resilience continuously
-3. **Safety**: Test without customer impact
+3. **Safety**: Test 沒有 customer impact
 4. **Coverage**: Test all critical failure scenarios
-5. **Automation**: Reduce manual testing effort
+5. **Automation**: 降低 manual testing effort
 6. **Learning**: Build organizational resilience knowledge
-7. **Cost**: Optimize testing infrastructure costs
+7. **成本**： Optimize testing infrastructure costs
 8. **Compliance**: Meet regulatory requirements
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Comprehensive Chaos Engineering Platform (Recommended)
+### 選項 1： Comprehensive Chaos Engineering Platform (Recommended)
 
-**Description**: Implement full chaos engineering platform with automated experiments
+**描述**： Implement full chaos engineering platform with automated experiments
 
 **Chaos Engineering Approach**:
 
@@ -197,7 +197,7 @@ const regionFailureExperiment: ChaosExperiment = {
 
 - Pod termination (random pod kills)
 - Service degradation (CPU/memory pressure)
-- Database failure (primary database down)
+- Database failure (主要資料庫 down)
 - Cache failure (Redis cluster down)
 - Message queue failure (Kafka broker down)
 
@@ -409,7 +409,7 @@ const chaosMetrics = {
 };
 ```
 
-**5. Game Days and Disaster Recovery Drills**:
+**5. Game Days 和 Disaster Recovery Drills**:
 
 **Quarterly Game Day Schedule**:
 
@@ -545,7 +545,7 @@ class ResilienceScoreCalculator {
 }
 ```
 
-**Pros**:
+**優點**：
 
 - ✅ Comprehensive resilience validation
 - ✅ Automated continuous testing
@@ -554,69 +554,69 @@ class ResilienceScoreCalculator {
 - ✅ Organizational learning
 - ✅ Proactive weakness discovery
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Initial setup complexity
+- ⚠️ Initial setup 複雜的ity
 - ⚠️ Requires cultural change
 - ⚠️ Tool integration effort
 - ⚠️ Ongoing maintenance
 
-**Cost**: $50,000/year
+**成本**： $50,000/year
 
-**Risk**: **Low** - Industry best practice
+**風險**： **Low** - Industry best practice
 
-### Option 2: Manual Quarterly Testing
+### 選項 2： Manual Quarterly Testing
 
-**Description**: Manual disaster recovery drills quarterly
+**描述**： Manual disaster recovery drills quarterly
 
-**Pros**:
+**優點**：
 
-- ✅ Simple to implement
+- ✅ 簡單implement
 - ✅ Low cost
 - ✅ Controlled testing
 
-**Cons**:
+**缺點**：
 
 - ❌ Infrequent testing
 - ❌ Limited coverage
 - ❌ Manual effort
 - ❌ No continuous validation
 
-**Cost**: $10,000/year
+**成本**： $10,000/year
 
-**Risk**: **High** - Insufficient coverage
+**風險**： **High** - Insufficient coverage
 
-### Option 3: Production Monitoring Only
+### 選項 3： Production Monitoring Only
 
-**Description**: Rely on production monitoring without chaos testing
+**描述**： Rely on production monitoring without chaos testing
 
-**Pros**:
+**優點**：
 
 - ✅ No testing overhead
 - ✅ Minimal cost
 
-**Cons**:
+**缺點**：
 
 - ❌ Reactive approach
 - ❌ Unknown weaknesses
 - ❌ Customer impact
 - ❌ No resilience validation
 
-**Cost**: $5,000/year
+**成本**： $5,000/year
 
-**Risk**: **Critical** - Unacceptable
+**風險**： **Critical** - Unacceptable
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Comprehensive Chaos Engineering Platform (Option 1)**
+**選擇的選項**： **Comprehensive Chaos Engineering Platform (Option 1)**
 
-### Rationale
+### 理由
 
-Comprehensive chaos engineering provides:
+Comprehensive chaos engineering 提供s:
 
 1. **Proactive**: Discover weaknesses before customers do
 2. **Continuous**: Ongoing resilience validation
-3. **Automated**: Reduce manual testing effort
+3. **Automated**: 降低 manual testing effort
 4. **Safe**: Production-safe experiments
 5. **Measurable**: Quantifiable resilience metrics
 6. **Learning**: Build organizational resilience knowledge
@@ -685,45 +685,45 @@ Comprehensive chaos engineering provides:
 4. Compliance violation scenarios
 5. Full disaster recovery drill
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| SRE Team | High | Implement and maintain chaos platform | Training, automation |
-| Development Team | Medium | Fix discovered issues | Prioritization, support |
-| Operations Team | Medium | Participate in game days | Training, runbooks |
+| SRE Team | High | Implement 和 維持 chaos platform | Training, automation |
+| Development Team | Medium | Fix discovered issues | Prioritization, 支援 |
+| Operations Team | Medium | Participate in game 天 | Training, runbooks |
 | Customers | Low | Transparent testing | Non-business hours |
-| Business | Low | Improved reliability | ROI analysis |
+| Business | Low | 改善d reliability | ROI analysis |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
-- All services and components
+- All services 和 components
 - Infrastructure layer
-- Monitoring and alerting
+- Monitoring 和 alerting
 - Incident response procedures
 - Team processes
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
 | Customer impact | Low | High | Safety checks, non-business hours |
 | False positives | Medium | Low | Baseline validation |
-| Tool complexity | Medium | Medium | Training, documentation |
+| Tool 複雜的ity | Medium | Medium | Training, documentation |
 | Cultural resistance | Medium | Medium | Education, gradual adoption |
 | Experiment failures | High | Low | Automated rollback |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Foundation (Month 1-2)
+### 第 1 階段： Foundation (Month 1-2)
 
 **Objectives**:
 
@@ -745,7 +745,7 @@ Affects:
 - Safety checks working
 - First experiment executed
 
-### Phase 2: Basic Experiments (Month 3-4)
+### 第 2 階段： Basic Experiments (Month 3-4)
 
 **Objectives**:
 
@@ -764,16 +764,16 @@ Affects:
 **Success Criteria**:
 
 - 5 experiments executed
-- Issues identified and fixed
+- Issues identified 和 fixed
 - Team trained
 
-### Phase 3: Advanced Experiments (Month 5-6)
+### 第 3 階段： Advanced Experiments (Month 5-6)
 
 **Objectives**:
 
-- Test complex failure scenarios
+- Test 複雜的 failure scenarios
 - Validate recovery procedures
-- Improve automation
+- 改善 automation
 
 **Tasks**:
 
@@ -787,31 +787,31 @@ Affects:
 
 - 10 experiments executed
 - Recovery procedures validated
-- Automation improved
+- Automation 改善d
 
-### Phase 4: Multi-Region Testing (Month 7-8)
+### 第 4 階段： Multi-Region Testing (Month 7-8)
 
 **Objectives**:
 
 - Test region-level failures
 - Validate cross-region failover
-- Conduct game days
+- Conduct game 天
 
 **Tasks**:
 
 - [ ] Region failure experiments
 - [ ] Network partition experiments
-- [ ] First game day
+- [ ] First game 天
 - [ ] Update DR procedures
 - [ ] Measure resilience score
 
 **Success Criteria**:
 
 - Region failover validated
-- Game day successful
+- Game 天 successful
 - Resilience score > 80
 
-### Phase 5: Continuous Improvement (Month 9-12)
+### Phase 5: Continuous 改善ment (Month 9-12)
 
 **Objectives**:
 
@@ -822,7 +822,7 @@ Affects:
 **Tasks**:
 
 - [ ] Weekly automated experiments
-- [ ] Monthly game days
+- [ ] Monthly game 天
 - [ ] Quarterly DR drills
 - [ ] Resilience dashboard
 - [ ] Team training program
@@ -833,28 +833,28 @@ Affects:
 - Resilience score > 90
 - Team confidence high
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Customer impact detected
 - Safety check failures
 - Experiment out of control
 - Business critical incident
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. **Immediate**: Stop all chaos experiments
 2. **Restore**: Execute automated rollback
 3. **Verify**: Confirm system stability
 4. **Investigate**: Root cause analysis
-5. **Resume**: Gradual re-enablement
+5. **Resume**: Gradual re-啟用ment
 
-**Rollback Time**: < 5 minutes
+**回滾時間**： < 5 minutes
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
@@ -895,57 +895,57 @@ const resilienceMetrics = {
 
 - **Daily**: Experiment results review
 - **Weekly**: Resilience metrics review
-- **Monthly**: Game day planning
+- **Monthly**: Game 天 planning
 - **Quarterly**: DR drill, resilience assessment
 - **Annually**: Strategy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Proactive**: Discover issues before customers
 - ✅ **Confidence**: Validated system resilience
-- ✅ **Automation**: Reduced manual testing
+- ✅ **Automation**: 降低d manual testing
 - ✅ **Learning**: Organizational resilience knowledge
 - ✅ **Metrics**: Quantifiable resilience
 - ✅ **Culture**: Resilience-focused mindset
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Complexity**: Additional operational complexity
-- ⚠️ **Cost**: $50,000/year platform costs
-- ⚠️ **Effort**: Team time for experiments
-- ⚠️ **Risk**: Potential customer impact
+- ⚠️ **複雜的ity**: Additional operational 複雜的ity
+- ⚠️ **成本**： $50,000/year platform costs
+- ⚠️ **Effort**: Team time 用於 experiments
+- ⚠️ **風險**： Potential customer impact
 - ⚠️ **Cultural**: Requires mindset change
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Manual experiment creation
 2. Limited blast radius control
 3. Basic safety checks
 4. Manual result analysis
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Automated experiment generation
 - **Q3 2026**: Advanced blast radius control
 - **Q4 2026**: AI-powered safety checks
-- **2027**: Automated result analysis and recommendations
+- **2027**: Automated result analysis 和 recommendations
 
-## Related Decisions
+## 相關決策
 
 - [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md) - Architecture foundation
 - [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md) - Replication resilience
 - [ADR-040: Network Partition Handling Strategy](040-network-partition-handling-strategy.md) - Partition resilience
-- [ADR-043: Observability for Multi-Region Operations](043-observability-multi-region-operations.md) - Monitoring integration
+- [ADR-043: Observability 用於 Multi-Region Operations](043-observability-multi-region-operations.md) - Monitoring integration
 
-## Notes
+## 備註
 
 ### Chaos Engineering Principles
 
-1. **Build a Hypothesis**: Define expected steady state
+1. **Build a Hypothesis**: Define 預期的 steady state
 2. **Vary Real-World Events**: Inject realistic failures
 3. **Run Experiments in Production**: Test real system
 4. **Automate Experiments**: Continuous validation
@@ -975,11 +975,11 @@ const resilienceMetrics = {
 - Issue documentation
 - Runbook updates
 - Team retrospective
-- Continuous improvement
+- Continuous 改善ment
 
 ### Experiment Design Best Practices
 
-**Good Experiment**:
+**良好的 Experiment**:
 
 - Clear hypothesis
 - Measurable steady state
@@ -997,6 +997,6 @@ const resilienceMetrics = {
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

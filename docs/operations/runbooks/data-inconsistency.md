@@ -2,25 +2,25 @@
 
 ## Symptoms
 
-- Mismatched data between services
-- Duplicate records in database
-- Missing records that should exist
-- Incorrect calculated values
-- Foreign key constraint violations
-- Event processing failures
-- Customer reports of incorrect data
+- Services 之間的資料不匹配
+- Database 中的重複記錄
+- 應該存在的記錄遺失
+- 不正確的計算值
+- Foreign key constraint 違規
+- Event 處理失敗
+- 客戶回報資料不正確
 
 ## Impact
 
-- **Severity**: P1 - High (P0 if affecting payments or orders)
-- **Affected Users**: Varies by data type
-- **Business Impact**: Loss of customer trust, incorrect billing, order fulfillment issues
+- **Severity**：P1 - High（如果影響 payments 或 orders 則為 P0）
+- **Affected Users**：依資料類型而異
+- **Business Impact**：客戶信任流失、不正確的帳單、訂單履行問題
 
 ## Detection
 
-- **Alert**: `DataInconsistencyDetected` alert fires
-- **Monitoring Dashboard**: Data Quality Dashboard
-- **Log Patterns**:
+- **Alert**：`DataInconsistencyDetected` alert 觸發
+- **Monitoring Dashboard**：Data Quality Dashboard
+- **Log Patterns**：
   - `Foreign key constraint violation`
   - `Duplicate key value`
   - `Data mismatch detected`
@@ -28,7 +28,7 @@
 
 ## Diagnosis
 
-### Step 1: Identify Scope of Inconsistency
+### 步驟 1：識別 Inconsistency 範圍
 
 ```bash
 # Check application logs for data errors
@@ -41,7 +41,7 @@ kubectl exec -it ${POD_NAME} -n production -- \
   "SELECT * FROM pg_stat_database_conflicts WHERE datname = 'ecommerce_production';"
 ```
 
-### Step 2: Run Data Integrity Checks
+### 步驟 2：執行資料完整性檢查
 
 ```sql
 -- Connect to database
@@ -68,7 +68,7 @@ GROUP BY o.id, o.total_amount
 HAVING o.total_amount != SUM(oi.quantity * oi.unit_price);
 
 -- Check for inventory inconsistencies
-SELECT p.id, p.name, p.stock_quantity, 
+SELECT p.id, p.name, p.stock_quantity,
        COALESCE(SUM(i.quantity), 0) as actual_inventory
 FROM products p
 LEFT JOIN inventory i ON p.id = i.product_id
@@ -80,11 +80,11 @@ SELECT o.id as order_id, o.total_amount as order_total,
        p.amount as payment_amount, p.status as payment_status
 FROM orders o
 LEFT JOIN payments p ON o.id = p.order_id
-WHERE o.status = 'COMPLETED' 
+WHERE o.status = 'COMPLETED'
   AND (p.id IS NULL OR p.status != 'COMPLETED' OR p.amount != o.total_amount);
 ```
 
-### Step 3: Check Event Processing
+### 步驟 3：檢查 Event 處理
 
 ```bash
 # Check Kafka consumer lag
@@ -102,7 +102,7 @@ kubectl logs deployment/ecommerce-backend -n production --tail=1000 | \
   grep -i "event.*failed\|event.*error"
 ```
 
-### Step 4: Check Cache Consistency
+### 步驟 4：檢查 Cache 一致性
 
 ```bash
 # Check Redis for stale data
@@ -123,7 +123,7 @@ TTL customer:12345
 SCAN 0 MATCH customer:* COUNT 1000
 ```
 
-### Step 5: Analyze Recent Changes
+### 步驟 5：分析最近的變更
 
 ```bash
 # Check recent deployments
@@ -138,14 +138,14 @@ kubectl exec -it ${POD_NAME} -n production -- \
 kubectl get configmap ecommerce-config -n production -o yaml | grep -A 5 "last-applied"
 ```
 
-### Step 6: Check for Race Conditions
+### 步驟 6：檢查 Race Conditions
 
 ```bash
 # Check for concurrent updates
 kubectl exec -it ${POD_NAME} -n production -- \
   psql -h ${DB_HOST} -U ${DB_USER} -d ${DB_NAME} -c \
-  "SELECT pid, usename, query_start, state, query 
-   FROM pg_stat_activity 
+  "SELECT pid, usename, query_start, state, query
+   FROM pg_stat_activity
    WHERE query LIKE '%UPDATE orders%' OR query LIKE '%UPDATE inventory%';"
 
 # Check for lock conflicts
@@ -166,9 +166,9 @@ kubectl exec -it ${POD_NAME} -n production -- \
 
 ## Resolution
 
-### Immediate Actions
+### 立即行動
 
-1. **Stop writes** to affected data (if critical):
+1. **停止寫入**受影響的資料（如果關鍵）：
 
 ```bash
 # Scale down to prevent further inconsistency
@@ -180,20 +180,20 @@ kubectl set env deployment/ecommerce-backend \
   -n production
 ```
 
-1. **Notify stakeholders**:
+1. **通知 stakeholders**：
 
 ```bash
 # Send incident notification
 # Subject: P1 - Data Inconsistency Detected
-# Data inconsistency detected in [affected area]. 
+# Data inconsistency detected in [affected area].
 # Team is investigating and will provide updates.
 ```
 
-### Root Cause Fixes
+### 根本原因修復
 
-#### If caused by failed event processing
+#### 如果由失敗的 event 處理造成
 
-1. **Replay failed events**:
+1. **重播失敗的 events**：
 
 ```bash
 # Get failed events from DLQ
@@ -210,12 +210,12 @@ kubectl exec -it kafka-0 -n production -- \
   --topic ecommerce-events < failed-events.json
 ```
 
-1. **Implement idempotency**:
+1. **實作 idempotency**：
 
 ```java
 @Component
 public class OrderEventHandler {
-    
+
     @TransactionalEventListener
     public void handleOrderCreated(OrderCreatedEvent event) {
         // Check if already processed
@@ -223,11 +223,11 @@ public class OrderEventHandler {
             log.info("Event already processed: {}", event.getEventId());
             return;
         }
-        
+
         try {
             // Process event
             inventoryService.reserveItems(event.getOrderId());
-            
+
             // Mark as processed
             processedEventRepository.save(
                 new ProcessedEvent(event.getEventId(), Instant.now())
@@ -240,21 +240,21 @@ public class OrderEventHandler {
 }
 ```
 
-#### If caused by race conditions
+#### 如果由 race conditions 造成
 
-1. **Implement optimistic locking**:
+1. **實作 optimistic locking**：
 
 ```java
 @Entity
 public class Product {
     @Id
     private String id;
-    
+
     @Version
     private Long version;
-    
+
     private Integer stockQuantity;
-    
+
     public void decreaseStock(int quantity) {
         if (stockQuantity < quantity) {
             throw new InsufficientStockException();
@@ -266,7 +266,7 @@ public class Product {
 @Service
 @Transactional
 public class InventoryService {
-    
+
     @Retryable(
         value = {OptimisticLockingFailureException.class},
         maxAttempts = 3,
@@ -275,24 +275,24 @@ public class InventoryService {
     public void reserveStock(String productId, int quantity) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new ProductNotFoundException(productId));
-        
+
         product.decreaseStock(quantity);
         productRepository.save(product);
     }
 }
 ```
 
-1. **Use distributed locks** for critical sections:
+1. **使用 distributed locks** 處理關鍵區段：
 
 ```java
 @Service
 public class OrderService {
-    
+
     private final RedissonClient redissonClient;
-    
+
     public void processOrder(String orderId) {
         RLock lock = redissonClient.getLock("order:" + orderId);
-        
+
         try {
             // Wait up to 10 seconds, lock for up to 30 seconds
             if (lock.tryLock(10, 30, TimeUnit.SECONDS)) {
@@ -315,9 +315,9 @@ public class OrderService {
 }
 ```
 
-#### If caused by cache staleness
+#### 如果由 cache staleness 造成
 
-1. **Clear stale cache**:
+1. **清除過時的 cache**：
 
 ```bash
 # Clear specific cache entries
@@ -327,22 +327,22 @@ kubectl exec -it redis-0 -n production -- redis-cli DEL customer:12345
 kubectl exec -it redis-0 -n production -- redis-cli FLUSHDB
 ```
 
-1. **Implement cache invalidation**:
+1. **實作 cache invalidation**：
 
 ```java
 @Service
 public class CustomerService {
-    
+
     @CacheEvict(value = "customers", key = "#customer.id")
     public Customer updateCustomer(Customer customer) {
         Customer updated = customerRepository.save(customer);
-        
+
         // Publish event for other services
         eventPublisher.publish(new CustomerUpdatedEvent(updated.getId()));
-        
+
         return updated;
     }
-    
+
     @EventListener
     @CacheEvict(value = "customers", key = "#event.customerId")
     public void handleCustomerUpdated(CustomerUpdatedEvent event) {
@@ -351,19 +351,19 @@ public class CustomerService {
 }
 ```
 
-#### If caused by database corruption
+#### 如果由 database 損毀造成
 
-1. **Run data reconciliation**:
+1. **執行資料 reconciliation**：
 
 ```sql
 -- Fix orphaned orders
-DELETE FROM orders 
+DELETE FROM orders
 WHERE customer_id NOT IN (SELECT id FROM customers);
 
 -- Fix duplicate emails (keep oldest)
 DELETE FROM customers c1
 USING customers c2
-WHERE c1.email = c2.email 
+WHERE c1.email = c2.email
   AND c1.created_at > c2.created_at;
 
 -- Recalculate order totals
@@ -386,39 +386,39 @@ SET stock_quantity = (
 );
 ```
 
-1. **Create reconciliation job**:
+1. **建立 reconciliation job**：
 
 ```java
 @Component
 public class DataReconciliationJob {
-    
+
     @Scheduled(cron = "0 0 2 * * *")  // Run at 2 AM daily
     public void reconcileData() {
         log.info("Starting data reconciliation");
-        
+
         // Reconcile orders
         reconcileOrders();
-        
+
         // Reconcile inventory
         reconcileInventory();
-        
+
         // Reconcile payments
         reconcilePayments();
-        
+
         log.info("Data reconciliation completed");
     }
-    
+
     private void reconcileOrders() {
         List<Order> orders = orderRepository.findAll();
         for (Order order : orders) {
             BigDecimal calculatedTotal = order.getItems().stream()
                 .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-            
+
             if (!order.getTotalAmount().equals(calculatedTotal)) {
                 log.warn("Order total mismatch: orderId={}, stored={}, calculated={}",
                     order.getId(), order.getTotalAmount(), calculatedTotal);
-                
+
                 order.setTotalAmount(calculatedTotal);
                 orderRepository.save(order);
             }
@@ -427,26 +427,26 @@ public class DataReconciliationJob {
 }
 ```
 
-### Data Recovery
+### 資料恢復
 
-If data loss occurred:
+如果發生資料遺失：
 
-1. **Restore from backup**:
+1. **從 backup restore**：
 
 ```bash
 # See backup-restore.md for detailed procedures
 ./scripts/restore-from-backup.sh --date=2025-10-25 --time=10:00
 ```
 
-1. **Replay events** from event store:
+1. **從 event store 重播 events**：
 
 ```java
 @Service
 public class EventReplayService {
-    
+
     public void replayEvents(String aggregateId, LocalDateTime from, LocalDateTime to) {
         List<DomainEvent> events = eventStore.getEvents(aggregateId, from, to);
-        
+
         for (DomainEvent event : events) {
             try {
                 eventPublisher.publish(event);
@@ -461,16 +461,16 @@ public class EventReplayService {
 
 ## Verification
 
-- [ ] Data integrity checks pass
-- [ ] No orphaned records
-- [ ] No duplicate records
-- [ ] Calculated values correct
-- [ ] Foreign key constraints intact
-- [ ] Cache consistent with database
-- [ ] Event processing working
-- [ ] No data inconsistency alerts
+- [ ] 資料完整性檢查通過
+- [ ] 無 orphaned records
+- [ ] 無重複記錄
+- [ ] 計算值正確
+- [ ] Foreign key constraints 完整
+- [ ] Cache 與 database 一致
+- [ ] Event 處理正常運作
+- [ ] 無 data inconsistency alerts
 
-### Verification Queries
+### 驗證 Queries
 
 ```sql
 -- Verify no orphaned orders
@@ -503,23 +503,23 @@ WHERE p.stock_quantity != (
 
 ## Prevention
 
-### 1. Implement Data Validation
+### 1. 實作資料驗證
 
 ```java
 @Entity
 public class Order {
-    
+
     @PrePersist
     @PreUpdate
     public void validate() {
         if (totalAmount == null || totalAmount.compareTo(BigDecimal.ZERO) < 0) {
             throw new InvalidOrderException("Total amount must be positive");
         }
-        
+
         BigDecimal calculatedTotal = items.stream()
             .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
-        
+
         if (!totalAmount.equals(calculatedTotal)) {
             throw new InvalidOrderException("Total amount does not match items");
         }
@@ -527,31 +527,31 @@ public class Order {
 }
 ```
 
-### 2. Implement Idempotency
+### 2. 實作 Idempotency
 
 ```java
 @Component
 public class IdempotentEventHandler {
-    
+
     private final ProcessedEventRepository processedEventRepository;
-    
+
     @TransactionalEventListener
     public void handleEvent(DomainEvent event) {
         // Check if already processed
         if (isProcessed(event.getEventId())) {
             return;
         }
-        
+
         // Process event
         processEvent(event);
-        
+
         // Mark as processed
         markAsProcessed(event.getEventId());
     }
 }
 ```
 
-### 3. Regular Data Audits
+### 3. 定期資料稽核
 
 ```bash
 # Schedule daily data integrity checks
@@ -561,7 +561,7 @@ public class IdempotentEventHandler {
 ./scripts/generate-data-quality-report.sh
 ```
 
-### 4. Monitoring and Alerting
+### 4. Monitoring 和 Alerting
 
 ```yaml
 # Set up data quality alerts
@@ -570,7 +570,7 @@ public class IdempotentEventHandler {
 
   expr: data_integrity_check_failures > 0
   for: 5m
-  
+
 - alert: HighEventProcessingLag
 
   expr: kafka_consumer_lag > 10000
@@ -579,12 +579,12 @@ public class IdempotentEventHandler {
 
 ## Escalation
 
-- **L1 Support**: DevOps team (immediate response)
-- **L2 Support**: Backend engineering team (data fixes)
-- **L3 Support**: Database administrator (complex queries)
-- **Data Team**: For data analysis and recovery
+- **L1 Support**：DevOps team（立即回應）
+- **L2 Support**：Backend engineering team（資料修復）
+- **L3 Support**：Database administrator（複雜 queries）
+- **Data Team**：負責資料分析和恢復
 
-## Related
+## 相關
 
 - [Backup and Restore](backup-restore.md)
 - [Database Connection Issues](database-connection-issues.md)
@@ -592,6 +592,6 @@ public class IdempotentEventHandler {
 
 ---
 
-**Last Updated**: 2025-10-25  
-**Owner**: DevOps Team  
-**Review Cycle**: Monthly
+**Last Updated**：2025-10-25
+**Owner**：DevOps Team
+**Review Cycle**：Monthly

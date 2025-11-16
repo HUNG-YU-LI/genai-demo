@@ -1,6 +1,6 @@
 ---
 adr_number: 016
-title: "Data Encryption Strategy (At Rest and In Transit)"
+title: "Data Encryption Strategy (At Rest 和 In Transit)"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,221 +10,221 @@ affected_viewpoints: ["information", "deployment", "operational"]
 affected_perspectives: ["security", "performance", "availability"]
 ---
 
-# ADR-016: Data Encryption Strategy (At Rest and In Transit)
+# ADR-016: Data Encryption Strategy (At Rest 和 In Transit)
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform handles sensitive data including:
+The Enterprise E-Commerce Platform 處理s sensitive data including:
 
 - Customer personal information (PII)
 - Payment card data (PCI-DSS compliance required)
 - Authentication credentials
 - Business confidential data
 
-We need a comprehensive encryption strategy that:
+We 需要comprehensive encryption strategy：
 
-- Protects data at rest in databases and file storage
-- Secures data in transit between services and clients
+- Protects data at rest in databases 和 file storage
+- Secures data in transit between services 和 clients
 - Meets regulatory compliance (GDPR, PCI-DSS, Taiwan Personal Data Protection Act)
-- Maintains acceptable performance (< 10ms encryption overhead)
-- Enables secure key management and rotation
-- Supports data residency requirements
+- 維持s acceptable performance (< 10ms encryption overhead)
+- 啟用s secure key management 和 rotation
+- 支援s data residency requirements
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- PCI-DSS Level 1 compliance required for payment processing
-- GDPR compliance for EU customers
+- PCI-DSS Level 1 compliance required 用於 payment processing
+- GDPR compliance 用於 EU customers
 - Taiwan Personal Data Protection Act compliance
-- Customer trust and brand reputation
+- Customer trust 和 brand reputation
 - Regulatory penalties avoidance (up to 4% of annual revenue)
 
-**Constraints**:
+**限制條件**：
 
-- Must encrypt payment card data (PCI-DSS Requirement 3)
-- Must encrypt PII (GDPR Article 32)
+- 必須 encrypt payment card data (PCI-DSS Requirement 3)
+- 必須 encrypt PII (GDPR Article 32)
 - Performance impact < 10ms per operation
-- Key rotation without service downtime
-- Budget: $2,000/month for encryption infrastructure
+- Key rotation 沒有 service downtime
+- 預算: $2,000/month 用於 encryption infrastructure
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
 - PostgreSQL database on AWS RDS
-- S3 for file storage
-- Redis for caching
-- Kafka for event streaming
+- S3 用於 file storage
+- Redis 用於 caching
+- Kafka 用於 event streaming
 - Spring Boot microservices
 
-**Requirements**:
+**需求**：
 
 - Encrypt sensitive data at rest
 - Encrypt all data in transit (TLS 1.3)
 - Secure key management
 - Key rotation capability
-- Audit trail for encryption operations
+- Audit trail 用於 encryption operations
 - Performance: < 10ms overhead
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **Compliance**: Meet PCI-DSS, GDPR, local regulations
 2. **Security**: Industry-standard encryption algorithms
 3. **Performance**: Minimal performance impact
 4. **Key Management**: Secure, auditable key lifecycle
-5. **Scalability**: Support millions of encrypted records
+5. **Scalability**: 支援 millions of encrypted records
 6. **Operational**: Automated key rotation, monitoring
-7. **Cost**: Within budget constraints
-8. **Flexibility**: Support multiple encryption methods
+7. **成本**： Within budget constraints
+8. **Flexibility**: 支援 multiple encryption methods
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: AWS KMS with Envelope Encryption
+### 選項 1： AWS KMS with Envelope Encryption
 
-**Description**: Use AWS KMS for key management, envelope encryption for data
+**描述**： Use AWS KMS for key management, envelope encryption for data
 
-**Pros**:
+**優點**：
 
 - ✅ Managed key lifecycle (rotation, auditing)
 - ✅ FIPS 140-2 Level 2 validated
-- ✅ Integrated with AWS services (RDS, S3, EBS)
+- ✅ Integrated 與 AWS services (RDS, S3, EBS)
 - ✅ Automatic key rotation
 - ✅ CloudTrail audit logging
-- ✅ Envelope encryption reduces KMS API calls
-- ✅ Supports customer-managed keys (CMK)
+- ✅ Envelope encryption 降低s KMS API calls
+- ✅ 支援s customer-managed keys (CMK)
 - ✅ Multi-region key replication
 
-**Cons**:
+**缺點**：
 
 - ⚠️ AWS vendor lock-in
 - ⚠️ API rate limits (1200 req/sec per CMK)
 - ⚠️ Cost per API call ($0.03 per 10K requests)
-- ⚠️ Network latency for KMS calls
+- ⚠️ Network latency 用於 KMS calls
 
-**Cost**: $1,500/month (KMS + API calls)
+**成本**： $1,500/month (KMS + API calls)
 
-**Risk**: **Low** - Proven AWS service
+**風險**： **Low** - Proven AWS service
 
-### Option 2: HashiCorp Vault
+### 選項 2： HashiCorp Vault
 
-**Description**: Self-managed encryption and key management
+**描述**： Self-managed encryption and key management
 
-**Pros**:
+**優點**：
 
 - ✅ Cloud-agnostic (no vendor lock-in)
 - ✅ Advanced features (dynamic secrets, PKI)
 - ✅ Fine-grained access control
 - ✅ Audit logging
-- ✅ Multi-cloud support
+- ✅ Multi-cloud 支援
 
-**Cons**:
+**缺點**：
 
-- ❌ Self-managed infrastructure (operational overhead)
-- ❌ High availability setup complex
+- ❌ Self-managed infrastructure (營運開銷)
+- ❌ High availability setup 複雜的
 - ❌ Additional infrastructure costs
 - ❌ Team learning curve
 - ❌ Maintenance burden
 
-**Cost**: $3,000/month (infrastructure + operations)
+**成本**： $3,000/month (infrastructure + operations)
 
-**Risk**: **Medium** - Operational complexity
+**風險**： **Medium** - Operational complexity
 
-### Option 3: Application-Level Encryption Only
+### 選項 3： Application-Level Encryption Only
 
-**Description**: Encrypt in application code, manage keys manually
+**描述**： Encrypt in application code, manage keys manually
 
-**Pros**:
+**優點**：
 
 - ✅ Full control over encryption
 - ✅ No external dependencies
 - ✅ Low cost
 
-**Cons**:
+**缺點**：
 
 - ❌ Manual key management (high risk)
 - ❌ No automatic key rotation
-- ❌ Difficult to audit
+- ❌ 難以audit
 - ❌ Key storage security concerns
-- ❌ Not compliant with PCI-DSS
+- ❌ Not compliant 與 PCI-DSS
 - ❌ High operational risk
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **High** - Security and compliance risks
+**風險**： **High** - Security and compliance risks
 
-### Option 4: Database-Level Encryption Only
+### 選項 4： Database-Level Encryption Only
 
-**Description**: Rely on RDS encryption, no application-level encryption
+**描述**： Rely on RDS encryption, no application-level encryption
 
-**Pros**:
+**優點**：
 
-- ✅ Easy to enable
+- ✅ 容易啟用
 - ✅ Transparent to application
 - ✅ Low cost
 
-**Cons**:
+**缺點**：
 
 - ❌ Coarse-grained (encrypts entire database)
 - ❌ No field-level encryption
 - ❌ Keys accessible to DBAs
-- ❌ Not sufficient for PCI-DSS
-- ❌ Cannot selectively encrypt fields
+- ❌ Not sufficient 用於 PCI-DSS
+- ❌ 可以not selectively encrypt fields
 
-**Cost**: Included in RDS
+**成本**： Included in RDS
 
-**Risk**: **High** - Insufficient for compliance
+**風險**： **High** - Insufficient for compliance
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **AWS KMS with Envelope Encryption + Multi-Layer Encryption**
+**選擇的選項**： **AWS KMS with Envelope Encryption + Multi-Layer Encryption**
 
-### Rationale
+### 理由
 
-We will implement a multi-layer encryption strategy:
+We 將 implement a multi-layer encryption strategy:
 
-1. **Data in Transit**: TLS 1.3 for all network communication
+1. **Data in Transit**: TLS 1.3 用於 all network communication
 2. **Data at Rest - Infrastructure Level**: AWS service encryption (RDS, S3, EBS)
-3. **Data at Rest - Application Level**: Field-level encryption for sensitive data using AWS KMS
-4. **Key Management**: AWS KMS for centralized key management
+3. **Data at Rest - Application Level**: Field-level encryption 用於 sensitive data using AWS KMS
+4. **Key Management**: AWS KMS 用於 centralized key management
 
 **Why AWS KMS**:
 
-- Managed service reduces operational overhead
+- Managed service 降低s 營運開銷
 - FIPS 140-2 Level 2 compliance
-- Integrated with AWS services
+- Integrated 與 AWS services
 - Automatic key rotation
 - Comprehensive audit logging
-- Cost-effective for our scale
+- Cost-effective 用於 our scale
 
 **Why Multi-Layer**:
 
 - Defense in depth
-- Compliance requirements (PCI-DSS requires field-level encryption)
+- Compliance requirements (PCI-DSS 需要field-level encryption)
 - Granular control over sensitive data
 - Performance optimization (encrypt only what's necessary)
 
-**Encryption Strategy by Data Type**:
+**Encryption Strategy 透過 Data Type**:
 
 | Data Type | Encryption Method | Key Type | Rotation |
 |-----------|------------------|----------|----------|
-| Payment Card Data | AES-256 field-level | AWS KMS CMK | 90 days |
-| PII (email, phone) | AES-256 field-level | AWS KMS CMK | 90 days |
+| Payment Card Data | AES-256 field-level | AWS KMS CMK | 90 天 |
+| PII (email, phone) | AES-256 field-level | AWS KMS CMK | 90 天 |
 | Passwords | BCrypt (cost 12) | N/A | N/A |
 | Session Tokens | N/A (short-lived) | N/A | N/A |
 | Business Data | RDS encryption | AWS-managed | Annual |
-| File Storage | S3 SSE-KMS | AWS KMS CMK | 90 days |
-| Backups | EBS/S3 encryption | AWS KMS CMK | 90 days |
+| File Storage | S3 SSE-KMS | AWS KMS CMK | 90 天 |
+| Backups | EBS/S3 encryption | AWS KMS CMK | 90 天 |
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
@@ -235,11 +235,11 @@ We will implement a multi-layer encryption strategy:
 | Compliance | Positive | Meet regulatory requirements | Compliance documentation |
 | Performance | Low | < 10ms overhead | Caching, optimization |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All services handling sensitive data
 - Database schema (encrypted columns)
@@ -248,7 +248,7 @@ Affects:
 - Deployment (key management)
 - Monitoring (encryption metrics)
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
@@ -258,77 +258,77 @@ Affects:
 | Key rotation downtime | Low | High | Zero-downtime rotation process, dual-key period |
 | Compliance audit failure | Low | High | Regular audits, automated compliance checks |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Infrastructure Setup (Week 1)
+### 第 1 階段： Infrastructure Setup （第 1 週）
 
 - [x] Create AWS KMS Customer Managed Keys (CMKs)
-- [x] Configure key policies and IAM roles
-- [x] Enable CloudTrail logging for KMS
+- [x] Configure key policies 和 IAM roles
+- [x] 啟用 CloudTrail logging 用於 KMS
 - [x] Set up key rotation (90-day schedule)
 - [x] Configure multi-region key replication
-- [x] Create key aliases for different data types
+- [x] Create key aliases 用於 different data types
 
-### Phase 2: Data in Transit Encryption (Week 2)
+### 第 2 階段： Data in Transit Encryption （第 2 週）
 
-- [x] Enable TLS 1.3 for all API endpoints
+- [x] 啟用 TLS 1.3 用於 all API endpoints
 - [x] Configure HTTPS-only (HSTS headers)
-- [x] Enable TLS for database connections
-- [x] Enable TLS for Redis connections
-- [x] Enable TLS for Kafka connections
+- [x] 啟用 TLS 用於 database connections
+- [x] 啟用 TLS 用於 Redis connections
+- [x] 啟用 TLS 用於 Kafka connections
 - [x] Configure certificate management (ACM)
 
-### Phase 3: Data at Rest - Infrastructure Level (Week 3)
+### 第 3 階段： Data at Rest - Infrastructure Level （第 3 週）
 
-- [x] Enable RDS encryption with KMS
-- [x] Enable S3 bucket encryption (SSE-KMS)
-- [x] Enable EBS volume encryption
-- [x] Enable ElastiCache encryption
-- [x] Enable MSK encryption
+- [x] 啟用 RDS encryption 與 KMS
+- [x] 啟用 S3 bucket encryption (SSE-KMS)
+- [x] 啟用 EBS volume encryption
+- [x] 啟用 ElastiCache encryption
+- [x] 啟用 MSK encryption
 - [x] Verify encryption status
 
-### Phase 4: Data at Rest - Application Level (Week 4-5)
+### 第 4 階段： Data at Rest - Application Level （第 4-5 週）
 
 - [x] Implement encryption service using AWS KMS
-- [x] Implement envelope encryption for performance
-- [x] Add JPA AttributeConverter for encrypted fields
+- [x] Implement envelope encryption 用於 performance
+- [x] Add JPA AttributeConverter 用於 encrypted fields
 - [x] Encrypt payment card data fields
 - [x] Encrypt PII fields (email, phone, address)
 - [x] Implement key caching (5-minute TTL)
 - [x] Add encryption audit logging
 
-### Phase 5: Testing and Validation (Week 6)
+### Phase 5: Testing and Validation （第 6 週）
 
-- [x] Unit tests for encryption/decryption
-- [x] Integration tests with KMS
+- [x] Unit tests 用於 encryption/decryption
+- [x] Integration tests 與 KMS
 - [x] Performance testing (< 10ms overhead)
 - [x] Key rotation testing
 - [x] Disaster recovery testing
 - [x] Compliance validation (PCI-DSS, GDPR)
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Performance degradation > 20ms per operation
 - KMS availability issues
-- Data corruption during encryption
+- Data corruption 期間 encryption
 - Compliance audit failures
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Disable application-level encryption
 2. Revert to infrastructure-level encryption only
-3. Investigate and fix issues
-4. Re-enable with fixes
+3. Investigate 和 fix issues
+4. Re-啟用 與 fixes
 
-**Rollback Time**: < 2 hours
+**回滾時間**： < 2 hours
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Encryption overhead < 10ms (95th percentile)
 - ✅ Zero data breaches
@@ -338,7 +338,7 @@ Affects:
 - ✅ GDPR compliance achieved
 - ✅ KMS API error rate < 0.1%
 
-### Monitoring Plan
+### 監控計畫
 
 **CloudWatch Metrics**:
 
@@ -349,10 +349,10 @@ Affects:
 - `encryption.cache.hit_rate` (gauge)
 - `key.rotation.success` (count)
 
-**Alerts**:
+**告警**：
 
-- KMS API error rate > 1% for 5 minutes
-- Encryption latency > 20ms for 5 minutes
+- KMS API error rate > 1% 用於 5 minutes
+- Encryption latency > 20ms 用於 5 minutes
 - Key rotation failures
 - KMS API throttling
 - Encryption cache hit rate < 80%
@@ -364,55 +364,55 @@ Affects:
 - Key policy changes
 - Encryption/decryption failures
 
-**Review Schedule**:
+**審查時程**：
 
 - Daily: Check encryption metrics
 - Weekly: Review KMS audit logs
 - Monthly: Key rotation verification
 - Quarterly: Compliance audit
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Compliance**: Meet PCI-DSS, GDPR, local regulations
-- ✅ **Security**: Defense in depth with multi-layer encryption
+- ✅ **Security**: Defense in depth 與 multi-layer encryption
 - ✅ **Key Management**: Automated, auditable key lifecycle
-- ✅ **Performance**: < 10ms overhead with caching
-- ✅ **Scalability**: Envelope encryption reduces KMS calls
-- ✅ **Operational**: Managed service reduces overhead
+- ✅ **Performance**: < 10ms overhead 與 caching
+- ✅ **Scalability**: Envelope encryption 降低s KMS calls
+- ✅ **Operational**: Managed service 降低s overhead
 - ✅ **Audit Trail**: Complete encryption operation history
 - ✅ **Disaster Recovery**: Multi-region key replication
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Complexity**: Additional encryption layer to manage
-- ⚠️ **Cost**: $1,500/month for KMS and API calls
+- ⚠️ **複雜的ity**: Additional encryption layer to manage
+- ⚠️ **成本**： $1,500/month for KMS and API calls
 - ⚠️ **Vendor Lock-in**: AWS KMS dependency
-- ⚠️ **Performance**: Small overhead for encryption operations
-- ⚠️ **Development**: Additional code for encryption logic
+- ⚠️ **Performance**: Small overhead 用於 encryption operations
+- ⚠️ **Development**: Additional code 用於 encryption logic
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. No client-side encryption for highly sensitive data (acceptable for now)
-2. Manual encryption key selection (acceptable with clear guidelines)
-3. No homomorphic encryption for searchable encrypted data (not needed yet)
+1. No client-side encryption 用於 highly sensitive data (acceptable 用於 now)
+2. Manual encryption key selection (acceptable 與 clear guidelines)
+3. No homomorphic encryption 用於 searchable encrypted data (not needed yet)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q2 2026**: Evaluate client-side encryption for payment data
+- **Q2 2026**: Evaluate client-side encryption 用於 payment data
 - **Q3 2026**: Implement automated encryption key selection
 - **Q4 2026**: Evaluate searchable encryption if needed
 
-## Related Decisions
+## 相關決策
 
-- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md) - Database encryption
+- [ADR-001: Use PostgreSQL 用於 Primary Database](001-use-postgresql-for-primary-database.md) - Database encryption
 - [ADR-014: JWT-Based Authentication Strategy](014-jwt-based-authentication-strategy.md) - Token security
 - [ADR-054: Data Loss Prevention (DLP) Strategy](054-data-loss-prevention-strategy.md) - Data protection integration
 
-## Notes
+## 備註
 
 ### Encryption Implementation
 
@@ -520,19 +520,19 @@ spring:
 ### Key Rotation Process
 
 1. **Automatic Rotation** (AWS KMS):
-   - KMS automatically rotates CMKs every 90 days
-   - Old key versions retained for decryption
+   - KMS automatically rotates CMKs every 90 天
+   - Old key versions retained 用於 decryption
    - No application changes needed
 
 2. **Manual Rotation** (if needed):
    - Create new CMK
    - Update application configuration
-   - Re-encrypt data with new key (background job)
+   - Re-encrypt data 與 new key (background job)
    - Deprecate old key after re-encryption complete
 
 3. **Zero-Downtime Rotation**:
-   - Dual-key period (7 days)
-   - Both old and new keys active
+   - Dual-key period (7 天)
+   - Both old 和 new keys active
    - Gradual migration to new key
    - Verify all data re-encrypted
    - Deactivate old key
@@ -548,11 +548,11 @@ spring:
 
 **GDPR Requirements**:
 
-- Article 32: Security of processing ✅ (Encryption at rest and in transit)
-- Article 33: Breach notification ✅ (Monitoring and alerting)
+- Article 32: Security of processing ✅ (Encryption at rest 和 in transit)
+- Article 33: Breach notification ✅ (Monitoring 和 alerting)
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

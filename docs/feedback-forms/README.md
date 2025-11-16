@@ -1,228 +1,227 @@
 # Documentation Review Feedback Forms
 
-This directory contains structured feedback forms for collecting stakeholder input during the documentation review process.
+本目錄包含用於在 documentation review 過程中收集利害關係人意見的結構化回饋表單。
 
 ---
 
-## Available Forms
+## 可用表單
 
 ### 1. Developer Feedback Form
-**File**: `developer-feedback-form.md`
-**Target Audience**: Backend developers, frontend developers, junior developers
-**Focus Areas**:
-- Development viewpoint and guides
+**檔案**: `developer-feedback-form.md`
+**目標受眾**: Backend developers, frontend developers, junior developers
+**關注領域**:
+- Development viewpoint 與指南
 - API documentation
-- Code examples and tutorials
-- Setup and onboarding guides
+- 程式碼範例與教學
+- 設定與 onboarding 指南
 
-**Estimated Time**: 2-3 hours for review + form completion
+**預估時間**: 審查 + 填寫表單 2-3 小時
 
 ---
 
 ### 2. Operations Feedback Form
-**File**: `operations-feedback-form.md`
-**Target Audience**: SRE team, DevOps engineers, on-call engineers
-**Focus Areas**:
+**檔案**: `operations-feedback-form.md`
+**目標受眾**: SRE team, DevOps engineers, on-call engineers
+**關注領域**:
 - Operational viewpoint
-- Deployment procedures
-- Runbooks and troubleshooting guides
-- Monitoring and alerting
-- Backup and recovery procedures
+- Deployment 程序
+- Runbooks 與 troubleshooting 指南
+- Monitoring 與 alerting
+- Backup 與 recovery 程序
 
-**Estimated Time**: 2-3 hours for review + form completion
+**預估時間**: 審查 + 填寫表單 2-3 小時
 
 ---
 
 ### 3. Architecture Feedback Form
-**File**: `architecture-feedback-form.md`
-**Target Audience**: Chief architect, solution architects, technical leads
-**Focus Areas**:
-- All 7 viewpoints
-- All 8 perspectives
+**檔案**: `architecture-feedback-form.md`
+**目標受眾**: Chief architect, solution architects, technical leads
+**關注領域**:
+- 所有 7 個 viewpoints
+- 所有 8 個 perspectives
 - Architecture Decision Records (ADRs)
 - System diagrams
-- Architecture patterns and principles
+- Architecture patterns 與 principles
 
-**Estimated Time**: 3-4 hours for review + form completion
+**預估時間**: 審查 + 填寫表單 3-4 小時
 
 ---
 
 ### 4. Business Stakeholder Feedback Form
-**File**: `business-stakeholder-feedback-form.md`
-**Target Audience**: Product managers, business analysts, project managers
-**Focus Areas**:
+**檔案**: `business-stakeholder-feedback-form.md`
+**目標受眾**: Product managers, business analysts, project managers
+**關注領域**:
 - Functional viewpoint
 - Context viewpoint
 - Bounded contexts
-- Business capabilities and use cases
-- Business terminology and processes
+- Business capabilities 與 use cases
+- Business 術語與流程
 
-**Estimated Time**: 1.5-2 hours for review + form completion
-
----
-
-## How to Use These Forms
-
-### For Reviewers
-
-1. **Download the Form**: Get the appropriate form for your stakeholder group
-2. **Review Documentation**: Access the documentation package provided by the review coordinator
-3. **Complete the Form**: Fill out all sections with honest, constructive feedback
-4. **Submit**: Send completed form to the documentation team by the deadline
-
-### For Review Coordinators
-
-1. **Distribute Forms**: Send appropriate forms to each stakeholder group
-2. **Provide Context**: Include links to relevant documentation
-3. **Set Deadlines**: Give reviewers adequate time (typically 3-5 days)
-4. **Collect Responses**: Gather all completed forms
-5. **Consolidate Feedback**: Use the feedback consolidation process in the review plan
+**預估時間**: 審查 + 填寫表單 1.5-2 小時
 
 ---
 
-## Form Structure
+## 如何使用這些表單
 
-All forms follow a consistent structure:
+### 審查者
 
-1. **Reviewer Information**: Name, role, date
-2. **Section-by-Section Review**: Detailed feedback on specific documentation areas
-3. **Rating Scales**: 1-5 rating for each section
-4. **Specific Feedback**: Open-ended questions for detailed input
-5. **Overall Assessment**: Strengths, areas for improvement, critical issues
-6. **Final Rating**: Overall quality rating and approval status
-7. **Follow-up**: Contact information for additional discussion
+1. **下載表單**: 取得適合您利害關係人群組的表單
+2. **審查 Documentation**: 存取 review coordinator 提供的 documentation package
+3. **完成表單**: 以誠實、建設性的回饋填寫所有部分
+4. **提交**: 在截止日期前將完成的表單發送給 documentation team
 
----
+### Review Coordinators
 
-## Rating Scale
-
-All forms use a consistent 1-5 rating scale:
-
-- **5 - Excellent**: No changes needed, exceeds expectations
-- **4 - Good**: Minor enhancements possible, meets expectations
-- **3 - Satisfactory**: Minor improvements needed, acceptable
-- **2 - Below Expectations**: Significant improvements needed
-- **1 - Poor**: Major revision required, does not meet needs
+1. **分發表單**: 將適當的表單發送給每個利害關係人群組
+2. **提供背景**: 包含相關 documentation 的連結
+3. **設定截止日期**: 給予審查者足夠時間（通常 3-5 天）
+4. **收集回應**: 收集所有完成的表單
+5. **整合回饋**: 使用 review plan 中的 feedback consolidation 流程
 
 ---
 
-## Feedback Categories
+## 表單結構
 
-Feedback is categorized by priority:
+所有表單遵循一致的結構：
 
-- **Critical**: Incorrect information, missing critical content (must fix immediately)
-- **High**: Significant gaps, unclear instructions (should fix before approval)
-- **Medium**: Minor improvements, additional examples needed (nice to fix)
-- **Low**: Formatting, typos, nice-to-have additions (future consideration)
-
----
-
-## Tips for Providing Effective Feedback
-
-### Do's ✅
-
-- **Be Specific**: Point to exact sections or pages
-- **Be Constructive**: Suggest improvements, not just criticisms
-- **Be Honest**: Share your genuine experience and concerns
-- **Be Thorough**: Review all relevant sections carefully
-- **Provide Examples**: Give concrete examples of issues or improvements
-- **Consider Your Audience**: Think about how others in your role would use the docs
-
-### Don'ts ❌
-
-- **Don't Be Vague**: Avoid general statements like "needs improvement"
-- **Don't Be Harsh**: Provide constructive criticism, not personal attacks
-- **Don't Rush**: Take time to review thoroughly
-- **Don't Ignore Sections**: Complete all relevant sections of the form
-- **Don't Forget Context**: Consider the documentation's purpose and audience
+1. **審查者資訊**: 姓名、角色、日期
+2. **逐節審查**: 特定 documentation 區域的詳細回饋
+3. **評分量表**: 每個部分的 1-5 評分
+4. **具體回饋**: 開放式問題以獲得詳細意見
+5. **整體評估**: 優點、待改進領域、關鍵問題
+6. **最終評分**: 整體品質評分與核准狀態
+7. **後續追蹤**: 額外討論的聯絡資訊
 
 ---
 
-## Example Feedback
+## 評分量表
 
-### Good Feedback ✅
+所有表單使用一致的 1-5 評分量表：
 
-> **Section**: Local Environment Setup Guide
-> **Rating**: 3
-> **Feedback**: The setup guide is generally clear, but step 5 (Docker configuration) 
-> is missing the command to verify Docker is running correctly. I spent 15 minutes 
-> troubleshooting before realizing Docker wasn't started. Suggest adding: 
-> `docker ps` to verify Docker is running.
-> 
-> Also, the Java version requirement (Java 21) should be mentioned earlier in the 
-> prerequisites section, not just in step 2.
-
-### Poor Feedback ❌
-
-> **Section**: Local Environment Setup Guide
-> **Rating**: 2
-> **Feedback**: This doesn't work. Needs improvement.
+- **5 - 優秀**: 無需變更，超越期望
+- **4 - 良好**: 可能有小幅提升，符合期望
+- **3 - 滿意**: 需要小幅改進，可接受
+- **2 - 低於期望**: 需要重大改進
+- **1 - 差**: 需要大幅修訂，未滿足需求
 
 ---
 
-## Submission Guidelines
+## 回饋類別
 
-### Submission Methods
+回饋依優先級分類：
 
-1. **Email**: Send completed form to documentation-team@company.com
-2. **Shared Drive**: Upload to designated review folder
-3. **Issue Tracker**: Create issue with feedback (if using GitHub/Jira)
-4. **In-Person**: Bring to review session for discussion
-
-### Submission Deadline
-
-- Typically 3-5 days after receiving the form
-- Check your invitation email for specific deadline
-- Contact review coordinator if you need more time
-
-### Confidentiality
-
-- Feedback is used to improve documentation
-- Individual feedback may be shared with documentation team
-- Consolidated feedback report will be shared with all stakeholders
-- Constructive criticism is encouraged and valued
+- **Critical（關鍵）**: 錯誤資訊、缺少關鍵內容（必須立即修正）
+- **High（高）**: 重大缺口、不明確的指示（核准前應修正）
+- **Medium（中）**: 小幅改進、需要額外範例（最好修正）
+- **Low（低）**: 格式、錯字、可有可無的補充（未來考慮）
 
 ---
 
-## After Submission
+## 提供有效回饋的技巧
 
-### What Happens Next
+### 應該做的 ✅
 
-1. **Consolidation**: All feedback is consolidated and categorized
-2. **Response Plan**: Documentation team creates action plan
-3. **Implementation**: Changes are made based on feedback
-4. **Re-Review**: Critical changes may require re-review
-5. **Final Validation**: Final review session with all stakeholders
-6. **Sign-off**: Formal approval from all stakeholder groups
+- **具體**: 指出確切的部分或頁面
+- **建設性**: 建議改進，而非只是批評
+- **誠實**: 分享您真實的經驗與關切
+- **徹底**: 仔細審查所有相關部分
+- **提供範例**: 提供具體的問題或改進範例
+- **考慮您的受眾**: 思考在您角色中的其他人會如何使用文件
 
-### Timeline
+### 不應該做的 ❌
 
-- **Day 1**: Feedback submission deadline
-- **Day 2-3**: Feedback consolidation and response planning
-- **Day 4-7**: Implementation of changes
-- **Day 8-10**: Final validation and sign-off
-
----
-
-## Questions?
-
-If you have questions about:
-- **The Forms**: Contact the review coordinator
-- **The Documentation**: Contact the documentation team
-- **The Process**: See `docs/STAKEHOLDER-REVIEW-PLAN.md`
-- **Technical Issues**: Contact IT support
+- **不要模糊**: 避免籠統的陳述如「需要改進」
+- **不要嚴苛**: 提供建設性批評，而非人身攻擊
+- **不要倉促**: 花時間徹底審查
+- **不要忽略部分**: 完成表單的所有相關部分
+- **不要忘記背景**: 考慮 documentation 的目的與受眾
 
 ---
 
-## Related Documents
+## 回饋範例
 
-- **Full Review Plan**: `docs/STAKEHOLDER-REVIEW-PLAN.md`
+### 良好回饋 ✅
+
+> **部分**: Local Environment Setup Guide
+> **評分**: 3
+> **回饋**: 設定指南大致清楚，但步驟 5（Docker configuration）
+> 缺少驗證 Docker 正確執行的命令。我花了 15 分鐘
+> 故障排除才意識到 Docker 未啟動。建議加入：
+> `docker ps` 以驗證 Docker 正在執行。
+>
+> 此外，Java 版本要求（Java 21）應在
+> prerequisites 部分更早提及，而不只在步驟 2。
+
+### 不良回饋 ❌
+
+> **部分**: Local Environment Setup Guide
+> **評分**: 2
+> **回饋**: 這不能用。需要改進。
+
+---
+
+## 提交指南
+
+### 提交方式
+
+1. **Email**: 將完成的表單發送至 documentation-team@company.com
+2. **Shared Drive**: 上傳至指定的 review 資料夾
+3. **Issue Tracker**: 建立包含回饋的 issue（如使用 GitHub/Jira）
+4. **In-Person**: 帶到 review session 進行討論
+
+### 提交截止日期
+
+- 通常在收到表單後 3-5 天
+- 查看您的邀請 email 以了解具體截止日期
+- 如需更多時間，請聯絡 review coordinator
+
+### 保密性
+
+- 回饋用於改進 documentation
+- 個別回饋可能與 documentation team 分享
+- 整合回饋報告將與所有利害關係人分享
+- 鼓勵並重視建設性批評
+
+---
+
+## 提交後
+
+### 接下來會發生什麼
+
+1. **整合**: 所有回饋被整合並分類
+2. **回應計畫**: Documentation team 建立行動計畫
+3. **實施**: 根據回饋進行變更
+4. **重新審查**: 關鍵變更可能需要重新審查
+5. **最終驗證**: 與所有利害關係人進行最終 review session
+6. **簽署**: 所有利害關係人群組的正式核准
+
+### 時程
+
+- **第 1 天**: 回饋提交截止日期
+- **第 2-3 天**: 回饋整合與回應規劃
+- **第 4-7 天**: 變更實施
+- **第 8-10 天**: 最終驗證與簽署
+
+---
+
+## 有問題？
+
+如果您有關於以下的問題：
+- **表單**: 聯絡 review coordinator
+- **Documentation**: 聯絡 documentation team
+- **流程**: 參見 `docs/STAKEHOLDER-REVIEW-PLAN.md`
+- **技術問題**: 聯絡 IT support
+
+---
+
+## 相關文件
+
+- **Complete Review Plan**: `docs/STAKEHOLDER-REVIEW-PLAN.md`
 - **Quick Start Guide**: `docs/REVIEW-COORDINATOR-QUICK-START.md`
 - **Task Completion Summary**: `.kiro/specs/documentation-redesign/task-27-completion-summary.md`
 
 ---
 
-**Last Updated**: 2025-01-17
-**Version**: 1.0
-**Maintained By**: Documentation Team
-
+**最後更新**: 2025-01-17
+**版本**: 1.0
+**維護者**: Documentation Team

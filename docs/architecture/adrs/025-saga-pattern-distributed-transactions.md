@@ -1,6 +1,6 @@
 ---
 adr_number: 025
-title: "Saga Pattern for Distributed Transactions"
+title: "Saga Pattern 用於 Distributed Transactions"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,93 +10,93 @@ affected_viewpoints: ["functional", "concurrency"]
 affected_perspectives: ["availability", "performance"]
 ---
 
-# ADR-025: Saga Pattern for Distributed Transactions
+# ADR-025: Saga Pattern 用於 Distributed Transactions
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires a reliable way to handle distributed transactions across multiple bounded contexts:
+The Enterprise E-Commerce Platform 需要reliable way to 處理 distributed transactions 跨 multiple bounded contexts:
 
 **Business Requirements**:
 
-- **Data Consistency**: Maintain consistency across microservices
+- **Data Consistency**: 維持 consistency 跨 microservices
 - **Reliability**: Ensure business processes complete successfully
-- **Compensation**: Handle failures gracefully with rollback
+- **Compensation**: 處理 failures gracefully 與 rollback
 - **Visibility**: Track long-running business processes
 - **Performance**: Avoid blocking distributed transactions
-- **Scalability**: Support high transaction volumes
+- **Scalability**: 支援 high transaction volumes
 
 **Technical Challenges**:
 
-- 13 bounded contexts with separate databases
+- 13 bounded contexts 與 separate databases
 - No distributed transactions (2PC not suitable)
-- Complex business workflows spanning multiple services
-- Need for compensation logic
-- Failure handling and recovery
+- 複雜的 business workflows spanning multiple services
+- 需要 compensation logic
+- Failure handling 和 recovery
 - Monitoring long-running processes
 
 **Example Workflows**:
 
 1. **Order Submission**: Order → Inventory → Payment → Shipping
-2. **Order Cancellation**: Order → Payment Refund → Inventory Release
+2. **Order 可以cellation**: Order → Payment Refund → Inventory Release
 3. **Customer Registration**: Customer → Email → Loyalty Program
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
 - Ensure order processing reliability
-- Handle payment failures gracefully
-- Maintain inventory accuracy
-- Support complex business workflows
-- Enable business process monitoring
+- 處理 payment failures gracefully
+- 維持 inventory accuracy
+- 支援 複雜的 business workflows
+- 啟用 business process monitoring
 
-**Constraints**:
+**限制條件**：
 
-- Budget: $60,000 for implementation
-- Timeline: 2 months
+- 預算: $60,000 用於 implementation
+- Timeline: 2 個月
 - Team: 3 senior developers
-- Must work with existing event-driven architecture
-- Cannot use distributed transactions (2PC)
-- Must support compensation
+- 必須 work 與 existing event-driven architecture
+- 可以not use distributed transactions (2PC)
+- 必須 支援 compensation
 
-### Technical Context
+### 技術上下文
 
 **Current Approach**:
 
-- Domain events for integration
+- Domain events 用於 integration
 - No coordination mechanism
 - Manual compensation logic
-- Difficult to track workflow state
+- 難以track workflow state
 
 **Target Approach**:
 
-- Saga pattern for orchestration
+- Saga pattern 用於 orchestration
 - Automated compensation
 - Workflow state tracking
-- Monitoring and observability
+- Monitoring 和 observability
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Consistency**: Maintain eventual consistency across services
-2. **Reliability**: Ensure workflows complete or compensate
-3. **Observability**: Track workflow progress and failures
-4. **Simplicity**: Easy to understand and implement
+1. **Consistency**: 維持 eventual consistency 跨 services
+2. **Reliability**: Ensure workflows complete 或 compensate
+3. **Observability**: Track workflow progress 和 failures
+4. **Simplicity**: 容易understand 和 implement
 5. **Performance**: Non-blocking, asynchronous execution
-6. **Scalability**: Handle high transaction volumes
-7. **Maintainability**: Easy to add new workflows
-8. **Testability**: Easy to test compensation logic
+6. **Scalability**: 處理 high transaction volumes
+7. **維持ability**: 容易add new workflows
+8. **Testability**: 容易test compensation logic
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Choreography-Based Saga (Recommended)
+### 選項 1： Choreography-Based Saga (Recommended)
 
-**Description**: Services coordinate through domain events, no central orchestrator
+**描述**： Services coordinate through domain events, no central orchestrator
 
 **Order Submission Saga Example**:
 
@@ -381,7 +381,7 @@ public class SagaMonitoringController {
 }
 ```
 
-**Idempotency for Saga Steps**:
+**Idempotency 用於 Saga Steps**:
 
 ```java
 @Component
@@ -457,93 +457,93 @@ public class SagaTimeoutMonitor {
 }
 ```
 
-**Pros**:
+**優點**：
 
 - ✅ Decentralized, no single point of failure
 - ✅ Services remain loosely coupled
-- ✅ Natural fit for event-driven architecture
-- ✅ Easy to add new participants
+- ✅ Natural fit 用於 event-driven architecture
+- ✅ 容易add new participants
 - ✅ Scales well
-- ✅ Simple to understand
+- ✅ 簡單understand
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Difficult to track overall workflow
-- ⚠️ Complex to debug
+- ⚠️ 難以track overall workflow
+- ⚠️ 複雜的 to debug
 - ⚠️ Cyclic dependencies possible
 - ⚠️ Requires careful event design
 
-**Cost**: $60,000 implementation + $5,000/year operational
+**成本**： $60,000 implementation + $5,000/year operational
 
-**Risk**: **Low** - Fits existing architecture
+**風險**： **Low** - Fits existing architecture
 
-### Option 2: Orchestration-Based Saga
+### 選項 2： Orchestration-Based Saga
 
-**Description**: Central orchestrator coordinates saga execution
+**描述**： Central orchestrator coordinates saga execution
 
-**Pros**:
+**優點**：
 
 - ✅ Centralized workflow logic
-- ✅ Easy to track progress
-- ✅ Simpler debugging
+- ✅ 容易track progress
+- ✅ 簡單的r debugging
 - ✅ Clear compensation flow
 
-**Cons**:
+**缺點**：
 
 - ❌ Single point of failure
 - ❌ Tight coupling to orchestrator
-- ❌ More complex infrastructure
+- ❌ More 複雜的 infrastructure
 - ❌ Orchestrator becomes bottleneck
 
-**Cost**: $90,000 implementation + $10,000/year
+**成本**： $90,000 implementation + $10,000/year
 
-**Risk**: **Medium** - Additional complexity
+**風險**： **Medium** - Additional complexity
 
-### Option 3: Two-Phase Commit (2PC)
+### 選項 3： Two-Phase Commit (2PC)
 
-**Description**: Distributed transaction protocol
+**描述**： Distributed transaction protocol
 
-**Pros**:
+**優點**：
 
 - ✅ Strong consistency
 - ✅ ACID guarantees
 
-**Cons**:
+**缺點**：
 
 - ❌ Blocking protocol
 - ❌ Poor performance
 - ❌ Scalability issues
 - ❌ Single point of failure (coordinator)
-- ❌ Not suitable for microservices
+- ❌ Not suitable 用於 microservices
 
-**Cost**: $40,000 implementation
+**成本**： $40,000 implementation
 
-**Risk**: **High** - Not recommended for microservices
+**風險**： **High** - Not recommended for microservices
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Choreography-Based Saga (Option 1)**
+**選擇的選項**： **Choreography-Based Saga (Option 1)**
 
-### Rationale
+### 理由
 
-Choreography-based saga fits naturally with our existing event-driven architecture, maintains loose coupling between services, and provides the flexibility and scalability needed for our distributed system.
+Choreography-based saga fits naturally 與 our existing event-driven architecture, 維持s loose coupling between services, 和 提供s the flexibility 和 scalability needed 用於 our distributed system.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
 | Development Team | High | New pattern to learn | Training, examples, documentation |
 | QA Team | Medium | New testing approaches | Test frameworks, saga testing tools |
 | Operations Team | Medium | New monitoring needs | Dashboards, alerts, runbooks |
-| Business Team | Low | Better process visibility | Monitoring dashboards |
+| Business Team | Low | 更好的 process visibility | Monitoring dashboards |
 
 ### Impact Radius Assessment
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All bounded contexts
 - Event-driven architecture
@@ -551,21 +551,21 @@ Affects:
 - Monitoring systems
 - Testing approach
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
-| Complex debugging | Medium | Medium | Saga tracking, correlation IDs |
+| 複雜的 debugging | Medium | Medium | Saga tracking, correlation IDs |
 | Event ordering issues | Low | High | Idempotency, event versioning |
 | Compensation failures | Low | High | Retry mechanism, manual intervention |
 | Saga timeouts | Medium | Medium | Timeout monitoring, alerts |
 | Cyclic dependencies | Low | Medium | Careful event design, reviews |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Framework Setup (Week 1-2)
+### 第 1 階段： Framework Setup （第 1-2 週）
 
 **Tasks**:
 
@@ -581,7 +581,7 @@ Affects:
 - Monitoring working
 - Documentation complete
 
-### Phase 2: Pilot Saga (Week 3-4)
+### 第 2 階段： Pilot Saga （第 3-4 週）
 
 **Tasks**:
 
@@ -597,13 +597,13 @@ Affects:
 - Compensation tested
 - Team comfortable
 
-### Phase 3: Additional Sagas (Week 5-6)
+### 第 3 階段： Additional Sagas （第 5-6 週）
 
 **Tasks**:
 
-- [ ] Implement Order Cancellation saga
+- [ ] Implement Order 可以cellation saga
 - [ ] Implement Customer Registration saga
-- [ ] Add monitoring for all sagas
+- [ ] Add monitoring 用於 all sagas
 - [ ] Update documentation
 - [ ] Train team
 
@@ -613,13 +613,13 @@ Affects:
 - Monitoring comprehensive
 - Team trained
 
-### Phase 4: Production Rollout (Week 7-8)
+### 第 4 階段： Production Rollout （第 7-8 週）
 
 **Tasks**:
 
 - [ ] Deploy to production
 - [ ] Monitor saga execution
-- [ ] Handle edge cases
+- [ ] 處理 edge cases
 - [ ] Optimize performance
 - [ ] Document lessons learned
 
@@ -629,26 +629,26 @@ Affects:
 - Sagas executing reliably
 - Team confident
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Unacceptable failure rate
 - Performance issues
-- Team cannot maintain
+- Team 可以not 維持
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Disable saga pattern
 2. Use synchronous calls
 3. Fix issues
-4. Re-enable sagas
+4. Re-啟用 sagas
 
-**Rollback Time**: 1 day
+**回滾時間**： 1 day
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
@@ -664,53 +664,53 @@ Affects:
 - **Monthly**: Pattern optimization
 - **Quarterly**: Strategy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Consistency**: Eventual consistency across services
-- ✅ **Reliability**: Workflows complete or compensate
+- ✅ **Consistency**: Eventual consistency 跨 services
+- ✅ **Reliability**: Workflows complete 或 compensate
 - ✅ **Observability**: Track workflow progress
 - ✅ **Scalability**: Non-blocking, asynchronous
-- ✅ **Flexibility**: Easy to add new workflows
+- ✅ **Flexibility**: 容易add new workflows
 - ✅ **Loose Coupling**: Services remain independent
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Complexity**: More complex than synchronous calls
-- ⚠️ **Debugging**: Harder to debug distributed workflows
-- ⚠️ **Testing**: More complex testing scenarios
+- ⚠️ **複雜的ity**: More 複雜的 than synchronous calls
+- ⚠️ **Debugging**: 更難debug distributed workflows
+- ⚠️ **Testing**: More 複雜的 testing scenarios
 - ⚠️ **Eventual Consistency**: Not immediate consistency
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Manual saga timeout handling
 2. Limited saga visualization
 3. Basic compensation testing
 4. No saga replay capability
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Automated timeout handling
 - **Q3 2026**: Saga visualization dashboard
 - **Q4 2026**: Comprehensive compensation testing
-- **Q1 2027**: Saga replay for debugging
+- **Q1 2027**: Saga replay 用於 debugging
 
-## Related Decisions
+## 相關決策
 
-- [ADR-020: Database Migration Strategy with Flyway](020-database-migration-strategy-flyway.md)
-- [ADR-021: Event Sourcing for Critical Aggregates](021-event-sourcing-critical-aggregates.md)
-- [ADR-026: CQRS Pattern for Read/Write Separation](026-cqrs-pattern-read-write-separation.md)
+- [ADR-020: Database Migration Strategy 與 Flyway](020-database-migration-strategy-flyway.md)
+- [ADR-021: Event Sourcing 用於 Critical Aggregates](021-event-sourcing-critical-aggregates.md)
+- [ADR-026: CQRS Pattern 用於 Read/Write Separation](026-cqrs-pattern-read-write-separation.md)
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）
 
-## Notes
+## 備註
 
 ### Saga Design Best Practices
 
@@ -720,7 +720,7 @@ Affects:
 - ✅ Use correlation IDs
 - ✅ Implement compensation logic
 - ✅ Monitor saga execution
-- ✅ Handle timeouts
+- ✅ 處理 timeouts
 - ✅ Test failure scenarios
 
 **DON'T**:
@@ -736,11 +736,11 @@ Affects:
 **Order Processing**:
 
 1. Create Order → Reserve Inventory → Process Payment → Confirm Order
-2. Compensation: Release Inventory ← Refund Payment ← Cancel Order
+2. Compensation: Release Inventory ← Refund Payment ← 可以cel Order
 
-**Order Cancellation**:
+**Order 可以cellation**:
 
-1. Cancel Order → Refund Payment → Release Inventory → Notify Customer
+1. 可以cel Order → Refund Payment → Release Inventory → Notify Customer
 2. Compensation: Restore Order ← Reverse Refund
 
 **Customer Registration**:

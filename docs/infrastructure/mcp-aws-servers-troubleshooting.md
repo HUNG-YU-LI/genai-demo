@@ -1,13 +1,13 @@
-# AWS MCP Servers Troubleshooting Guide
+# AWS MCP Servers 故障排除指南
 
-> **Last Updated**: 2025-11-07  
-> **Issue**: IAM, Lambda, and Pricing MCP servers connection timeout
+> **最後更新**: 2025-11-07
+> **問題**: IAM, Lambda, 與 Pricing MCP servers 連線 timeout
 
 ---
 
-## 🔴 Current Issue
+## 🔴 目前問題
 
-The following AWS MCP servers are experiencing connection timeouts:
+以下 AWS MCP servers 遇到連線 timeouts：
 
 - ❌ `awslabs.iam-mcp-server`
 - ❌ `awslabs.lambda-mcp-server`
@@ -15,9 +15,9 @@ The following AWS MCP servers are experiencing connection timeouts:
 
 ---
 
-## 🔍 Diagnosis
+## 🔍 診斷
 
-### AWS Credentials Status
+### AWS Credentials 狀態
 
 ```bash
 ✅ AWS Profile: kim-sso
@@ -26,92 +26,92 @@ The following AWS MCP servers are experiencing connection timeouts:
 ✅ Region: us-east-1 (default)
 ```
 
-### Possible Causes
+### 可能原因
 
-1. **Server Startup Time** ⏱️
-   - AWS MCP servers may take longer to initialize
-   - First-time package download via `uvx`
-   - Network latency to AWS services
+1. **Server 啟動時間** ⏱️
+   - AWS MCP servers 初始化可能需要較長時間
+   - 首次透過 `uvx` 下載 package
+   - 連到 AWS services 的網路延遲
 
-2. **Region Mismatch** 🌏
-   - Config specifies: `ap-northeast-1`
-   - AWS CLI default: `us-east-1`
-   - May cause confusion or delays
+2. **Region 不一致** 🌏
+   - Config 指定：`ap-northeast-1`
+   - AWS CLI 預設：`us-east-1`
+   - 可能造成混淆或延遲
 
-3. **Package Installation Issues** 📦
-   - `uvx` needs to download packages on first run
-   - Network issues during download
-   - Package version conflicts
+3. **Package 安裝問題** 📦
+   - `uvx` 需要在首次執行時下載 packages
+   - 下載期間的網路問題
+   - Package 版本衝突
 
-4. **Timeout Settings** ⏰
-   - Kiro's default MCP timeout may be too short
-   - AWS API calls can be slow
+4. **Timeout 設定** ⏰
+   - Kiro 的預設 MCP timeout 可能太短
+   - AWS API 呼叫可能很慢
 
 ---
 
-## 🔧 Solutions
+## 🔧 解決方案
 
-### Solution 1: Disable Problematic Servers (Quick Fix)
+### 解決方案 1：停用有問題的 Servers（快速修正）
 
-If you don't need these servers immediately, disable them:
+如果您不立即需要這些 servers，請停用它們：
 
-**Edit `~/.kiro/settings/mcp.json`:**
+**編輯 `~/.kiro/settings/mcp.json`：**
 
 ```json
 {
   "mcpServers": {
     "awslabs.lambda-mcp-server": {
-      "disabled": true,  // Add this line
-      // ... rest of config
+      "disabled": true,  // 加入這一行
+      // ... 其餘 config
     },
     "awslabs.iam-mcp-server": {
-      "disabled": true,  // Add this line
-      // ... rest of config
+      "disabled": true,  // 加入這一行
+      // ... 其餘 config
     },
     "awslabs.aws-pricing-mcp-server": {
-      "disabled": true,  // Add this line
-      // ... rest of config
+      "disabled": true,  // 加入這一行
+      // ... 其餘 config
     }
   }
 }
 ```
 
-**Then restart Kiro.**
+**然後重新啟動 Kiro。**
 
 ---
 
-### Solution 2: Pre-install Packages (Recommended)
+### 解決方案 2：預先安裝 Packages（建議）
 
-Install the packages manually first to avoid timeout during Kiro startup:
+先手動安裝 packages 以避免 Kiro 啟動時 timeout：
 
 ```bash
-# Install Lambda MCP server
+# 安裝 Lambda MCP server
 uvx awslabs.lambda-mcp-server@latest --help
 
-# Install IAM MCP server
+# 安裝 IAM MCP server
 uvx awslabs.iam-mcp-server@latest --help
 
-# Install Pricing MCP server
+# 安裝 Pricing MCP server
 uvx awslabs.aws-pricing-mcp-server@latest --help
 ```
 
-This will:
+這將會：
 
-- Download and cache the packages
-- Verify they work with your AWS credentials
-- Speed up Kiro startup
+- 下載並快取 packages
+- 驗證它們使用您的 AWS credentials 運作
+- 加速 Kiro 啟動
 
-**Then restart Kiro.**
+**然後重新啟動 Kiro。**
 
 ---
 
-### Solution 3: Fix Region Configuration
+### 解決方案 3：修正 Region Configuration
 
-Ensure consistent region configuration:
+確保一致的 region configuration：
 
-**Option A: Use us-east-1 (matches AWS CLI default)**
+**選項 A：使用 us-east-1（符合 AWS CLI 預設）**
 
-Edit `~/.kiro/settings/mcp.json`:
+編輯 `~/.kiro/settings/mcp.json`：
 
 ```json
 {
@@ -120,47 +120,47 @@ Edit `~/.kiro/settings/mcp.json`:
       "env": {
         "FASTMCP_LOG_LEVEL": "ERROR",
         "AWS_PROFILE": "kim-sso",
-        "AWS_REGION": "us-east-1"  // Changed from ap-northeast-1
+        "AWS_REGION": "us-east-1"  // 從 ap-northeast-1 變更
       }
     },
     "awslabs.iam-mcp-server": {
       "env": {
         "FASTMCP_LOG_LEVEL": "ERROR",
         "AWS_PROFILE": "kim-sso",
-        "AWS_REGION": "us-east-1"  // Changed from ap-northeast-1
+        "AWS_REGION": "us-east-1"  // 從 ap-northeast-1 變更
       }
     },
     "awslabs.aws-pricing-mcp-server": {
       "env": {
         "FASTMCP_LOG_LEVEL": "ERROR",
         "AWS_PROFILE": "kim-sso",
-        "AWS_REGION": "us-east-1"  // Changed from ap-northeast-1
+        "AWS_REGION": "us-east-1"  // 從 ap-northeast-1 變更
       }
     }
   }
 }
 ```
 
-**Option B: Keep ap-northeast-1 (if you need Tokyo region)**
+**選項 B：保留 ap-northeast-1（如需要東京 region）**
 
-Keep the config as is, but be aware:
+保持 config 不變，但請注意：
 
-- Lambda functions must exist in ap-northeast-1
-- IAM is global, so region doesn't matter much
-- Pricing API works globally
+- Lambda functions 必須存在於 ap-northeast-1
+- IAM 是全域的，所以 region 影響不大
+- Pricing API 是全域運作的
 
 ---
 
-### Solution 4: Increase Logging for Debugging
+### 解決方案 4：增加 Logging 以除錯
 
-Temporarily increase log level to see what's happening:
+暫時提高 log level 以查看發生了什麼：
 
 ```json
 {
   "mcpServers": {
     "awslabs.lambda-mcp-server": {
       "env": {
-        "FASTMCP_LOG_LEVEL": "DEBUG",  // Changed from ERROR
+        "FASTMCP_LOG_LEVEL": "DEBUG",  // 從 ERROR 變更
         "AWS_PROFILE": "kim-sso",
         "AWS_REGION": "ap-northeast-1"
       }
@@ -169,50 +169,50 @@ Temporarily increase log level to see what's happening:
 }
 ```
 
-Check Kiro logs to see detailed error messages.
+檢查 Kiro logs 以查看詳細錯誤訊息。
 
 ---
 
-### Solution 5: Test Servers Manually
+### 解決方案 5：手動測試 Servers
 
-Test each server independently to identify the issue:
+獨立測試每個 server 以識別問題：
 
 ```bash
-# Test Lambda server
+# 測試 Lambda server
 AWS_PROFILE=kim-sso AWS_REGION=ap-northeast-1 uvx awslabs.lambda-mcp-server@latest
 
-# Test IAM server
+# 測試 IAM server
 AWS_PROFILE=kim-sso AWS_REGION=ap-northeast-1 uvx awslabs.iam-mcp-server@latest --readonly
 
-# Test Pricing server
+# 測試 Pricing server
 AWS_PROFILE=kim-sso AWS_REGION=ap-northeast-1 uvx awslabs.aws-pricing-mcp-server@latest
 ```
 
-If any fail, you'll see the actual error message.
+如果任何失敗，您將看到實際的錯誤訊息。
 
 ---
 
-## 📋 Recommended Action Plan
+## 📋 建議的行動計畫
 
-### Step 1: Quick Fix (Immediate)
+### 步驟 1：快速修正（立即）
 
-Disable the problematic servers to unblock your work:
+停用有問題的 servers 以解除您工作的阻礙：
 
 ```bash
-# Edit global config
+# 編輯全域 config
 code ~/.kiro/settings/mcp.json
 
-# Set disabled: true for:
+# 設定 disabled: true 給：
 # - awslabs.lambda-mcp-server
-# - awslabs.iam-mcp-server  
+# - awslabs.iam-mcp-server
 # - awslabs.aws-pricing-mcp-server
 
-# Restart Kiro
+# 重新啟動 Kiro
 ```
 
-### Step 2: Investigate (When Time Permits)
+### 步驟 2：調查（有時間時）
 
-1. **Pre-install packages**:
+1. **預先安裝 packages**：
 
    ```bash
    uvx awslabs.lambda-mcp-server@latest --help
@@ -220,28 +220,28 @@ code ~/.kiro/settings/mcp.json
    uvx awslabs.aws-pricing-mcp-server@latest --help
    ```
 
-2. **Test manually** to see actual errors
+2. **手動測試** 以查看實際錯誤
 
-3. **Check if you actually need these servers**:
-   - Do you manage Lambda functions via Kiro?
-   - Do you need IAM information in Kiro?
-   - Do you need AWS pricing in Kiro?
+3. **檢查您是否真的需要這些 servers**：
+   - 您透過 Kiro 管理 Lambda functions 嗎？
+   - 您在 Kiro 中需要 IAM 資訊嗎？
+   - 您在 Kiro 中需要 AWS pricing 嗎？
 
-### Step 3: Re-enable (If Needed)
+### 步驟 3：重新啟用（如需要）
 
-Once packages are pre-installed and tested:
+一旦 packages 預先安裝並測試過：
 
-1. Set `disabled: false` in config
-2. Restart Kiro
-3. Verify connection
+1. 在 config 中設定 `disabled: false`
+2. 重新啟動 Kiro
+3. 驗證連線
 
 ---
 
-## 🎯 Minimal Working Configuration
+## 🎯 最小運作 Configuration
 
-If you don't need AWS resource management via MCP, here's a minimal config:
+如果您不需要透過 MCP 管理 AWS 資源，這裡有一個最小 config：
 
-**Global Config** (`~/.kiro/settings/mcp.json`):
+**全域 Config**（`~/.kiro/settings/mcp.json`）：
 
 ```json
 {
@@ -261,7 +261,7 @@ If you don't need AWS resource management via MCP, here's a minimal config:
 }
 ```
 
-**Project Config** (`.kiro/settings/mcp.json`):
+**專案 Config**（`.kiro/settings/mcp.json`）：
 
 ```json
 {
@@ -304,82 +304,82 @@ If you don't need AWS resource management via MCP, here's a minimal config:
 }
 ```
 
-This keeps:
+這保留了：
 
-- ✅ Documentation servers (aws-docs, aws-cdk)
-- ✅ Pricing analysis (aws-pricing)
-- ✅ Diagram creation (excalidraw)
-- ✅ Time utilities (time)
-- ✅ GitHub integration (github)
+- ✅ Documentation servers（aws-docs, aws-cdk）
+- ✅ Pricing 分析（aws-pricing）
+- ✅ 圖表建立（excalidraw）
+- ✅ 時間工具（time）
+- ✅ GitHub 整合（github）
 
-Removes:
+移除了：
 
-- ❌ Lambda management (rarely needed in IDE)
-- ❌ IAM management (rarely needed in IDE)
+- ❌ Lambda 管理（IDE 中很少需要）
+- ❌ IAM 管理（IDE 中很少需要）
 
 ---
 
-## 🔍 Debugging Commands
+## 🔍 除錯命令
 
-### Check Package Installation
+### 檢查 Package 安裝
 
 ```bash
-# List installed uvx packages
+# 列出已安裝的 uvx packages
 ls ~/.local/share/uv/tools/
 
-# Check if AWS MCP servers are installed
+# 檢查是否已安裝 AWS MCP servers
 ls ~/.local/share/uv/tools/ | grep awslabs
 ```
 
-### Test AWS Connectivity
+### 測試 AWS 連線性
 
 ```bash
-# Test AWS CLI works
+# 測試 AWS CLI 運作
 aws sts get-caller-identity --profile kim-sso
 
-# Test Lambda access
+# 測試 Lambda 存取
 aws lambda list-functions --profile kim-sso --region ap-northeast-1 --max-items 1
 
-# Test IAM access
+# 測試 IAM 存取
 aws iam list-users --profile kim-sso --max-items 1
 ```
 
-### Check Kiro Logs
+### 檢查 Kiro Logs
 
-Look for MCP-related errors in Kiro's output panel or logs.
+在 Kiro 的 output panel 或 logs 中尋找 MCP 相關錯誤。
 
 ---
 
-## 📊 Server Priority Assessment
+## 📊 Server 優先級評估
 
-| Server | Priority | Use Case | Recommendation |
+| Server | 優先級 | 使用情境 | 建議 |
 |--------|----------|----------|----------------|
-| `aws-docs` | 🔴 High | Documentation lookup | ✅ Keep enabled |
-| `aws-cdk` | 🔴 High | CDK development | ✅ Keep enabled |
-| `aws-pricing` | 🟡 Medium | Cost analysis | ✅ Keep enabled |
-| `excalidraw` | 🟡 Medium | Diagrams | ✅ Keep enabled |
-| `time` | 🟡 Medium | Time operations | ✅ Keep enabled |
-| `github` | 🟡 Medium | GitHub ops | ✅ Keep enabled |
-| `lambda` | 🟢 Low | Lambda management | ⚠️ Disable if timeout |
-| `iam` | 🟢 Low | IAM queries | ⚠️ Disable if timeout |
+| `aws-docs` | 🔴 高 | Documentation 查詢 | ✅ 保持啟用 |
+| `aws-cdk` | 🔴 高 | CDK 開發 | ✅ 保持啟用 |
+| `aws-pricing` | 🟡 中 | 成本分析 | ✅ 保持啟用 |
+| `excalidraw` | 🟡 中 | 圖表 | ✅ 保持啟用 |
+| `time` | 🟡 中 | 時間操作 | ✅ 保持啟用 |
+| `github` | 🟡 中 | GitHub 操作 | ✅ 保持啟用 |
+| `lambda` | 🟢 低 | Lambda 管理 | ⚠️ 如 timeout 請停用 |
+| `iam` | 🟢 低 | IAM 查詢 | ⚠️ 如 timeout 請停用 |
 
 ---
 
-## ✅ Quick Fix Script
+## ✅ 快速修正 Script
 
-Save this as `fix-aws-mcp-servers.sh`:
+儲存為 `fix-aws-mcp-servers.sh`：
 
 ```bash
 #!/bin/bash
 
-echo "🔧 Fixing AWS MCP Server Issues"
+echo "🔧 修正 AWS MCP Server 問題"
 echo ""
 
-# Backup
+# 備份
 cp ~/.kiro/settings/mcp.json ~/.kiro/settings/mcp.json.backup.$(date +%Y%m%d_%H%M%S)
-echo "✅ Backup created"
+echo "✅ 已建立備份"
 
-# Disable problematic servers
+# 停用有問題的 servers
 jq '.mcpServers["awslabs.lambda-mcp-server"].disabled = true |
     .mcpServers["awslabs.iam-mcp-server"].disabled = true |
     .mcpServers["awslabs.aws-pricing-mcp-server"].disabled = true' \
@@ -387,15 +387,15 @@ jq '.mcpServers["awslabs.lambda-mcp-server"].disabled = true |
 
 mv ~/.kiro/settings/mcp.json.tmp ~/.kiro/settings/mcp.json
 
-echo "✅ Disabled problematic AWS MCP servers"
+echo "✅ 已停用有問題的 AWS MCP servers"
 echo ""
-echo "📋 Next steps:"
-echo "1. Restart Kiro"
-echo "2. Verify other servers work"
-echo "3. Optionally pre-install packages and re-enable"
+echo "📋 後續步驟："
+echo "1. 重新啟動 Kiro"
+echo "2. 驗證其他 servers 運作正常"
+echo "3. 選擇性地預先安裝 packages 並重新啟用"
 ```
 
-Run with:
+執行方式：
 
 ```bash
 chmod +x fix-aws-mcp-servers.sh
@@ -404,25 +404,25 @@ chmod +x fix-aws-mcp-servers.sh
 
 ---
 
-## 🎯 Recommended Solution
+## 🎯 建議的解決方案
 
-**For immediate productivity**:
+**立即提升生產力**：
 
-1. Disable the three problematic servers
-2. Keep the working servers (aws-docs, aws-cdk, aws-pricing in project, github in global)
-3. Restart Kiro
+1. 停用三個有問題的 servers
+2. 保留運作中的 servers（專案中的 aws-docs, aws-cdk, aws-pricing，全域的 github）
+3. 重新啟動 Kiro
 
-**For long-term**:
+**長期**：
 
-1. Pre-install the packages when you have time
-2. Test them manually
-3. Re-enable only if you actually need them
+1. 有時間時預先安裝 packages
+2. 手動測試它們
+3. 只有在真正需要時才重新啟用
 
-Most developers don't need Lambda/IAM management directly in their IDE, so disabling them is perfectly fine.
+大多數開發者不需要直接在 IDE 中管理 Lambda/IAM，因此停用它們完全沒問題。
 
 ---
 
-**Related Documentation**:
+**相關 Documentation**：
 
 - [MCP Cleanup Report](./mcp-cleanup-report.md)
 - [MCP Server Analysis](./mcp-server-analysis.md)

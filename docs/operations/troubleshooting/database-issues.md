@@ -1,12 +1,12 @@
-# Database Troubleshooting Guide
+# 資料庫疑難排解指南
 
-## Overview
+## 概述
 
-This document provides comprehensive troubleshooting procedures for database-related issues in the Enterprise E-Commerce Platform. It covers query performance analysis, connection pool management, deadlock resolution, and advanced PostgreSQL diagnostics.
+本文件提供企業電商平台資料庫相關問題的全面疑難排解程序。涵蓋查詢效能分析、connection pool 管理、deadlock 解決和進階 PostgreSQL 診斷。
 
-**Target Audience**: Database administrators, DevOps engineers, backend developers  
-**Prerequisites**: Access to database, kubectl, psql client  
-**Related Documents**:
+**目標受眾**: 資料庫管理員、DevOps engineer、後端開發人員
+**先決條件**: 存取資料庫、kubectl、psql client
+**相關文件**:
 
 - [Database Maintenance](../maintenance/database-maintenance.md)
 - [Slow API Responses Runbook](../runbooks/slow-api-responses.md)
@@ -14,37 +14,37 @@ This document provides comprehensive troubleshooting procedures for database-rel
 
 ---
 
-## Table of Contents
+## 目錄
 
-1. [Query Performance Analysis](#query-performance-analysis)
-2. [Connection Pool Exhaustion](#connection-pool-exhaustion)
-3. [Deadlock Detection and Resolution](#deadlock-detection-and-resolution)
-4. [Lock Contention Analysis](#lock-contention-analysis)
-5. [Transaction Isolation Issues](#transaction-isolation-issues)
-6. [Replication Lag Troubleshooting](#replication-lag-troubleshooting)
-7. [Database Parameter Tuning](#database-parameter-tuning)
-8. [pg_stat_statements Analysis](#pg_stat_statements-analysis)
-9. [EXPLAIN ANALYZE Interpretation](#explain-analyze-interpretation)
+1. [查詢效能分析](#query-performance-analysis)
+2. [Connection Pool 耗盡](#connection-pool-exhaustion)
+3. [Deadlock 偵測與解決](#deadlock-detection-and-resolution)
+4. [Lock 競爭分析](#lock-contention-analysis)
+5. [Transaction Isolation 問題](#transaction-isolation-issues)
+6. [Replication Lag 疑難排解](#replication-lag-troubleshooting)
+7. [資料庫參數調校](#database-parameter-tuning)
+8. [pg_stat_statements 分析](#pg_stat_statements-analysis)
+9. [EXPLAIN ANALYZE 解讀](#explain-analyze-interpretation)
 
 ---
 
-## Query Performance Analysis
+## 查詢效能分析
 
-### Overview
+### 概述
 
-Query performance issues are the most common cause of application slowdowns. This section provides systematic procedures for identifying and resolving slow queries.
+查詢效能問題是應用程式變慢最常見的原因。本節提供識別和解決慢速查詢的系統化程序。
 
-### Symptoms
+### 症狀
 
-- API response times > 2 seconds
-- Database CPU usage > 70%
-- High I/O wait times
-- Application timeouts
-- User complaints about slow page loads
+- API 回應時間 > 2 秒
+- 資料庫 CPU 使用率 > 70%
+- 高 I/O 等待時間
+- 應用程式逾時
+- 使用者抱怨頁面載入緩慢
 
-### Diagnostic Procedures
+### 診斷程序
 
-#### Step 1: Identify Slow Queries
+#### 步驟 1: 識別慢速查詢
 
 **Using pg_stat_statements** (recommended):
 

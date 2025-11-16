@@ -1,44 +1,44 @@
-# Disaster Recovery Automation Scripts
+# Disaster Recovery 自動化腳本
 
-This directory contains scripts and tools for managing and testing the Enhanced Disaster Recovery Automation system.
+本目錄包含用於管理和測試增強 Disaster Recovery 自動化系統的腳本和工具。
 
-## Overview
+## 概述
 
-The DR automation system provides fully automated disaster recovery capabilities including:
+DR 自動化系統提供完全自動化的災難復原能力，包括：
 
-- **Automated Failover**: Automatic promotion of Aurora Global Database and DNS routing updates
-- **Chaos Engineering**: Automated testing and validation of DR readiness
-- **Monthly Testing**: Scheduled comprehensive DR tests
-- **Monitoring**: Real-time monitoring and alerting for DR components
+- **自動化容錯移轉**：自動提升 Aurora Global Database 和 DNS 路由更新
+- **混沌工程**：自動化測試和驗證 DR 準備狀態
+- **每月測試**：排程的完整 DR 測試
+- **監控**：DR 組件的即時監控和告警
 
-## Scripts
+## 腳本
 
 ### dr-automation-test.js
 
-Main testing and validation script for DR automation.
+DR 自動化的主要測試和驗證腳本。
 
-#### Installation
+#### 安裝
 
 ```bash
-# Install dependencies
+# 安裝依賴項
 cd infrastructure
 npm install
 
-# Make script executable
+# 使腳本可執行
 chmod +x scripts/dr-automation-test.js
 ```
 
-#### Usage
+#### 使用方式
 
-##### Test Failover Workflow
+##### 測試容錯移轉工作流程
 
 ```bash
-# Basic failover test
+# 基本容錯移轉測試
 node scripts/dr-automation-test.js test-failover \
   --project genai-demo \
   --environment production
 
-# Full failover test with all parameters
+# 完整容錯移轉測試，包含所有參數
 node scripts/dr-automation-test.js test-failover \
   --project genai-demo \
   --environment production \
@@ -52,89 +52,89 @@ node scripts/dr-automation-test.js test-failover \
   --notification-topic-arn arn:aws:sns:ap-northeast-1:123456789012:genai-demo-dr-alerts
 ```
 
-##### Run Chaos Engineering Tests
+##### 執行混沌工程測試
 
 ```bash
-# Monthly DR test
+# 每月 DR 測試
 node scripts/dr-automation-test.js test-chaos \
   --project genai-demo \
   --environment production \
   --test-type monthly_dr_test
 
-# Health check failure simulation
+# 健康檢查失敗模擬
 node scripts/dr-automation-test.js test-chaos \
   --project genai-demo \
   --environment production \
   --test-type health_check_failure
 
-# Network partition simulation
+# 網路分區模擬
 node scripts/dr-automation-test.js test-chaos \
   --project genai-demo \
   --environment production \
   --test-type network_partition
 ```
 
-##### Validate DR Readiness
+##### 驗證 DR 準備狀態
 
 ```bash
-# Comprehensive DR readiness validation
+# 全面的 DR 準備狀態驗證
 node scripts/dr-automation-test.js validate \
   --project genai-demo \
   --environment production
 ```
 
-##### Generate DR Report
+##### 產生 DR 報告
 
 ```bash
-# Generate comprehensive DR report
+# 產生全面的 DR 報告
 node scripts/dr-automation-test.js report \
   --project genai-demo \
   --environment production \
   --output dr-report-$(date +%Y%m%d).json
 ```
 
-#### NPM Scripts
+#### NPM 腳本
 
-The following NPM scripts are available for convenience:
+為方便起見，提供以下 NPM 腳本：
 
 ```bash
-# Test failover workflow
+# 測試容錯移轉工作流程
 npm run dr:test-failover -- --project genai-demo --environment production
 
-# Run chaos engineering tests
+# 執行混沌工程測試
 npm run dr:test-chaos -- --project genai-demo --environment production
 
-# Validate DR readiness
+# 驗證 DR 準備狀態
 npm run dr:validate -- --project genai-demo --environment production
 
-# Generate DR report
+# 產生 DR 報告
 npm run dr:report -- --project genai-demo --environment production --output report.json
 ```
 
-## Configuration
+## 配置
 
-### Environment Variables
+### 環境變數
 
-Set the following environment variables before running the scripts:
+在執行腳本前設定以下環境變數：
 
 ```bash
 export AWS_REGION=ap-northeast-1
-export AWS_PROFILE=your-aws-profile  # Optional
+export AWS_PROFILE=your-aws-profile  # 選用
 ```
 
-### AWS Credentials
+### AWS 憑證
 
-Ensure you have appropriate AWS credentials configured with the following permissions:
+確保已配置適當的 AWS 憑證，並具備以下權限：
 
-- **Step Functions**: Execute state machines
-- **Lambda**: Invoke functions
-- **CloudWatch**: Read metrics and alarms
-- **Route 53**: Read health checks
-- **RDS**: Read cluster information
-- **Systems Manager**: Read parameters
-- **SNS**: Publish messages (for notifications)
+- **Step Functions**：執行狀態機
+- **Lambda**：調用函式
+- **CloudWatch**：讀取指標和告警
+- **Route 53**：讀取健康檢查
+- **RDS**：讀取叢集資訊
+- **Systems Manager**：讀取參數
+- **SNS**：發布訊息（用於通知）
 
-### Required IAM Permissions
+### 所需 IAM 權限
 
 ```json
 {
@@ -163,33 +163,33 @@ Ensure you have appropriate AWS credentials configured with the following permis
 }
 ```
 
-## Test Types
+## 測試類型
 
-### Failover Tests
+### 容錯移轉測試
 
-- **Health Check Validation**: Verifies health check responsiveness
-- **Aurora Promotion**: Tests Aurora Global Database failover
-- **DNS Updates**: Validates DNS routing changes
-- **End-to-End**: Complete failover workflow
+- **健康檢查驗證**：驗證健康檢查回應性
+- **Aurora 提升**：測試 Aurora Global Database 容錯移轉
+- **DNS 更新**：驗證 DNS 路由變更
+- **端到端**：完整的容錯移轉工作流程
 
-### Chaos Engineering Tests
+### 混沌工程測試
 
-- **Monthly DR Test**: Comprehensive monthly validation
-- **Health Check Failure**: Simulates health check failures
-- **Network Partition**: Tests network connectivity issues
-- **Database Failure**: Simulates database unavailability
+- **每月 DR 測試**：全面的每月驗證
+- **健康檢查失敗**：模擬健康檢查失敗
+- **網路分區**：測試網路連接問題
+- **資料庫失敗**：模擬資料庫不可用性
 
-### Validation Tests
+### 驗證測試
 
-- **Health Checks**: Validates health check configuration
-- **Aurora Global Database**: Checks replication status
-- **DNS Configuration**: Verifies DNS setup
-- **Automation Components**: Tests Step Functions and Lambda
-- **Monitoring**: Validates CloudWatch and alerting
+- **健康檢查**：驗證健康檢查配置
+- **Aurora Global Database**：檢查複製狀態
+- **DNS 配置**：驗證 DNS 設定
+- **自動化組件**：測試 Step Functions 和 Lambda
+- **監控**：驗證 CloudWatch 和告警
 
-## Output Examples
+## 輸出範例
 
-### Successful Failover Test
+### 成功的容錯移轉測試
 
 ```
 🚀 Starting failover workflow test...
@@ -224,7 +224,7 @@ Ensure you have appropriate AWS credentials configured with the following permis
 }
 ```
 
-### DR Readiness Validation
+### DR 準備狀態驗證
 
 ```
 🔍 Validating DR readiness...
@@ -238,7 +238,7 @@ Ensure you have appropriate AWS credentials configured with the following permis
 📊 DR Readiness: 5/5 checks passed (100%)
 ```
 
-### DR Report
+### DR 報告
 
 ```
 📊 Generating DR report...
@@ -255,89 +255,89 @@ Checks Passed: 5/5
 1. DR system is fully operational. Consider running monthly chaos tests to maintain readiness.
 ```
 
-## Troubleshooting
+## 疑難排解
 
-### Common Issues
+### 常見問題
 
-#### 1. Configuration Not Found
+#### 1. 找不到配置
 
 ```
 ❌ Failed to load DR automation configuration: ParameterNotFound
 ```
 
-**Solution**: Ensure the DR automation stack has been deployed and the configuration parameter exists.
+**解決方案**：確保已部署 DR 自動化堆疊且配置參數存在。
 
 ```bash
-# Check if parameter exists
+# 檢查參數是否存在
 aws ssm get-parameter --name "/genai-demo/production/dr/automation-config"
 ```
 
-#### 2. Insufficient Permissions
+#### 2. 權限不足
 
 ```
 ❌ Failover workflow test failed: AccessDenied
 ```
 
-**Solution**: Verify your AWS credentials have the required permissions listed above.
+**解決方案**：驗證您的 AWS 憑證具備上述所需權限。
 
-#### 3. State Machine Not Found
+#### 3. 找不到狀態機
 
 ```
 ❌ Execution failed: StateMachineDoesNotExist
 ```
 
-**Solution**: Ensure the DR automation infrastructure has been deployed.
+**解決方案**：確保已部署 DR 自動化基礎設施。
 
 ```bash
-# List state machines
+# 列出狀態機
 aws stepfunctions list-state-machines --query 'stateMachines[?contains(name, `genai-demo-production-dr`)]'
 ```
 
-#### 4. Health Check Issues
+#### 4. 健康檢查問題
 
 ```
 ❌ Health check validation failed: HealthCheckNotFound
 ```
 
-**Solution**: Verify health checks exist and are properly configured.
+**解決方案**：驗證健康檢查存在且已正確配置。
 
 ```bash
-# List health checks
+# 列出健康檢查
 aws route53 list-health-checks --query 'HealthChecks[?contains(CallerReference, `genai-demo`)]'
 ```
 
-### Debug Mode
+### 除錯模式
 
-Enable debug logging by setting the LOG_LEVEL environment variable:
+透過設定 LOG_LEVEL 環境變數啟用除錯日誌：
 
 ```bash
 export LOG_LEVEL=DEBUG
 node scripts/dr-automation-test.js validate --project genai-demo --environment production
 ```
 
-### Manual Verification
+### 手動驗證
 
-You can manually verify DR components using AWS CLI:
+您可以使用 AWS CLI 手動驗證 DR 組件：
 
 ```bash
-# Check Step Functions state machines
+# 檢查 Step Functions 狀態機
 aws stepfunctions list-state-machines --query 'stateMachines[?contains(name, `genai-demo`)]'
 
-# Check Lambda functions
+# 檢查 Lambda 函式
 aws lambda list-functions --query 'Functions[?contains(FunctionName, `genai-demo-dr`)]'
 
-# Check CloudWatch dashboards
+# 檢查 CloudWatch 儀表板
 aws cloudwatch list-dashboards --query 'DashboardEntries[?contains(DashboardName, `genai-demo`)]'
 
-# Check EventBridge rules
+# 檢查 EventBridge 規則
 aws events list-rules --query 'Rules[?contains(Name, `genai-demo`)]'
 ```
 
-## Integration with CI/CD
+## 與 CI/CD 整合
 
 ### GitHub Actions
 
-Add DR testing to your GitHub Actions workflow:
+將 DR 測試新增到您的 GitHub Actions 工作流程：
 
 ```yaml
 - name: Test DR Automation
@@ -351,59 +351,59 @@ Add DR testing to your GitHub Actions workflow:
     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 ```
 
-### Scheduled Testing
+### 排程測試
 
-Set up scheduled DR testing using cron:
+使用 cron 設定排程的 DR 測試：
 
 ```bash
-# Add to crontab for monthly testing
+# 新增到 crontab 以進行每月測試
 0 2 1 * * cd /path/to/infrastructure && npm run dr:test-chaos -- --project genai-demo --environment production --test-type monthly_dr_test
 ```
 
-## Monitoring and Alerting
+## 監控和告警
 
-### CloudWatch Metrics
+### CloudWatch 指標
 
-The DR automation system publishes custom metrics:
+DR 自動化系統發布自訂指標：
 
-- `DR/FailoverSuccess` - Successful failover operations
-- `DR/FailoverFailure` - Failed failover operations
-- `DR/TestSuccess` - Successful chaos tests
-- `DR/TestFailure` - Failed chaos tests
-- `DR/ReadinessScore` - Overall DR readiness score (0-100)
+- `DR/FailoverSuccess` - 成功的容錯移轉操作
+- `DR/FailoverFailure` - 失敗的容錯移轉操作
+- `DR/TestSuccess` - 成功的混沌測試
+- `DR/TestFailure` - 失敗的混沌測試
+- `DR/ReadinessScore` - 整體 DR 準備狀態評分（0-100）
 
-### SNS Notifications
+### SNS 通知
 
-Configure SNS subscriptions for DR alerts:
+為 DR 告警配置 SNS 訂閱：
 
 ```bash
-# Subscribe to DR alerts
+# 訂閱 DR 告警
 aws sns subscribe \
   --topic-arn arn:aws:sns:ap-northeast-1:123456789012:genai-demo-production-dr-alerts \
   --protocol email \
   --notification-endpoint your-email@example.com
 ```
 
-## Best Practices
+## 最佳實踐
 
-1. **Regular Testing**: Run DR tests monthly or after significant infrastructure changes
-2. **Monitor Metrics**: Set up CloudWatch alarms for DR metrics
-3. **Document Changes**: Update DR documentation when making infrastructure changes
-4. **Validate Configuration**: Always validate DR readiness after deployments
-5. **Review Reports**: Regularly review DR reports and address recommendations
-6. **Test Scenarios**: Test different failure scenarios, not just happy path
-7. **Update Procedures**: Keep DR procedures updated with infrastructure changes
+1. **定期測試**：每月或在重大基礎設施變更後執行 DR 測試
+2. **監控指標**：為 DR 指標設定 CloudWatch 告警
+3. **文件變更**：在進行基礎設施變更時更新 DR 文件
+4. **驗證配置**：部署後始終驗證 DR 準備狀態
+5. **檢視報告**：定期檢視 DR 報告並處理建議
+6. **測試場景**：測試不同的失敗場景，不僅僅是正常路徑
+7. **更新程序**：隨著基礎設施變更保持 DR 程序更新
 
-## Support
+## 支援
 
-For issues or questions:
+如有問題或疑問：
 
-1. Check the troubleshooting section above
-2. Review CloudWatch logs for detailed error information
-3. Consult the main DR automation documentation
-4. Contact the DevOps team for assistance
+1. 檢查上述疑難排解部分
+2. 檢視 CloudWatch 日誌以取得詳細的錯誤資訊
+3. 參閱主要 DR 自動化文件
+4. 聯絡 DevOps 團隊尋求協助
 
-## Related Documentation
+## 相關文件
 
 - [DR Automation Implementation Guide](../docs/DR_AUTOMATION_IMPLEMENTATION.md)
 - [Infrastructure Troubleshooting Guide](../TROUBLESHOOTING.md)

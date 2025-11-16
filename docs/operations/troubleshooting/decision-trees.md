@@ -1,12 +1,12 @@
-# Troubleshooting Decision Trees
+# 疑難排解決策樹
 
-## Overview
+## 概述
 
-This document provides systematic decision trees for diagnosing and resolving common issues in the Enterprise E-Commerce Platform. Each decision tree follows an if-then-else diagnostic workflow with clear escalation criteria and procedures.
+本文件提供用於診斷和解決企業電商平台常見問題的系統化決策樹。每個決策樹遵循 if-then-else 診斷工作流程,具有明確的升級標準和程序。
 
-**Purpose**: Provide structured troubleshooting workflows for rapid issue resolution  
-**Audience**: DevOps engineers, SREs, on-call engineers, support teams  
-**Usage**: Follow the decision tree from top to bottom, answering each question to reach the appropriate resolution path
+**目的**: 提供結構化的疑難排解工作流程以快速解決問題
+**受眾**: DevOps engineer、SRE、on-call engineer、support team
+**使用方式**: 從上到下遵循決策樹,回答每個問題以達到適當的解決路徑
 
 ---
 

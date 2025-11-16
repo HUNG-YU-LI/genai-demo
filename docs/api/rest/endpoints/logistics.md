@@ -1,24 +1,24 @@
 # Logistics API
 
-## Overview
+## 概述
 
-The Logistics API provides endpoints for managing shipping, delivery tracking, and logistics operations. This includes shipment creation, tracking updates, and delivery management.
+Logistics API 提供了管理配送、物流追蹤和物流作業的端點。包括貨件建立、追蹤更新和配送管理。
 
 **Base Path**: `/api/v1/logistics`
 
-**Authentication**: Required for most endpoints
+**Authentication**: 大部分端點需要驗證
 
 ## Endpoints
 
 ### Create Shipment
 
-Create a new shipment for an order.
+為訂單建立新的貨件。
 
 **Endpoint**: `POST /api/v1/logistics/shipments`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: ADMIN or WAREHOUSE role required
+**Authorization**: 需要 ADMIN 或 WAREHOUSE 角色
 
 **Request Body**:
 
@@ -63,11 +63,11 @@ Create a new shipment for an order.
 
 **Validation Rules**:
 
-- `orderId`: Required, must exist
-- `shippingMethod`: Required, one of: STANDARD, EXPRESS, SAME_DAY
-- `carrier`: Required, one of: CHUNGHWA_POST, KERRY_TJ, SF_EXPRESS, BLACK_CAT
-- `shippingAddress`: Required with all fields
-- `items`: Required, at least one item
+- `orderId`: 必填，必須存在
+- `shippingMethod`: 必填，必須為以下其中之一：STANDARD, EXPRESS, SAME_DAY
+- `carrier`: 必填，必須為以下其中之一：CHUNGHWA_POST, KERRY_TJ, SF_EXPRESS, BLACK_CAT
+- `shippingAddress`: 必填，包含所有欄位
+- `items`: 必填，至少一個項目
 
 **Success Response** (201 Created):
 
@@ -106,10 +106,10 @@ Create a new shipment for an order.
 
 **Error Responses**:
 
-- `400 Bad Request`: Validation errors
-- `403 Forbidden`: Insufficient permissions
-- `404 Not Found`: Order not found
-- `409 Conflict`: Shipment already exists for order
+- `400 Bad Request`: 驗證錯誤
+- `403 Forbidden`: 權限不足
+- `404 Not Found`: 找不到訂單
+- `409 Conflict`: 訂單的貨件已存在
 
 **curl Example**:
 
@@ -129,13 +129,13 @@ curl -X POST https://api.ecommerce.com/api/v1/logistics/shipments \
 
 ### Get Shipment by ID
 
-Retrieve shipment details by ID.
+根據 ID 取得貨件詳細資料。
 
 **Endpoint**: `GET /api/v1/logistics/shipments/{shipmentId}`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: User can view own shipments, or ADMIN/WAREHOUSE role required
+**Authorization**: 使用者可查看自己的貨件，或需要 ADMIN/WAREHOUSE 角色
 
 **Path Parameters**:
 
@@ -188,8 +188,8 @@ Retrieve shipment details by ID.
 
 **Error Responses**:
 
-- `403 Forbidden`: Insufficient permissions
-- `404 Not Found`: Shipment not found
+- `403 Forbidden`: 權限不足
+- `404 Not Found`: 找不到貨件
 
 **curl Example**:
 
@@ -202,15 +202,15 @@ curl -X GET https://api.ecommerce.com/api/v1/logistics/shipments/ship-123 \
 
 ### Track Shipment
 
-Track a shipment by tracking number (public endpoint).
+根據追蹤號碼追蹤貨件（公開端點）。
 
 **Endpoint**: `GET /api/v1/logistics/track/{trackingNumber}`
 
-**Authentication**: Not required
+**Authentication**: 不需要
 
 **Path Parameters**:
 
-- `trackingNumber`: Tracking number
+- `trackingNumber`: 追蹤號碼
 
 **Success Response** (200 OK):
 
@@ -248,7 +248,7 @@ Track a shipment by tracking number (public endpoint).
 
 **Error Responses**:
 
-- `404 Not Found`: Tracking number not found
+- `404 Not Found`: 找不到追蹤號碼
 
 **curl Example**:
 
@@ -260,13 +260,13 @@ curl -X GET https://api.ecommerce.com/api/v1/logistics/track/TW1234567890
 
 ### Update Shipment Status
 
-Update shipment status and add tracking event.
+更新貨件狀態並新增追蹤事件。
 
 **Endpoint**: `POST /api/v1/logistics/shipments/{shipmentId}/events`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: ADMIN, WAREHOUSE, or CARRIER role required
+**Authorization**: 需要 ADMIN、WAREHOUSE 或 CARRIER 角色
 
 **Path Parameters**:
 
@@ -286,14 +286,14 @@ Update shipment status and add tracking event.
 
 **Status Values**:
 
-- `PENDING`: Shipment created, awaiting pickup
-- `PICKED_UP`: Picked up by carrier
-- `IN_TRANSIT`: In transit to destination
-- `OUT_FOR_DELIVERY`: Out for delivery
-- `DELIVERED`: Successfully delivered
-- `FAILED_DELIVERY`: Delivery attempt failed
-- `RETURNED`: Returned to sender
-- `CANCELLED`: Shipment cancelled
+- `PENDING`: 貨件已建立，等待取件
+- `PICKED_UP`: 物流業者已取件
+- `IN_TRANSIT`: 運送至目的地途中
+- `OUT_FOR_DELIVERY`: 配送中
+- `DELIVERED`: 成功送達
+- `FAILED_DELIVERY`: 配送嘗試失敗
+- `RETURNED`: 退回寄件人
+- `CANCELLED`: 貨件已取消
 
 **Success Response** (201 Created):
 
@@ -317,9 +317,9 @@ Update shipment status and add tracking event.
 
 **Error Responses**:
 
-- `400 Bad Request`: Invalid status transition
-- `403 Forbidden`: Insufficient permissions
-- `404 Not Found`: Shipment not found
+- `400 Bad Request`: 無效的狀態轉換
+- `403 Forbidden`: 權限不足
+- `404 Not Found`: 找不到貨件
 
 **curl Example**:
 
@@ -338,13 +338,13 @@ curl -X POST https://api.ecommerce.com/api/v1/logistics/shipments/ship-123/event
 
 ### Get Shipments by Order
 
-Get all shipments for an order.
+取得訂單的所有貨件。
 
 **Endpoint**: `GET /api/v1/logistics/orders/{orderId}/shipments`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: User can view own order shipments, or ADMIN role required
+**Authorization**: 使用者可查看自己的訂單貨件，或需要 ADMIN 角色
 
 **Path Parameters**:
 
@@ -380,23 +380,23 @@ curl -X GET https://api.ecommerce.com/api/v1/logistics/orders/order-456/shipment
 
 ### List Shipments
 
-List shipments with filters (admin).
+使用篩選條件列出貨件（管理員）。
 
 **Endpoint**: `GET /api/v1/logistics/shipments`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: ADMIN or WAREHOUSE role required
+**Authorization**: 需要 ADMIN 或 WAREHOUSE 角色
 
 **Query Parameters**:
 
-- `page`: Page number (default: 0)
-- `size`: Page size (default: 20)
-- `status`: Filter by status
-- `carrier`: Filter by carrier
-- `warehouseId`: Filter by warehouse
-- `startDate`: Filter from date (ISO 8601)
-- `endDate`: Filter to date (ISO 8601)
+- `page`: 頁碼（預設：0）
+- `size`: 每頁大小（預設：20）
+- `status`: 依狀態篩選
+- `carrier`: 依物流業者篩選
+- `warehouseId`: 依倉庫篩選
+- `startDate`: 從日期篩選（ISO 8601）
+- `endDate`: 至日期篩選（ISO 8601）
 
 **Success Response** (200 OK):
 
@@ -437,11 +437,11 @@ curl -X GET "https://api.ecommerce.com/api/v1/logistics/shipments?status=IN_TRAN
 
 ### Calculate Shipping Cost
 
-Calculate shipping cost for an order.
+計算訂單的運費。
 
 **Endpoint**: `POST /api/v1/logistics/calculate-shipping`
 
-**Authentication**: Required
+**Authentication**: 需要
 
 **Request Body**:
 
@@ -502,16 +502,16 @@ curl -X POST https://api.ecommerce.com/api/v1/logistics/calculate-shipping \
 
 ### Get Available Carriers
 
-Get available carriers for a destination.
+取得目的地可用的物流業者。
 
 **Endpoint**: `GET /api/v1/logistics/carriers`
 
-**Authentication**: Not required
+**Authentication**: 不需要
 
 **Query Parameters**:
 
-- `country`: Destination country code (e.g., TW)
-- `city`: Destination city (optional)
+- `country`: 目的地國家代碼（例如：TW）
+- `city`: 目的地城市（選填）
 
 **Success Response** (200 OK):
 
@@ -568,11 +568,11 @@ curl -X GET "https://api.ecommerce.com/api/v1/logistics/carriers?country=TW"
 
 ### Request Return Shipment
 
-Request a return shipment for an order.
+為訂單請求退貨貨件。
 
 **Endpoint**: `POST /api/v1/logistics/returns`
 
-**Authentication**: Required
+**Authentication**: 需要
 
 **Request Body**:
 
@@ -593,11 +593,11 @@ Request a return shipment for an order.
 
 **Reason Codes**:
 
-- `DEFECTIVE`: Product defective
-- `WRONG_ITEM`: Wrong item received
-- `NOT_AS_DESCRIBED`: Not as described
-- `CHANGED_MIND`: Customer changed mind
-- `OTHER`: Other reason
+- `DEFECTIVE`: 產品瑕疵
+- `WRONG_ITEM`: 收到錯誤商品
+- `NOT_AS_DESCRIBED`: 與描述不符
+- `CHANGED_MIND`: 顧客改變主意
+- `OTHER`: 其他原因
 
 **Success Response** (201 Created):
 
@@ -691,39 +691,39 @@ curl -X POST https://api.ecommerce.com/api/v1/logistics/returns \
 
 | Code | Name | Coverage | Tracking |
 |------|------|----------|----------|
-| CHUNGHWA_POST | Chunghwa Post | Taiwan nationwide | Yes |
-| BLACK_CAT | Black Cat Delivery | Taiwan nationwide | Yes |
-| KERRY_TJ | Kerry TJ Logistics | Taiwan nationwide | Yes |
-| SF_EXPRESS | SF Express | Taiwan + International | Yes |
+| CHUNGHWA_POST | Chunghwa Post | 台灣全境 | 是 |
+| BLACK_CAT | Black Cat Delivery | 台灣全境 | 是 |
+| KERRY_TJ | Kerry TJ Logistics | 台灣全境 | 是 |
+| SF_EXPRESS | SF Express | 台灣 + 國際 | 是 |
 
 ## Business Rules
 
-1. **Shipment Creation**: One shipment per order (or multiple for partial shipments)
-2. **Tracking Updates**: Real-time updates from carrier APIs
-3. **Delivery Confirmation**: Requires recipient signature or photo proof
-4. **Failed Delivery**: Maximum 3 delivery attempts
-5. **Return Window**: 7 days from delivery date
-6. **Shipping Cost**: Calculated based on weight, dimensions, and destination
-7. **Insurance**: Optional, based on declared value
+1. **Shipment Creation**: 每筆訂單一個貨件（或多個以進行部分配送）
+2. **Tracking Updates**: 從物流業者 API 即時更新
+3. **Delivery Confirmation**: 需要收件人簽名或照片證明
+4. **Failed Delivery**: 最多 3 次配送嘗試
+5. **Return Window**: 送達日期起 7 天內
+6. **Shipping Cost**: 根據重量、尺寸和目的地計算
+7. **Insurance**: 選填，基於申報價值
 
 ## Error Codes
 
 | Code | Description | Solution |
 |------|-------------|----------|
-| `LOGISTICS_SHIPMENT_NOT_FOUND` | Shipment not found | Check shipment ID |
-| `LOGISTICS_TRACKING_NOT_FOUND` | Tracking number not found | Check tracking number |
-| `LOGISTICS_INVALID_STATUS_TRANSITION` | Invalid status change | Check current status |
-| `LOGISTICS_CARRIER_NOT_AVAILABLE` | Carrier not available for destination | Choose different carrier |
-| `LOGISTICS_SHIPMENT_ALREADY_EXISTS` | Shipment already exists for order | Use existing shipment |
-| `LOGISTICS_RETURN_WINDOW_EXPIRED` | Return window has expired | Contact customer service |
+| `LOGISTICS_SHIPMENT_NOT_FOUND` | 找不到貨件 | 檢查貨件 ID |
+| `LOGISTICS_TRACKING_NOT_FOUND` | 找不到追蹤號碼 | 檢查追蹤號碼 |
+| `LOGISTICS_INVALID_STATUS_TRANSITION` | 無效的狀態變更 | 檢查目前狀態 |
+| `LOGISTICS_CARRIER_NOT_AVAILABLE` | 物流業者不支援該目的地 | 選擇其他物流業者 |
+| `LOGISTICS_SHIPMENT_ALREADY_EXISTS` | 訂單的貨件已存在 | 使用現有貨件 |
+| `LOGISTICS_RETURN_WINDOW_EXPIRED` | 退貨期限已過 | 聯絡客服 |
 
 ## Related Documentation
 
-- [Order API](orders.md) - Order management
-- [Customer API](customers.md) - Customer addresses
-- [Notification API](notifications.md) - Shipping notifications
+- [Order API](orders.md) - 訂單管理
+- [Customer API](customers.md) - 顧客地址
+- [Notification API](notifications.md) - 配送通知
 
 ---
 
-**Last Updated**: 2025-10-25  
+**Last Updated**: 2025-10-25
 **API Version**: v1

@@ -1,550 +1,550 @@
-# Documentation Maintenance Schedule
+# Documentation 維護時程
 
-## Overview
+## 總覽
 
-This document defines the recurring maintenance schedule for documentation reviews, updates, and quality checks. Regular maintenance ensures documentation stays accurate, relevant, and useful.
+本文件定義 documentation 審查、更新和品質檢查的定期維護時程。定期維護確保 documentation 保持準確、相關且有用。
 
-**Established**: 2024-11-09  
-**Next Review**: 2024-12-09
+**建立日期**: 2024-11-09
+**下次審閱**: 2024-12-09
 
 ---
 
-## Maintenance Cadence
+## 維護頻率
 
-### Daily Tasks (Automated)
+### 每日任務 (自動化)
 
-**Automated Checks** - Run via CI/CD
-- Link validation on every commit
-- Diagram generation on PlantUML changes
-- Template compliance checks
-- Broken reference detection
+**自動化檢查** - 透過 CI/CD 執行
+- 每次 commit 時驗證連結
+- PlantUML 變更時生成 diagram
+- Template 合規性檢查
+- 損壞參考偵測
 
-**Responsibility**: CI/CD Pipeline  
-**Escalation**: Slack #documentation-alerts
+**負責人**: CI/CD Pipeline
+**升級**: Slack #documentation-alerts
 
-### Weekly Tasks (Manual)
+### 每週任務 (人工)
 
-**Every Monday, 10:00 AM**
+**每週一, 10:00 AM**
 
-**Review Team Meeting** (30 minutes)
-- Review new documentation issues
-- Triage feedback from previous week
-- Assign urgent items
-- Update backlog priorities
+**審查團隊會議** (30 分鐘)
+- 審查新的 documentation issues
+- 分類上週的回饋
+- 分配緊急項目
+- 更新待辦清單優先順序
 
-**Attendees**:
+**出席人員**:
 - Documentation Lead
 - Technical Writer
 - Developer Liaison
 - Operations Liaison
 
-**Agenda Template**:
-1. Review metrics from previous week
-2. Triage new issues (10 min)
-3. Review in-progress items (10 min)
-4. Plan week's priorities (10 min)
+**議程範本**:
+1. 審查上週的指標
+2. 分類新 issues (10 分鐘)
+3. 審查進行中的項目 (10 分鐘)
+4. 規劃本週的優先事項 (10 分鐘)
 
-**Every Friday, 3:00 PM**
+**每週五, 3:00 PM**
 
-**Quality Check** (1 hour)
-- Run comprehensive validation scripts
-- Review documentation metrics
-- Check for outdated content
-- Update maintenance log
+**品質檢查** (1 小時)
+- 執行全面的驗證 scripts
+- 審查 documentation metrics
+- 檢查過時內容
+- 更新維護日誌
 
-**Responsibility**: Documentation Team  
-**Deliverable**: Weekly quality report
+**負責人**: Documentation Team
+**交付物**: 每週品質報告
 
-### Monthly Tasks
+### 每月任務
 
-**First Monday of Month, 2:00 PM**
+**每月第一個週一, 2:00 PM**
 
-**Comprehensive Documentation Review** (2 hours)
+**全面 Documentation 審查** (2 小時)
 
-**Attendees**:
+**出席人員**:
 - Documentation Team
-- Architecture Team Representative
-- Development Team Representative
-- Operations Team Representative
+- Architecture Team 代表
+- Development Team 代表
+- Operations Team 代表
 
-**Agenda**:
-1. Review previous month's metrics (15 min)
-2. Assess documentation health (30 min)
-3. Review and update backlog (30 min)
-4. Plan next month's priorities (30 min)
-5. Identify improvement opportunities (15 min)
+**議程**:
+1. 審查上月指標 (15 分鐘)
+2. 評估 documentation 健康度 (30 分鐘)
+3. 審查和更新待辦清單 (30 分鐘)
+4. 規劃下月優先事項 (30 分鐘)
+5. 識別改進機會 (15 分鐘)
 
-**Deliverables**:
-- Monthly metrics report
-- Updated backlog
-- Next month's priorities
-- Action items list
+**交付物**:
+- 每月指標報告
+- 更新的待辦清單
+- 下月優先事項
+- 行動項目清單
 
-**Second Tuesday of Month, 10:00 AM**
+**每月第二個週二, 10:00 AM**
 
-**Stakeholder Feedback Review** (1 hour)
+**Stakeholder 回饋審查** (1 小時)
 
-**Attendees**:
+**出席人員**:
 - Documentation Lead
 - Product Manager
-- Key Stakeholders (rotating)
+- 關鍵 Stakeholders (輪流)
 
-**Agenda**:
-1. Review feedback forms (20 min)
-2. Discuss common themes (20 min)
-3. Prioritize improvements (20 min)
+**議程**:
+1. 審查回饋表單 (20 分鐘)
+2. 討論共同主題 (20 分鐘)
+3. 排定改進優先順序 (20 分鐘)
 
-**Deliverables**:
-- Feedback summary
-- Prioritized improvement list
+**交付物**:
+- 回饋摘要
+- 優先排序的改進清單
 
-**Third Wednesday of Month, 3:00 PM**
+**每月第三個週三, 3:00 PM**
 
-**Content Freshness Review** (1.5 hours)
+**內容新鮮度審查** (1.5 小時)
 
-**Focus**: Identify and update outdated content
+**重點**: 識別並更新過時內容
 
-**Process**:
-1. Run automated staleness detection
-2. Review documents older than 90 days
-3. Verify technical accuracy
-4. Update or archive as needed
+**流程**:
+1. 執行自動化過時檢測
+2. 審查超過 90 天的文件
+3. 驗證技術準確性
+4. 視需要更新或封存
 
-**Responsibility**: Technical Writer + Domain Experts  
-**Deliverable**: Updated content list
+**負責人**: Technical Writer + Domain Experts
+**交付物**: 更新的內容清單
 
-**Last Friday of Month**
+**每月最後一個週五**
 
-**Metrics Collection & Reporting** (1 hour)
+**指標收集與報告** (1 小時)
 
-**Tasks**:
-- Collect all documentation metrics
-- Generate monthly report
-- Update dashboards
-- Share with stakeholders
+**任務**:
+- 收集所有 documentation metrics
+- 生成每月報告
+- 更新儀表板
+- 與 stakeholders 分享
 
-**Responsibility**: Documentation Lead  
-**Deliverable**: Monthly metrics report
+**負責人**: Documentation Lead
+**交付物**: 每月 metrics 報告
 
-### Quarterly Tasks
+### 每季任務
 
-**First Week of Quarter**
+**每季第一週**
 
-**Strategic Documentation Review** (Half Day)
+**策略性 Documentation 審查** (半天)
 
-**Attendees**:
+**出席人員**:
 - Documentation Team
 - Architecture Team
 - Development Leadership
 - Operations Leadership
 - Product Leadership
 
-**Agenda**:
-1. Review quarter's achievements (30 min)
-2. Assess documentation strategy (1 hour)
-3. Plan next quarter (1 hour)
-4. Update documentation roadmap (30 min)
+**議程**:
+1. 審查本季成就 (30 分鐘)
+2. 評估 documentation 策略 (1 小時)
+3. 規劃下一季 (1 小時)
+4. 更新 documentation roadmap (30 分鐘)
 
-**Deliverables**:
-- Quarterly review report
-- Updated documentation strategy
-- Next quarter's roadmap
-- Resource allocation plan
+**交付物**:
+- 季度審查報告
+- 更新的 documentation 策略
+- 下一季 roadmap
+- 資源分配計劃
 
-**Mid-Quarter**
+**季度中期**
 
-**Stakeholder Survey** (Ongoing for 2 weeks)
+**Stakeholder 調查** (持續 2 週)
 
-**Process**:
-1. Distribute satisfaction survey
-2. Collect responses
-3. Analyze results
-4. Present findings
-5. Plan improvements
+**流程**:
+1. 發送滿意度調查
+2. 收集回應
+3. 分析結果
+4. 呈現發現
+5. 規劃改進
 
-**Responsibility**: Documentation Lead  
-**Deliverable**: Survey results and action plan
+**負責人**: Documentation Lead
+**交付物**: 調查結果和行動計劃
 
-**End of Quarter**
+**季度末**
 
-**Documentation Audit** (Full Day)
+**Documentation 稽核** (全天)
 
-**Focus**: Comprehensive quality assessment
+**重點**: 全面品質評估
 
-**Tasks**:
-- Review all viewpoints and perspectives
-- Verify all diagrams are current
-- Check all ADRs are up-to-date
-- Validate all API documentation
-- Review all runbooks
-- Assess template compliance
+**任務**:
+- 審查所有 viewpoints 和 perspectives
+- 驗證所有 diagrams 是最新的
+- 檢查所有 ADRs 是最新的
+- 驗證所有 API documentation
+- 審查所有 runbooks
+- 評估 template 合規性
 
-**Responsibility**: Full Documentation Team  
-**Deliverable**: Audit report with findings
+**負責人**: 完整 Documentation Team
+**交付物**: 帶發現的稽核報告
 
-### Annual Tasks
+### 年度任務
 
-**January (Q1)**
+**一月 (Q1)**
 
-**Annual Documentation Planning** (Full Day Workshop)
+**年度 Documentation 規劃** (全天工作坊)
 
-**Attendees**:
+**出席人員**:
 - Documentation Team
-- All Stakeholders
+- 所有 Stakeholders
 - Leadership Team
 
-**Agenda**:
-1. Review previous year (1 hour)
-2. Assess current state (1 hour)
-3. Define annual goals (2 hours)
-4. Plan major initiatives (2 hours)
-5. Allocate resources (1 hour)
+**議程**:
+1. 審查上一年 (1 小時)
+2. 評估目前狀態 (1 小時)
+3. 定義年度目標 (2 小時)
+4. 規劃主要計劃 (2 小時)
+5. 分配資源 (1 小時)
 
-**Deliverables**:
-- Annual review report
-- Documentation goals for year
-- Major initiatives roadmap
-- Resource plan
+**交付物**:
+- 年度審查報告
+- 今年的 documentation 目標
+- 主要計劃 roadmap
+- 資源計劃
 
-**July (Q3)**
+**七月 (Q3)**
 
-**Mid-Year Review** (Half Day)
+**年中審查** (半天)
 
-**Focus**: Progress assessment and course correction
+**重點**: 進度評估和方向修正
 
-**Agenda**:
-1. Review H1 achievements (1 hour)
-2. Assess goal progress (1 hour)
-3. Adjust H2 plans (1 hour)
+**議程**:
+1. 審查 H1 成就 (1 小時)
+2. 評估目標進度 (1 小時)
+3. 調整 H2 計劃 (1 小時)
 
-**Deliverable**: Mid-year review report
+**交付物**: 年中審查報告
 
 ---
 
-## First Maintenance Review
+## 第一次維護審查
 
-### Scheduled Date
+### 排定日期
 
-**Date**: Monday, December 9, 2024  
-**Time**: 2:00 PM - 4:00 PM (2 hours)  
-**Location**: Conference Room A / Zoom Link: [TBD]
+**日期**: 2024 年 12 月 9 日，週一
+**時間**: 2:00 PM - 4:00 PM (2 小時)
+**地點**: Conference Room A / Zoom 連結: [待定]
 
-### Attendees
+### 出席人員
 
-**Required**:
+**必要**:
 - Documentation Lead
 - Technical Writer
 - Developer Liaison
 - Operations Liaison
-- Architecture Team Representative
+- Architecture Team 代表
 
-**Optional**:
+**選擇性**:
 - Product Manager
 - QA Lead
-- Additional Stakeholders
+- 額外 Stakeholders
 
-### Agenda
+### 議程
 
-**2:00 PM - 2:15 PM**: Welcome & Overview (15 min)
-- Review documentation launch
-- Discuss initial feedback
-- Set expectations for review
+**2:00 PM - 2:15 PM**: 歡迎與總覽 (15 分鐘)
+- 審查 documentation 啟動
+- 討論初步回饋
+- 設定審查期望
 
-**2:15 PM - 2:45 PM**: Metrics Review (30 min)
-- Documentation usage statistics
-- Quality metrics
-- Feedback summary
-- Issue resolution status
+**2:15 PM - 2:45 PM**: 指標審查 (30 分鐘)
+- Documentation 使用統計
+- 品質指標
+- 回饋摘要
+- Issue 解決狀態
 
-**2:45 PM - 3:15 PM**: Content Assessment (30 min)
-- Review completed documentation
-- Identify gaps and issues
-- Assess documentation quality
-- Discuss improvement areas
+**2:45 PM - 3:15 PM**: 內容評估 (30 分鐘)
+- 審查已完成的 documentation
+- 識別缺口和 issues
+- 評估 documentation 品質
+- 討論改進領域
 
-**3:15 PM - 3:45 PM**: Backlog Review & Prioritization (30 min)
-- Review current backlog
-- Prioritize items for next month
-- Assign responsibilities
-- Set deadlines
+**3:15 PM - 3:45 PM**: 待辦清單審查與優先排序 (30 分鐘)
+- 審查目前待辦清單
+- 優先排序下月項目
+- 分配責任
+- 設定截止日期
 
-**3:45 PM - 4:00 PM**: Action Items & Next Steps (15 min)
-- Summarize action items
-- Confirm assignments
-- Schedule next review
-- Closing remarks
+**3:45 PM - 4:00 PM**: 行動項目與後續步驟 (15 分鐘)
+- 總結行動項目
+- 確認分配
+- 安排下次審查
+- 結束語
 
-### Pre-Meeting Preparation
+### 會前準備
 
-**By December 6, 2024**:
-- [ ] Collect and analyze metrics
-- [ ] Compile feedback summary
-- [ ] Review backlog items
-- [ ] Prepare presentation materials
-- [ ] Send calendar invites
-- [ ] Share pre-read materials
+**截至 2024 年 12 月 6 日**:
+- [ ] 收集並分析指標
+- [ ] 編纂回饋摘要
+- [ ] 審查待辦清單項目
+- [ ] 準備簡報資料
+- [ ] 發送日曆邀請
+- [ ] 分享預讀資料
 
-### Deliverables
+### 交付物
 
-- Meeting minutes
-- Action items list with owners
-- Updated backlog priorities
-- Next month's focus areas
-- Metrics report
+- 會議記錄
+- 包含負責人的行動項目清單
+- 更新的待辦清單優先順序
+- 下月的重點領域
+- Metrics 報告
 
-### Follow-Up
+### 後續追蹤
 
-**Within 3 Days**:
-- Distribute meeting minutes
-- Update backlog in tracking system
-- Communicate action items
-- Schedule follow-up meetings
-
----
-
-## Recurring Calendar Events
-
-### Created Events
-
-The following recurring calendar events have been created:
-
-1. **Weekly Review Team Meeting**
-   - Every Monday, 10:00 AM - 10:30 AM
-   - Attendees: Documentation Team
-   - Location: Conference Room B / Zoom
-
-2. **Weekly Quality Check**
-   - Every Friday, 3:00 PM - 4:00 PM
-   - Attendees: Documentation Team
-   - Location: Documentation Team Area
-
-3. **Monthly Comprehensive Review**
-   - First Monday of Month, 2:00 PM - 4:00 PM
-   - Attendees: Documentation + Representatives
-   - Location: Conference Room A / Zoom
-
-4. **Monthly Stakeholder Feedback Review**
-   - Second Tuesday of Month, 10:00 AM - 11:00 AM
-   - Attendees: Documentation Lead + Stakeholders
-   - Location: Conference Room B / Zoom
-
-5. **Monthly Content Freshness Review**
-   - Third Wednesday of Month, 3:00 PM - 4:30 PM
-   - Attendees: Technical Writer + Domain Experts
-   - Location: Documentation Team Area
-
-6. **Monthly Metrics Collection**
-   - Last Friday of Month, 2:00 PM - 3:00 PM
-   - Attendees: Documentation Lead
-   - Location: Documentation Team Area
-
-7. **Quarterly Strategic Review**
-   - First Week of Quarter (Specific date TBD)
-   - Attendees: All Leadership + Documentation Team
-   - Location: Large Conference Room / Zoom
-
-### Calendar Management
-
-**Calendar Owner**: Documentation Lead  
-**Backup**: Technical Writer
-
-**To Join**:
-- Check your calendar for invites
-- Accept recurring events
-- Set reminders as needed
-- Add to your working calendar
-
-**To Modify**:
-- Contact Documentation Lead
-- Provide at least 1 week notice
-- Suggest alternative times
-- Confirm with all attendees
+**3 天內**:
+- 發送會議記錄
+- 在追蹤系統中更新待辦清單
+- 溝通行動項目
+- 安排後續會議
 
 ---
 
-## Maintenance Responsibilities
+## 定期行事曆活動
+
+### 已建立活動
+
+已建立以下定期行事曆活動:
+
+1. **每週審查團隊會議**
+   - 每週一, 10:00 AM - 10:30 AM
+   - 出席者: Documentation Team
+   - 地點: Conference Room B / Zoom
+
+2. **每週品質檢查**
+   - 每週五, 3:00 PM - 4:00 PM
+   - 出席者: Documentation Team
+   - 地點: Documentation Team Area
+
+3. **每月全面審查**
+   - 每月第一個週一, 2:00 PM - 4:00 PM
+   - 出席者: Documentation + 代表
+   - 地點: Conference Room A / Zoom
+
+4. **每月 Stakeholder 回饋審查**
+   - 每月第二個週二, 10:00 AM - 11:00 AM
+   - 出席者: Documentation Lead + Stakeholders
+   - 地點: Conference Room B / Zoom
+
+5. **每月內容新鮮度審查**
+   - 每月第三個週三, 3:00 PM - 4:30 PM
+   - 出席者: Technical Writer + Domain Experts
+   - 地點: Documentation Team Area
+
+6. **每月指標收集**
+   - 每月最後一個週五, 2:00 PM - 3:00 PM
+   - 出席者: Documentation Lead
+   - 地點: Documentation Team Area
+
+7. **每季策略審查**
+   - 每季第一週 (具體日期待定)
+   - 出席者: 所有 Leadership + Documentation Team
+   - 地點: Large Conference Room / Zoom
+
+### 行事曆管理
+
+**行事曆負責人**: Documentation Lead
+**備份**: Technical Writer
+
+**如何參加**:
+- 檢查您的行事曆邀請
+- 接受定期活動
+- 視需要設定提醒
+- 加入您的工作行事曆
+
+**如何修改**:
+- 聯絡 Documentation Lead
+- 提供至少 1 週通知
+- 建議替代時間
+- 與所有出席者確認
+
+---
+
+## 維護責任
 
 ### Documentation Lead
 
-**Weekly**:
-- Lead review team meetings
-- Monitor documentation metrics
-- Triage new issues
-- Coordinate with stakeholders
+**每週**:
+- 主持審查團隊會議
+- 監控 documentation metrics
+- 分類新 issues
+- 與 stakeholders 協調
 
-**Monthly**:
-- Conduct comprehensive reviews
-- Generate metrics reports
-- Update documentation strategy
-- Present to stakeholders
+**每月**:
+- 進行全面審查
+- 生成 metrics 報告
+- 更新 documentation 策略
+- 向 stakeholders 簡報
 
-**Quarterly**:
-- Lead strategic reviews
-- Conduct stakeholder surveys
-- Plan next quarter
-- Update roadmap
+**每季**:
+- 主持策略審查
+- 進行 stakeholder 調查
+- 規劃下一季
+- 更新 roadmap
 
 ### Technical Writer
 
-**Daily**:
-- Review and respond to feedback
-- Update documentation as needed
-- Monitor quality checks
+**每日**:
+- 審查並回應回饋
+- 視需要更新 documentation
+- 監控品質檢查
 
-**Weekly**:
-- Participate in team meetings
-- Conduct quality checks
-- Update content
+**每週**:
+- 參加團隊會議
+- 進行品質檢查
+- 更新內容
 
-**Monthly**:
-- Lead content freshness reviews
-- Update outdated content
-- Improve documentation quality
+**每月**:
+- 主持內容新鮮度審查
+- 更新過時內容
+- 改進 documentation 品質
 
 ### Developer Liaison
 
-**Weekly**:
-- Review technical accuracy
-- Provide developer perspective
-- Update technical content
+**每週**:
+- 審查技術準確性
+- 提供 developer 觀點
+- 更新技術內容
 
-**Monthly**:
-- Validate technical documentation
-- Review API documentation
-- Update code examples
+**每月**:
+- 驗證技術 documentation
+- 審查 API documentation
+- 更新程式碼範例
 
 ### Operations Liaison
 
-**Weekly**:
-- Review operational content
-- Update runbooks as needed
-- Validate procedures
+**每週**:
+- 審查維運內容
+- 視需要更新 runbooks
+- 驗證程序
 
-**Monthly**:
-- Review operational documentation
-- Update deployment guides
-- Validate troubleshooting guides
+**每月**:
+- 審查維運 documentation
+- 更新部署指南
+- 驗證故障排除指南
 
 ---
 
-## Escalation Process
+## 升級流程
 
-### Issue Severity Levels
+### Issue 嚴重性等級
 
 **Critical (P0)**:
-- Incorrect information causing production issues
-- Security vulnerabilities in documentation
-- Broken critical documentation links
+- 導致 production issues 的不正確資訊
+- Documentation 中的安全漏洞
+- 損壞的關鍵 documentation 連結
 
 **High (P1)**:
-- Significant gaps in documentation
-- Outdated information affecting operations
-- Major usability issues
+- Documentation 中的重大缺口
+- 影響維運的過時資訊
+- 主要可用性問題
 
 **Medium (P2)**:
-- Minor inaccuracies
-- Formatting issues
-- Enhancement requests
+- 小的不準確性
+- 格式問題
+- 增強請求
 
 **Low (P3)**:
-- Typos and grammar
-- Style improvements
-- Nice-to-have additions
+- 拼字和文法
+- 風格改進
+- 錦上添花的增補
 
-### Escalation Path
+### 升級路徑
 
 **P0 - Critical**:
-1. Immediate notification to Documentation Lead
-2. Fix within 4 hours
-3. Post-mortem within 24 hours
+1. 立即通知 Documentation Lead
+2. 4 小時內修復
+3. 24 小時內進行事後檢討
 
 **P1 - High**:
-1. Notification to Documentation Lead
-2. Fix within 2 business days
-3. Review in next weekly meeting
+1. 通知 Documentation Lead
+2. 2 個工作日內修復
+3. 在下次每週會議中審查
 
 **P2 - Medium**:
-1. Add to backlog
-2. Prioritize in monthly review
-3. Fix within 2 weeks
+1. 加入待辦清單
+2. 在每月審查中排定優先順序
+3. 2 週內修復
 
 **P3 - Low**:
-1. Add to backlog
-2. Address as capacity allows
-3. Review quarterly
+1. 加入待辦清單
+2. 視容量處理
+3. 每季審查
 
 ---
 
-## Contact Information
+## 聯絡資訊
 
 ### Documentation Team
 
 **Documentation Lead**:
-- Name: [TBD]
+- 姓名: [待定]
 - Email: doc-lead@company.com
 - Slack: @doc-lead
 
 **Technical Writer**:
-- Name: [TBD]
+- 姓名: [待定]
 - Email: tech-writer@company.com
 - Slack: @tech-writer
 
 **Developer Liaison**:
-- Name: [TBD]
+- 姓名: [待定]
 - Email: dev-liaison@company.com
 - Slack: @dev-liaison
 
 **Operations Liaison**:
-- Name: [TBD]
+- 姓名: [待定]
 - Email: ops-liaison@company.com
 - Slack: @ops-liaison
 
-### Support Channels
+### 支援管道
 
 - **Slack**: #documentation
 - **Email**: documentation-team@company.com
-- **Office Hours**: Tuesday & Thursday, 2-3 PM
-- **Emergency**: Contact Documentation Lead directly
+- **辦公時間**: 週二和週四，下午 2-3 點
+- **緊急**: 直接聯絡 Documentation Lead
 
 ---
 
-## Appendix
+## 附錄
 
-### Maintenance Checklist Templates
+### 維護檢查清單範本
 
-#### Weekly Quality Check Checklist
+#### 每週品質檢查清單
 
-- [ ] Run link validation script
-- [ ] Check diagram generation
-- [ ] Review new issues
-- [ ] Update metrics dashboard
-- [ ] Check for broken references
-- [ ] Review feedback forms
-- [ ] Update maintenance log
+- [ ] 執行連結驗證 script
+- [ ] 檢查 diagram 生成
+- [ ] 審查新 issues
+- [ ] 更新 metrics 儀表板
+- [ ] 檢查損壞的參考
+- [ ] 審查回饋表單
+- [ ] 更新維護日誌
 
-#### Monthly Review Checklist
+#### 每月審查檢查清單
 
-- [ ] Collect monthly metrics
-- [ ] Review all feedback
-- [ ] Assess documentation health
-- [ ] Update backlog priorities
-- [ ] Review outdated content
-- [ ] Generate monthly report
-- [ ] Plan next month's work
+- [ ] 收集每月 metrics
+- [ ] 審查所有回饋
+- [ ] 評估 documentation 健康度
+- [ ] 更新待辦清單優先順序
+- [ ] 審查過時內容
+- [ ] 生成每月報告
+- [ ] 規劃下月工作
 
-#### Quarterly Audit Checklist
+#### 每季稽核檢查清單
 
-- [ ] Review all viewpoints
-- [ ] Review all perspectives
-- [ ] Validate all diagrams
-- [ ] Check all ADRs
-- [ ] Review all API docs
-- [ ] Validate all runbooks
-- [ ] Assess template compliance
-- [ ] Generate audit report
+- [ ] 審查所有 viewpoints
+- [ ] 審查所有 perspectives
+- [ ] 驗證所有 diagrams
+- [ ] 檢查所有 ADRs
+- [ ] 審查所有 API docs
+- [ ] 驗證所有 runbooks
+- [ ] 評估 template 合規性
+- [ ] 生成稽核報告
 
 ---
 
-*This schedule is reviewed and updated quarterly. Last review: 2024-11-09*
+*此時程每季審查和更新。最後審查: 2024-11-09*
 
-**Questions?** Contact the Documentation Team via #documentation or documentation-team@company.com
+**問題？** 透過 #documentation 或 documentation-team@company.com 聯絡 Documentation Team

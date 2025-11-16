@@ -2,26 +2,26 @@
 
 ## Symptoms
 
-- "Connection refused" errors in logs
-- "Too many connections" errors
-- Timeout errors when accessing database
-- Application unable to start
+- Logs 中出現 "Connection refused" 錯誤
+- "Too many connections" 錯誤
+- 存取 database 時發生 timeout 錯誤
+- Application 無法啟動
 
 ## Impact
 
-- **Severity**: P0 - Critical
-- **Affected Users**: All users
-- **Business Impact**: Service unavailable, no data access
+- **Severity**：P0 - Critical
+- **Affected Users**：所有使用者
+- **Business Impact**：服務無法使用，無法存取資料
 
 ## Detection
 
-- **Alert**: `HighDatabaseConnectionUsage` or `DatabaseConnectionFailed`
-- **Monitoring Dashboard**: Database Dashboard > Connections
-- **Log Patterns**: `SQLException`, `Connection timeout`, `Too many connections`
+- **Alert**：`HighDatabaseConnectionUsage` 或 `DatabaseConnectionFailed`
+- **Monitoring Dashboard**：Database Dashboard > Connections
+- **Log Patterns**：`SQLException`、`Connection timeout`、`Too many connections`
 
 ## Diagnosis
 
-### Step 1: Check Connection Pool Status
+### 步驟 1：檢查 Connection Pool 狀態
 
 ```bash
 # Check application logs
@@ -31,7 +31,7 @@ kubectl logs deployment/ecommerce-backend -n production | grep -i "connection"
 curl http://localhost:8080/actuator/metrics/hikaricp.connections.active
 ```
 
-### Step 2: Check Database Status
+### 步驟 2：檢查 Database 狀態
 
 ```bash
 # Check RDS instance status
@@ -50,44 +50,44 @@ kubectl exec -it ${POD_NAME} -n production -- \
   -c "SHOW max_connections;"
 ```
 
-### Step 3: Identify Connection Leaks
+### 步驟 3：識別 Connection Leaks
 
 ```bash
 # Check long-running connections
 kubectl exec -it ${POD_NAME} -n production -- \
   psql -h ${DB_HOST} -U ${DB_USER} -d ${DB_NAME} \
-  -c "SELECT pid, usename, application_name, state, query_start, query 
-      FROM pg_stat_activity 
-      WHERE state != 'idle' 
+  -c "SELECT pid, usename, application_name, state, query_start, query
+      FROM pg_stat_activity
+      WHERE state != 'idle'
       ORDER BY query_start;"
 ```
 
 ## Resolution
 
-### Immediate Actions
+### 立即行動
 
-1. **Kill idle connections** (if safe):
+1. **終止閒置的 connections**（如果安全）：
 
 ```bash
 kubectl exec -it ${POD_NAME} -n production -- \
   psql -h ${DB_HOST} -U ${DB_USER} -d ${DB_NAME} \
-  -c "SELECT pg_terminate_backend(pid) 
-      FROM pg_stat_activity 
-      WHERE state = 'idle' 
+  -c "SELECT pg_terminate_backend(pid)
+      FROM pg_stat_activity
+      WHERE state = 'idle'
       AND query_start < NOW() - INTERVAL '10 minutes';"
 ```
 
-1. **Restart application pods**:
+1. **重啟 application pods**：
 
 ```bash
 kubectl rollout restart deployment/ecommerce-backend -n production
 ```
 
-### Root Cause Fixes
+### 根本原因修復
 
-#### If connection pool exhausted
+#### 如果 connection pool 耗盡
 
-1. Increase connection pool size:
+1. 增加 connection pool 大小：
 
 ```yaml
 spring:
@@ -97,14 +97,14 @@ spring:
       minimum-idle: 15       # Increase from 10
 ```
 
-1. Fix connection leaks in code:
-   - Ensure proper try-with-resources usage
-   - Close connections in finally blocks
-   - Use @Transactional properly
+1. 修復程式碼中的 connection leaks：
+   - 確保正確使用 try-with-resources
+   - 在 finally blocks 中關閉 connections
+   - 正確使用 @Transactional
 
-#### If database max_connections reached
+#### 如果達到 database max_connections
 
-1. Increase RDS max_connections:
+1. 增加 RDS max_connections：
 
 ```bash
 aws rds modify-db-parameter-group \
@@ -112,40 +112,40 @@ aws rds modify-db-parameter-group \
   --parameters "ParameterName=max_connections,ParameterValue=200,ApplyMethod=immediate"
 ```
 
-1. Restart RDS instance if needed
+1. 必要時重啟 RDS instance
 
 ## Verification
 
-- [ ] Application can connect to database
-- [ ] Connection pool metrics normal
-- [ ] No connection errors in logs
-- [ ] API endpoints responding
-- [ ] Database queries executing successfully
+- [ ] Application 可以連線至 database
+- [ ] Connection pool metrics 正常
+- [ ] Logs 中無 connection 錯誤
+- [ ] API endpoints 正常回應
+- [ ] Database queries 成功執行
 
 ## Prevention
 
-1. **Proper connection management**:
-   - Use connection pooling
-   - Set appropriate timeouts
-   - Implement connection validation
+1. **適當的 connection 管理**：
+   - 使用 connection pooling
+   - 設定適當的 timeouts
+   - 實作 connection validation
 
-2. **Monitoring**:
-   - Monitor connection pool usage
-   - Alert on high connection count
-   - Track connection leaks
+2. **Monitoring**：
+   - 監控 connection pool 使用率
+   - 在 connection 數量高時發出 alert
+   - 追蹤 connection leaks
 
-3. **Code review**:
-   - Review database access code
-   - Ensure proper resource cleanup
-   - Use try-with-resources
+3. **Code review**：
+   - 檢視 database 存取程式碼
+   - 確保適當的資源清理
+   - 使用 try-with-resources
 
 ## Escalation
 
-- **L1 Support**: DevOps team
-- **L2 Support**: Backend engineering team
-- **Database DBA**: For RDS-specific issues
+- **L1 Support**：DevOps team
+- **L2 Support**：Backend engineering team
+- **Database DBA**：針對 RDS 特定問題
 
-## Related
+## 相關
 
 - [Slow Database Queries](slow-queries.md)
 - [High Memory Usage](high-memory-usage.md)
@@ -153,5 +153,5 @@ aws rds modify-db-parameter-group \
 
 ---
 
-**Last Updated**: 2025-10-25  
-**Owner**: DevOps Team
+**Last Updated**：2025-10-25
+**Owner**：DevOps Team

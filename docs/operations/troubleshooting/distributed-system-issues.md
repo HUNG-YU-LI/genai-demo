@@ -1,10 +1,10 @@
-# Distributed System Troubleshooting Guide
+# 分散式系統疑難排解指南
 
-## Overview
+## 概述
 
-This guide provides troubleshooting procedures for distributed system issues in the e-commerce platform, including event-driven architecture with Apache Kafka, distributed tracing with AWS X-Ray, saga patterns, and cross-service transactions.
+本指南提供電商平台分散式系統問題的疑難排解程序,包括使用 Apache Kafka 的 event-driven architecture、使用 AWS X-Ray 的分散式追蹤、saga pattern 和跨服務 transaction。
 
-**Technology Stack**:
+**技術堆疊**:
 
 - **Messaging**: Apache Kafka (Amazon MSK)
 - **Container Orchestration**: Amazon EKS
@@ -13,35 +13,35 @@ This guide provides troubleshooting procedures for distributed system issues in 
 - **Database**: PostgreSQL (Amazon RDS)
 - **Cache**: Redis (Amazon ElastiCache)
 
-**Last Updated**: 2025-10-25  
-**Severity Levels**: Critical, High, Medium, Low
+**Last Updated**: 2025-10-25
+**嚴重性等級**: Critical、High、Medium、Low
 
 ---
 
-## Table of Contents
+## 目錄
 
-1. [Event-Driven Architecture Issues](#event-driven-architecture-issues)
-2. [Distributed Tracing Analysis](#distributed-tracing-analysis)
-3. [Saga Pattern Failures](#saga-pattern-failures)
-4. [Eventual Consistency Issues](#eventual-consistency-issues)
-5. [Cross-Service Transaction Failures](#cross-service-transaction-failures)
-6. [Circuit Breaker Issues](#circuit-breaker-issues)
-7. [Rate Limiting and Throttling](#rate-limiting-and-throttling)
+1. [Event-Driven Architecture 問題](#event-driven-architecture-issues)
+2. [Distributed Tracing 分析](#distributed-tracing-analysis)
+3. [Saga Pattern 失敗](#saga-pattern-failures)
+4. [Eventual Consistency 問題](#eventual-consistency-issues)
+5. [跨服務 Transaction 失敗](#cross-service-transaction-failures)
+6. [Circuit Breaker 問題](#circuit-breaker-issues)
+7. [Rate Limiting 與 Throttling](#rate-limiting-and-throttling)
 
 ---
 
-## Event-Driven Architecture Issues
+## Event-Driven Architecture 問題
 
 ### Kafka Consumer Lag
 
-#### Symptoms
+#### 症狀
 
-- Events are not being processed in real-time
-- Consumer lag metrics increasing in CloudWatch
-- Delayed order confirmations or inventory updates
-- Dashboard shows high consumer lag values
+- Event 未即時處理
+- CloudWatch 中的 consumer lag metric 增加
+- 訂單確認或庫存更新延遲
+- Dashboard 顯示高 consumer lag 值
 
-#### Detection
+#### 偵測
 
 ```bash
 # Check consumer lag using Kafka tools

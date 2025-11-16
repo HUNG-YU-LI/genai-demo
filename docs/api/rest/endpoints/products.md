@@ -1,21 +1,21 @@
 # Product API
 
-## Overview
+## 概述
 
-The Product API provides endpoints for managing the product catalog, including product information, inventory, pricing, and search functionality.
+Product API 提供管理產品目錄的 endpoints，包括產品資訊、庫存、定價和搜尋功能。
 
 **Base Path**: `/api/v1/products`
 
 **Authentication**:
 
-- Read operations: Not required (public)
-- Write operations: ADMIN or SELLER role required
+- 讀取操作: 不需要（公開）
+- 寫入操作: 需要 ADMIN 或 SELLER 角色
 
 ## Endpoints
 
-### List Products
+### 列出產品
 
-Retrieve a paginated list of products with filtering and search.
+檢索具有篩選和搜尋功能的分頁產品清單。
 
 **Endpoint**: `GET /api/v1/products`
 
@@ -23,18 +23,18 @@ Retrieve a paginated list of products with filtering and search.
 
 **Query Parameters**:
 
-- `page`: Page number (0-based, default: 0)
-- `size`: Page size (default: 20, max: 100)
-- `sort`: Sort field and direction (default: `createdAt,desc`)
-  - Options: `name,asc`, `price,asc`, `price,desc`, `popularity,desc`
-- `search`: Search term (searches name and description)
-- `category`: Filter by category ID
-- `minPrice`: Minimum price filter
-- `maxPrice`: Maximum price filter
-- `inStock`: Filter by stock availability (true/false)
-- `brand`: Filter by brand name
+- `page`: 頁碼（從 0 開始，預設: 0）
+- `size`: 頁面大小（預設: 20，最大: 100）
+- `sort`: 排序欄位和方向（預設: `createdAt,desc`）
+  - 選項: `name,asc`, `price,asc`, `price,desc`, `popularity,desc`
+- `search`: 搜尋詞（搜尋名稱和描述）
+- `category`: 依分類 ID 篩選
+- `minPrice`: 最低價格篩選
+- `maxPrice`: 最高價格篩選
+- `inStock`: 依庫存可用性篩選（true/false）
+- `brand`: 依品牌名稱篩選
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -77,24 +77,24 @@ Retrieve a paginated list of products with filtering and search.
 }
 ```
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
-# Basic list
+# 基本清單
 curl -X GET "https://api.ecommerce.com/api/v1/products?page=0&size=20"
 
-# With search and filters
+# 帶搜尋和篩選
 curl -X GET "https://api.ecommerce.com/api/v1/products?search=mouse&category=cat-123&minPrice=100&maxPrice=1000&inStock=true"
 
-# Sort by price
+# 依價格排序
 curl -X GET "https://api.ecommerce.com/api/v1/products?sort=price,asc"
 ```
 
 ---
 
-### Get Product by ID
+### 依 ID 取得產品
 
-Retrieve detailed information about a specific product.
+檢索特定產品的詳細資訊。
 
 **Endpoint**: `GET /api/v1/products/{id}`
 
@@ -102,9 +102,9 @@ Retrieve detailed information about a specific product.
 
 **Path Parameters**:
 
-- `id`: Product ID (e.g., `prod-456`)
+- `id`: 產品 ID（例如 `prod-456`）
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -157,11 +157,11 @@ Retrieve detailed information about a specific product.
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `404 Not Found`: Product not found
+- `404 Not Found`: 找不到產品
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/products/prod-456
@@ -169,9 +169,9 @@ curl -X GET https://api.ecommerce.com/api/v1/products/prod-456
 
 ---
 
-### Search Products
+### 搜尋產品
 
-Advanced product search with full-text search capabilities.
+具有全文搜尋功能的進階產品搜尋。
 
 **Endpoint**: `GET /api/v1/products/search`
 
@@ -179,13 +179,13 @@ Advanced product search with full-text search capabilities.
 
 **Query Parameters**:
 
-- `q`: Search query (required)
-- `page`: Page number (default: 0)
-- `size`: Page size (default: 20)
-- `filters`: JSON string of filters
-  - Example: `{"category": "cat-123", "brand": "TechBrand"}`
+- `q`: 搜尋查詢（必填）
+- `page`: 頁碼（預設: 0）
+- `size`: 頁面大小（預設: 20）
+- `filters`: 篩選條件的 JSON 字串
+  - 範例: `{"category": "cat-123", "brand": "TechBrand"}`
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -226,7 +226,7 @@ Advanced product search with full-text search capabilities.
 }
 ```
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/products/search?q=wireless+mouse&page=0&size=20"
@@ -234,9 +234,9 @@ curl -X GET "https://api.ecommerce.com/api/v1/products/search?q=wireless+mouse&p
 
 ---
 
-### Get Products by Category
+### 依分類取得產品
 
-Retrieve products in a specific category.
+檢索特定分類中的產品。
 
 **Endpoint**: `GET /api/v1/products/category/{categoryId}`
 
@@ -244,13 +244,13 @@ Retrieve products in a specific category.
 
 **Path Parameters**:
 
-- `categoryId`: Category ID
+- `categoryId`: 分類 ID
 
 **Query Parameters**:
 
-- `page`, `size`, `sort`: Standard pagination parameters
+- `page`, `size`, `sort`: 標準分頁參數
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -279,7 +279,7 @@ Retrieve products in a specific category.
 }
 ```
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/products/category/cat-123?page=0&size=20"
@@ -287,15 +287,15 @@ curl -X GET "https://api.ecommerce.com/api/v1/products/category/cat-123?page=0&s
 
 ---
 
-### Create Product
+### 建立產品
 
-Create a new product (Admin/Seller only).
+建立新產品（僅限 Admin/Seller）。
 
 **Endpoint**: `POST /api/v1/products`
 
 **Authentication**: Required
 
-**Authorization**: ADMIN or SELLER role required
+**Authorization**: 需要 ADMIN 或 SELLER 角色
 
 **Request Body**:
 
@@ -326,16 +326,16 @@ Create a new product (Admin/Seller only).
 }
 ```
 
-**Validation Rules**:
+**驗證規則**:
 
-- `sku`: Required, unique
-- `name`: Required, 2-200 characters
-- `description`: Required, 10-5000 characters
-- `price`: Required, must be > 0
-- `categoryId`: Required, must exist
-- `stockQuantity`: Required, must be >= 0
+- `sku`: 必填，唯一
+- `name`: 必填，2-200 個字元
+- `description`: 必填，10-5000 個字元
+- `price`: 必填，必須 > 0
+- `categoryId`: 必填，必須存在
+- `stockQuantity`: 必填，必須 >= 0
 
-**Success Response** (201 Created):
+**成功回應** (201 Created):
 
 ```json
 {
@@ -358,14 +358,14 @@ Create a new product (Admin/Seller only).
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `400 Bad Request`: Validation errors
-- `401 Unauthorized`: Missing or invalid token
-- `403 Forbidden`: Insufficient permissions
-- `409 Conflict`: SKU already exists
+- `400 Bad Request`: 驗證錯誤
+- `401 Unauthorized`: 缺少或無效的 token
+- `403 Forbidden`: 權限不足
+- `409 Conflict`: SKU 已存在
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/products \
@@ -384,23 +384,23 @@ curl -X POST https://api.ecommerce.com/api/v1/products \
 
 ---
 
-### Update Product
+### 更新產品
 
-Update product information (Admin/Seller only).
+更新產品資訊（僅限 Admin/Seller）。
 
 **Endpoint**: `PUT /api/v1/products/{id}`
 
 **Authentication**: Required
 
-**Authorization**: ADMIN or SELLER role required
+**Authorization**: 需要 ADMIN 或 SELLER 角色
 
 **Path Parameters**:
 
-- `id`: Product ID
+- `id`: 產品 ID
 
-**Request Body**: Same as Create Product
+**Request Body**: 與建立產品相同
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -413,7 +413,7 @@ Update product information (Admin/Seller only).
 }
 ```
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X PUT https://api.ecommerce.com/api/v1/products/prod-456 \
@@ -427,19 +427,19 @@ curl -X PUT https://api.ecommerce.com/api/v1/products/prod-456 \
 
 ---
 
-### Update Product Stock
+### 更新產品庫存
 
-Update product inventory (Admin/Seller only).
+更新產品庫存（僅限 Admin/Seller）。
 
 **Endpoint**: `PATCH /api/v1/products/{id}/stock`
 
 **Authentication**: Required
 
-**Authorization**: ADMIN or SELLER role required
+**Authorization**: 需要 ADMIN 或 SELLER 角色
 
 **Path Parameters**:
 
-- `id`: Product ID
+- `id`: 產品 ID
 
 **Request Body**:
 
@@ -452,11 +452,11 @@ Update product inventory (Admin/Seller only).
 
 **Operations**:
 
-- `SET`: Set absolute quantity
-- `ADD`: Add to current quantity
-- `SUBTRACT`: Subtract from current quantity
+- `SET`: 設定絕對數量
+- `ADD`: 加到目前數量
+- `SUBTRACT`: 從目前數量減去
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -469,7 +469,7 @@ Update product inventory (Admin/Seller only).
 }
 ```
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X PATCH https://api.ecommerce.com/api/v1/products/prod-456/stock \
@@ -483,30 +483,30 @@ curl -X PATCH https://api.ecommerce.com/api/v1/products/prod-456/stock \
 
 ---
 
-### Delete Product
+### 刪除產品
 
-Delete a product (Admin only).
+刪除產品（僅限 Admin）。
 
 **Endpoint**: `DELETE /api/v1/products/{id}`
 
 **Authentication**: Required
 
-**Authorization**: ADMIN role required
+**Authorization**: 需要 ADMIN 角色
 
 **Path Parameters**:
 
-- `id`: Product ID
+- `id`: 產品 ID
 
-**Success Response** (204 No Content)
+**成功回應** (204 No Content)
 
-**Error Responses**:
+**錯誤回應**:
 
-- `401 Unauthorized`: Missing or invalid token
-- `403 Forbidden`: Insufficient permissions
-- `404 Not Found`: Product not found
-- `409 Conflict`: Product has active orders
+- `401 Unauthorized`: 缺少或無效的 token
+- `403 Forbidden`: 權限不足
+- `404 Not Found`: 找不到產品
+- `409 Conflict`: 產品有使用中的訂單
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X DELETE https://api.ecommerce.com/api/v1/products/prod-456 \
@@ -515,9 +515,9 @@ curl -X DELETE https://api.ecommerce.com/api/v1/products/prod-456 \
 
 ---
 
-### Get Product Reviews
+### 取得產品評價
 
-Retrieve reviews for a product.
+檢索產品的評價。
 
 **Endpoint**: `GET /api/v1/products/{id}/reviews`
 
@@ -525,15 +525,15 @@ Retrieve reviews for a product.
 
 **Path Parameters**:
 
-- `id`: Product ID
+- `id`: 產品 ID
 
 **Query Parameters**:
 
-- `page`, `size`: Standard pagination
-- `sort`: Sort by `rating,desc`, `createdAt,desc`, `helpful,desc`
-- `rating`: Filter by rating (1-5)
+- `page`, `size`: 標準分頁
+- `sort`: 依 `rating,desc`、`createdAt,desc`、`helpful,desc` 排序
+- `rating`: 依評分篩選（1-5）
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -572,7 +572,7 @@ Retrieve reviews for a product.
 }
 ```
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/products/prod-456/reviews?page=0&size=20&sort=helpful,desc"
@@ -580,9 +580,9 @@ curl -X GET "https://api.ecommerce.com/api/v1/products/prod-456/reviews?page=0&s
 
 ---
 
-### Get Related Products
+### 取得相關產品
 
-Get products related to a specific product.
+取得與特定產品相關的產品。
 
 **Endpoint**: `GET /api/v1/products/{id}/related`
 
@@ -590,13 +590,13 @@ Get products related to a specific product.
 
 **Path Parameters**:
 
-- `id`: Product ID
+- `id`: 產品 ID
 
 **Query Parameters**:
 
-- `limit`: Number of related products (default: 10, max: 20)
+- `limit`: 相關產品數量（預設: 10，最大: 20）
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -615,7 +615,7 @@ Get products related to a specific product.
 }
 ```
 
-**curl Example**:
+**curl 範例**:
 
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/products/prod-456/related?limit=10"
@@ -623,7 +623,7 @@ curl -X GET "https://api.ecommerce.com/api/v1/products/prod-456/related?limit=10
 
 ---
 
-## Data Models
+## 資料模型
 
 ### Product Object
 
@@ -664,60 +664,60 @@ curl -X GET "https://api.ecommerce.com/api/v1/products/prod-456/related?limit=10
 }
 ```
 
-### Product Status
+### 產品狀態
 
 | Status | Description |
 |--------|-------------|
-| In Stock | Available for purchase |
-| Low Stock | Stock below threshold |
-| Out of Stock | Not available |
-| Discontinued | No longer sold |
+| In Stock | 可供購買 |
+| Low Stock | 庫存低於臨界值 |
+| Out of Stock | 無庫存 |
+| Discontinued | 不再販售 |
 
-## Search and Filtering
+## 搜尋和篩選
 
-### Search Capabilities
+### 搜尋功能
 
-1. **Full-Text Search**: Searches product name and description
-2. **Faceted Search**: Filter by category, brand, price range
-3. **Auto-Suggestions**: Real-time search suggestions
-4. **Relevance Ranking**: Results sorted by relevance score
+1. **全文搜尋**: 搜尋產品名稱和描述
+2. **多面向搜尋**: 依分類、品牌、價格範圍篩選
+3. **自動建議**: 即時搜尋建議
+4. **相關性排名**: 結果依相關性分數排序
 
-### Filter Options
+### 篩選選項
 
-- **Category**: Filter by product category
-- **Brand**: Filter by brand name
-- **Price Range**: Min and max price filters
-- **Rating**: Filter by minimum rating
-- **Availability**: In stock / out of stock
-- **Tags**: Filter by product tags
+- **分類**: 依產品分類篩選
+- **品牌**: 依品牌名稱篩選
+- **價格範圍**: 最低和最高價格篩選
+- **評分**: 依最低評分篩選
+- **可用性**: 有庫存/無庫存
+- **標籤**: 依產品標籤篩選
 
-## Business Rules
+## 業務規則
 
-1. **Stock Management**: Automatic low stock alerts
-2. **Price Updates**: Price history tracked
-3. **Product Visibility**: Out of stock products still visible
-4. **Review Verification**: Only verified purchases can review
-5. **Image Requirements**: At least one primary image required
-6. **SKU Uniqueness**: SKU must be unique across all products
+1. **庫存管理**: 自動低庫存警示
+2. **價格更新**: 追蹤價格歷史
+3. **產品可見性**: 無庫存產品仍然可見
+4. **評價驗證**: 僅已驗證的購買可以評價
+5. **圖片需求**: 至少需要一張主要圖片
+6. **SKU 唯一性**: SKU 必須在所有產品中唯一
 
-## Error Codes
+## 錯誤代碼
 
 | Code | Description | Solution |
 |------|-------------|----------|
-| `PRODUCT_NOT_FOUND` | Product ID not found | Check product ID |
-| `PRODUCT_SKU_EXISTS` | SKU already exists | Use different SKU |
-| `PRODUCT_OUT_OF_STOCK` | Product not available | Check stock or wait |
-| `PRODUCT_INVALID_PRICE` | Price must be positive | Provide valid price |
-| `PRODUCT_INVALID_CATEGORY` | Category not found | Check category ID |
+| `PRODUCT_NOT_FOUND` | 找不到產品 ID | 檢查產品 ID |
+| `PRODUCT_SKU_EXISTS` | SKU 已存在 | 使用不同的 SKU |
+| `PRODUCT_OUT_OF_STOCK` | 產品無庫存 | 檢查庫存或等待 |
+| `PRODUCT_INVALID_PRICE` | 價格必須為正數 | 提供有效價格 |
+| `PRODUCT_INVALID_CATEGORY` | 找不到分類 | 檢查分類 ID |
 
-## Related Documentation
+## 相關文件
 
-- [Order API](orders.md) - Order management
-- [Inventory API](inventory.md) - Inventory management
-- [Shopping Cart API](shopping-cart.md) - Cart operations
-- [Authentication](../authentication.md) - Authentication and authorization
+- [Order API](orders.md) - 訂單管理
+- [Inventory API](inventory.md) - 庫存管理
+- [Shopping Cart API](shopping-cart.md) - 購物車操作
+- [Authentication](../authentication.md) - 驗證和授權
 
 ---
 
-**Last Updated**: 2025-10-25  
-**API Version**: v1
+**最後更新**: 2025-10-25
+**API 版本**: v1

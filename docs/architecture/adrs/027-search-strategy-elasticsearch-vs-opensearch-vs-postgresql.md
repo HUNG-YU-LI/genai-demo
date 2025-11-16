@@ -12,265 +12,265 @@ affected_perspectives: ["performance", "scalability", "cost"]
 
 # ADR-027: Search Strategy (Elasticsearch vs OpenSearch vs PostgreSQL)
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires search functionality for:
+The Enterprise E-Commerce Platform 需要search functionality for:
 
-- Product search with full-text search, filters, and facets
-- Order search by customer, date range, status, and order number
-- Customer search by name, email, phone, and membership level
-- Fast search response times (< 200ms for 95th percentile)
-- Support for typo tolerance and fuzzy matching
-- Relevance ranking and scoring
-- Autocomplete and search suggestions
-- Scalability to handle millions of products and orders
+- Product search 與 full-text search, filters, 和 facets
+- Order search 透過 customer, date range, status, 和 order number
+- Customer search 透過 name, email, phone, 和 membership level
+- Fast search 回應時間 (< 200ms 用於 95th percentile)
+- 支援 用於 typo tolerance 和 fuzzy matching
+- Relevance ranking 和 scoring
+- Autocomplete 和 search suggestions
+- Scalability to 處理 millions of products 和 orders
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Product discovery is critical for conversion (60% of users use search)
-- Fast search improves user experience and sales
+- Product discovery is critical 用於 conversion (60% of users use search)
+- Fast search 改善s 用戶體驗 和 sales
 - Advanced search features (filters, facets) increase engagement
-- Support for 100K+ products, 1M+ orders, 100K+ customers
-- Expected search traffic: 1000+ searches/second during peak
+- 支援 用於 100K+ products, 1M+ orders, 100K+ customers
+- 預期的 search traffic: 1000+ searches/second 期間 peak
 
 **Business Constraints**:
 
-- Budget: $1000/month for search infrastructure
-- Search response time < 200ms (95th percentile)
-- Must support Chinese and English full-text search
-- Need real-time or near-real-time indexing
+- 預算: $1000/month 用於 search infrastructure
+- Search 回應時間 < 200ms (95th percentile)
+- 必須 支援 Chinese 和 English full-text search
+- Need real-time 或 near-real-time indexing
 - High availability (99.9% uptime)
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
-- PostgreSQL primary database (ADR-001)
-- Redis for caching (ADR-004)
+- PostgreSQL 主要資料庫 (ADR-001)
+- Redis 用於 caching (ADR-004)
 - Spring Boot 3.4.5 application
-- AWS cloud infrastructure
-- 13 bounded contexts with search needs
+- AWS 雲端基礎設施
+- 13 bounded contexts 與 search needs
 
-**Requirements**:
+**需求**：
 
-- Full-text search with relevance ranking
-- Faceted search (filters by category, price, brand, etc.)
-- Autocomplete and suggestions
-- Typo tolerance and fuzzy matching
-- Multi-language support (Chinese, English)
-- Real-time or near-real-time indexing
+- Full-text search 與 relevance ranking
+- Faceted search (filters 透過 category, price, brand, etc.)
+- Autocomplete 和 suggestions
+- Typo tolerance 和 fuzzy matching
+- Multi-language 支援 (Chinese, English)
+- Real-time 或 near-real-time indexing
 - Scalability to millions of documents
-- High availability with automatic failover
+- High availability 與 自動容錯移轉
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Performance**: Search response time < 200ms (95th percentile)
+1. **Performance**: Search 回應時間 < 200ms (95th percentile)
 2. **Features**: Full-text search, facets, autocomplete, fuzzy matching
-3. **Scalability**: Handle millions of documents, 1000+ searches/second
-4. **Cost**: Within $1000/month budget
+3. **Scalability**: 處理 millions of documents, 1000+ searches/second
+4. **成本**： Within $1000/month budget
 5. **Operational Overhead**: Managed service preferred
 6. **Integration**: Spring Boot integration
-7. **Multi-Language**: Chinese and English support
+7. **Multi-Language**: Chinese 和 English 支援
 8. **Real-Time**: Near-real-time indexing (< 1 minute lag)
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: PostgreSQL Full-Text Search
+### 選項 1： PostgreSQL Full-Text Search
 
-**Description**: Use PostgreSQL's built-in full-text search capabilities
+**描述**： Use PostgreSQL's built-in full-text search capabilities
 
-**Pros**:
+**優點**：
 
 - ✅ No additional infrastructure
-- ✅ ACID transactions with search
-- ✅ Simple to implement
+- ✅ ACID transactions 與 search
+- ✅ 簡單implement
 - ✅ No data synchronization needed
 - ✅ Cost-effective ($0 additional)
-- ✅ Good for simple searches
+- ✅ 良好的 用於 簡單的 searches
 
-**Cons**:
+**缺點**：
 
 - ❌ Limited full-text search features
 - ❌ Poor performance at scale (> 100K documents)
-- ❌ No faceted search support
+- ❌ No faceted search 支援
 - ❌ Limited relevance ranking
-- ❌ No autocomplete support
-- ❌ Increases database load
-- ❌ Limited multi-language support
+- ❌ No autocomplete 支援
+- ❌ Increases 資料庫負載
+- ❌ Limited multi-language 支援
 - ❌ No distributed search
 
-**Cost**: $0 (included in database)
+**成本**： $0 (included in database)
 
-**Risk**: **High** - Insufficient for requirements
+**風險**： **High** - Insufficient for requirements
 
-**Performance**: 500-2000ms for complex searches
+**Performance**: 500-2000ms 用於 複雜的 searches
 
-### Option 2: Elasticsearch (AWS OpenSearch Service)
+### 選項 2： Elasticsearch (AWS OpenSearch Service)
 
-**Description**: Use Elasticsearch via AWS OpenSearch Service (Elasticsearch-compatible)
+**描述**： Use Elasticsearch via AWS OpenSearch Service (Elasticsearch-compatible)
 
-**Pros**:
+**優點**：
 
-- ✅ Excellent full-text search capabilities
-- ✅ Rich faceted search and aggregations
+- ✅ 優秀的 full-text search capabilities
+- ✅ 豐富的 faceted search 和 aggregations
 - ✅ Fast search performance (< 50ms)
-- ✅ Autocomplete and suggestions
-- ✅ Typo tolerance and fuzzy matching
+- ✅ Autocomplete 和 suggestions
+- ✅ Typo tolerance 和 fuzzy matching
 - ✅ Multi-language analyzers
 - ✅ Scalable to billions of documents
-- ✅ AWS managed service
-- ✅ High availability with replicas
-- ✅ Large community and ecosystem
+- ✅ AWS 託管服務
+- ✅ High availability 與 replicas
+- ✅ 大型的 社群和生態系統
 - ✅ Spring Data Elasticsearch integration
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Additional infrastructure cost
-- ⚠️ Data synchronization complexity
+- ⚠️ Data synchronization 複雜的ity
 - ⚠️ Eventual consistency
 - ⚠️ Operational overhead (indexing, monitoring)
 - ⚠️ Learning curve
 
-**Cost**:
+**成本**：
 
 - Development: $800/month (t3.medium.search x 2)
-- Production: $1200/month (r6g.large.search x 2)
+- Production: $1200/month (r6g.大型的.search x 2)
 
-**Risk**: **Low** - Industry-standard solution
+**風險**： **Low** - Industry-standard solution
 
-**Performance**: 20-100ms for complex searches
+**Performance**: 20-100ms 用於 複雜的 searches
 
-### Option 3: OpenSearch (AWS OpenSearch Service)
+### 選項 3： OpenSearch (AWS OpenSearch Service)
 
-**Description**: Use OpenSearch (AWS's open-source fork of Elasticsearch)
+**描述**： Use OpenSearch (AWS's open-source fork of Elasticsearch)
 
-**Pros**:
+**優點**：
 
 - ✅ All Elasticsearch features (fork from ES 7.10)
-- ✅ Excellent full-text search capabilities
-- ✅ Rich faceted search and aggregations
+- ✅ 優秀的 full-text search capabilities
+- ✅ 豐富的 faceted search 和 aggregations
 - ✅ Fast search performance (< 50ms)
-- ✅ AWS managed service
+- ✅ AWS 託管服務
 - ✅ Lower cost than Elasticsearch
 - ✅ Open-source (Apache 2.0 license)
 - ✅ AWS native integration
 - ✅ Spring Data Elasticsearch compatible
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Smaller community than Elasticsearch
-- ⚠️ Data synchronization complexity
+- ⚠️ Data synchronization 複雜的ity
 - ⚠️ Eventual consistency
 - ⚠️ Operational overhead
 
-**Cost**:
+**成本**：
 
 - Development: $600/month (t3.medium.search x 2)
-- Production: $1000/month (r6g.large.search x 2)
+- Production: $1000/month (r6g.大型的.search x 2)
 
-**Risk**: **Low** - AWS-backed solution
+**風險**： **Low** - AWS-backed solution
 
-**Performance**: 20-100ms for complex searches
+**Performance**: 20-100ms 用於 複雜的 searches
 
-### Option 4: Hybrid Approach (PostgreSQL + Redis)
+### 選項 4： Hybrid Approach (PostgreSQL + Redis)
 
-**Description**: Use PostgreSQL for simple searches, Redis for autocomplete
+**描述**： Use PostgreSQL for simple searches, Redis for autocomplete
 
-**Pros**:
+**優點**：
 
 - ✅ Leverages existing infrastructure
 - ✅ Cost-effective
-- ✅ Simple to implement
-- ✅ Good for basic use cases
+- ✅ 簡單implement
+- ✅ 良好的 用於 basic 使用案例s
 
-**Cons**:
+**缺點**：
 
 - ❌ Limited search features
 - ❌ Poor performance at scale
 - ❌ No faceted search
-- ❌ Complex to maintain
+- ❌ 複雜的 to 維持
 - ❌ Doesn't meet requirements
 
-**Cost**: $0 (existing infrastructure)
+**成本**： $0 (existing infrastructure)
 
-**Risk**: **High** - Insufficient for requirements
+**風險**： **High** - Insufficient for requirements
 
-**Performance**: 200-1000ms for complex searches
+**Performance**: 200-1000ms 用於 複雜的 searches
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **OpenSearch (AWS OpenSearch Service)**
+**選擇的選項**： **OpenSearch (AWS OpenSearch Service)**
 
-### Rationale
+### 理由
 
-OpenSearch was selected for the following reasons:
+OpenSearch被選擇的原因如下：
 
-1. **Cost-Effective**: Meets requirements within $1000/month budget
-2. **Performance**: Sub-100ms search response time
+1. **Cost-Effective**: Meets requirements within $1000/month 預算
+2. **Performance**: Sub-100ms search 回應時間
 3. **Features**: All required search features (full-text, facets, autocomplete, fuzzy)
-4. **AWS Native**: Seamless AWS integration, managed service
+4. **AWS Native**: 無縫的AWS整合, 託管服務
 5. **Open-Source**: Apache 2.0 license, no vendor lock-in
-6. **Scalability**: Handles millions of documents easily
-7. **Spring Integration**: Compatible with Spring Data Elasticsearch
-8. **Multi-Language**: Excellent Chinese and English support
-9. **Proven**: Used by many large-scale e-commerce platforms
+6. **Scalability**: 處理s millions of documents easily
+7. **Spring Integration**: Compatible 與 Spring Data Elasticsearch
+8. **Multi-Language**: 優秀的 Chinese 和 English 支援
+9. **Proven**: Used 透過 many 大型的-scale e-commerce platforms
 
 **Search Architecture**:
 
 **Primary Use Cases**:
 
-- **Product Search**: Full-text search with facets (category, price, brand, rating)
-- **Order Search**: Search by order number, customer, date range, status
-- **Customer Search**: Search by name, email, phone (admin only)
+- **Product Search**: Full-text search 與 facets (category, price, brand, rating)
+- **Order Search**: Search 透過 order number, customer, date range, status
+- **Customer Search**: Search 透過 name, email, phone (admin only)
 
 **Indexing Strategy**:
 
 - **Real-Time**: Product updates indexed within 1 minute
-- **Batch**: Bulk indexing for historical data
+- **Batch**: Bulk indexing 用於 historical data
 - **CDC**: Change Data Capture from PostgreSQL to OpenSearch
 - **Event-Driven**: Domain events trigger index updates
 
 **Search Features**:
 
-- Full-text search with relevance ranking
-- Faceted search (filters and aggregations)
-- Autocomplete and search suggestions
+- Full-text search 與 relevance ranking
+- Faceted search (filters 和 aggregations)
+- Autocomplete 和 search suggestions
 - Typo tolerance (fuzzy matching, edit distance)
 - Multi-language analyzers (Chinese, English)
 - Highlighting of search terms
-- Pagination and sorting
+- Pagination 和 sorting
 
-**Why Not PostgreSQL**: Insufficient features, poor performance at scale.
+**為何不選 PostgreSQL**： Insufficient features, poor performance at scale.
 
-**Why Not Elasticsearch**: Higher cost, licensing concerns (Elastic License).
+**為何不選 Elasticsearch**： Higher cost, licensing concerns (Elastic License).
 
-**Why Not Hybrid**: Doesn't meet requirements, complex to maintain.
+**為何不選 Hybrid**： Doesn't meet requirements, 複雜的 to 維持.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
 | Development Team | High | Need to learn OpenSearch | Training, documentation, examples |
-| Operations Team | Medium | Monitor OpenSearch cluster | AWS managed service, runbooks |
-| End Users | Positive | Faster, better search experience | N/A |
-| Business | Positive | Improved conversion, user satisfaction | N/A |
-| Database Team | Low | Reduced database search load | N/A |
+| Operations Team | Medium | Monitor OpenSearch cluster | AWS 託管服務, runbooks |
+| End Users | Positive | Faster, 更好的 search experience | N/A |
+| Business | Positive | 改善d conversion, user satisfaction | N/A |
+| Database Team | Low | 降低d database search load | N/A |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - Product bounded context (primary)
 - Order bounded context (secondary)
@@ -279,7 +279,7 @@ Affects:
 - Infrastructure layer (OpenSearch cluster)
 - Data synchronization (CDC pipeline)
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
@@ -289,75 +289,75 @@ Affects:
 | Cost overrun | Low | Medium | Monitor usage, set alarms, optimize queries |
 | Search relevance issues | Medium | Medium | Tuning, A/B testing, user feedback |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Setup (Week 1-2)
+### 第 1 階段： Setup （第 1-2 週）
 
-- [x] Provision OpenSearch cluster (r6g.large.search x 2)
+- [x] Provision OpenSearch cluster (r6g.大型的.search x 2)
 - [x] Configure security (VPC, security groups, IAM)
-- [x] Set up monitoring and alerting
-- [x] Create index templates and mappings
+- [x] Set up monitoring 和 alerting
+- [x] Create index templates 和 mappings
 - [x] Configure analyzers (Chinese, English)
 
-### Phase 2: Product Search (Week 3-4)
+### 第 2 階段： Product Search （第 3-4 週）
 
 - [x] Implement product index mapping
 - [x] Bulk index existing products
-- [x] Implement CDC for product updates
+- [x] Implement CDC 用於 product updates
 - [x] Create product search API
 - [x] Implement faceted search
 - [x] Add autocomplete
 
-### Phase 3: Order & Customer Search (Week 5-6)
+### 第 3 階段： Order & Customer Search （第 5-6 週）
 
 - [x] Implement order index mapping
 - [x] Bulk index existing orders
-- [x] Implement CDC for order updates
+- [x] Implement CDC 用於 order updates
 - [x] Create order search API
 - [x] Implement customer search (admin)
 - [x] Add search suggestions
 
-### Phase 4: Optimization (Week 7-8)
+### 第 4 階段： Optimization （第 7-8 週）
 
-- [x] Performance tuning and optimization
+- [x] Performance tuning 和 optimization
 - [x] Relevance tuning (scoring, boosting)
 - [x] Load testing (1000+ searches/second)
 - [x] Implement search analytics
-- [x] Documentation and training
+- [x] Documentation 和 training
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
-- Search response time > 500ms
+- Search 回應時間 > 500ms
 - OpenSearch availability < 99%
 - Data sync lag > 5 minutes
-- Cost exceeds budget by > 50%
+- Cost exceeds 預算 透過 > 50%
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Disable OpenSearch search
-2. Fall back to PostgreSQL simple search
-3. Investigate and fix issues
-4. Re-enable OpenSearch gradually
+2. Fall back to PostgreSQL 簡單的 search
+3. Investigate 和 fix issues
+4. Re-啟用 OpenSearch gradually
 5. Monitor performance
 
-**Rollback Time**: < 1 hour
+**回滾時間**： < 1 hour
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
-- ✅ Search response time < 200ms (95th percentile)
+- ✅ Search 回應時間 < 200ms (95th percentile)
 - ✅ Search availability > 99.9%
 - ✅ Data sync lag < 1 minute
 - ✅ Search relevance score > 80% (user feedback)
-- ✅ Cost within budget ($1000/month)
-- ✅ Zero data loss during sync
+- ✅ Cost within 預算 ($1000/month)
+- ✅ Zero data loss 期間 sync
 
-### Monitoring Plan
+### 監控計畫
 
 **CloudWatch Metrics**:
 
@@ -384,7 +384,7 @@ public class SearchMetrics {
 }
 ```
 
-**Alerts**:
+**告警**：
 
 - Search latency > 500ms
 - Cluster status not green
@@ -393,53 +393,53 @@ public class SearchMetrics {
 - Index lag > 5 minutes
 - Search error rate > 1%
 
-**Review Schedule**:
+**審查時程**：
 
 - Daily: Check search metrics
 - Weekly: Review search relevance
 - Monthly: Optimize search performance
 - Quarterly: Search strategy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Performance**: Sub-200ms search response time
-- ✅ **Features**: Rich search capabilities (facets, autocomplete, fuzzy)
-- ✅ **Scalability**: Handles millions of documents
+- ✅ **Performance**: Sub-200ms search 回應時間
+- ✅ **Features**: 豐富的 search capabilities (facets, autocomplete, fuzzy)
+- ✅ **Scalability**: 處理s millions of documents
 - ✅ **User Experience**: Fast, relevant search results
-- ✅ **Conversion**: Improved product discovery
-- ✅ **Database Health**: Reduced database search load
-- ✅ **Flexibility**: Easy to add new search features
+- ✅ **Conversion**: 改善d product discovery
+- ✅ **Database Health**: 降低d database search load
+- ✅ **Flexibility**: 容易add new search features
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Complexity**: Additional infrastructure to manage
-- ⚠️ **Cost**: $1000/month additional cost
+- ⚠️ **複雜的ity**: Additional infrastructure to manage
+- ⚠️ **成本**： $1000/month additional cost
 - ⚠️ **Consistency**: Eventual consistency (1-minute lag)
 - ⚠️ **Synchronization**: Need to keep data in sync
 - ⚠️ **Operational Overhead**: Monitoring, tuning, maintenance
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. Manual relevance tuning (can be automated with ML)
-2. Simple CDC (can use Debezium for robust CDC)
+1. Manual relevance tuning (可以 be automated 與 ML)
+2. 簡單的 CDC (可以 use Debezium 用於 robust CDC)
 3. No search analytics (future enhancement)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q2 2026**: Implement Debezium for robust CDC
+- **Q2 2026**: Implement Debezium 用於 robust CDC
 - **Q3 2026**: Add ML-based relevance tuning
-- **Q4 2026**: Implement search analytics and A/B testing
+- **Q4 2026**: Implement search analytics 和 A/B testing
 
-## Related Decisions
+## 相關決策
 
-- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md) - Source of truth for data
-- [ADR-004: Use Redis for Distributed Caching](004-use-redis-for-distributed-caching.md) - Cache search results
+- [ADR-001: Use PostgreSQL 用於 Primary Database](001-use-postgresql-for-primary-database.md) - Source of truth 用於 data
+- [ADR-004: Use Redis 用於 Distributed Caching](004-use-redis-for-distributed-caching.md) - Cache search results
 
-## Notes
+## 備註
 
 ### OpenSearch Index Mapping
 
@@ -618,6 +618,6 @@ Backup: Automated daily snapshots, 7-day retention
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

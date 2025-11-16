@@ -1,24 +1,24 @@
 # Inventory API
 
-## Overview
+## 概述
 
-The Inventory API provides endpoints for managing product stock levels, reservations, and warehouse operations. This API is primarily used by internal systems and administrators.
+Inventory API 提供了管理產品庫存水平、保留和倉庫作業的端點。此 API 主要供內部系統和管理員使用。
 
 **Base Path**: `/api/v1/inventory`
 
-**Authentication**: Required for all endpoints
+**Authentication**: 所有端點皆需要驗證
 
-**Authorization**: Most endpoints require ADMIN or WAREHOUSE role
+**Authorization**: 大部分端點需要 ADMIN 或 WAREHOUSE 角色
 
 ## Endpoints
 
 ### Check Product Availability
 
-Check stock availability for a product.
+檢查產品的庫存可用性。
 
 **Endpoint**: `GET /api/v1/inventory/products/{productId}/availability`
 
-**Authentication**: Not required (public endpoint)
+**Authentication**: 不需要（公開端點）
 
 **Path Parameters**:
 
@@ -26,8 +26,8 @@ Check stock availability for a product.
 
 **Query Parameters**:
 
-- `quantity`: Requested quantity (default: 1)
-- `warehouseId`: Specific warehouse (optional)
+- `quantity`: 請求數量（預設：1）
+- `warehouseId`: 特定倉庫（選填）
 
 **Success Response** (200 OK):
 
@@ -77,7 +77,7 @@ Check stock availability for a product.
 
 **Error Responses**:
 
-- `404 Not Found`: Product not found
+- `404 Not Found`: 找不到產品
 
 **curl Example**:
 
@@ -89,13 +89,13 @@ curl -X GET "https://api.ecommerce.com/api/v1/inventory/products/prod-456/availa
 
 ### Get Inventory by Product
 
-Get detailed inventory information for a product.
+取得產品的詳細庫存資訊。
 
 **Endpoint**: `GET /api/v1/inventory/products/{productId}`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: ADMIN or WAREHOUSE role required
+**Authorization**: 需要 ADMIN 或 WAREHOUSE 角色
 
 **Path Parameters**:
 
@@ -142,8 +142,8 @@ Get detailed inventory information for a product.
 
 **Error Responses**:
 
-- `403 Forbidden`: Insufficient permissions
-- `404 Not Found`: Product not found
+- `403 Forbidden`: 權限不足
+- `404 Not Found`: 找不到產品
 
 **curl Example**:
 
@@ -156,13 +156,13 @@ curl -X GET https://api.ecommerce.com/api/v1/inventory/products/prod-456 \
 
 ### Reserve Inventory
 
-Reserve inventory for an order (internal use).
+為訂單保留庫存（內部使用）。
 
 **Endpoint**: `POST /api/v1/inventory/reservations`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: SYSTEM or ADMIN role required
+**Authorization**: 需要 SYSTEM 或 ADMIN 角色
 
 **Request Body**:
 
@@ -187,10 +187,10 @@ Reserve inventory for an order (internal use).
 
 **Validation Rules**:
 
-- `orderId`: Required, unique
-- `items`: Required, at least one item
-- `quantity`: Required, positive integer
-- `expiresAt`: Optional, default 15 minutes from now
+- `orderId`: 必填，唯一
+- `items`: 必填，至少一個項目
+- `quantity`: 必填，正整數
+- `expiresAt`: 選填，預設為現在起 15 分鐘
 
 **Success Response** (201 Created):
 
@@ -251,9 +251,9 @@ Reserve inventory for an order (internal use).
 
 **Error Responses**:
 
-- `400 Bad Request`: Validation errors
-- `403 Forbidden`: Insufficient permissions
-- `409 Conflict`: Insufficient stock for all items
+- `400 Bad Request`: 驗證錯誤
+- `403 Forbidden`: 權限不足
+- `409 Conflict`: 所有項目庫存不足
 
 **curl Example**:
 
@@ -277,13 +277,13 @@ curl -X POST https://api.ecommerce.com/api/v1/inventory/reservations \
 
 ### Confirm Reservation
 
-Confirm a reservation and deduct from available stock.
+確認保留並從可用庫存扣除。
 
 **Endpoint**: `POST /api/v1/inventory/reservations/{reservationId}/confirm`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: SYSTEM or ADMIN role required
+**Authorization**: 需要 SYSTEM 或 ADMIN 角色
 
 **Path Parameters**:
 
@@ -312,9 +312,9 @@ Confirm a reservation and deduct from available stock.
 
 **Error Responses**:
 
-- `403 Forbidden`: Insufficient permissions
-- `404 Not Found`: Reservation not found
-- `409 Conflict`: Reservation expired or already confirmed
+- `403 Forbidden`: 權限不足
+- `404 Not Found`: 找不到保留
+- `409 Conflict`: 保留已過期或已確認
 
 **curl Example**:
 
@@ -327,13 +327,13 @@ curl -X POST https://api.ecommerce.com/api/v1/inventory/reservations/res-123/con
 
 ### Cancel Reservation
 
-Cancel a reservation and release reserved stock.
+取消保留並釋放已保留的庫存。
 
 **Endpoint**: `POST /api/v1/inventory/reservations/{reservationId}/cancel`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: SYSTEM or ADMIN role required
+**Authorization**: 需要 SYSTEM 或 ADMIN 角色
 
 **Path Parameters**:
 
@@ -371,13 +371,13 @@ curl -X POST https://api.ecommerce.com/api/v1/inventory/reservations/res-123/can
 
 ### Update Stock Level
 
-Update stock level for a product in a warehouse.
+更新倉庫中產品的庫存水平。
 
 **Endpoint**: `PUT /api/v1/inventory/products/{productId}/warehouses/{warehouseId}`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: ADMIN or WAREHOUSE role required
+**Authorization**: 需要 ADMIN 或 WAREHOUSE 角色
 
 **Path Parameters**:
 
@@ -397,17 +397,17 @@ Update stock level for a product in a warehouse.
 
 **Operation Types**:
 
-- `SET`: Set absolute quantity
-- `ADD`: Add to current quantity
-- `SUBTRACT`: Subtract from current quantity
+- `SET`: 設定絕對數量
+- `ADD`: 加到當前數量
+- `SUBTRACT`: 從當前數量減去
 
 **Reason Codes**:
 
-- `RESTOCK`: Inventory replenishment
-- `ADJUSTMENT`: Inventory adjustment
-- `DAMAGE`: Damaged goods
-- `RETURN`: Customer return
-- `TRANSFER`: Warehouse transfer
+- `RESTOCK`: 庫存補貨
+- `ADJUSTMENT`: 庫存調整
+- `DAMAGE`: 損壞商品
+- `RETURN`: 顧客退貨
+- `TRANSFER`: 倉庫轉移
 
 **Success Response** (200 OK):
 
@@ -428,9 +428,9 @@ Update stock level for a product in a warehouse.
 
 **Error Responses**:
 
-- `400 Bad Request`: Invalid operation or quantity
-- `403 Forbidden`: Insufficient permissions
-- `404 Not Found`: Product or warehouse not found
+- `400 Bad Request`: 無效的操作或數量
+- `403 Forbidden`: 權限不足
+- `404 Not Found`: 找不到產品或倉庫
 
 **curl Example**:
 
@@ -449,19 +449,19 @@ curl -X PUT https://api.ecommerce.com/api/v1/inventory/products/prod-456/warehou
 
 ### Get Low Stock Products
 
-Get products with stock below reorder point.
+取得庫存低於補貨點的產品。
 
 **Endpoint**: `GET /api/v1/inventory/low-stock`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: ADMIN or WAREHOUSE role required
+**Authorization**: 需要 ADMIN 或 WAREHOUSE 角色
 
 **Query Parameters**:
 
-- `page`: Page number (default: 0)
-- `size`: Page size (default: 20)
-- `warehouseId`: Filter by warehouse (optional)
+- `page`: 頁碼（預設：0）
+- `size`: 每頁大小（預設：20）
+- `warehouseId`: 依倉庫篩選（選填）
 
 **Success Response** (200 OK):
 
@@ -513,13 +513,13 @@ curl -X GET "https://api.ecommerce.com/api/v1/inventory/low-stock?warehouseId=wh
 
 ### Get Inventory Movement History
 
-Get inventory movement history for a product.
+取得產品的庫存異動歷史。
 
 **Endpoint**: `GET /api/v1/inventory/products/{productId}/movements`
 
-**Authentication**: Required
+**Authentication**: 需要
 
-**Authorization**: ADMIN or WAREHOUSE role required
+**Authorization**: 需要 ADMIN 或 WAREHOUSE 角色
 
 **Path Parameters**:
 
@@ -527,12 +527,12 @@ Get inventory movement history for a product.
 
 **Query Parameters**:
 
-- `page`: Page number (default: 0)
-- `size`: Page size (default: 20)
-- `startDate`: Filter from date (ISO 8601)
-- `endDate`: Filter to date (ISO 8601)
-- `warehouseId`: Filter by warehouse (optional)
-- `type`: Filter by movement type (optional)
+- `page`: 頁碼（預設：0）
+- `size`: 每頁大小（預設：20）
+- `startDate`: 從日期篩選（ISO 8601）
+- `endDate`: 至日期篩選（ISO 8601）
+- `warehouseId`: 依倉庫篩選（選填）
+- `type`: 依異動類型篩選（選填）
 
 **Success Response** (200 OK):
 
@@ -577,13 +577,13 @@ Get inventory movement history for a product.
 
 **Movement Types**:
 
-- `RESTOCK`: Inventory replenishment
-- `SALE`: Order fulfillment
-- `RETURN`: Customer return
-- `ADJUSTMENT`: Manual adjustment
-- `DAMAGE`: Damaged goods write-off
-- `TRANSFER_IN`: Transfer from another warehouse
-- `TRANSFER_OUT`: Transfer to another warehouse
+- `RESTOCK`: 庫存補貨
+- `SALE`: 訂單履行
+- `RETURN`: 顧客退貨
+- `ADJUSTMENT`: 手動調整
+- `DAMAGE`: 損壞商品報廢
+- `TRANSFER_IN`: 從其他倉庫轉入
+- `TRANSFER_OUT`: 轉出至其他倉庫
 
 **curl Example**:
 
@@ -649,32 +649,32 @@ curl -X GET "https://api.ecommerce.com/api/v1/inventory/products/prod-456/moveme
 
 ## Business Rules
 
-1. **Stock Calculation**: Available Stock = Total Stock - Reserved Stock
-2. **Reservation Expiry**: Reservations expire after 15 minutes if not confirmed
-3. **Reorder Point**: Automatic alerts when stock falls below reorder point
-4. **Multi-Warehouse**: Stock is tracked per warehouse
-5. **Negative Stock**: Not allowed, operations fail if result would be negative
-6. **Concurrent Updates**: Optimistic locking prevents race conditions
-7. **Audit Trail**: All stock movements are logged
+1. **Stock Calculation**: 可用庫存 = 總庫存 - 已保留庫存
+2. **Reservation Expiry**: 保留在未確認的情況下 15 分鐘後過期
+3. **Reorder Point**: 當庫存低於補貨點時自動提醒
+4. **Multi-Warehouse**: 每個倉庫分別追蹤庫存
+5. **Negative Stock**: 不允許，若結果為負數則操作失敗
+6. **Concurrent Updates**: 樂觀鎖定防止競爭條件
+7. **Audit Trail**: 所有庫存異動皆記錄在案
 
 ## Error Codes
 
 | Code | Description | Solution |
 |------|-------------|----------|
-| `INVENTORY_INSUFFICIENT_STOCK` | Not enough stock available | Reduce quantity or wait for restock |
-| `INVENTORY_RESERVATION_EXPIRED` | Reservation has expired | Create new reservation |
-| `INVENTORY_RESERVATION_NOT_FOUND` | Reservation not found | Check reservation ID |
-| `INVENTORY_NEGATIVE_STOCK` | Operation would result in negative stock | Check current stock level |
-| `INVENTORY_PRODUCT_NOT_FOUND` | Product not found in inventory | Check product ID |
-| `INVENTORY_WAREHOUSE_NOT_FOUND` | Warehouse not found | Check warehouse ID |
+| `INVENTORY_INSUFFICIENT_STOCK` | 可用庫存不足 | 減少數量或等待補貨 |
+| `INVENTORY_RESERVATION_EXPIRED` | 保留已過期 | 建立新的保留 |
+| `INVENTORY_RESERVATION_NOT_FOUND` | 找不到保留 | 檢查保留 ID |
+| `INVENTORY_NEGATIVE_STOCK` | 操作會導致負庫存 | 檢查當前庫存水平 |
+| `INVENTORY_PRODUCT_NOT_FOUND` | 在庫存中找不到產品 | 檢查產品 ID |
+| `INVENTORY_WAREHOUSE_NOT_FOUND` | 找不到倉庫 | 檢查倉庫 ID |
 
 ## Related Documentation
 
-- [Product API](products.md) - Product information
-- [Order API](orders.md) - Order processing
-- [Shopping Cart API](shopping-cart.md) - Cart stock validation
+- [Product API](products.md) - 產品資訊
+- [Order API](orders.md) - 訂單處理
+- [Shopping Cart API](shopping-cart.md) - 購物車庫存驗證
 
 ---
 
-**Last Updated**: 2025-10-25  
+**Last Updated**: 2025-10-25
 **API Version**: v1

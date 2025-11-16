@@ -1,12 +1,12 @@
 # Authentication
 
-## Overview
+## 概述
 
-The Enterprise E-Commerce Platform API uses JWT (JSON Web Token) based authentication to secure API endpoints. This document describes the authentication flow, token format, and best practices.
+企業電子商務平台 API 使用基於 JWT (JSON Web Token) 的身份驗證來保護 API endpoints。本文件描述身份驗證流程、token 格式和最佳實踐。
 
-## Authentication Flow
+## 身份驗證流程
 
-### 1. User Login
+### 1. 使用者登入
 
 **Endpoint**: `POST /api/v1/auth/login`
 
@@ -50,9 +50,9 @@ Content-Type: application/json
 }
 ```
 
-### 2. Using Access Token
+### 2. 使用 Access Token
 
-Include the access token in the `Authorization` header for all authenticated requests:
+在所有需要身份驗證的請求中，將 access token 包含在 `Authorization` header 中：
 
 ```http
 GET /api/v1/customers/me HTTP/1.1
@@ -60,9 +60,9 @@ Host: api.ecommerce.com
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9...
 ```
 
-### 3. Token Refresh
+### 3. Token 更新
 
-When the access token expires, use the refresh token to obtain a new access token:
+當 access token 過期時，使用 refresh token 獲取新的 access token：
 
 **Endpoint**: `POST /api/v1/auth/refresh`
 
@@ -94,7 +94,7 @@ Content-Type: application/json
 }
 ```
 
-### 4. Logout
+### 4. 登出
 
 **Endpoint**: `POST /api/v1/auth/logout`
 
@@ -112,11 +112,11 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9...
 HTTP/1.1 204 No Content
 ```
 
-## JWT Token Format
+## JWT Token 格式
 
-### Access Token Structure
+### Access Token 結構
 
-The access token is a JWT with the following structure:
+access token 是一個 JWT，具有以下結構：
 
 **Header**:
 
@@ -141,19 +141,19 @@ The access token is a JWT with the following structure:
 }
 ```
 
-**Claims Explanation**:
+**Claims 說明**:
 
-- `sub`: Subject (user email)
-- `userId`: User unique identifier
-- `roles`: User roles (e.g., USER, ADMIN, CUSTOMER)
-- `permissions`: Specific permissions
-- `iat`: Issued at timestamp
-- `exp`: Expiration timestamp
-- `jti`: JWT ID (unique token identifier)
+- `sub`: 主體（使用者 email）
+- `userId`: 使用者唯一識別碼
+- `roles`: 使用者角色（例如：USER, ADMIN, CUSTOMER）
+- `permissions`: 特定權限
+- `iat`: 發行時間戳記
+- `exp`: 過期時間戳記
+- `jti`: JWT ID（唯一 token 識別碼）
 
-### Refresh Token Structure
+### Refresh Token 結構
 
-The refresh token has a longer expiration time and is used only for obtaining new access tokens:
+refresh token 具有較長的過期時間，僅用於獲取新的 access token：
 
 **Payload**:
 
@@ -168,38 +168,38 @@ The refresh token has a longer expiration time and is used only for obtaining ne
 }
 ```
 
-### Token Expiration
+### Token 過期時間
 
-| Token Type | Expiration | Purpose |
+| Token 類型 | 過期時間 | 用途 |
 |------------|------------|---------|
-| Access Token | 1 hour | API authentication |
-| Refresh Token | 7 days | Token renewal |
+| Access Token | 1 小時 | API 身份驗證 |
+| Refresh Token | 7 天 | Token 更新 |
 
-## Authorization
+## 授權
 
-### Role-Based Access Control (RBAC)
+### 基於角色的存取控制 (RBAC)
 
-The API uses role-based access control to manage permissions:
+API 使用基於角色的存取控制來管理權限：
 
-**Roles**:
+**角色**:
 
-- `USER`: Basic authenticated user
-- `CUSTOMER`: Customer with shopping privileges
-- `ADMIN`: Administrative access
-- `SELLER`: Seller/vendor access
-- `SUPPORT`: Customer support access
+- `USER`: 基本認證使用者
+- `CUSTOMER`: 具有購物權限的客戶
+- `ADMIN`: 管理員存取權限
+- `SELLER`: 賣家/供應商存取權限
+- `SUPPORT`: 客戶支援存取權限
 
-**Role Hierarchy**:
+**角色層級**:
 
 ```text
 ADMIN > SELLER > SUPPORT > CUSTOMER > USER
 ```
 
-### Permission Checks
+### 權限檢查
 
-Endpoints may require specific roles or permissions:
+Endpoints 可能需要特定角色或權限：
 
-**Example - Admin Only**:
+**範例 - 僅限管理員**:
 
 ```http
 GET /api/v1/admin/users
@@ -221,23 +221,23 @@ HTTP/1.1 403 Forbidden
 }
 ```
 
-### Resource-Level Authorization
+### 資源層級授權
 
-Some endpoints enforce resource-level authorization:
+某些 endpoints 強制執行資源層級授權：
 
-**Example - Own Resource Access**:
+**範例 - 存取自有資源**:
 
 ```http
 GET /api/v1/customers/cust-123
 Authorization: Bearer <user-token>
 ```
 
-- ✅ Allowed if token belongs to `cust-123` or user has `ADMIN` role
-- ❌ Forbidden if token belongs to different user without `ADMIN` role
+- ✅ 如果 token 屬於 `cust-123` 或使用者具有 `ADMIN` 角色，則允許
+- ❌ 如果 token 屬於不同使用者且沒有 `ADMIN` 角色，則禁止
 
-## Authentication Endpoints
+## 身份驗證 Endpoints
 
-### Login
+### 登入
 
 **Endpoint**: `POST /api/v1/auth/login`
 
@@ -250,12 +250,12 @@ Authorization: Bearer <user-token>
 }
 ```
 
-**Validation Rules**:
+**驗證規則**:
 
-- Email: Required, valid email format
-- Password: Required, minimum 8 characters
+- Email: 必填，有效的 email 格式
+- Password: 必填，最少 8 個字元
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -274,13 +274,13 @@ Authorization: Bearer <user-token>
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `400 Bad Request`: Invalid email or password format
-- `401 Unauthorized`: Invalid credentials
-- `429 Too Many Requests`: Too many failed login attempts
+- `400 Bad Request`: 無效的 email 或密碼格式
+- `401 Unauthorized`: 無效的憑證
+- `429 Too Many Requests`: 登入失敗次數過多
 
-### Register
+### 註冊
 
 **Endpoint**: `POST /api/v1/auth/register`
 
@@ -295,14 +295,14 @@ Authorization: Bearer <user-token>
 }
 ```
 
-**Validation Rules**:
+**驗證規則**:
 
-- Name: Required, 2-100 characters
-- Email: Required, valid email format, unique
-- Password: Required, minimum 8 characters, must contain uppercase, lowercase, and number
-- Confirm Password: Must match password
+- Name: 必填，2-100 個字元
+- Email: 必填，有效的 email 格式，唯一
+- Password: 必填，最少 8 個字元，必須包含大寫、小寫和數字
+- Confirm Password: 必須與密碼相符
 
-**Success Response** (201 Created):
+**成功回應** (201 Created):
 
 ```json
 {
@@ -321,12 +321,12 @@ Authorization: Bearer <user-token>
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `400 Bad Request`: Validation errors
-- `409 Conflict`: Email already registered
+- `400 Bad Request`: 驗證錯誤
+- `409 Conflict`: Email 已註冊
 
-### Refresh Token
+### 更新 Token
 
 **Endpoint**: `POST /api/v1/auth/refresh`
 
@@ -338,7 +338,7 @@ Authorization: Bearer <user-token>
 }
 ```
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -351,12 +351,12 @@ Authorization: Bearer <user-token>
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `400 Bad Request`: Missing refresh token
-- `401 Unauthorized`: Invalid or expired refresh token
+- `400 Bad Request`: 缺少 refresh token
+- `401 Unauthorized`: 無效或過期的 refresh token
 
-### Logout
+### 登出
 
 **Endpoint**: `POST /api/v1/auth/logout`
 
@@ -366,13 +366,13 @@ Authorization: Bearer <user-token>
 Authorization: Bearer <access-token>
 ```
 
-**Success Response** (204 No Content)
+**成功回應** (204 No Content)
 
-**Error Responses**:
+**錯誤回應**:
 
-- `401 Unauthorized`: Invalid or missing token
+- `401 Unauthorized`: 無效或缺少 token
 
-### Password Reset Request
+### 密碼重設請求
 
 **Endpoint**: `POST /api/v1/auth/password-reset/request`
 
@@ -384,7 +384,7 @@ Authorization: Bearer <access-token>
 }
 ```
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -394,9 +394,9 @@ Authorization: Bearer <access-token>
 }
 ```
 
-**Note**: Always returns success to prevent email enumeration
+**注意**: 總是回傳成功以防止 email 列舉攻擊
 
-### Password Reset Confirm
+### 確認密碼重設
 
 **Endpoint**: `POST /api/v1/auth/password-reset/confirm`
 
@@ -410,7 +410,7 @@ Authorization: Bearer <access-token>
 }
 ```
 
-**Success Response** (200 OK):
+**成功回應** (200 OK):
 
 ```json
 {
@@ -420,12 +420,12 @@ Authorization: Bearer <access-token>
 }
 ```
 
-**Error Responses**:
+**錯誤回應**:
 
-- `400 Bad Request`: Invalid token or password validation failed
-- `401 Unauthorized`: Expired reset token
+- `400 Bad Request`: 無效的 token 或密碼驗證失敗
+- `401 Unauthorized`: 過期的重設 token
 
-## Code Examples
+## 程式碼範例
 
 ### JavaScript (Fetch API)
 
@@ -439,43 +439,43 @@ async function login(email, password) {
     },
     body: JSON.stringify({ email, password })
   });
-  
+
   if (!response.ok) {
     throw new Error('Login failed');
   }
-  
+
   const data = await response.json();
-  
+
   // Store tokens securely
   sessionStorage.setItem('accessToken', data.data.accessToken);
   sessionStorage.setItem('refreshToken', data.data.refreshToken);
-  
+
   return data.data.user;
 }
 
 // Authenticated request
 async function getProfile() {
   const accessToken = sessionStorage.getItem('accessToken');
-  
+
   const response = await fetch('https://api.ecommerce.com/api/v1/customers/me', {
     headers: {
       'Authorization': `Bearer ${accessToken}`
     }
   });
-  
+
   if (response.status === 401) {
     // Token expired, try refresh
     await refreshToken();
     return getProfile(); // Retry
   }
-  
+
   return response.json();
 }
 
 // Refresh token
 async function refreshToken() {
   const refreshToken = sessionStorage.getItem('refreshToken');
-  
+
   const response = await fetch('https://api.ecommerce.com/api/v1/auth/refresh', {
     method: 'POST',
     headers: {
@@ -483,13 +483,13 @@ async function refreshToken() {
     },
     body: JSON.stringify({ refreshToken })
   });
-  
+
   if (!response.ok) {
     // Refresh failed, redirect to login
     window.location.href = '/login';
     return;
   }
-  
+
   const data = await response.json();
   sessionStorage.setItem('accessToken', data.data.accessToken);
   sessionStorage.setItem('refreshToken', data.data.refreshToken);
@@ -503,33 +503,33 @@ async function refreshToken() {
 public class AuthService {
     private final RestTemplate restTemplate;
     private final String apiBaseUrl = "https://api.ecommerce.com";
-    
+
     public LoginResponse login(String email, String password) {
         LoginRequest request = new LoginRequest(email, password);
-        
+
         ResponseEntity<ApiResponse<LoginResponse>> response = restTemplate.postForEntity(
             apiBaseUrl + "/api/v1/auth/login",
             request,
             new ParameterizedTypeReference<ApiResponse<LoginResponse>>() {}
         );
-        
+
         return response.getBody().getData();
     }
-    
+
     // Authenticated request
     public CustomerResponse getProfile(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
-        
+
         HttpEntity<Void> entity = new HttpEntity<>(headers);
-        
+
         ResponseEntity<ApiResponse<CustomerResponse>> response = restTemplate.exchange(
             apiBaseUrl + "/api/v1/customers/me",
             HttpMethod.GET,
             entity,
             new ParameterizedTypeReference<ApiResponse<CustomerResponse>>() {}
         );
-        
+
         return response.getBody().getData();
     }
 }
@@ -545,43 +545,43 @@ class AuthClient:
         self.base_url = base_url
         self.access_token = None
         self.refresh_token = None
-    
+
     def login(self, email, password):
         response = requests.post(
             f"{self.base_url}/api/v1/auth/login",
             json={"email": email, "password": password}
         )
         response.raise_for_status()
-        
+
         data = response.json()["data"]
         self.access_token = data["accessToken"]
         self.refresh_token = data["refreshToken"]
-        
+
         return data["user"]
-    
+
     def get_profile(self):
         headers = {"Authorization": f"Bearer {self.access_token}"}
-        
+
         response = requests.get(
             f"{self.base_url}/api/v1/customers/me",
             headers=headers
         )
-        
+
         if response.status_code == 401:
             # Token expired, refresh
             self.refresh_access_token()
             return self.get_profile()  # Retry
-        
+
         response.raise_for_status()
         return response.json()["data"]
-    
+
     def refresh_access_token(self):
         response = requests.post(
             f"{self.base_url}/api/v1/auth/refresh",
             json={"refreshToken": self.refresh_token}
         )
         response.raise_for_status()
-        
+
         data = response.json()["data"]
         self.access_token = data["accessToken"]
         self.refresh_token = data["refreshToken"]
@@ -613,105 +613,105 @@ curl -X POST https://api.ecommerce.com/api/v1/auth/refresh \
   }'
 ```
 
-## Security Best Practices
+## 安全最佳實踐
 
-### Token Storage
+### Token 儲存
 
-**✅ Recommended**:
+**✅ 建議**:
 
-- Store tokens in memory (JavaScript variables)
-- Use HttpOnly cookies for web applications
-- Use secure storage APIs on mobile (Keychain, KeyStore)
-- Use session storage for single-tab applications
+- 將 token 儲存在記憶體中（JavaScript 變數）
+- 對於 web 應用程式使用 HttpOnly cookies
+- 在行動裝置上使用安全儲存 API（Keychain, KeyStore）
+- 對於單分頁應用程式使用 session storage
 
-**❌ Not Recommended**:
+**❌ 不建議**:
 
-- localStorage (vulnerable to XSS attacks)
-- Cookies without HttpOnly flag
-- Plain text files
-- URL parameters
+- localStorage（容易受到 XSS 攻擊）
+- 沒有 HttpOnly 標誌的 Cookies
+- 純文字檔案
+- URL 參數
 
-### Token Transmission
+### Token 傳輸
 
-**✅ Always**:
+**✅ 務必**:
 
-- Use HTTPS in production
-- Include tokens in Authorization header
-- Validate SSL certificates
+- 在生產環境使用 HTTPS
+- 在 Authorization header 中包含 token
+- 驗證 SSL 憑證
 
-**❌ Never**:
+**❌ 絕不**:
 
-- Send tokens in URL parameters
-- Send tokens over HTTP
-- Log tokens in application logs
-- Share tokens between users
+- 在 URL 參數中傳送 token
+- 透過 HTTP 傳送 token
+- 在應用程式日誌中記錄 token
+- 在使用者之間共用 token
 
-### Token Lifecycle
+### Token 生命週期
 
-**Best Practices**:
+**最佳實踐**:
 
-1. **Short-Lived Access Tokens**: 1 hour expiration
-2. **Longer Refresh Tokens**: 7 days expiration
-3. **Token Rotation**: Issue new refresh token on refresh
-4. **Revocation**: Implement token blacklist for logout
-5. **Monitoring**: Track token usage and anomalies
+1. **短期 Access Token**: 1 小時過期
+2. **較長期的 Refresh Token**: 7 天過期
+3. **Token 輪換**: 在更新時發行新的 refresh token
+4. **撤銷**: 實施 token 黑名單用於登出
+5. **監控**: 追蹤 token 使用情況和異常
 
-### Password Security
+### 密碼安全
 
-**Requirements**:
+**需求**:
 
-- Minimum 8 characters
-- At least one uppercase letter
-- At least one lowercase letter
-- At least one number
-- At least one special character
-- No common passwords (checked against dictionary)
+- 最少 8 個字元
+- 至少一個大寫字母
+- 至少一個小寫字母
+- 至少一個數字
+- 至少一個特殊字元
+- 不使用常見密碼（與字典檢查）
 
-**Best Practices**:
+**最佳實踐**:
 
-- Use password managers
-- Enable two-factor authentication (2FA)
-- Change passwords regularly
-- Never reuse passwords
+- 使用密碼管理器
+- 啟用雙因素驗證 (2FA)
+- 定期更改密碼
+- 絕不重複使用密碼
 
-## Troubleshooting
+## 疑難排解
 
-### Common Issues
+### 常見問題
 
 **401 Unauthorized**:
 
-- **Cause**: Invalid or expired token
-- **Solution**: Refresh token or re-authenticate
+- **原因**: 無效或過期的 token
+- **解決方案**: 更新 token 或重新驗證
 
 **403 Forbidden**:
 
-- **Cause**: Insufficient permissions
-- **Solution**: Check required roles/permissions
+- **原因**: 權限不足
+- **解決方案**: 檢查所需的角色/權限
 
 **429 Too Many Requests**:
 
-- **Cause**: Rate limit exceeded
-- **Solution**: Implement exponential backoff
+- **原因**: 超過速率限制
+- **解決方案**: 實施指數退避
 
-### Error Codes
+### 錯誤代碼
 
-| Code | Description | Action |
+| 代碼 | 描述 | 動作 |
 |------|-------------|--------|
-| `INVALID_CREDENTIALS` | Wrong email or password | Check credentials |
-| `TOKEN_EXPIRED` | Access token expired | Refresh token |
-| `TOKEN_INVALID` | Malformed or invalid token | Re-authenticate |
-| `REFRESH_TOKEN_EXPIRED` | Refresh token expired | Re-authenticate |
-| `INSUFFICIENT_PERMISSIONS` | Missing required role | Contact administrator |
-| `ACCOUNT_LOCKED` | Too many failed attempts | Wait or contact support |
+| `INVALID_CREDENTIALS` | 錯誤的 email 或密碼 | 檢查憑證 |
+| `TOKEN_EXPIRED` | Access token 過期 | 更新 token |
+| `TOKEN_INVALID` | 格式錯誤或無效的 token | 重新驗證 |
+| `REFRESH_TOKEN_EXPIRED` | Refresh token 過期 | 重新驗證 |
+| `INSUFFICIENT_PERMISSIONS` | 缺少所需角色 | 聯絡管理員 |
+| `ACCOUNT_LOCKED` | 失敗嘗試次數過多 | 等待或聯絡支援 |
 
-## Related Documentation
+## 相關文件
 
-- [Error Handling](error-handling.md) - Complete error code reference
-- [Customer API](endpoints/customers.md) - Customer profile management
-- [Security Perspective](../../perspectives/security/) - Security architecture
-- [ADR-014: JWT Authentication](../../architecture/adrs/014-jwt-authentication-strategy.md) - Authentication design decisions
+- [錯誤處理](error-handling.md) - 完整錯誤代碼參考
+- [Customer API](endpoints/customers.md) - 客戶資料管理
+- [Security Perspective](../../perspectives/security/) - 安全架構
+- [ADR-014: JWT Authentication](../../architecture/adrs/014-jwt-authentication-strategy.md) - 身份驗證設計決策
 
 ---
 
-**Last Updated**: 2025-10-25  
+**最後更新**: 2025-10-25
 **API Version**: v1

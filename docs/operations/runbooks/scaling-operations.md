@@ -1,29 +1,29 @@
-# Runbook: Scaling Operations
+# Runbook: 擴展操作
 
-## Overview
+## 概述
 
-This runbook covers manual and automatic scaling procedures for the Enterprise E-Commerce Platform.
+本 runbook 涵蓋企業電商平台的手動和自動擴展程序。
 
-## When to Scale
+## 何時進行擴展
 
-### Scale Up Triggers
+### 擴展觸發條件
 
-- CPU utilization > 70% for 10+ minutes
-- Memory utilization > 80% for 5+ minutes
-- Request queue length increasing
-- Response time degradation
-- Anticipated traffic spike (marketing campaign, sales event)
+- CPU 使用率超過 70% 持續 10 分鐘以上
+- 記憶體使用率超過 80% 持續 5 分鐘以上
+- 請求佇列長度持續增加
+- 回應時間下降
+- 預期的流量尖峰 (行銷活動、促銷活動)
 
-### Scale Down Triggers
+### 縮減觸發條件
 
-- CPU utilization < 30% for 30+ minutes
-- Memory utilization < 50% for 30+ minutes
-- Low request rate during off-peak hours
-- Cost optimization needs
+- CPU 使用率低於 30% 持續 30 分鐘以上
+- 記憶體使用率低於 50% 持續 30 分鐘以上
+- 離峰時段的低請求率
+- 成本最佳化需求
 
 ## Horizontal Pod Autoscaling (HPA)
 
-### Check Current HPA Status
+### 檢查當前 HPA 狀態
 
 ```bash
 # Get HPA status
@@ -39,7 +39,7 @@ kubectl get hpa ecommerce-backend-hpa -n production -o yaml
 kubectl get events -n production --field-selector involvedObject.name=ecommerce-backend-hpa
 ```
 
-### Configure HPA
+### 配置 HPA
 
 ```yaml
 # hpa.yaml
@@ -112,7 +112,7 @@ spec:
       selectPolicy: Min
 ```
 
-### Apply HPA Configuration
+### 套用 HPA 配置
 
 ```bash
 # Apply HPA
@@ -125,11 +125,11 @@ kubectl get hpa -n production -w
 kubectl top pods -n production -l app=ecommerce-backend
 ```
 
-## Manual Scaling
+## 手動擴展
 
-### Scale Application Pods
+### 擴展應用程式 Pod
 
-#### Scale Up
+#### 擴展
 
 ```bash
 # Check current replica count
@@ -145,7 +145,7 @@ kubectl get pods -n production -l app=ecommerce-backend -w
 kubectl get pods -n production -l app=ecommerce-backend | grep "1/1.*Running" | wc -l
 ```
 
-#### Scale Down
+#### 縮減
 
 ```bash
 # Scale down to 4 replicas
@@ -158,9 +158,9 @@ kubectl get pods -n production -l app=ecommerce-backend -w
 kubectl get events -n production | grep "ecommerce-backend" | grep "Killing"
 ```
 
-### Scale Database
+### 擴展資料庫
 
-#### Read Replicas
+#### Read Replica
 
 ```bash
 # Add read replica
@@ -180,7 +180,7 @@ kubectl set env deployment/ecommerce-backend \
   -n production
 ```
 
-#### Vertical Scaling (Instance Size)
+#### 垂直擴展 (Instance 大小)
 
 ```bash
 # Modify RDS instance class
@@ -199,9 +199,9 @@ aws rds wait db-instance-available \
   --db-instance-identifier ecommerce-production
 ```
 
-### Scale Cache (Redis)
+### 擴展 Cache (Redis)
 
-#### Add Cache Nodes
+#### 增加 Cache Node
 
 ```bash
 # Increase number of cache nodes
@@ -216,7 +216,7 @@ aws elasticache describe-replication-groups \
   --query 'ReplicationGroups[0].Status'
 ```
 
-#### Vertical Scaling (Node Type)
+#### 垂直擴展 (Node Type)
 
 ```bash
 # Modify cache node type
@@ -226,9 +226,9 @@ aws elasticache modify-replication-group \
   --apply-immediately
 ```
 
-### Scale Kafka (MSK)
+### 擴展 Kafka (MSK)
 
-#### Add Brokers
+#### 增加 Broker
 
 ```bash
 # Get current broker count
@@ -247,7 +247,7 @@ aws kafka describe-cluster-operation \
   --cluster-operation-arn ${OPERATION_ARN}
 ```
 
-#### Vertical Scaling (Broker Type)
+#### 垂直擴展 (Broker Type)
 
 ```bash
 # Update broker type
@@ -257,9 +257,9 @@ aws kafka update-broker-type \
   --target-instance-type kafka.m5.2xlarge
 ```
 
-## Cluster Scaling (EKS Nodes)
+## Cluster 擴展 (EKS Node)
 
-### Check Current Node Status
+### 檢查當前 Node 狀態
 
 ```bash
 # Get node count and status
@@ -272,9 +272,9 @@ kubectl top nodes
 kubectl get pods -n production -o wide | awk '{print $7}' | sort | uniq -c
 ```
 
-### Scale Node Group
+### 擴展 Node Group
 
-#### Using eksctl
+#### 使用 eksctl
 
 ```bash
 # Scale node group
@@ -289,7 +289,7 @@ eksctl scale nodegroup \
 kubectl get nodes -w
 ```
 
-#### Using AWS CLI
+#### 使用 AWS CLI
 
 ```bash
 # Update Auto Scaling Group
@@ -303,7 +303,7 @@ aws autoscaling update-auto-scaling-group \
 kubectl wait --for=condition=Ready nodes --all --timeout=600s
 ```
 
-### Add New Node Group
+### 新增 Node Group
 
 ```bash
 # Create new node group with larger instances
@@ -324,9 +324,9 @@ kubectl drain -l node-group=ng-1 --ignore-daemonsets --delete-emptydir-data
 kubectl get pods -n production -o wide
 ```
 
-## Scaling for Specific Events
+## 特定事件的擴展
 
-### Pre-Event Scaling (Marketing Campaign)
+### 事件前擴展 (行銷活動)
 
 ```bash
 # 1 hour before event
@@ -357,7 +357,7 @@ eksctl scale nodegroup \
 ./scripts/preload-data.sh
 ```
 
-### Post-Event Scale Down
+### 事件後縮減
 
 ```bash
 # Wait 2 hours after event ends
@@ -382,9 +382,9 @@ eksctl scale nodegroup \
   --nodes=6
 ```
 
-## Monitoring During Scaling
+## 擴展期間的監控
 
-### Key Metrics to Watch
+### 關鍵 Metric
 
 ```bash
 # Monitor pod CPU/Memory
@@ -403,36 +403,36 @@ watch -n 5 'kubectl logs deployment/ecommerce-backend -n production --tail=100 |
 watch -n 5 'kubectl logs deployment/ecommerce-backend -n production --tail=100 | grep "ERROR" | wc -l'
 ```
 
-### Grafana Dashboards
+### Grafana Dashboard
 
-- **Scaling Dashboard**: Monitor scaling metrics in real-time
-- **Resource Utilization**: Track CPU, memory, network
-- **Application Performance**: Response times, throughput, errors
-- **Cost Dashboard**: Track scaling costs
+- **Scaling Dashboard**: 即時監控擴展 metric
+- **Resource Utilization**: 追蹤 CPU、記憶體、網路
+- **Application Performance**: 回應時間、吞吐量、錯誤
+- **Cost Dashboard**: 追蹤擴展成本
 
-## Verification
+## 驗證
 
-### After Scaling Up
+### 擴展後
 
-- [ ] All new pods are running (1/1 Ready)
-- [ ] New pods passing health checks
-- [ ] Load distributed across all pods
-- [ ] Response times improved or stable
-- [ ] Error rate normal (< 1%)
-- [ ] No resource constraints
-- [ ] Database connections healthy
-- [ ] Cache hit rate maintained
+- [ ] 所有新 pod 正在執行 (1/1 Ready)
+- [ ] 新 pod 通過健康檢查
+- [ ] 負載分散到所有 pod
+- [ ] 回應時間改善或穩定
+- [ ] 錯誤率正常 (< 1%)
+- [ ] 無資源限制
+- [ ] 資料庫連線健康
+- [ ] Cache 命中率維持
 
-### After Scaling Down
+### 縮減後
 
-- [ ] Remaining pods are running
-- [ ] No service disruption
-- [ ] Response times stable
-- [ ] Error rate normal
-- [ ] Resource utilization appropriate
-- [ ] Cost reduced as expected
+- [ ] 剩餘 pod 正在執行
+- [ ] 無服務中斷
+- [ ] 回應時間穩定
+- [ ] 錯誤率正常
+- [ ] 資源使用率適當
+- [ ] 成本如預期降低
 
-### Verification Commands
+### 驗證指令
 
 ```bash
 # Check pod status
@@ -452,9 +452,9 @@ curl http://localhost:8080/actuator/metrics/http.server.requests
 curl http://localhost:8080/actuator/metrics/jvm.memory.used
 ```
 
-## Troubleshooting
+## 疑難排解
 
-### Pods Not Scaling
+### Pod 無法擴展
 
 ```bash
 # Check HPA status
@@ -470,7 +470,7 @@ kubectl describe deployment ecommerce-backend -n production | grep -A 5 "Limits\
 kubectl get events -n production --sort-by='.lastTimestamp' | grep -i scale
 ```
 
-### Nodes Not Scaling
+### Node 無法擴展
 
 ```bash
 # Check Auto Scaling Group
@@ -486,7 +486,7 @@ aws autoscaling describe-scaling-activities \
 kubectl describe nodes | grep -A 5 "Allocatable"
 ```
 
-### Performance Not Improving
+### 效能未改善
 
 ```bash
 # Check if pods are actually receiving traffic
@@ -503,9 +503,9 @@ kubectl top pods -n production
 kubectl top nodes
 ```
 
-## Cost Optimization
+## 成本最佳化
 
-### Right-Sizing
+### 適當調整大小
 
 ```bash
 # Analyze resource usage over time
@@ -518,7 +518,7 @@ kubectl set resources deployment/ecommerce-backend \
   -n production
 ```
 
-### Spot Instances
+### Spot Instance
 
 ```bash
 # Create spot instance node group
@@ -538,7 +538,7 @@ kubectl label deployment ecommerce-backend-worker \
   -n production
 ```
 
-### Scheduled Scaling
+### 排程擴展
 
 ```bash
 # Scale down during off-peak hours (2 AM - 6 AM)
@@ -596,33 +596,33 @@ spec:
 EOF
 ```
 
-## Best Practices
+## 最佳實踐
 
-### 1. Gradual Scaling
+### 1. 漸進式擴展
 
-- Scale in small increments (1-2 pods at a time)
-- Monitor impact before scaling further
-- Allow time for pods to warm up
+- 以小幅度擴展 (一次 1-2 個 pod)
+- 在進一步擴展前監控影響
+- 允許 pod 有時間預熱
 
-### 2. Predictive Scaling
+### 2. 預測性擴展
 
-- Analyze historical traffic patterns
-- Pre-scale before known traffic spikes
-- Use scheduled scaling for predictable patterns
+- 分析歷史流量模式
+- 在已知流量尖峰前預先擴展
+- 對可預測模式使用排程擴展
 
-### 3. Testing
+### 3. 測試
 
-- Test scaling procedures in staging
-- Conduct load tests to verify scaling behavior
-- Practice scaling during low-traffic periods
+- 在 staging 環境測試擴展程序
+- 進行負載測試以驗證擴展行為
+- 在低流量時段練習擴展
 
-### 4. Documentation
+### 4. 文件記錄
 
-- Document scaling decisions
-- Track scaling events and outcomes
-- Update runbooks based on learnings
+- 記錄擴展決策
+- 追蹤擴展事件和結果
+- 根據經驗更新 runbook
 
-## Related
+## 相關文件
 
 - [High CPU Usage](high-cpu-usage.md)
 - [High Memory Usage](high-memory-usage.md)
@@ -631,6 +631,6 @@ EOF
 
 ---
 
-**Last Updated**: 2025-10-25  
-**Owner**: DevOps Team  
+**Last Updated**: 2025-10-25
+**Owner**: DevOps Team
 **Review Cycle**: Quarterly

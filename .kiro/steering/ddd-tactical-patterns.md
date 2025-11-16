@@ -1,33 +1,33 @@
 # DDD Tactical Patterns
 
-## Overview
+## 概述
 
-This document defines the Domain-Driven Design tactical patterns used in this project. These patterns are mandatory for all domain model implementations.
+本文件定義了此專案中使用的 Domain-Driven Design tactical patterns。這些 patterns 對所有 domain model 實作都是強制性的。
 
-**Purpose**: Provide rules and quick checks for DDD pattern implementation.
-**Detailed Examples**: See `.kiro/examples/ddd-patterns/` for comprehensive implementation guides.
+**目的**: 提供 DDD pattern 實作的規則和快速檢查。
+**詳細範例**: 請參閱 `.kiro/examples/ddd-patterns/` 以獲取完整的實作指南。
 
 ---
 
 ## Aggregate Root Pattern
 
-### Must Follow
+### 必須遵循
 
-- [ ] Extend `AggregateRoot` base class
-- [ ] Use `@AggregateRoot` annotation with metadata
-- [ ] Collect events with `collectEvent()` method
-- [ ] No direct repository access from domain
-- [ ] Aggregates are consistency boundaries
-- [ ] Only aggregate roots can be obtained from repositories
+- [ ] 繼承 `AggregateRoot` base class
+- [ ] 使用帶有 metadata 的 `@AggregateRoot` annotation
+- [ ] 使用 `collectEvent()` 方法收集 events
+- [ ] 從 domain 不直接存取 repository
+- [ ] Aggregates 是一致性邊界
+- [ ] 只有 aggregate roots 可以從 repositories 取得
 
-### Must Avoid
+### 必須避免
 
-- [ ] ❌ Exposing internal collections directly
-- [ ] ❌ Setters for internal state
-- [ ] ❌ Publishing events directly from aggregate
-- [ ] ❌ Accessing other aggregates directly
+- [ ] ❌ 直接暴露內部 collections
+- [ ] ❌ 內部狀態的 setters
+- [ ] ❌ 直接從 aggregate 發布 events
+- [ ] ❌ 直接存取其他 aggregates
 
-### Example Structure
+### 範例結構
 
 ```java
 @AggregateRoot(name = "Order", boundedContext = "Order", version = "1.0")
@@ -35,18 +35,18 @@ public class Order extends AggregateRoot {
     private final OrderId id;
     private OrderStatus status;
     private List<OrderItem> items;
-    
+
     public void submit() {
         // 1. Validate business rules
         validateOrderSubmission();
-        
+
         // 2. Update state
         status = OrderStatus.PENDING;
-        
+
         // 3. Collect domain event
         collectEvent(OrderSubmittedEvent.create(id, customerId, totalAmount));
     }
-    
+
     private void validateOrderSubmission() {
         if (items.isEmpty()) {
             throw new BusinessRuleViolationException("Cannot submit empty order");
@@ -55,29 +55,29 @@ public class Order extends AggregateRoot {
 }
 ```
 
-**Full Examples**: #[[file:../examples/ddd-patterns/aggregate-root-examples.md]]
+**完整範例**: #[[file:../examples/ddd-patterns/aggregate-root-examples.md]]
 
 ---
 
 ## Domain Events Pattern
 
-### Must Follow
+### 必須遵循
 
-- [ ] Use Record implementation for immutability
-- [ ] Implement `DomainEvent` interface
-- [ ] Use factory method with `createEventMetadata()`
-- [ ] Events are immutable and contain all necessary data
-- [ ] Use past tense naming (e.g., `OrderSubmitted`, not `SubmitOrder`)
-- [ ] Include aggregate ID in event
+- [ ] 使用 Record 實作以實現不可變性
+- [ ] 實作 `DomainEvent` interface
+- [ ] 使用帶有 `createEventMetadata()` 的 factory method
+- [ ] Events 是不可變的並包含所有必要資料
+- [ ] 使用過去式命名（例如，`OrderSubmitted`，而非 `SubmitOrder`）
+- [ ] 在 event 中包含 aggregate ID
 
-### Must Avoid
+### 必須避免
 
-- [ ] ❌ Mutable event fields
-- [ ] ❌ Business logic in events
-- [ ] ❌ References to mutable objects
-- [ ] ❌ Missing event metadata (eventId, occurredOn)
+- [ ] ❌ 可變的 event 欄位
+- [ ] ❌ events 中的業務邏輯
+- [ ] ❌ 對可變物件的引用
+- [ ] ❌ 缺少 event metadata (eventId、occurredOn)
 
-### Example Structure
+### 範例結構
 
 ```java
 public record OrderSubmittedEvent(
@@ -88,7 +88,7 @@ public record OrderSubmittedEvent(
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
-    
+
     // Factory method with automatic metadata
     public static OrderSubmittedEvent create(
         OrderId orderId,
@@ -102,12 +102,12 @@ public record OrderSubmittedEvent(
             metadata.eventId(), metadata.occurredOn()
         );
     }
-    
+
     @Override
     public String getEventType() {
         return DomainEvent.getEventTypeFromClass(this.getClass());
     }
-    
+
     @Override
     public String getAggregateId() {
         return orderId.getValue();
@@ -115,33 +115,33 @@ public record OrderSubmittedEvent(
 }
 ```
 
-**Full Examples**: #[[file:../examples/ddd-patterns/domain-events-examples.md]]
+**完整範例**: #[[file:../examples/ddd-patterns/domain-events-examples.md]]
 
 ---
 
 ## Value Objects Pattern
 
-### Must Follow
+### 必須遵循
 
-- [ ] Use Record for immutability
-- [ ] Validate in constructor
-- [ ] No setters
-- [ ] Implement equals/hashCode based on value
-- [ ] Make validation explicit and fail fast
-- [ ] Use descriptive names (e.g., `Email`, not `String`)
+- [ ] 使用 Record 以實現不可變性
+- [ ] 在 constructor 中驗證
+- [ ] 沒有 setters
+- [ ] 基於值實作 equals/hashCode
+- [ ] 使驗證明確且快速失敗
+- [ ] 使用描述性名稱（例如，`Email`，而非 `String`）
 
-### Must Avoid
+### 必須避免
 
-- [ ] ❌ Mutable fields
-- [ ] ❌ Setters or modification methods
-- [ ] ❌ Identity-based equality
-- [ ] ❌ Primitive obsession (using String instead of Email)
+- [ ] ❌ 可變欄位
+- [ ] ❌ Setters 或修改方法
+- [ ] ❌ 基於身份的相等性
+- [ ] ❌ Primitive obsession（使用 String 而非 Email）
 
-### Example Structure
+### 範例結構
 
 ```java
 public record Email(String value) {
-    
+
     public Email {
         // Validation in compact constructor
         if (value == null || value.isBlank()) {
@@ -151,7 +151,7 @@ public record Email(String value) {
             throw new IllegalArgumentException("Invalid email format: " + value);
         }
     }
-    
+
     // Factory method for clarity
     public static Email of(String value) {
         return new Email(value);
@@ -159,7 +159,7 @@ public record Email(String value) {
 }
 
 public record Money(BigDecimal amount, Currency currency) {
-    
+
     public Money {
         if (amount == null) {
             throw new IllegalArgumentException("Amount cannot be null");
@@ -168,7 +168,7 @@ public record Money(BigDecimal amount, Currency currency) {
             throw new IllegalArgumentException("Currency cannot be null");
         }
     }
-    
+
     // Business methods
     public Money add(Money other) {
         if (!currency.equals(other.currency)) {
@@ -176,36 +176,36 @@ public record Money(BigDecimal amount, Currency currency) {
         }
         return new Money(amount.add(other.amount), currency);
     }
-    
+
     public static Money zero() {
         return new Money(BigDecimal.ZERO, Currency.getInstance("USD"));
     }
 }
 ```
 
-**Full Examples**: #[[file:../examples/ddd-patterns/value-objects-examples.md]]
+**完整範例**: #[[file:../examples/ddd-patterns/value-objects-examples.md]]
 
 ---
 
 ## Repository Pattern
 
-### Must Follow
+### 必須遵循
 
-- [ ] Interface in domain layer
-- [ ] Implementation in infrastructure layer
-- [ ] Return domain objects, not entities
-- [ ] Use Optional for single results
-- [ ] Repository per aggregate root
-- [ ] Only aggregate roots have repositories
+- [ ] Interface 在 domain 層
+- [ ] 實作在 infrastructure 層
+- [ ] 回傳 domain objects，而非 entities
+- [ ] 對單一結果使用 Optional
+- [ ] 每個 aggregate root 一個 repository
+- [ ] 只有 aggregate roots 有 repositories
 
-### Must Avoid
+### 必須避免
 
-- [ ] ❌ Repository in infrastructure layer without domain interface
-- [ ] ❌ Exposing JPA entities
-- [ ] ❌ Business logic in repository
-- [ ] ❌ Repositories for non-aggregate entities
+- [ ] ❌ 在 infrastructure 層的 repository 沒有 domain interface
+- [ ] ❌ 暴露 JPA entities
+- [ ] ❌ repository 中的業務邏輯
+- [ ] ❌ 非 aggregate entities 的 repositories
 
-### Example Structure
+### 範例結構
 
 ```java
 // Domain layer: interface
@@ -223,16 +223,16 @@ package solid.humank.genaidemo.infrastructure.order;
 
 @Repository
 public class JpaOrderRepository implements OrderRepository {
-    
+
     private final OrderJpaRepository jpaRepository;
     private final OrderMapper mapper;
-    
+
     @Override
     public Optional<Order> findById(OrderId orderId) {
         return jpaRepository.findById(orderId.getValue())
             .map(mapper::toDomain);
     }
-    
+
     @Override
     public Order save(Order order) {
         OrderEntity entity = mapper.toEntity(order);
@@ -242,27 +242,27 @@ public class JpaOrderRepository implements OrderRepository {
 }
 ```
 
-**Full Examples**: #[[file:../examples/ddd-patterns/repository-examples.md]]
+**完整範例**: #[[file:../examples/ddd-patterns/repository-examples.md]]
 
 ---
 
 ## Domain Services Pattern
 
-### When to Use
+### 使用時機
 
-- [ ] Business logic that doesn't naturally fit in an aggregate
-- [ ] Operations involving multiple aggregates
-- [ ] Complex calculations or algorithms
-- [ ] Integration with external domain concepts
+- [ ] 不自然適合 aggregate 的業務邏輯
+- [ ] 涉及多個 aggregates 的操作
+- [ ] 複雜的計算或演算法
+- [ ] 與外部 domain 概念的整合
 
-### Must Follow
+### 必須遵循
 
-- [ ] Stateless services
-- [ ] Interface in domain layer
-- [ ] Implementation can be in domain or infrastructure
-- [ ] Use domain language in method names
+- [ ] 無狀態 services
+- [ ] Interface 在 domain 層
+- [ ] 實作可以在 domain 或 infrastructure
+- [ ] 方法名稱使用 domain 語言
 
-### Example Structure
+### 範例結構
 
 ```java
 // Domain layer
@@ -276,7 +276,7 @@ public interface PricingService {
 // Domain layer implementation
 @Service
 public class PricingServiceImpl implements PricingService {
-    
+
     @Override
     public Money calculateOrderTotal(Order order, Customer customer) {
         Money subtotal = order.calculateSubtotal();
@@ -290,43 +290,43 @@ public class PricingServiceImpl implements PricingService {
 
 ## Application Services Pattern
 
-### Responsibilities
+### 職責
 
-- [ ] Orchestrate use cases
-- [ ] Load aggregates from repositories
-- [ ] Invoke aggregate methods
-- [ ] Save aggregates
-- [ ] Publish domain events
-- [ ] Transaction management
+- [ ] 編排 use cases
+- [ ] 從 repositories 載入 aggregates
+- [ ] 呼叫 aggregate 方法
+- [ ] 儲存 aggregates
+- [ ] 發布 domain events
+- [ ] Transaction 管理
 
-### Must Follow
+### 必須遵循
 
-- [ ] Thin application services (orchestration only)
-- [ ] No business logic in application services
-- [ ] Use `@Transactional` for consistency
-- [ ] Publish events after successful transaction
+- [ ] 精簡的 application services（僅編排）
+- [ ] application services 中沒有業務邏輯
+- [ ] 使用 `@Transactional` 以確保一致性
+- [ ] 在成功的 transaction 之後發布 events
 
-### Example Structure
+### 範例結構
 
 ```java
 @Service
 @Transactional
 public class OrderApplicationService {
-    
+
     private final OrderRepository orderRepository;
     private final DomainEventApplicationService eventService;
-    
+
     public void submitOrder(SubmitOrderCommand command) {
         // 1. Load aggregate
         Order order = orderRepository.findById(command.orderId())
             .orElseThrow(() -> new OrderNotFoundException(command.orderId()));
-        
+
         // 2. Execute business operation (aggregate handles logic)
         order.submit();
-        
+
         // 3. Save aggregate
         orderRepository.save(order);
-        
+
         // 4. Publish collected events
         eventService.publishEventsFromAggregate(order);
     }
@@ -337,15 +337,15 @@ public class OrderApplicationService {
 
 ## Bounded Context Pattern
 
-### Must Follow
+### 必須遵循
 
-- [ ] Each context is independent
-- [ ] Communication via domain events
-- [ ] No direct dependencies between contexts
-- [ ] Shared kernel in `domain/shared/`
-- [ ] Context map documented
+- [ ] 每個 context 是獨立的
+- [ ] 透過 domain events 通訊
+- [ ] contexts 之間沒有直接依賴
+- [ ] Shared kernel 在 `domain/shared/`
+- [ ] Context map 已記錄
 
-### Package Structure
+### Package 結構
 
 ```text
 domain/
@@ -367,21 +367,21 @@ domain/
 
 ## Event Handlers Pattern
 
-### Must Follow
+### 必須遵循
 
-- [ ] Extend `AbstractDomainEventHandler<T>`
-- [ ] Annotate with `@Component`
-- [ ] Implement idempotency checks
-- [ ] Use `@TransactionalEventListener(phase = AFTER_COMMIT)`
-- [ ] Handle errors gracefully
+- [ ] 繼承 `AbstractDomainEventHandler<T>`
+- [ ] 使用 `@Component` 標註
+- [ ] 實作冪等性檢查
+- [ ] 使用 `@TransactionalEventListener(phase = AFTER_COMMIT)`
+- [ ] 優雅地處理錯誤
 
-### Example Structure
+### 範例結構
 
 ```java
 @Component
-public class OrderSubmittedEventHandler 
+public class OrderSubmittedEventHandler
     extends AbstractDomainEventHandler<OrderSubmittedEvent> {
-    
+
     @Override
     @Transactional
     public void handle(OrderSubmittedEvent event) {
@@ -389,15 +389,15 @@ public class OrderSubmittedEventHandler
         if (isEventAlreadyProcessed(event.getEventId())) {
             return;
         }
-        
+
         // 2. Execute cross-aggregate logic
         inventoryService.reserveItems(event.orderId());
         notificationService.sendOrderConfirmation(event.customerId());
-        
+
         // 3. Mark as processed
         markEventAsProcessed(event.getEventId());
     }
-    
+
     @Override
     public Class<OrderSubmittedEvent> getSupportedEventType() {
         return OrderSubmittedEvent.class;
@@ -407,15 +407,15 @@ public class OrderSubmittedEventHandler
 
 ---
 
-## Validation
+## 驗證
 
-### Architecture Compliance
+### 架構合規性
 
 ```bash
 ./gradlew archUnit  # Verify DDD patterns compliance
 ```
 
-### ArchUnit Rules
+### ArchUnit 規則
 
 ```java
 @ArchTest
@@ -437,28 +437,28 @@ static final ArchRule repositoryRules = classes()
 
 ---
 
-## Quick Reference
+## 快速參考
 
-| Pattern | Key Rule | Location |
+| Pattern | 關鍵規則 | 位置 |
 |---------|----------|----------|
-| Aggregate Root | Collect events, don't publish | `domain/{context}/model/aggregate/` |
-| Domain Event | Immutable Record | `domain/{context}/events/` |
-| Value Object | Immutable Record with validation | `domain/{context}/model/valueobject/` |
-| Repository | Interface in domain, impl in infra | Interface: `domain/{context}/repository/`<br>Impl: `infrastructure/{context}/` |
-| Domain Service | Stateless, domain logic | `domain/{context}/service/` |
-| Application Service | Orchestration only | `application/{context}/` |
+| Aggregate Root | 收集 events，不發布 | `domain/{context}/model/aggregate/` |
+| Domain Event | 不可變 Record | `domain/{context}/events/` |
+| Value Object | 帶驗證的不可變 Record | `domain/{context}/model/valueobject/` |
+| Repository | Interface 在 domain，impl 在 infra | Interface: `domain/{context}/repository/`<br>Impl: `infrastructure/{context}/` |
+| Domain Service | 無狀態，domain 邏輯 | `domain/{context}/service/` |
+| Application Service | 僅編排 | `application/{context}/` |
 
 ---
 
-## Related Documentation
+## 相關文件
 
-- **Core Principles**: #[[file:core-principles.md]]
-- **Design Principles**: #[[file:design-principles.md]]
-- **Architecture Constraints**: #[[file:architecture-constraints.md]]
-- **DDD Examples**: #[[file:../examples/ddd-patterns/]]
+- **核心原則**: #[[file:core-principles.md]]
+- **設計原則**: #[[file:design-principles.md]]
+- **架構約束**: #[[file:architecture-constraints.md]]
+- **DDD 範例**: #[[file:../examples/ddd-patterns/]]
 
 ---
 
-**Document Version**: 1.0
-**Last Updated**: 2025-01-17
-**Owner**: Architecture Team
+**文件版本**: 1.0
+**最後更新**: 2025-01-17
+**負責人**: Architecture Team

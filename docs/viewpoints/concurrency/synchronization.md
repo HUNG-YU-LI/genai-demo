@@ -8,21 +8,21 @@ stakeholders: ["Architects", "Developers", "Operations Team"]
 
 # Synchronization Mechanisms
 
-> **Viewpoint**: Concurrency  
-> **Purpose**: Document synchronization techniques for coordinating concurrent operations  
+> **Viewpoint**: Concurrency
+> **Purpose**: 記錄用於協調並行操作的同步技術
 > **Audience**: Architects, Developers, Operations Team
 
-## Overview
+## 概述
 
-This document describes the synchronization mechanisms used to coordinate concurrent access to shared resources, maintain data consistency, and prevent race conditions in the E-Commerce Platform's distributed system.
+本文件描述用於協調對共享資源的並行存取、維護資料一致性,以及防止 E-Commerce Platform 分散式系統中 race conditions 的同步機制。
 
 ![Distributed Locking Sequence](../../diagrams/generated/concurrency/distributed-locking.png)
 
-*Figure 1: Distributed locking sequence diagram showing lock acquisition, contention, timeout, and optimistic locking scenarios*
+*圖 1: Distributed locking sequence diagram showing lock acquisition, contention, timeout, and optimistic locking scenarios*
 
-## Synchronization Hierarchy
+## 同步階層
 
-Our synchronization strategy operates at multiple levels:
+我們的同步策略在多個層級運作:
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -45,17 +45,17 @@ Our synchronization strategy operates at multiple levels:
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## Database Transaction Management
+## 資料庫 Transaction 管理
 
-### 1. Transaction Boundaries
+### 1. Transaction 邊界
 
-We use Spring's `@Transactional` annotation to define clear transaction boundaries:
+我們使用 Spring 的 `@Transactional` annotation 來定義明確的 transaction 邊界:
 
 ```java
 @Service
 @Transactional
 public class OrderApplicationService {
-    
+
     // Read-only transactions for queries
     @Transactional(readOnly = true)
     public OrderSummary getOrderSummary(String orderId) {
@@ -63,23 +63,23 @@ public class OrderApplicationService {
             .orElseThrow(() -> new OrderNotFoundException(orderId));
         return OrderSummary.from(order);
     }
-    
+
     // Write transaction with proper isolation
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public OrderResult submitOrder(SubmitOrderCommand command) {
         Order order = orderRepository.findById(command.orderId())
             .orElseThrow(() -> new OrderNotFoundException(command.orderId()));
-        
+
         // Business logic within transaction boundary
         order.submit();
         Order savedOrder = orderRepository.save(order);
-        
+
         // Events are published after transaction commit
         eventPublisher.publishEvent(new OrderSubmittedEvent(savedOrder));
-        
+
         return OrderResult.success(savedOrder);
     }
-    
+
     // New transaction for independent operations
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void processPaymentCallback(PaymentCallbackEvent event) {
@@ -93,7 +93,7 @@ public class OrderApplicationService {
 
 ### 2. Optimistic Locking
 
-Primary mechanism for handling concurrent updates:
+處理並行更新的主要機制:
 
 ```java
 @Entity
@@ -101,15 +101,15 @@ Primary mechanism for handling concurrent updates:
 public class Order {
     @Id
     private String id;
-    
+
     @Version
     private Long version;                   // Optimistic locking
-    
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
-    
+
     private LocalDateTime lastModified;
-    
+
     public void submit() {
         if (this.status != OrderStatus.CREATED) {
             throw new IllegalStateException("Order cannot be submitted in status: " + this.status);
@@ -121,12 +121,12 @@ public class Order {
 }
 ```
 
-**Handling Optimistic Lock Exceptions**:
+**處理 Optimistic Lock Exceptions**:
 
 ```java
 @Service
 public class OrderService {
-    
+
     @Retryable(
         value = {OptimisticLockingFailureException.class},
         maxAttempts = 3,
@@ -140,12 +140,12 @@ public class OrderService {
             throw e; // Trigger retry
         }
     }
-    
+
     @Recover
     public OrderResult recoverFromOptimisticLockFailure(
-            OptimisticLockingFailureException ex, 
+            OptimisticLockingFailureException ex,
             SubmitOrderCommand command) {
-        log.error("Failed to submit order {} after retries due to concurrent modification", 
+        log.error("Failed to submit order {} after retries due to concurrent modification",
             command.orderId());
         return OrderResult.failure("Order is being modified by another process. Please try again.");
     }
@@ -154,27 +154,27 @@ public class OrderService {
 
 ### 3. Distributed Locking
 
-For operations requiring coordination across multiple application instances:
+用於需要跨多個應用程式實例協調的操作:
 
 ```java
 @Component
 public class DistributedLockService {
-    
+
     private final RedisTemplate<String, String> redisTemplate;
-    
+
     public <T> T executeWithLock(String lockKey, Duration timeout, Supplier<T> operation) {
         String lockValue = UUID.randomUUID().toString();
         String fullLockKey = "lock:" + lockKey;
-        
+
         try {
             // Attempt to acquire lock
             Boolean acquired = redisTemplate.opsForValue()
                 .setIfAbsent(fullLockKey, lockValue, timeout);
-            
+
             if (!acquired) {
                 throw new LockAcquisitionException("Failed to acquire lock: " + lockKey);
             }
-            
+
             // Execute operation with lock held
             return operation.get();
         } finally {
@@ -182,16 +182,16 @@ public class DistributedLockService {
             releaseLock(fullLockKey, lockValue);
         }
     }
-    
+
     private void releaseLock(String lockKey, String lockValue) {
         // Lua script for atomic lock release
-        String script = 
+        String script =
             "if redis.call('get', KEYS[1]) == ARGV[1] then " +
             "  return redis.call('del', KEYS[1]) " +
             "else " +
             "  return 0 " +
             "end";
-        
+
         redisTemplate.execute(
             RedisScript.of(script, Boolean.class),
             Collections.singletonList(lockKey),
@@ -201,28 +201,28 @@ public class DistributedLockService {
 }
 ```
 
-## Event Ordering and Consistency
+## 事件排序和一致性
 
 ### 1. Kafka Partition-based Ordering
 
-Events for the same aggregate are guaranteed to be ordered:
+相同 aggregate 的事件保證有序:
 
 ```java
 @Component
 public class OrderedEventPublisher {
-    
+
     private final KafkaTemplate<String, DomainEvent> kafkaTemplate;
-    
+
     public void publishEvent(DomainEvent event) {
         // Use aggregate ID as partition key to ensure ordering
         String partitionKey = event.getAggregateId();
-        
+
         ProducerRecord<String, DomainEvent> record = new ProducerRecord<>(
             "domain-events",
             partitionKey,  // Events for same aggregate go to same partition
             event
         );
-        
+
         kafkaTemplate.send(record);
     }
 }
@@ -233,60 +233,60 @@ public class OrderedEventPublisher {
 ```java
 @Component
 public class OrderedEventProcessor {
-    
+
     private final ConcurrentMap<String, Long> lastProcessedSequence = new ConcurrentHashMap<>();
-    
+
     @KafkaListener(topics = "domain-events")
     public void processEvent(DomainEvent event) {
         String aggregateId = event.getAggregateId();
         long eventSequence = event.getSequenceNumber();
-        
+
         synchronized (getLock(aggregateId)) {
             Long lastSequence = lastProcessedSequence.get(aggregateId);
-            
+
             if (lastSequence == null || eventSequence == lastSequence + 1) {
                 processEventInternal(event);
                 lastProcessedSequence.put(aggregateId, eventSequence);
             } else {
-                log.warn("Out-of-order event detected: {} for aggregate {}", 
+                log.warn("Out-of-order event detected: {} for aggregate {}",
                     eventSequence, aggregateId);
             }
         }
     }
-    
+
     private Object getLock(String aggregateId) {
         return aggregateId.intern();
     }
 }
 ```
 
-## Deadlock Prevention
+## Deadlock 預防
 
 ### 1. Lock Ordering
 
-Always acquire locks in a consistent order:
+總是以一致的順序獲取 locks:
 
 ```java
 @Service
 public class TransferService {
-    
+
     public void transferFunds(String fromAccountId, String toAccountId, Money amount) {
         // Always lock accounts in alphabetical order to prevent deadlock
         String firstLock = fromAccountId.compareTo(toAccountId) < 0 ? fromAccountId : toAccountId;
         String secondLock = fromAccountId.compareTo(toAccountId) < 0 ? toAccountId : fromAccountId;
-        
+
         distributedLockService.executeWithLock(firstLock, Duration.ofSeconds(5), () -> {
             return distributedLockService.executeWithLock(secondLock, Duration.ofSeconds(5), () -> {
                 // Both accounts locked in consistent order
                 Account fromAccount = accountRepository.findById(fromAccountId).orElseThrow();
                 Account toAccount = accountRepository.findById(toAccountId).orElseThrow();
-                
+
                 fromAccount.debit(amount);
                 toAccount.credit(amount);
-                
+
                 accountRepository.save(fromAccount);
                 accountRepository.save(toAccount);
-                
+
                 return null;
             });
         });
@@ -299,23 +299,23 @@ public class TransferService {
 ```java
 @Component
 public class DeadlockDetector {
-    
+
     private final ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-    
+
     @Scheduled(fixedRate = 30000) // Every 30 seconds
     public void detectDeadlocks() {
         long[] deadlockedThreads = threadBean.findDeadlockedThreads();
-        
+
         if (deadlockedThreads != null && deadlockedThreads.length > 0) {
             ThreadInfo[] threadInfos = threadBean.getThreadInfo(deadlockedThreads, true, true);
-            
+
             StringBuilder report = new StringBuilder("Deadlock detected:\n");
             for (ThreadInfo info : threadInfos) {
                 report.append("Thread: ").append(info.getThreadName()).append("\n");
                 report.append("  State: ").append(info.getThreadState()).append("\n");
                 report.append("  Lock: ").append(info.getLockName()).append("\n");
             }
-            
+
             log.error(report.toString());
             alertService.sendCriticalAlert("Deadlock Detected", report.toString());
         }
@@ -323,25 +323,25 @@ public class DeadlockDetector {
 }
 ```
 
-## Best Practices
+## 最佳實踐
 
-### 1. Minimize Lock Scope
+### 1. 最小化 Lock 範圍
 
 ```java
 // ✅ GOOD: Lock only critical section
 public void processOrder(Order order) {
     validateOrder(order);
     calculateTotal(order);
-    
+
     synchronized(this) {
         updateInventory(order);     // Only this needs lock
     }
-    
+
     sendNotification(order);
 }
 ```
 
-### 2. Use Appropriate Isolation Levels
+### 2. 使用適當的 Isolation Levels
 
 ```java
 @Transactional(isolation = Isolation.READ_COMMITTED)  // Default
@@ -355,11 +355,11 @@ public OrderReport generateReport(String orderId) {
 }
 ```
 
-## Monitoring and Troubleshooting
+## 監控和故障排除
 
 ### Lock Metrics
 
-**Key Metrics to Monitor**:
+**要監控的關鍵指標**:
 
 - Lock acquisition time
 - Lock hold duration
@@ -367,20 +367,20 @@ public OrderReport generateReport(String orderId) {
 - Deadlock occurrences
 - Lock timeout rate
 
-**Monitoring Implementation**:
+**監控實作**:
 
 ```java
 @Aspect
 @Component
 public class LockMonitoringAspect {
-    
+
     private final MeterRegistry meterRegistry;
-    
+
     @Around("@annotation(DistributedLock)")
     public Object monitorLock(ProceedingJoinPoint joinPoint) throws Throwable {
         Timer.Sample sample = Timer.start(meterRegistry);
         String lockName = getLockName(joinPoint);
-        
+
         try {
             Object result = joinPoint.proceed();
             sample.stop(Timer.builder("distributed.lock.acquisition")
@@ -399,43 +399,43 @@ public class LockMonitoringAspect {
 }
 ```
 
-### Troubleshooting Common Issues
+### 常見問題故障排除
 
-**Issue 1: High Lock Contention**
+**問題 1: 高 Lock Contention**
 
-- **Symptom**: Slow response times, high lock wait times
-- **Solution**: Reduce lock scope, use optimistic locking, partition data
+- **症狀**: 回應時間慢,高 lock wait times
+- **解決方案**: 減少 lock 範圍,使用 optimistic locking,分割資料
 
-**Issue 2: Deadlocks**
+**問題 2: Deadlocks**
 
-- **Symptom**: Threads blocked indefinitely
-- **Solution**: Implement lock ordering, use timeouts, review lock acquisition patterns
+- **症狀**: Threads 無限期阻塞
+- **解決方案**: 實作 lock ordering,使用 timeouts,檢視 lock acquisition patterns
 
-**Issue 3: Lock Timeouts**
+**問題 3: Lock Timeouts**
 
-- **Symptom**: Frequent lock acquisition failures
-- **Solution**: Increase timeout, optimize locked operations, scale horizontally
+- **症狀**: 頻繁的 lock acquisition 失敗
+- **解決方案**: 增加 timeout,最佳化鎖定操作,水平擴展
 
-## Performance Considerations
+## 效能考量
 
-### Lock Performance Comparison
+### Lock 效能比較
 
-| Mechanism | Overhead | Scalability | Use Case |
+| 機制 | 開銷 | 可擴展性 | 使用案例 |
 |-----------|----------|-------------|----------|
-| Optimistic Locking | Low | High | Low contention scenarios |
-| Pessimistic Locking | Medium | Medium | High contention scenarios |
-| Distributed Locks | High | Low | Cross-instance coordination |
-| Event Ordering | Low | High | Asynchronous operations |
+| Optimistic Locking | 低 | 高 | 低競爭場景 |
+| Pessimistic Locking | 中 | 中 | 高競爭場景 |
+| Distributed Locks | 高 | 低 | 跨實例協調 |
+| Event Ordering | 低 | 高 | 非同步操作 |
 
-### Optimization Strategies
+### 最佳化策略
 
-1. **Minimize Lock Scope**: Lock only critical sections
-2. **Use Read-Write Locks**: Allow concurrent reads
-3. **Implement Lock Striping**: Partition locks by key
-4. **Cache Lock Status**: Reduce lock acquisition attempts
-5. **Use Optimistic Locking First**: Fall back to pessimistic only when needed
+1. **最小化 Lock 範圍**: 只鎖定關鍵部分
+2. **使用 Read-Write Locks**: 允許並行讀取
+3. **實作 Lock Striping**: 依 key 分割 locks
+4. **快取 Lock Status**: 減少 lock acquisition 嘗試
+5. **優先使用 Optimistic Locking**: 只在需要時回退到 pessimistic
 
-## Related Documentation
+## 相關文件
 
 - [Concurrency Viewpoint Overview](overview.md) - Overall concurrency model ←
 - [Synchronous vs Asynchronous Operations](sync-async-operations.md) - Operation classification ←
@@ -444,7 +444,7 @@ public class LockMonitoringAspect {
 
 ---
 
-**Document Status**: Active  
-**Last Review**: 2025-10-23  
-**Next Review**: 2025-11-23  
+**Document Status**: Active
+**Last Review**: 2025-10-23
+**Next Review**: 2025-11-23
 **Owner**: Architecture Team

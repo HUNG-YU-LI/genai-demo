@@ -1,6 +1,6 @@
 ---
 adr_number: 012
-title: "BDD with Cucumber for Requirements Specification"
+title: "BDD 與 Cucumber 用於 Requirements Specification"
 date: 2025-10-24
 status: "accepted"
 supersedes: []
@@ -10,188 +10,188 @@ affected_viewpoints: ["development"]
 affected_perspectives: ["development-resource", "evolution"]
 ---
 
-# ADR-012: BDD with Cucumber for Requirements Specification
+# ADR-012: BDD 與 Cucumber 用於 Requirements Specification
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-24
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires a methodology that:
+The Enterprise E-Commerce Platform 需要methodology that:
 
-- Bridges the gap between business requirements and technical implementation
-- Provides executable specifications that serve as living documentation
-- Enables collaboration between business stakeholders and developers
-- Ensures requirements are testable and verifiable
-- Supports Test-Driven Development (TDD) workflow
-- Maintains alignment between business goals and implementation
-- Provides clear acceptance criteria for features
-- Enables regression testing of business scenarios
+- Bridges the gap between business requirements 和 technical implementation
+- 提供s executable specifications that serve as living documentation
+- 啟用s collaboration between business stakeholders 和 developers
+- Ensures requirements are testable 和 verifiable
+- 支援s Test-Driven Development (TDD) workflow
+- 維持s alignment between business goals 和 implementation
+- 提供s clear acceptance criteria 用於 features
+- 啟用s regression testing of business scenarios
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Need for clear, unambiguous requirements
-- Requirement for business stakeholder involvement in development
-- Compliance requirements for documented business rules
-- Need for living documentation that stays up-to-date
-- Reduction of misunderstandings between business and technical teams
-- Support for agile development with clear acceptance criteria
+- 需要 clear, unambiguous requirements
+- Requirement 用於 business stakeholder involvement in development
+- Compliance requirements 用於 documented business rules
+- 需要 living documentation that stays up-to-date
+- Reduction of misunderstandings between business 和 technical teams
+- 支援 用於 agile development 與 clear acceptance criteria
 
-**Constraints**:
+**限制條件**：
 
 - Team has limited BDD experience
 - Business stakeholders have limited technical knowledge
-- Must integrate with existing testing strategy (ADR-006)
-- Timeline: 3 months to establish BDD practice
-- Budget: No additional tooling costs
+- 必須 integrate 與 existing testing strategy (ADR-006)
+- Timeline: 3 個月 to establish BDD practice
+- 預算: No additional tooling costs
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
 - Spring Boot 3.4.5 + Java 21
-- JUnit 5 for testing (ADR-006)
+- JUnit 5 用於 testing (ADR-006)
 - Domain-Driven Design approach (ADR-002)
 - Hexagonal Architecture (ADR-002)
 - Event-driven architecture (ADR-003)
 
-**Requirements**:
+**需求**：
 
 - Business-readable specifications
 - Executable specifications
-- Integration with CI/CD pipeline
-- Support for multiple languages (English, Chinese)
+- Integration 與 CI/CD pipeline
+- 支援 用於 multiple languages (English, Chinese)
 - Reusable step definitions
 - Clear test reporting
-- Version control for specifications
+- Version control 用於 specifications
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Business Collaboration**: Enable non-technical stakeholders to understand tests
-2. **Living Documentation**: Specifications that stay current with code
+1. **Business Collaboration**: 啟用 non-technical stakeholders to understand tests
+2. **Living Documentation**: Specifications that stay current 與 code
 3. **Executable Specifications**: Tests that verify business requirements
 4. **Ubiquitous Language**: Use domain language in specifications
 5. **Test Automation**: Automated execution of business scenarios
-6. **Maintainability**: Easy to update as requirements change
-7. **Integration**: Works with existing testing framework
-8. **Cost**: Free and open source
+6. **維持ability**: 容易update as requirements change
+7. **Integration**: Works 與 existing testing framework
+8. **成本**： Free and open source
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Cucumber with Gherkin (BDD Framework)
+### 選項 1： Cucumber with Gherkin (BDD Framework)
 
-**Description**: BDD framework using Gherkin syntax for business-readable specifications
+**描述**： BDD framework using Gherkin syntax for business-readable specifications
 
-**Pros**:
+**優點**：
 
 - ✅ Business-readable Gherkin syntax (Given-When-Then)
-- ✅ Excellent Java integration (Cucumber-JVM)
-- ✅ Supports multiple languages
-- ✅ Large community and ecosystem
-- ✅ Integration with Spring Boot
+- ✅ 優秀的Java整合 (Cucumber-JVM)
+- ✅ 支援s multiple languages
+- ✅ 大型的 社群和生態系統
+- ✅ Integration 與 Spring Boot
 - ✅ Reusable step definitions
 - ✅ Clear test reports
-- ✅ IDE support (IntelliJ, VS Code)
+- ✅ IDE 支援 (IntelliJ, VS Code)
 - ✅ CI/CD integration
 - ✅ Living documentation generation
 
-**Cons**:
+**缺點**：
 
-- ⚠️ Learning curve for Gherkin syntax
-- ⚠️ Can be verbose for simple scenarios
-- ⚠️ Requires discipline to maintain
+- ⚠️ Learning curve 用於 Gherkin syntax
+- ⚠️ 可以 be verbose 用於 簡單的 scenarios
+- ⚠️ Requires discipline to 維持
 
-**Cost**: $0 (open source)
+**成本**： $0 (open source)
 
-**Risk**: **Low** - Mature, widely adopted
+**風險**： **Low** - Mature, widely adopted
 
-### Option 2: JBehave
+### 選項 2： JBehave
 
-**Description**: Java BDD framework similar to Cucumber
+**描述**： Java BDD framework similar to Cucumber
 
-**Pros**:
+**優點**：
 
 - ✅ Java-native BDD framework
 - ✅ Similar to Cucumber
-- ✅ Good Spring integration
+- ✅ 良好的Spring整合
 
-**Cons**:
+**缺點**：
 
 - ❌ Smaller community than Cucumber
 - ❌ Less active development
 - ❌ Fewer IDE plugins
 - ❌ Less documentation
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **Medium** - Smaller ecosystem
+**風險**： **Medium** - Smaller ecosystem
 
-### Option 3: Spock Framework
+### 選項 3： Spock Framework
 
-**Description**: Groovy-based testing framework with BDD-style syntax
+**描述**： Groovy-based testing framework with BDD-style syntax
 
-**Pros**:
+**優點**：
 
 - ✅ Expressive syntax
-- ✅ Good for unit tests
+- ✅ 良好的 用於 unit tests
 - ✅ Data-driven testing
 
-**Cons**:
+**缺點**：
 
 - ❌ Requires Groovy knowledge
 - ❌ Not business-readable
-- ❌ Less suitable for collaboration with non-technical stakeholders
-- ❌ Primarily for developers
+- ❌ Less suitable 用於 collaboration 與 non-technical stakeholders
+- ❌ Primarily 用於 developers
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **Medium** - Not true BDD
+**風險**： **Medium** - Not true BDD
 
-### Option 4: Plain JUnit with Descriptive Names
+### 選項 4： Plain JUnit with Descriptive Names
 
-**Description**: Use JUnit with very descriptive test method names
+**描述**： Use JUnit with very descriptive test method names
 
-**Pros**:
+**優點**：
 
 - ✅ No additional framework
 - ✅ Team already knows JUnit
-- ✅ Simple
+- ✅ 簡單的
 
-**Cons**:
+**缺點**：
 
 - ❌ Not business-readable
 - ❌ No living documentation
-- ❌ No collaboration with business stakeholders
+- ❌ No collaboration 與 business stakeholders
 - ❌ Doesn't bridge business-technical gap
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **High** - Misses BDD benefits
+**風險**： **High** - Misses BDD benefits
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **Cucumber with Gherkin (BDD Framework)**
+**選擇的選項**： **Cucumber with Gherkin (BDD Framework)**
 
-### Rationale
+### 理由
 
-Cucumber with Gherkin was selected for the following reasons:
+Cucumber 與 Gherkin被選擇的原因如下：
 
-1. **Business Collaboration**: Gherkin syntax is readable by non-technical stakeholders
+1. **Business Collaboration**: Gherkin syntax is readable 透過 non-technical stakeholders
 2. **Ubiquitous Language**: Scenarios use domain language from DDD
 3. **Living Documentation**: Feature files serve as up-to-date documentation
 4. **Executable Specifications**: Scenarios are automated tests
-5. **Mature Ecosystem**: Large community, excellent tooling, extensive documentation
-6. **Spring Boot Integration**: Seamless integration with existing stack
-7. **Reusability**: Step definitions can be reused across scenarios
+5. **Mature Ecosystem**: 大型的 community, 優秀的 tooling, extensive documentation
+6. **Spring Boot Integration**: Seamless integration 與 existing stack
+7. **Reusability**: Step definitions 可以 be reused 跨 scenarios
 8. **Reporting**: Clear, business-friendly test reports
-9. **IDE Support**: Excellent plugins for IntelliJ IDEA and VS Code
+9. **IDE 支援**: 優秀的 plugins 用於 IntelliJ IDEA 和 VS Code
 
-**Implementation Strategy**:
+**實作策略**：
 
 **Gherkin Structure**:
 
@@ -323,29 +323,29 @@ public class OrderStepDefinitions {
 }
 ```
 
-**Why Not JBehave**: Smaller community and less active development compared to Cucumber.
+**為何不選 JBehave**： Smaller community 和 less active development compared to Cucumber.
 
-**Why Not Spock**: Not business-readable, primarily for developers, doesn't enable business collaboration.
+**為何不選 Spock**： Not business-readable, primarily 用於 developers, doesn't 啟用 business collaboration.
 
-**Why Not Plain JUnit**: Misses the key benefit of BDD - collaboration with business stakeholders through executable specifications.
+**為何不選 Plain JUnit**： Misses the key benefit of BDD - collaboration 與 business stakeholders through executable specifications.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Business Stakeholders | High | Can read and validate requirements | Training on Gherkin, workshops |
+| Business Stakeholders | High | 可以 read 和 validate requirements | Training on Gherkin, workshops |
 | Product Owners | High | Write acceptance criteria in Gherkin | Training, templates, examples |
-| Developers | High | Write step definitions and scenarios | Training, pair programming |
-| QA Team | High | Use scenarios for testing | Training, test automation guides |
-| Architects | Medium | Ensure scenarios align with architecture | Review process, guidelines |
+| Developers | High | Write step definitions 和 scenarios | Training, pair programming |
+| QA Team | High | Use scenarios 用於 testing | Training, test automation guides |
+| Architects | Medium | Ensure scenarios align 與 architecture | Review process, guidelines |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - Requirements gathering process
 - Development workflow (TDD/BDD)
@@ -354,7 +354,7 @@ Affects:
 - Stakeholder collaboration
 - CI/CD pipeline
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
@@ -364,11 +364,11 @@ Affects:
 | Over-specification | Medium | Medium | Focus on business value, avoid technical details |
 | Step definition duplication | Medium | Low | Reusable step library, code reviews |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Setup and Training (Week 1-2)
+### 第 1 階段： Setup and Training （第 1-2 週）
 
 - [ ] Add Cucumber dependencies
 
@@ -440,7 +440,7 @@ Affects:
   - Step definition best practices
   - BDD workflow demonstration
 
-### Phase 2: Core Step Definitions (Week 2-3)
+### 第 2 階段： Core Step Definitions （第 2-3 週）
 
 - [ ] Create base configuration
 
@@ -520,7 +520,7 @@ Affects:
   }
   ```
 
-### Phase 3: Feature Implementation (Week 3-6)
+### 第 3 階段： Feature Implementation （第 3-6 週）
 
 - [ ] Write Customer features
 
@@ -621,11 +621,11 @@ Affects:
       And the error should be "Payment method invalid"
   ```
 
-- [ ] Implement step definitions for all features
+- [ ] Implement step definitions 用於 all features
 
-### Phase 4: Business Stakeholder Collaboration (Week 6-8)
+### 第 4 階段： Business Stakeholder Collaboration （第 6-8 週）
 
-- [ ] Conduct BDD workshops with business stakeholders
+- [ ] Conduct BDD workshops 與 business stakeholders
   - Explain Gherkin syntax
   - Demonstrate scenario writing
   - Practice writing scenarios together
@@ -659,7 +659,7 @@ Affects:
       And [expected outcomes]
   ```
 
-### Phase 5: CI/CD Integration (Week 8-9)
+### Phase 5: CI/CD Integration （第 8-9 週）
 
 - [ ] Configure Gradle task
 
@@ -707,7 +707,7 @@ Affects:
   </dependency>
   ```
 
-### Phase 6: Documentation and Best Practices (Week 9-10)
+### Phase 6: Documentation and Best Practices （第 9-10 週）
 
 - [ ] Create BDD guidelines document
   - Scenario writing best practices
@@ -726,41 +726,41 @@ Affects:
 - [ ] Establish maintenance process
   - Regular scenario reviews
   - Refactoring step definitions
-  - Updating scenarios with requirements changes
+  - Updating scenarios 與 requirements changes
   - Archiving obsolete scenarios
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
-- Business stakeholders not engaged after 3 months
+- Business stakeholders not engaged after 3 個月
 - Scenario maintenance overhead > 30% of development time
 - Team unable to adopt BDD practices
-- Scenarios become out of sync with implementation
+- Scenarios become out of sync 與 implementation
 
-**Rollback Steps**:
+**回滾步驟**：
 
-1. Archive feature files for reference
+1. Archive feature files 用於 reference
 2. Convert critical scenarios to JUnit tests
-3. Simplify to plain JUnit with descriptive names
+3. Simplify to plain JUnit 與 descriptive names
 4. Document lessons learned
 5. Re-evaluate BDD approach
 
-**Rollback Time**: 2 weeks
+**回滾時間**： 2 weeks
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ 100% of user stories have Gherkin scenarios
 - ✅ Business stakeholder participation in scenario reviews > 80%
 - ✅ Scenario pass rate > 95%
 - ✅ Scenario execution time < 10 minutes
 - ✅ Living documentation generated automatically
-- ✅ Developer satisfaction with BDD > 4/5
+- ✅ Developer satisfaction 與 BDD > 4/5
 - ✅ Business stakeholder satisfaction > 4/5
 
-### Monitoring Plan
+### 監控計畫
 
 **BDD Metrics**:
 
@@ -772,60 +772,60 @@ Affects:
 
 **Quality Metrics**:
 
-- Requirements coverage by scenarios
-- Defects found by BDD tests
+- Requirements coverage 透過 scenarios
+- Defects found 透過 BDD tests
 - Time to write scenarios vs implementation
 - Scenario maintenance effort
 
-**Review Schedule**:
+**審查時程**：
 
 - Weekly: Scenario review sessions
 - Monthly: BDD practice retrospective
 - Quarterly: Business stakeholder feedback
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
-- ✅ **Business Collaboration**: Non-technical stakeholders can read and validate requirements
+- ✅ **Business Collaboration**: Non-technical stakeholders 可以 read 和 validate requirements
 - ✅ **Living Documentation**: Scenarios serve as up-to-date documentation
 - ✅ **Executable Specifications**: Requirements are automatically tested
 - ✅ **Ubiquitous Language**: Scenarios use domain language
 - ✅ **Clear Acceptance Criteria**: Each scenario defines "done"
 - ✅ **Regression Testing**: Scenarios prevent regression
 - ✅ **Requirements Traceability**: Clear link from requirement to test
-- ✅ **Reduced Misunderstandings**: Shared understanding of requirements
+- ✅ **降低d Misunderstandings**: Shared understanding of requirements
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Learning Curve**: Team needs to learn Gherkin and BDD practices
+- ⚠️ **Learning Curve**: Team needs to learn Gherkin 和 BDD practices
 - ⚠️ **Initial Overhead**: Writing scenarios takes time initially
 - ⚠️ **Maintenance**: Scenarios need to be kept up-to-date
 - ⚠️ **Engagement Required**: Requires active business stakeholder participation
-- ⚠️ **Can Be Verbose**: Some scenarios can become lengthy
+- ⚠️ **可以 Be Verbose**: Some scenarios 可以 become lengthy
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Not all features have BDD scenarios yet (gradual adoption)
 2. Some step definitions have duplication (needs refactoring)
 3. Limited Chinese language scenarios (future requirement)
 4. No automated scenario generation from requirements (future enhancement)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q1 2026**: Achieve 100% scenario coverage for all features
+- **Q1 2026**: Achieve 100% scenario coverage 用於 all features
 - **Q2 2026**: Refactor step definitions to eliminate duplication
-- **Q3 2026**: Add Chinese language scenario support
+- **Q3 2026**: Add Chinese language scenario 支援
 - **Q4 2026**: Explore automated scenario generation tools
 
-## Related Decisions
+## 相關決策
 
 - [ADR-006: Environment-Specific Testing Strategy](006-environment-specific-testing-strategy.md) - BDD as part of testing strategy
 - [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - Scenarios test through application layer
 
-## Notes
+## 備註
 
 ### Gherkin Best Practices
 
@@ -833,9 +833,9 @@ Affects:
 
 - Use business language, not technical jargon
 - Keep scenarios focused on business value
-- Use Background for common setup
-- Use Scenario Outline for similar scenarios with different data
-- Make scenarios independent and isolated
+- Use Background 用於 common setup
+- Use Scenario Outline 用於 similar scenarios 與 different data
+- Make scenarios independent 和 isolated
 - Use descriptive scenario names
 
 **DON'T**:
@@ -918,6 +918,6 @@ Feature: Order Submission
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-24  
-**Next Review**: 2026-01-24 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-24  
+**下次審查**： 2026-01-24 （每季）

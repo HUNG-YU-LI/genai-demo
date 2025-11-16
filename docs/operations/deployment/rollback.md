@@ -1,51 +1,51 @@
-# Rollback Procedures
+# Rollback 程序
 
-## Overview
+## 概述
 
-This document provides procedures for rolling back deployments when issues are detected in staging or production environments.
+本文件提供在 staging 或 production 環境中偵測到問題時 rollback 部署的程序。
 
-## When to Rollback
+## 何時進行 Rollback
 
-### Rollback Triggers
+### Rollback 觸發條件
 
-Initiate rollback immediately if any of the following occur:
+如果發生以下任何情況,立即啟動 rollback:
 
-- **Critical Errors**: Error rate > 5% for more than 5 minutes
-- **Performance Degradation**: Response time > 3x baseline for more than 10 minutes
-- **Data Corruption**: Any evidence of data integrity issues
-- **Security Breach**: Any security vulnerability exploited
-- **Service Outage**: Service unavailable for more than 2 minutes
-- **Failed Health Checks**: Health checks failing for more than 3 minutes
-- **Database Migration Failure**: Migration cannot be completed or causes errors
+- **Critical 錯誤**: 錯誤率 > 5% 超過 5 分鐘
+- **效能降級**: 回應時間 > 基準值 3 倍超過 10 分鐘
+- **資料損壞**: 任何資料完整性問題的證據
+- **安全漏洞**: 任何安全漏洞被利用
+- **服務中斷**: 服務不可用超過 2 分鐘
+- **Health Check 失敗**: Health check 失敗超過 3 分鐘
+- **Database Migration 失敗**: Migration 無法完成或導致錯誤
 
-### Decision Matrix
+### 決策矩陣
 
-| Severity | Impact | Action | Timeline |
+| 嚴重性 | 影響 | 行動 | 時間表 |
 |----------|--------|--------|----------|
-| P0 - Critical | Service down or data at risk | Immediate rollback | < 5 minutes |
-| P1 - High | Significant degradation | Rollback after 10 min monitoring | < 15 minutes |
-| P2 - Medium | Minor issues affecting some users | Evaluate and decide | < 30 minutes |
-| P3 - Low | Cosmetic or non-critical issues | Fix forward or schedule rollback | Next deployment |
+| P0 - Critical | 服務停止或資料風險 | 立即 rollback | < 5 分鐘 |
+| P1 - High | 顯著降級 | 監控 10 分鐘後 rollback | < 15 分鐘 |
+| P2 - Medium | 影響部分使用者的小問題 | 評估並決定 | < 30 分鐘 |
+| P3 - Low | 外觀或非關鍵問題 | 向前修復或排程 rollback | 下次部署 |
 
-## Rollback Types
+## Rollback 類型
 
 ### 1. Application Rollback
 
-Rolling back the application code to the previous version.
+將應用程式程式碼 rollback 至先前版本。
 
 ### 2. Database Rollback
 
-Rolling back database schema changes (if possible).
+Rollback 資料庫 schema 變更 (如果可能)。
 
 ### 3. Configuration Rollback
 
-Rolling back configuration changes.
+Rollback 配置變更。
 
 ### 4. Full System Rollback
 
-Rolling back all components to previous state.
+將所有元件 rollback 至先前狀態。
 
-## Application Rollback Procedures
+## Application Rollback 程序
 
 ### Kubernetes Deployment Rollback
 

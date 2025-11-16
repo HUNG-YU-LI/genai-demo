@@ -1,6 +1,6 @@
 ---
 adr_number: 053
-title: "Security Monitoring and Incident Response"
+title: "Security Monitoring 和 Incident Response"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,23 +10,23 @@ affected_viewpoints: ["operational", "deployment"]
 affected_perspectives: ["security", "availability"]
 ---
 
-# ADR-053: Security Monitoring and Incident Response
+# ADR-053: Security Monitoring 和 Incident Response
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires comprehensive security monitoring and incident response capabilities to:
+The Enterprise E-Commerce Platform 需要comprehensive security monitoring 和 incident response capabilities to:
 
 - Detect security threats in real-time
 - Respond to security incidents rapidly
-- Maintain audit trails for compliance
-- Prevent data breaches and unauthorized access
-- Meet regulatory requirements for security monitoring
+- 維持 audit trails 用於 compliance
+- Prevent data breaches 和 unauthorized access
+- Meet regulatory requirements 用於 security monitoring
 - Protect against sophisticated cyber attacks
 
 Taiwan's cyber security environment presents unique challenges:
@@ -34,29 +34,29 @@ Taiwan's cyber security environment presents unique challenges:
 - Frequent DDoS attacks from state-sponsored actors
 - Advanced Persistent Threat (APT) campaigns
 - High-value e-commerce platform as attractive target
-- Need for 24/7 security operations
+- 需要 24/7 security operations
 - Regulatory compliance (Taiwan Cyber Security Management Act)
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Protect customer data and business operations
-- Maintain platform availability and reputation
-- Comply with security regulations
+- Protect customer data 和 business operations
+- 維持 platform availability 和 reputation
+- Comply 與 security regulations
 - Minimize financial impact of security incidents
-- Enable rapid incident response and recovery
+- 啟用 rapid incident response 和 recovery
 
-**Constraints**:
+**限制條件**：
 
-- Must operate 24/7 with minimal false positives
-- Cannot impact system performance
-- Must integrate with existing monitoring (ADR-008)
-- Budget: $5,000/month for security monitoring tools
+- 必須 operate 24/7 與 minimal false positives
+- 可以not impact system performance
+- 必須 integrate 與 existing monitoring (ADR-008)
+- 預算: $5,000/month 用於 security monitoring tools
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
 - Basic CloudWatch monitoring (ADR-008)
 - No dedicated security monitoring
@@ -64,7 +64,7 @@ Taiwan's cyber security environment presents unique challenges:
 - No security incident response process
 - Manual security log analysis
 
-**Requirements**:
+**需求**：
 
 - Real-time threat detection
 - Automated incident response
@@ -73,26 +73,26 @@ Taiwan's cyber security environment presents unique challenges:
 - Threat intelligence integration
 - 24/7 security operations center (SOC)
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **Detection Speed**: Detect threats in real-time (< 1 minute)
 2. **Response Time**: Respond to incidents rapidly (< 15 minutes)
 3. **Coverage**: Monitor all attack vectors comprehensively
 4. **Accuracy**: Minimize false positives (< 5%)
 5. **Compliance**: Meet regulatory audit requirements
-6. **Scalability**: Handle 100K+ events per second
-7. **Cost**: Optimize operational costs
-8. **Integration**: Integrate with existing AWS infrastructure
+6. **Scalability**: 處理 100K+ events per second
+7. **成本**： Optimize operational costs
+8. **Integration**: Integrate 與 existing AWS infrastructure
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: AWS Native Security Monitoring (Recommended)
+### 選項 1： AWS Native Security Monitoring (Recommended)
 
-**Description**: Comprehensive security monitoring using AWS native services
+**描述**： Comprehensive security monitoring using AWS native services
 
 **Components**:
 
-- **AWS GuardDuty**: Threat detection for AWS accounts and workloads
+- **AWS GuardDuty**: Threat detection 用於 AWS accounts 和 workloads
 - **AWS Security Hub**: Centralized security findings management
 - **AWS CloudTrail**: API audit logging
 - **VPC Flow Logs**: Network traffic monitoring
@@ -101,63 +101,63 @@ Taiwan's cyber security environment presents unique challenges:
 - **AWS Lambda**: Automated incident response
 - **Amazon SNS**: Alert notifications
 
-**Pros**:
+**優點**：
 
 - ✅ Native AWS integration (no agents required)
 - ✅ Comprehensive threat detection (ML-powered)
 - ✅ Automated response capabilities
 - ✅ Centralized security management
 - ✅ Compliance-ready audit trails
-- ✅ Scalable and cost-effective
+- ✅ Scalable 和 cost-effective
 - ✅ Continuous threat intelligence updates
-- ✅ Low operational overhead
+- ✅ Low 營運開銷
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Limited customization compared to SIEM
 - ⚠️ AWS-specific (not multi-cloud)
-- ⚠️ Additional cost for GuardDuty and Security Hub
+- ⚠️ Additional cost 用於 GuardDuty 和 Security Hub
 
-**Cost**: $3,000/month (GuardDuty $1,500, Security Hub $500, storage $1,000)
+**成本**： $3,000/month (GuardDuty $1,500, Security Hub $500, storage $1,000)
 
-**Risk**: **Low** - Proven AWS services
+**風險**： **Low** - Proven AWS services
 
-### Option 2: Third-Party SIEM (Splunk, ELK Stack)
+### 選項 2： Third-Party SIEM (Splunk, ELK Stack)
 
-**Description**: Deploy dedicated Security Information and Event Management system
+**描述**： Deploy dedicated Security Information and Event Management system
 
-**Pros**:
+**優點**：
 
-- ✅ Advanced correlation and analytics
+- ✅ Advanced correlation 和 analytics
 - ✅ Customizable detection rules
-- ✅ Multi-cloud support
-- ✅ Rich visualization and reporting
+- ✅ Multi-cloud 支援
+- ✅ 豐富的 visualization 和 reporting
 - ✅ Extensive integration ecosystem
 
-**Cons**:
+**缺點**：
 
 - ❌ High cost ($10,000-20,000/month)
-- ❌ Complex deployment and maintenance
+- ❌ 複雜的 deployment 和 maintenance
 - ❌ Requires dedicated security team
 - ❌ Performance overhead
 - ❌ Steep learning curve
 
-**Cost**: $15,000/month (Splunk Enterprise Security)
+**成本**： $15,000/month (Splunk Enterprise Security)
 
-**Risk**: **Medium** - High operational complexity
+**風險**： **Medium** - High operational complexity
 
-### Option 3: Managed Security Service Provider (MSSP)
+### 選項 3： Managed Security Service Provider (MSSP)
 
-**Description**: Outsource security monitoring to third-party SOC
+**描述**： Outsource security monitoring to third-party SOC
 
-**Pros**:
+**優點**：
 
 - ✅ 24/7 professional monitoring
 - ✅ Expert incident response
 - ✅ No internal SOC required
-- ✅ Compliance support
+- ✅ Compliance 支援
 
-**Cons**:
+**缺點**：
 
 - ❌ Very high cost ($20,000-50,000/month)
 - ❌ Less control over security operations
@@ -165,26 +165,26 @@ Taiwan's cyber security environment presents unique challenges:
 - ❌ Vendor dependency
 - ❌ Communication overhead
 
-**Cost**: $30,000/month
+**成本**： $30,000/month
 
-**Risk**: **Medium** - Vendor dependency
+**風險**： **Medium** - Vendor dependency
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **AWS Native Security Monitoring (Option 1)**
+**選擇的選項**： **AWS Native Security Monitoring (Option 1)**
 
-### Rationale
+### 理由
 
-AWS native security monitoring was selected for the following reasons:
+AWS native security monitoring被選擇的原因如下：
 
-1. **Cost-Effective**: $3,000/month vs $15,000+ for alternatives
-2. **Native Integration**: Seamless integration with AWS infrastructure
-3. **Automated Detection**: ML-powered threat detection with continuous updates
-4. **Scalability**: Handles platform growth without additional infrastructure
-5. **Low Overhead**: No agents or additional infrastructure required
-6. **Compliance-Ready**: Built-in compliance reporting and audit trails
-7. **Rapid Deployment**: Can be enabled in hours, not weeks
-8. **Automated Response**: Event-driven automation with Lambda
+1. **Cost-Effective**: $3,000/month vs $15,000+ 用於 alternatives
+2. **Native Integration**: Seamless integration 與 AWS infrastructure
+3. **Automated Detection**: ML-powered threat detection 與 continuous updates
+4. **Scalability**: 處理s platform growth 沒有 additional infrastructure
+5. **Low Overhead**: No agents 或 additional infrastructure required
+6. **Compliance-Ready**: Built-in compliance reporting 和 audit trails
+7. **Rapid Deployment**: 可以 be 啟用d in hours, not 週
+8. **Automated Response**: Event-driven automation 與 Lambda
 
 ### Architecture
 
@@ -222,7 +222,7 @@ AWS native security monitoring was selected for the following reasons:
 
 **Threat Detection Categories**:
 
-- **Reconnaissance**: Port scanning, unusual API calls
+- **Reconnaissance**: Port s可以ning, unusual API calls
 - **Instance Compromise**: Malware, cryptocurrency mining, backdoor communication
 - **Account Compromise**: Credential theft, unusual API activity
 - **Bucket Compromise**: S3 data exfiltration, policy changes
@@ -294,7 +294,7 @@ aws_securityhub.CfnStandard(
 
 - Suricata instances in each VPC
 - Mirror VPC traffic to IDS instances
-- Analyze traffic for malicious patterns
+- Analyze traffic 用於 malicious patterns
 - Alert on suspicious activity
 
 **Detection Rules**:
@@ -303,7 +303,7 @@ aws_securityhub.CfnStandard(
 - Known malware signatures
 - Anomalous traffic patterns
 - Data exfiltration attempts
-- Command and control communication
+- Command 和 control communication
 
 **Implementation**:
 
@@ -340,7 +340,7 @@ outputs:
 
 **Response Actions**:
 
-1. **Auto-Block Malicious IPs**: Update WAF and Security Groups
+1. **Auto-Block Malicious IPs**: Update WAF 和 Security Groups
 2. **Isolate Compromised Instances**: Remove from load balancer, restrict network
 3. **Collect Forensics**: Snapshot volumes, capture memory, save logs
 4. **Notify Security Team**: Send alerts via SNS, PagerDuty
@@ -393,12 +393,12 @@ def lambda_handler(event, context):
 
 **SIEM Capabilities**:
 
-- Correlate events across multiple sources
+- Correlate events 跨 multiple sources
 - Detect multi-stage attacks
 - Identify attack patterns
 - Generate security insights
 
-**Implementation with CloudWatch Insights**:
+**Implementation 與 CloudWatch Insights**:
 
 ```sql
 -- Detect brute force attacks
@@ -429,9 +429,9 @@ fields @timestamp, sourceIPAddress, bytesOut
 **Integration**:
 
 - Automatically update WAF IP blocklists
-- Enrich GuardDuty findings
-- Correlate with known threat actors
-- Share intelligence with Taiwan CERT
+- En豐富的 GuardDuty findings
+- Correlate 與 known threat actors
+- Share intelligence 與 Taiwan CERT
 
 **Implementation**:
 
@@ -462,16 +462,16 @@ def update_threat_feeds():
 
 **SOC Structure**:
 
-- **Tier 1**: Alert triage and initial response (outsourced to Taiwan SOC)
-- **Tier 2**: Incident investigation and remediation (internal team)
-- **Tier 3**: Advanced threat hunting and forensics (internal team)
+- **Tier 1**: Alert triage 和 initial response (outsourced to Taiwan SOC)
+- **Tier 2**: Incident investigation 和 remediation (internal team)
+- **Tier 3**: Advanced threat hunting 和 forensics (internal team)
 
 **On-Call Rotation**:
 
 - 24/7 on-call coverage
-- Primary and secondary on-call engineers
-- Escalation to security lead for critical incidents
-- PagerDuty integration for alerting
+- Primary 和 secondary on-call engineers
+- Escalation to security lead 用於 critical incidents
+- PagerDuty integration 用於 alerting
 
 **Incident Classification**:
 
@@ -485,33 +485,33 @@ def update_threat_feeds():
 - P0: 15 minutes response, 1 hour resolution
 - P1: 1 hour response, 4 hours resolution
 - P2: 4 hours response, 24 hours resolution
-- P3: 24 hours response, 1 week resolution
+- P3: 24 hours response, 1 週 resolution
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Security Team | High | New monitoring tools and processes | Training, runbooks, automation |
-| Operations Team | Medium | Additional alerts and incidents | Alert tuning, automation |
+| Security Team | High | New monitoring tools 和 processes | Training, runbooks, automation |
+| Operations Team | Medium | Additional alerts 和 incidents | Alert tuning, automation |
 | Development Team | Low | Security findings to address | Security training, tools |
 | End Users | None | Transparent security monitoring | N/A |
 | Compliance Team | Positive | Enhanced audit capabilities | Regular compliance reports |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
-- All AWS accounts and resources
+- All AWS accounts 和 resources
 - All network traffic
 - All API calls
 - All security events
 - Incident response processes
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
@@ -519,40 +519,40 @@ Affects:
 | Alert fatigue | Medium | Medium | Prioritization, automation, aggregation |
 | Missed threats | Low | Critical | Multiple detection layers, threat intelligence |
 | Performance impact | Low | Low | Serverless architecture, efficient queries |
-| Cost overrun | Medium | Medium | Budget alerts, cost optimization |
+| Cost overrun | Medium | Medium | 預算 alerts, cost optimization |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Core Monitoring (Week 1-2)
+### 第 1 階段： Core Monitoring （第 1-2 週）
 
-- [ ] Enable AWS GuardDuty in all regions
-- [ ] Enable AWS Security Hub
+- [ ] 啟用 AWS GuardDuty in all regions
+- [ ] 啟用 AWS Security Hub
 - [ ] Configure CloudTrail logging
-- [ ] Enable VPC Flow Logs
-- [ ] Set up S3 bucket for log storage
+- [ ] 啟用 VPC Flow Logs
+- [ ] Set up S3 bucket 用於 log storage
 - [ ] Configure log retention policies
 
-### Phase 2: Automated Response (Week 3-4)
+### 第 2 階段： Automated Response （第 3-4 週）
 
-- [ ] Create EventBridge rules for security events
-- [ ] Implement Lambda functions for auto-response
-- [ ] Configure SNS topics for alerts
-- [ ] Integrate with PagerDuty
+- [ ] Create EventBridge rules 用於 security events
+- [ ] Implement Lambda functions 用於 auto-response
+- [ ] Configure SNS topics 用於 alerts
+- [ ] Integrate 與 PagerDuty
 - [ ] Create incident response runbooks
 - [ ] Test automated response workflows
 
-### Phase 3: IDS Deployment (Week 5-6)
+### 第 3 階段： IDS Deployment （第 5-6 週）
 
 - [ ] Deploy Suricata instances
 - [ ] Configure VPC traffic mirroring
 - [ ] Set up detection rules
-- [ ] Integrate with Security Hub
+- [ ] Integrate 與 Security Hub
 - [ ] Test detection capabilities
 - [ ] Tune false positive rates
 
-### Phase 4: SOC Operations (Week 7-8)
+### 第 4 階段： SOC Operations （第 7-8 週）
 
 - [ ] Establish on-call rotation
 - [ ] Create security dashboards
@@ -561,48 +561,48 @@ Affects:
 - [ ] Conduct tabletop exercises
 - [ ] Document incident response procedures
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Excessive false positives (> 10% of alerts)
 - Performance degradation (> 5% overhead)
-- Cost overrun (> 150% of budget)
+- Cost overrun (> 150% of 預算)
 - Operational issues
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Disable automated response actions
-2. Reduce GuardDuty sensitivity
+2. 降低 GuardDuty sensitivity
 3. Pause IDS deployment
 4. Revert to manual monitoring
-5. Investigate and fix issues
+5. Investigate 和 fix issues
 
-**Rollback Time**: < 2 hours
+**回滾時間**： < 2 hours
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Threat detection time: < 1 minute
-- ✅ Incident response time: < 15 minutes (P0)
+- ✅ Incident 回應時間: < 15 minutes (P0)
 - ✅ False positive rate: < 5%
 - ✅ Security event coverage: > 95%
 - ✅ Compliance audit pass rate: 100%
 - ✅ Mean time to detect (MTTD): < 5 minutes
 - ✅ Mean time to respond (MTTR): < 30 minutes
 
-### Monitoring Plan
+### 監控計畫
 
 **CloudWatch Metrics**:
 
-- `security.threats.detected` (count by severity)
-- `security.incidents.created` (count by priority)
+- `security.threats.detected` (count 透過 severity)
+- `security.incidents.created` (count 透過 priority)
 - `security.response.time` (histogram)
 - `security.false.positives` (count)
 - `security.compliance.score` (gauge)
 
-**Alerts**:
+**告警**：
 
 - Critical security finding detected
 - Incident response SLA breach
@@ -610,57 +610,57 @@ Affects:
 - Compliance score < 90%
 - Threat intelligence feed update failure
 
-**Review Schedule**:
+**審查時程**：
 
-- Daily: Review security alerts and incidents
-- Weekly: Analyze threat trends and patterns
-- Monthly: Compliance and audit review
+- Daily: Review security alerts 和 incidents
+- Weekly: Analyze threat trends 和 patterns
+- Monthly: Compliance 和 audit review
 - Quarterly: Security posture assessment
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Real-Time Detection**: Detect threats within minutes
-- ✅ **Automated Response**: Rapid incident response with automation
+- ✅ **Automated Response**: Rapid incident response 與 automation
 - ✅ **Comprehensive Coverage**: Monitor all attack vectors
-- ✅ **Compliance-Ready**: Built-in audit trails and reporting
-- ✅ **Cost-Effective**: $3,000/month for enterprise-grade monitoring
-- ✅ **Scalable**: Handles platform growth automatically
-- ✅ **Low Overhead**: No agents or additional infrastructure
+- ✅ **Compliance-Ready**: Built-in audit trails 和 reporting
+- ✅ **Cost-Effective**: $3,000/month 用於 enterprise-grade monitoring
+- ✅ **Scalable**: 處理s platform growth automatically
+- ✅ **Low Overhead**: No agents 或 additional infrastructure
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Alert Fatigue**: Potential for too many alerts initially
-- ⚠️ **False Positives**: ML models require tuning
+- ⚠️ **Alert Fatigue**: Potential 用於 too many alerts initially
+- ⚠️ **False Positives**: ML models 需要tuning
 - ⚠️ **Operational Overhead**: 24/7 SOC operations required
 - ⚠️ **Learning Curve**: Team needs training on new tools
-- ⚠️ **Cost**: $3,000/month ongoing operational cost
+- ⚠️ **成本**： $3,000/month ongoing operational cost
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Manual threat intelligence integration (acceptable initially)
-2. Basic security event correlation (acceptable for MVP)
+2. Basic security event correlation (acceptable 用於 MVP)
 3. No advanced threat hunting capabilities
 4. Limited forensics automation
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q2 2026**: Implement advanced threat hunting with Athena
-- **Q3 2026**: Automate forensics collection and analysis
-- **Q4 2026**: Integrate with SOAR platform for orchestration
+- **Q2 2026**: Implement advanced threat hunting 與 Athena
+- **Q3 2026**: Automate forensics collection 和 analysis
+- **Q4 2026**: Integrate 與 SOAR platform 用於 orchestration
 - **2027**: Implement AI-powered threat detection
 
-## Related Decisions
+## 相關決策
 
-- [ADR-008: Use CloudWatch + X-Ray + Grafana for Observability](008-use-cloudwatch-xray-grafana-for-observability.md) - Base monitoring infrastructure
-- [ADR-043: Observability for Multi-Region Operations](043-observability-multi-region-operations.md) - Multi-region monitoring
+- [ADR-008: Use CloudWatch + X-Ray + Grafana 用於 Observability](008-use-cloudwatch-xray-grafana-for-observability.md) - Base monitoring infrastructure
+- [ADR-043: Observability 用於 Multi-Region Operations](043-observability-multi-region-operations.md) - Multi-region monitoring
 - [ADR-052: Authentication Security Hardening](052-authentication-security-hardening.md) - Authentication security
 - [ADR-054: Data Loss Prevention (DLP) Strategy](054-data-loss-prevention-strategy.md) - Data protection monitoring
 
-## Notes
+## 備註
 
 ### GuardDuty Pricing
 
@@ -669,7 +669,7 @@ Affects:
 - S3 Data Events: $0.80 per million events
 - EKS Audit Logs: $0.40 per GB analyzed
 
-**Estimated Monthly Cost**: $1,500 for 100K users
+**Estimated Monthly Cost**: $1,500 用於 100K users
 
 ### Security Hub Pricing
 
@@ -687,6 +687,6 @@ Affects:
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）

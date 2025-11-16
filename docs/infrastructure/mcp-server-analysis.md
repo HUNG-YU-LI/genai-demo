@@ -1,142 +1,142 @@
-# MCP Server Configuration Analysis
+# MCP Server Configuration 分析
 
-> **Last Updated**: 2025-01-22  
-> **Status**: Active Configuration Review
+> **最後更新**: 2025-01-22
+> **狀態**: 配置審查中
 
-## Overview
+## 總覽
 
-This document analyzes the current MCP (Model Context Protocol) server configuration, identifying which servers are global vs project-based, their status, and recommendations for optimization.
-
----
-
-## Configuration Hierarchy
-
-### Global Configuration
-
-**Location**: `~/.kiro/settings/mcp.json`  
-**Scope**: Available across all Kiro workspaces  
-**Priority**: Lower (overridden by project-level config)
-
-### Project Configuration
-
-**Location**: `.kiro/settings/mcp.json`  
-**Scope**: This project only  
-**Priority**: Higher (overrides global config for same server names)
+本文件分析目前的 MCP (Model Context Protocol) server 配置，識別哪些 servers 是全域 vs 專案層級、其狀態，以及最佳化建議。
 
 ---
 
-## Server Inventory
+## Configuration 階層架構
 
-### ✅ Active Servers (Project-Level)
+### 全域 Configuration
 
-| Server | Type | Status | Purpose |
+**位置**: `~/.kiro/settings/mcp.json`
+**範圍**: 適用於所有 Kiro workspaces
+**優先級**: 較低（會被專案層級 config 覆蓋）
+
+### 專案 Configuration
+
+**位置**: `.kiro/settings/mcp.json`
+**範圍**: 僅限此專案
+**優先級**: 較高（對於相同 server 名稱會覆蓋全域 config）
+
+---
+
+## Server 清單
+
+### ✅ 啟用中的 Servers (專案層級)
+
+| Server | 類型 | 狀態 | 用途 |
 |--------|------|--------|---------|
-| `time` | Project | ✅ Active | Time operations and timezone conversions |
-| `aws-docs` | Project | ✅ Active | AWS documentation search |
-| `aws-cdk` | Project | ✅ Active | CDK guidance and Nag rule explanations |
-| `aws-pricing` | Project | ✅ Active | AWS cost analysis and pricing |
-| `excalidraw` | Project | ✅ Active | Diagram creation (local node server) |
+| `time` | Project | ✅ 啟用中 | 時間操作與時區轉換 |
+| `aws-docs` | Project | ✅ 啟用中 | AWS documentation 搜尋 |
+| `aws-cdk` | Project | ✅ 啟用中 | CDK 指引與 Nag rule 說明 |
+| `aws-pricing` | Project | ✅ 啟用中 | AWS 成本分析與 pricing |
+| `excalidraw` | Project | ✅ 啟用中 | 圖表建立（本機 node server） |
 
-### ✅ Active Servers (Global-Level)
+### ✅ 啟用中的 Servers (全域層級)
 
-| Server | Type | Status | Purpose |
+| Server | 類型 | 狀態 | 用途 |
 |--------|------|--------|---------|
-| `github` | Global | ✅ Active | GitHub API operations |
-| `aws-docs` | Global | ✅ Active | AWS documentation (duplicate) |
-| `awslabs.cdk-mcp-server` | Global | ✅ Active | CDK operations (duplicate) |
-| `awslabs.aws-pricing-mcp-server` | Global | ✅ Active | Pricing (duplicate) |
-| `awslabs.lambda-mcp-server` | Global | ✅ Active | Lambda function management |
-| `awslabs.iam-mcp-server` | Global | ✅ Active | IAM read-only operations |
+| `github` | Global | ✅ 啟用中 | GitHub API 操作 |
+| `aws-docs` | Global | ✅ 啟用中 | AWS documentation（重複） |
+| `awslabs.cdk-mcp-server` | Global | ✅ 啟用中 | CDK 操作（重複） |
+| `awslabs.aws-pricing-mcp-server` | Global | ✅ 啟用中 | Pricing（重複） |
+| `awslabs.lambda-mcp-server` | Global | ✅ 啟用中 | Lambda function 管理 |
+| `awslabs.iam-mcp-server` | Global | ✅ 啟用中 | IAM 唯讀操作 |
 
-### ⚠️ Disabled Servers (Global-Level)
+### ⚠️ 已停用的 Servers (全域層級)
 
-| Server | Reason | Recommendation |
+| Server | 原因 | 建議 |
 |--------|--------|----------------|
-| `aws-knowledge-mcp-server` | Disabled | Remove if not needed |
-| `fetch` | Disabled | Enable if web scraping needed |
-| `awslabs.core-mcp-server` | Disabled | Enable for Well-Architected reviews |
-| `awslabs.terraform-mcp-server` | Disabled | Enable if using Terraform |
-| `sqlite` | Disabled | Enable for local DB operations |
-| `kubernetes` | Disabled | Enable if managing K8s clusters |
-| `docker` | Disabled | Enable for container management |
-| `time` | Disabled (global) | Already active in project |
-| `awslabs.ec2-mcp-server` | Disabled | Enable if managing EC2 instances |
-| `ppt-automation` | Disabled | Enable if creating PowerPoint |
+| `aws-knowledge-mcp-server` | 已停用 | 如不需要可移除 |
+| `fetch` | 已停用 | 如需 web scraping 請啟用 |
+| `awslabs.core-mcp-server` | 已停用 | 用於 Well-Architected reviews 請啟用 |
+| `awslabs.terraform-mcp-server` | 已停用 | 如使用 Terraform 請啟用 |
+| `sqlite` | 已停用 | 用於本機 DB 操作請啟用 |
+| `kubernetes` | 已停用 | 如管理 K8s clusters 請啟用 |
+| `docker` | 已停用 | 用於 container 管理請啟用 |
+| `time` | 已停用（全域） | 已在專案中啟用 |
+| `awslabs.ec2-mcp-server` | 已停用 | 如管理 EC2 instances 請啟用 |
+| `ppt-automation` | 已停用 | 如建立 PowerPoint 請啟用 |
 
 ---
 
-## Duplicate Configurations
+## 重複的 Configurations
 
-### ⚠️ Servers Defined in Both Global and Project
+### ⚠️ 同時在全域與專案定義的 Servers
 
-These servers are defined in both configurations. **Project-level takes precedence**.
+這些 servers 同時在兩個 configurations 中定義。**專案層級優先**。
 
-| Server Name | Global Status | Project Status | Recommendation |
+| Server 名稱 | 全域狀態 | 專案狀態 | 建議 |
 |-------------|---------------|----------------|----------------|
-| `aws-docs` | ✅ Active | ✅ Active | Keep project-level, remove from global |
-| `time` | ❌ Disabled | ✅ Active | Keep project-level, remove from global |
+| `aws-docs` | ✅ 啟用中 | ✅ 啟用中 | 保留專案層級，從全域移除 |
+| `time` | ❌ 已停用 | ✅ 啟用中 | 保留專案層級，從全域移除 |
 
-**Note**: The following have different names but same functionality:
+**注意**: 以下名稱不同但功能相同：
 
-- Global: `awslabs.cdk-mcp-server` vs Project: `aws-cdk`
-- Global: `awslabs.aws-pricing-mcp-server` vs Project: `aws-pricing`
+- 全域: `awslabs.cdk-mcp-server` vs 專案: `aws-cdk`
+- 全域: `awslabs.aws-pricing-mcp-server` vs 專案: `aws-pricing`
 
 ---
 
-## Connection Issues Analysis
+## 連線問題分析
 
-### Likely Connection Problems
+### 可能的連線問題
 
-Based on the configuration, these servers may have connection issues:
+根據配置，這些 servers 可能有連線問題：
 
-#### 1. **aws-knowledge-mcp-server** (Global, Disabled)
+#### 1. **aws-knowledge-mcp-server** (全域，已停用)
 
 ```json
 "command": "uvx",
-"args": ["mcp-proxy", "--transport", "streamablehttp", 
+"args": ["mcp-proxy", "--transport", "streamablehttp",
          "https://knowledge-mcp.global.api.aws"]
 ```
 
-**Issue**: Requires AWS authentication and network access to AWS MCP endpoint  
-**Status**: Currently disabled  
-**Action**: Leave disabled unless AWS MCP service is available
+**問題**: 需要 AWS authentication 與 AWS MCP endpoint 的網路存取
+**狀態**: 目前已停用
+**行動**: 除非 AWS MCP service 可用，否則保持停用
 
-#### 2. **github** (Global, Active)
+#### 2. **github** (全域，啟用中)
 
 ```json
 "args": ["mcp-proxy", "--transport", "streamablehttp",
          "--headers", "Authorization", "Bearer gho_16gd32s7..."]
 ```
 
-**Issue**: Bearer token may be expired or invalid  
-**Status**: Active but may fail authentication  
-**Action**: Update token or disable if not needed
+**問題**: Bearer token 可能已過期或無效
+**狀態**: 啟用中但可能 authentication 失敗
+**行動**: 更新 token 或如不需要請停用
 
-#### 3. **excalidraw** (Project, Active) ✅
+#### 3. **excalidraw** (專案，啟用中) ✅
 
 ```json
 "command": "node",
 "args": ["/Users/yikaikao/git/genai-demo/node_modules/mcp-excalidraw-server/src/index.js"]
 ```
 
-**Status**: ✅ **Fully Functional** - Local installation verified  
-**Version**: 1.0.5  
-**Features**:
+**狀態**: ✅ **完全正常運作** - 已驗證本機安裝
+**版本**: 1.0.5
+**功能**:
 
-- Complete MCP server with 15+ tools
-- Element creation (rectangles, ellipses, diamonds, arrows, text, lines)
-- Element management (update, delete, query)
-- Batch operations
-- Advanced features (grouping, alignment, distribution, locking)
-- Optional canvas sync with frontend (currently disabled)
+- 完整的 MCP server 含 15+ tools
+- 元素建立（rectangles, ellipses, diamonds, arrows, text, lines）
+- 元素管理（update, delete, query）
+- Batch 操作
+- 進階功能（grouping, alignment, distribution, locking）
+- 選用的 canvas sync 與前端（目前已停用）
 
 **Configuration**:
 
-- `ENABLE_CANVAS_SYNC=false` - Running in standalone mode
-- No frontend server required for basic diagram creation
-- All tools available via MCP protocol
+- `ENABLE_CANVAS_SYNC=false` - 以 standalone 模式執行
+- 基本圖表建立不需要前端 server
+- 所有 tools 透過 MCP protocol 可用
 
-**Available Tools**:
+**可用的 Tools**:
 
 - `create_element`, `update_element`, `delete_element`, `query_elements`
 - `batch_create_elements`
@@ -145,47 +145,47 @@ Based on the configuration, these servers may have connection issues:
 - `lock_elements`, `unlock_elements`
 - `get_resource`
 
-**Action**: ✅ No action needed - working correctly
+**行動**: ✅ 無需行動 - 運作正常
 
-#### 4. **ppt-automation** (Global, Disabled)
+#### 4. **ppt-automation** (全域，已停用)
 
 ```json
 "command": "uv",
 "args": ["run", "--directory", "/Users/yikaikao/git/dst-lab/powerpoint-automation-mcp", ...]
 ```
 
-**Issue**: Depends on external project directory  
-**Status**: Disabled  
-**Action**: Leave disabled unless PowerPoint automation is needed
+**問題**: 依賴外部專案目錄
+**狀態**: 已停用
+**行動**: 除非需要 PowerPoint automation，否則保持停用
 
 ---
 
-## Recommendations
+## 建議
 
-### Immediate Actions
+### 立即行動
 
-1. **Remove Duplicates from Global Config**
+1. **從全域 Config 移除重複項**
 
    ```bash
-   # Edit ~/.kiro/settings/mcp.json and remove:
-   # - aws-docs (keep in project)
-   # - time (keep in project)
+   # 編輯 ~/.kiro/settings/mcp.json 並移除：
+   # - aws-docs（保留在專案中）
+   # - time（保留在專案中）
    ```
 
-2. **Fix GitHub Token** (if using GitHub MCP)
-   - Generate new token at: <https://github.com/settings/tokens>
-   - Update in `~/.kiro/settings/mcp.json`
+2. **修正 GitHub Token**（如使用 GitHub MCP）
+   - 在此產生新 token：<https://github.com/settings/tokens>
+   - 在 `~/.kiro/settings/mcp.json` 中更新
 
-3. **Verify Excalidraw Installation**
+3. **驗證 Excalidraw 安裝**
 
    ```bash
    cd /Users/yikaikao/git/genai-demo
    npm install mcp-excalidraw-server
    ```
 
-### Configuration Optimization
+### Configuration 最佳化
 
-#### Recommended Global Config (Cross-Project Tools)
+#### 建議的全域 Config（跨專案 Tools）
 
 ```json
 {
@@ -224,7 +224,7 @@ Based on the configuration, these servers may have connection issues:
 }
 ```
 
-#### Recommended Project Config (Project-Specific Tools)
+#### 建議的專案 Config（專案特定 Tools）
 
 ```json
 {
@@ -269,55 +269,55 @@ Based on the configuration, these servers may have connection issues:
 
 ---
 
-## Testing MCP Servers
+## 測試 MCP Servers
 
-### Test Individual Server
+### 測試個別 Server
 
 ```bash
-# Test if uvx can run a server
+# 測試 uvx 是否能執行 server
 uvx mcp-server-time --help
 
-# Test AWS servers (requires AWS credentials)
+# 測試 AWS servers（需要 AWS credentials）
 uvx awslabs.aws-documentation-mcp-server@latest --help
 ```
 
-### Verify Server Status in Kiro
+### 在 Kiro 中驗證 Server 狀態
 
-1. Open Command Palette: `Cmd+Shift+P`
-2. Search: "MCP Server"
-3. Select: "View MCP Servers"
-4. Check connection status for each server
-
----
-
-## Summary
-
-### Current Status
-
-- **Total Servers Configured**: 21
-- **Active (Project)**: 5
-- **Active (Global)**: 6
-- **Disabled (Global)**: 10
-- **Duplicates**: 2 (aws-docs, time)
-
-### Key Issues
-
-1. ✅ **Excalidraw**: Local dependency - verify installation
-2. ⚠️ **GitHub**: Token may be expired
-3. ⚠️ **Duplicates**: Remove from global config
-4. ℹ️ **Many Disabled**: Consider cleanup
-
-### Next Steps
-
-1. Clean up duplicate configurations
-2. Update GitHub token if needed
-3. Verify excalidraw installation
-4. Remove unused disabled servers
-5. Test active servers for connectivity
+1. 開啟 Command Palette：`Cmd+Shift+P`
+2. 搜尋："MCP Server"
+3. 選擇："View MCP Servers"
+4. 檢查每個 server 的連線狀態
 
 ---
 
-**Related Documentation**:
+## 摘要
+
+### 目前狀態
+
+- **配置的 Servers 總數**: 21
+- **啟用中（專案）**: 5
+- **啟用中（全域）**: 6
+- **已停用（全域）**: 10
+- **重複項**: 2（aws-docs, time）
+
+### 主要問題
+
+1. ✅ **Excalidraw**: 本機相依性 - 驗證安裝
+2. ⚠️ **GitHub**: Token 可能已過期
+3. ⚠️ **重複項**: 從全域 config 移除
+4. ℹ️ **許多已停用**: 考慮清理
+
+### 後續步驟
+
+1. 清理重複的 configurations
+2. 如需要請更新 GitHub token
+3. 驗證 excalidraw 安裝
+4. 移除未使用的已停用 servers
+5. 測試啟用中的 servers 連線性
+
+---
+
+**相關 Documentation**:
 
 - [MCP Configuration Guide](https://docs.kiro.ai/mcp)
 - [AWS MCP Servers](https://github.com/awslabs/mcp-servers)

@@ -1,6 +1,6 @@
 ---
 adr_number: 018
-title: "Container Orchestration with AWS EKS"
+title: "Container Orchestration 與 AWS EKS"
 date: 2025-10-25
 status: "accepted"
 supersedes: []
@@ -10,65 +10,65 @@ affected_viewpoints: ["deployment", "development", "operational"]
 affected_perspectives: ["availability", "performance", "evolution", "development-resource"]
 ---
 
-# ADR-018: Container Orchestration with AWS EKS
+# ADR-018: Container Orchestration 與 AWS EKS
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires a robust container orchestration solution to:
+The Enterprise E-Commerce Platform 需要robust container orchestration solution to:
 
 **Business Requirements**:
 
-- **Scalability**: Auto-scale based on demand (10x traffic spikes)
-- **High Availability**: 99.9% uptime with zero-downtime deployments
+- **Scalability**: Auto-scale based on demand (10x 流量尖峰)
+- **High Availability**: 99.9% uptime 與 zero-downtime deployments
 - **Resource Efficiency**: Optimize infrastructure costs
-- **Developer Productivity**: Simplify deployment and operations
-- **Multi-Region**: Support deployment across Taiwan and Tokyo
+- **Developer Productivity**: Simplify deployment 和 operations
+- **Multi-Region**: 支援 deployment 跨 Taiwan 和 Tokyo
 - **Portability**: Avoid vendor lock-in
 
 **Technical Challenges**:
 
-- Complex microservices architecture (13 bounded contexts)
+- 複雜的 microservices architecture (13 bounded contexts)
 - Variable traffic patterns (peak hours, sales events)
-- Need for rolling updates and canary deployments
-- Service discovery and load balancing
+- 需要 rolling updates 和 可以ary deployments
+- Service discovery 和 load balancing
 - Configuration management
-- Monitoring and logging at scale
-- Security and compliance requirements
+- Monitoring 和 logging at scale
+- Security 和 compliance requirements
 
-**Current State**:
+**目前狀態**：
 
 - Manual deployment to EC2 instances
 - No auto-scaling
-- Difficult to manage multiple services
+- 難以manage multiple services
 - Long deployment times
 - Limited resource utilization
-- Complex networking setup
+- 複雜的 networking setup
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Reduce deployment time from hours to minutes
-- Support rapid feature releases
+- 降低 deployment time from hours to minutes
+- 支援 rapid feature releases
 - Optimize infrastructure costs (30% reduction target)
-- Enable self-service deployments for developers
-- Improve system reliability and availability
+- 啟用 self-service deployments 用於 developers
+- 改善 system reliability 和 availability
 
-**Constraints**:
+**限制條件**：
 
-- Budget: $150,000 for initial setup
-- Timeline: 4 months for migration
+- 預算: $150,000 用於 initial setup
+- Timeline: 4 個月 用於 migration
 - Team: 3 DevOps engineers, 8 developers
-- Must maintain existing services during migration
-- Compliance with security standards
+- 必須 維持 existing services 期間 migration
+- Compliance 與 security standards
 
-### Technical Context
+### 技術上下文
 
 **Current Architecture**:
 
@@ -76,7 +76,7 @@ The Enterprise E-Commerce Platform requires a robust container orchestration sol
 - Manual deployment scripts
 - Static capacity provisioning
 - Limited monitoring
-- Complex networking
+- 複雜的 networking
 
 **Target Architecture**:
 
@@ -84,26 +84,26 @@ The Enterprise E-Commerce Platform requires a robust container orchestration sol
 - Automated CI/CD pipeline
 - Dynamic auto-scaling
 - Comprehensive observability
-- Service mesh for advanced networking
+- Service mesh 用於 advanced networking
 
-## Decision Drivers
+## 決策驅動因素
 
-1. **Kubernetes Ecosystem**: Industry standard with rich ecosystem
-2. **AWS Integration**: Native integration with AWS services
-3. **Managed Service**: Reduce operational overhead
-4. **Scalability**: Auto-scaling for pods and nodes
+1. **Kubernetes Ecosystem**: Industry standard 與 豐富的 ecosystem
+2. **AWS Integration**: Native integration 與 AWS services
+3. **Managed Service**: 降低 營運開銷
+4. **Scalability**: Auto-scaling 用於 pods 和 nodes
 5. **High Availability**: Multi-AZ deployment
-6. **Cost**: Optimize resource utilization
-7. **Developer Experience**: Familiar tools and workflows
-8. **Security**: Built-in security features and compliance
+6. **成本**： Optimize resource utilization
+7. **Developer Experience**: Familiar tools 和 workflows
+8. **Security**: Built-in security features 和 compliance
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: AWS EKS (Elastic Kubernetes Service) - Recommended
+### 選項 1： AWS EKS (Elastic Kubernetes Service) - Recommended
 
-**Description**: Managed Kubernetes service with deep AWS integration
+**描述**： Managed Kubernetes service with deep AWS integration
 
-**Architecture**:
+**架構**：
 
 ```typescript
 interface EKSArchitecture {
@@ -530,7 +530,7 @@ spec:
               number: 80
 ```
 
-**Monitoring and Observability**:
+**Monitoring 和 Observability**:
 
 ```yaml
 # Prometheus ServiceMonitor
@@ -680,136 +680,136 @@ spec:
       port: 6379
 ```
 
-**Pros**:
+**優點**：
 
 - ✅ Fully managed control plane
 - ✅ Deep AWS integration (IAM, VPC, ELB, etc.)
-- ✅ Auto-scaling for pods and nodes
-- ✅ Multi-AZ high availability
-- ✅ Rich ecosystem (Helm, operators)
+- ✅ Auto-scaling 用於 pods 和 nodes
+- ✅ Multi-AZ 高可用性
+- ✅ 豐富的 ecosystem (Helm, operators)
 - ✅ Security features (IAM roles, encryption)
 - ✅ Cost optimization (Spot instances, Fargate)
 - ✅ Familiar Kubernetes API
 
-**Cons**:
+**缺點**：
 
 - ⚠️ Control plane cost ($0.10/hour = $73/month per cluster)
-- ⚠️ Learning curve for Kubernetes
-- ⚠️ Complex networking (VPC CNI)
+- ⚠️ Learning curve 用於 Kubernetes
+- ⚠️ 複雜的 networking (VPC CNI)
 - ⚠️ AWS-specific features may cause lock-in
 
-**Cost**: $150,000 setup + $60,000/year operational (2 clusters)
+**成本**： $150,000 setup + $60,000/year operational (2 clusters)
 
-**Risk**: **Low** - Mature, widely adopted solution
+**風險**： **Low** - Mature, widely adopted solution
 
-### Option 2: Amazon ECS (Elastic Container Service)
+### 選項 2： Amazon ECS (Elastic Container Service)
 
-**Description**: AWS-native container orchestration service
+**描述**： AWS-native container orchestration service
 
-**Pros**:
+**優點**：
 
-- ✅ Simpler than Kubernetes
+- ✅ 簡單的r than Kubernetes
 - ✅ Deep AWS integration
 - ✅ No control plane cost
-- ✅ Fargate support
+- ✅ Fargate 支援
 
-**Cons**:
+**缺點**：
 
 - ❌ Less flexible than Kubernetes
 - ❌ Smaller ecosystem
 - ❌ AWS vendor lock-in
 - ❌ Limited multi-cloud portability
 
-**Cost**: $100,000 setup + $45,000/year operational
+**成本**： $100,000 setup + $45,000/year operational
 
-**Risk**: **Medium** - Vendor lock-in concerns
+**風險**： **Medium** - Vendor lock-in concerns
 
-### Option 3: Self-Managed Kubernetes on EC2
+### 選項 3： Self-Managed Kubernetes on EC2
 
-**Description**: Deploy and manage Kubernetes clusters on EC2 instances
+**描述**： Deploy and manage Kubernetes clusters on EC2 instances
 
-**Pros**:
+**優點**：
 
 - ✅ Full control over cluster
 - ✅ No control plane cost
 - ✅ Maximum flexibility
 
-**Cons**:
+**缺點**：
 
-- ❌ High operational overhead
-- ❌ Manual upgrades and patching
-- ❌ Complex setup and maintenance
+- ❌ High 營運開銷
+- ❌ Manual upgrades 和 patching
+- ❌ 複雜的 setup 和 maintenance
 - ❌ Requires deep Kubernetes expertise
 
-**Cost**: $80,000 setup + $100,000/year operational (DevOps team)
+**成本**： $80,000 setup + $100,000/year operational (DevOps team)
 
-**Risk**: **High** - Significant operational burden
+**風險**： **High** - Significant operational burden
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **AWS EKS (Option 1)**
+**選擇的選項**： **AWS EKS (Option 1)**
 
-### Rationale
+### 理由
 
-AWS EKS provides the best balance of Kubernetes ecosystem benefits with managed service convenience, justifying the control plane cost for reduced operational overhead and improved reliability.
+AWS EKS 提供s the best balance of Kubernetes ecosystem benefits 與 託管服務 convenience, justifying the control plane cost 用於 降低d 營運開銷 和 改善d reliability.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Development Team | High | New deployment model and tools | Training, documentation, gradual migration |
-| DevOps Team | High | New platform to manage | Training, AWS support, automation |
+| Development Team | High | New deployment model 和 tools | Training, documentation, gradual migration |
+| DevOps Team | High | New platform to manage | Training, AWS 支援, automation |
 | QA Team | Medium | New testing environments | Staging clusters, test automation |
-| Operations Team | Medium | New monitoring and troubleshooting | Training, runbooks, dashboards |
-| Management | Medium | Investment and timeline | ROI analysis, phased approach |
+| Operations Team | Medium | New monitoring 和 troubleshooting | Training, runbooks, dashboards |
+| Management | Medium | Investment 和 timeline | ROI analysis, phased approach |
 
 ### Impact Radius Assessment
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All application services
 - Deployment processes
 - Infrastructure management
-- Monitoring and logging
-- Security and compliance
+- Monitoring 和 logging
+- Security 和 compliance
 - Cost structure
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
-| Migration complexity | High | Medium | Phased migration, thorough testing |
-| Learning curve | High | Medium | Training, documentation, support |
+| Migration 複雜的ity | High | Medium | Phased migration, thorough testing |
+| Learning curve | High | Medium | Training, documentation, 支援 |
 | Performance issues | Low | High | Load testing, optimization |
-| Cost overruns | Medium | Medium | Budget monitoring, cost optimization |
-| Security vulnerabilities | Low | Critical | Security scanning, best practices |
+| Cost overruns | Medium | Medium | 預算 monitoring, cost optimization |
+| Security vulnerabilities | Low | Critical | Security s可以ning, best practices |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Infrastructure Setup (Month 1)
+### 第 1 階段： Infrastructure Setup (Month 1)
 
 **Tasks**:
 
-- [ ] Deploy EKS clusters in Taiwan and Tokyo
-- [ ] Configure VPC and networking
-- [ ] Set up IAM roles and policies
+- [ ] Deploy EKS clusters in Taiwan 和 Tokyo
+- [ ] Configure VPC 和 networking
+- [ ] Set up IAM roles 和 policies
 - [ ] Install cluster add-ons (ALB controller, autoscaler)
-- [ ] Configure monitoring and logging
+- [ ] Configure monitoring 和 logging
 - [ ] Set up CI/CD pipeline integration
 
 **Success Criteria**:
 
 - EKS clusters operational
 - Networking configured
-- Add-ons installed and tested
+- Add-ons installed 和 tested
 
-### Phase 2: Application Containerization (Month 2)
+### 第 2 階段： Application Containerization (Month 2)
 
 **Tasks**:
 
@@ -826,16 +826,16 @@ Affects:
 - Manifests validated
 - Development deployment successful
 
-### Phase 3: Staging Migration (Month 3)
+### 第 3 階段： Staging Migration (Month 3)
 
 **Tasks**:
 
 - [ ] Deploy to staging EKS cluster
 - [ ] Configure auto-scaling
-- [ ] Set up monitoring and alerting
+- [ ] Set up monitoring 和 alerting
 - [ ] Run integration tests
 - [ ] Performance testing
-- [ ] Security scanning
+- [ ] Security s可以ning
 
 **Success Criteria**:
 
@@ -843,7 +843,7 @@ Affects:
 - All tests passing
 - Performance acceptable
 
-### Phase 4: Production Migration (Month 4)
+### 第 4 階段： Production Migration (Month 4)
 
 **Tasks**:
 
@@ -860,25 +860,25 @@ Affects:
 - All metrics within targets
 - Team trained on operations
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Critical failures in EKS
 - Performance degradation
-- Data loss or corruption
+- Data loss 或 corruption
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Route traffic back to EC2
-2. Investigate and fix issues
+2. Investigate 和 fix issues
 3. Retry migration
 
-**Rollback Time**: < 2 hours
+**回滾時間**： < 2 hours
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
@@ -891,76 +891,76 @@ Affects:
 
 ### Review Schedule
 
-- **Weekly**: Cluster health and performance
-- **Monthly**: Cost and resource optimization
-- **Quarterly**: Architecture and security review
+- **Weekly**: Cluster health 和 performance
+- **Monthly**: Cost 和 resource optimization
+- **Quarterly**: Architecture 和 security review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Faster Deployments**: 10-minute deployments vs hours
 - ✅ **Auto-Scaling**: Automatic response to load changes
-- ✅ **High Availability**: Multi-AZ with automatic failover
-- ✅ **Cost Optimization**: 30% reduction through better utilization
+- ✅ **High Availability**: Multi-AZ 與 自動容錯移轉
+- ✅ **Cost Optimization**: 30% reduction through 更好的 utilization
 - ✅ **Developer Productivity**: Self-service deployments
 - ✅ **Portability**: Standard Kubernetes API
-- ✅ **Rich Ecosystem**: Access to Kubernetes tools and operators
+- ✅ **豐富的 Ecosystem**: Access to Kubernetes tools 和 operators
 
-### Negative Consequences
+### 負面後果
 
 - ⚠️ **Learning Curve**: Team needs Kubernetes training
-- ⚠️ **Complexity**: More complex than EC2 deployments
+- ⚠️ **複雜的ity**: More 複雜的 than EC2 deployments
 - ⚠️ **Control Plane Cost**: $73/month per cluster
-- ⚠️ **Networking Complexity**: VPC CNI learning curve
+- ⚠️ **Networking 複雜的ity**: VPC CNI learning curve
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
 1. Some services not fully containerized
-2. Manual configuration for some resources
+2. Manual configuration 用於 some resources
 3. Basic monitoring dashboards
 4. Limited automation
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Complete containerization
 - **Q3 2026**: Full GitOps implementation
-- **Q4 2026**: Advanced monitoring and automation
+- **Q4 2026**: Advanced monitoring 和 automation
 
-## Related Decisions
+## 相關決策
 
-- [ADR-007: Use AWS CDK for Infrastructure as Code](007-use-aws-cdk-for-infrastructure.md)
+- [ADR-007: Use AWS CDK 用於 Infrastructure as Code](007-use-aws-cdk-for-infrastructure.md)
 - [ADR-017: Multi-Region Deployment Strategy](017-multi-region-deployment-strategy.md)
 - [ADR-019: Progressive Deployment Strategy](019-progressive-deployment-strategy.md)
 - [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md)
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）
 
-## Notes
+## 備註
 
 ### EKS vs ECS Comparison
 
 | Feature | EKS | ECS |
 |---------|-----|-----|
 | Kubernetes API | ✅ Yes | ❌ No |
-| Ecosystem | Rich | Limited |
+| Ecosystem | 豐富的 | Limited |
 | Learning Curve | Steep | Moderate |
 | Control Plane Cost | $73/month | Free |
 | Multi-Cloud | ✅ Yes | ❌ No |
-| AWS Integration | Good | Excellent |
+| AWS Integration | 良好的 | 優秀的 |
 
 ### Cost Breakdown (Per Region)
 
 | Component | Monthly Cost |
 |-----------|--------------|
 | EKS Control Plane | $73 |
-| EC2 Nodes (5 x t3.large) | $365 |
+| EC2 Nodes (5 x t3.大型的) | $365 |
 | EBS Volumes | $50 |
 | Data Transfer | $100 |
 | Load Balancer | $25 |
@@ -971,27 +971,27 @@ Affects:
 **Cluster Management**:
 
 - Use managed node groups
-- Enable cluster logging
+- 啟用 cluster logging
 - Regular version upgrades
 - Implement pod security policies
 
 **Application Deployment**:
 
-- Use Helm for package management
+- Use Helm 用於 package management
 - Implement proper health checks
-- Set resource requests and limits
+- Set resource requests 和 limits
 - Use horizontal pod autoscaling
 
 **Security**:
 
-- Use IAM roles for service accounts
+- Use IAM roles 用於 service accounts
 - Implement network policies
-- Enable encryption at rest
-- Regular security scanning
+- 啟用 encryption at rest
+- Regular security s可以ning
 
 **Cost Optimization**:
 
-- Use Spot instances for non-critical workloads
+- Use Spot instances 用於 non-critical workloads
 - Implement cluster autoscaler
 - Right-size pod resources
-- Use Fargate for batch jobs
+- Use Fargate 用於 batch jobs

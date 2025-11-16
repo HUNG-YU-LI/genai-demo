@@ -1,6 +1,6 @@
 ---
 adr_number: 009
-title: "RESTful API Design with OpenAPI 3.0"
+title: "RESTful API Design 與 OpenAPI 3.0"
 date: 2025-10-24
 status: "accepted"
 supersedes: []
@@ -10,111 +10,111 @@ affected_viewpoints: ["functional", "development"]
 affected_perspectives: ["evolution", "accessibility"]
 ---
 
-# ADR-009: RESTful API Design with OpenAPI 3.0
+# ADR-009: RESTful API Design 與 OpenAPI 3.0
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-24
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform needs a well-defined API strategy that:
+The Enterprise E-Commerce Platform 需要well-defined API strategy：
 
-- Provides consistent, intuitive interfaces for clients
-- Supports multiple client types (web, mobile, third-party integrations)
-- Enables API versioning and evolution
-- Provides comprehensive API documentation
-- Supports API testing and validation
+- 提供s consistent, intuitive interfaces 用於 clients
+- 支援s multiple client types (web, mobile, third-party integrations)
+- 啟用s API versioning 和 evolution
+- 提供s comprehensive API documentation
+- 支援s API testing 和 validation
 - Follows industry best practices
-- Enables API-first development
-- Supports contract testing
+- 啟用s API-first development
+- 支援s contract testing
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Need for web and mobile client applications
-- Future requirement for third-party integrations
+- 需要 web 和 mobile client applications
+- Future requirement 用於 third-party integrations
 - API marketplace potential
-- Developer experience for internal and external developers
-- Rapid feature development without breaking clients
-- Compliance with industry standards
+- Developer experience 用於 internal 和 external developers
+- Rapid feature development 沒有 breaking clients
+- Compliance 與 industry standards
 
-**Constraints**:
+**限制條件**：
 
 - Team has REST API experience
 - Spring Boot framework (ADR-002)
-- Need for backward compatibility
-- Must support API versioning
-- Budget: No additional API gateway costs initially
+- 需要 backward compatibility
+- 必須 支援 API versioning
+- 預算: No additional API gateway costs initially
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
 - Spring Boot 3.4.5 + Java 21
 - Hexagonal Architecture (ADR-002)
 - Multiple bounded contexts
 - Event-driven architecture (ADR-003)
-- Next.js and Angular frontends
+- Next.js 和 Angular frontends
 
-**Requirements**:
+**需求**：
 
 - RESTful API design
 - API documentation generation
 - Request/response validation
 - Error handling standards
 - API versioning strategy
-- Authentication and authorization
-- Rate limiting support
+- Authentication 和 authorization
+- Rate limiting 支援
 - CORS configuration
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **Industry Standards**: Follow widely-adopted REST principles
 2. **Documentation**: Auto-generate comprehensive API docs
-3. **Developer Experience**: Easy to understand and use
-4. **Versioning**: Support API evolution without breaking clients
+3. **Developer Experience**: 容易understand 和 use
+4. **Versioning**: 支援 API evolution 沒有 breaking clients
 5. **Validation**: Automatic request/response validation
-6. **Testing**: Enable contract testing
-7. **Tooling**: Good IDE and testing tool support
+6. **Testing**: 啟用 contract testing
+7. **Tooling**: 良好的 IDE 和 testing tool 支援
 8. **Team Skills**: Leverage existing REST API knowledge
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: RESTful API with OpenAPI 3.0 (SpringDoc)
+### 選項 1： RESTful API with OpenAPI 3.0 (SpringDoc)
 
-**Description**: REST API following OpenAPI 3.0 specification with SpringDoc for documentation
+**描述**： REST API following OpenAPI 3.0 specification with SpringDoc for documentation
 
-**Pros**:
+**優點**：
 
 - ✅ Industry-standard REST principles
-- ✅ OpenAPI 3.0 widely supported
+- ✅ OpenAPI 3.0 widely 支援ed
 - ✅ SpringDoc auto-generates documentation from code
-- ✅ Swagger UI for interactive testing
+- ✅ Swagger UI 用於 interactive testing
 - ✅ Strong tooling ecosystem
 - ✅ Team has REST experience
-- ✅ Supports API versioning
-- ✅ Contract-first or code-first approach
-- ✅ Free and open source
+- ✅ 支援s API versioning
+- ✅ Contract-first 或 code-first approach
+- ✅ Free 和 open source
 
-**Cons**:
+**缺點**：
 
-- ⚠️ REST can be verbose for complex operations
-- ⚠️ Need to maintain API versioning discipline
+- ⚠️ REST 可以 be verbose 用於 複雜的 operations
+- ⚠️ Need to 維持 API versioning discipline
 - ⚠️ Over-fetching/under-fetching possible
 
-**Cost**: $0 (open source)
+**成本**： $0 (open source)
 
-**Risk**: **Low** - Proven, widely adopted
+**風險**： **Low** - Proven, widely adopted
 
-### Option 2: GraphQL
+### 選項 2： GraphQL
 
-**Description**: GraphQL API with schema-first design
+**描述**： GraphQL API with schema-first design
 
-**Pros**:
+**優點**：
 
 - ✅ Flexible querying (no over/under-fetching)
 - ✅ Strong typing
@@ -122,52 +122,52 @@ The Enterprise E-Commerce Platform needs a well-defined API strategy that:
 - ✅ Real-time subscriptions
 - ✅ Introspection
 
-**Cons**:
+**缺點**：
 
 - ❌ Team lacks GraphQL experience
-- ❌ More complex to implement
+- ❌ More 複雜的 to implement
 - ❌ Caching more difficult
 - ❌ N+1 query problems
-- ❌ Harder to version
-- ❌ Security concerns (query complexity)
+- ❌ 更難version
+- ❌ Security concerns (query 複雜的ity)
 
-**Cost**: $0 (open source)
+**成本**： $0 (open source)
 
-**Risk**: **Medium** - Learning curve, complexity
+**風險**： **Medium** - Learning curve, complexity
 
-### Option 3: gRPC
+### 選項 3： gRPC
 
-**Description**: gRPC with Protocol Buffers
+**描述**： gRPC with Protocol Buffers
 
-**Pros**:
+**優點**：
 
 - ✅ High performance (binary protocol)
 - ✅ Strong typing
 - ✅ Bi-directional streaming
 - ✅ Code generation
 
-**Cons**:
+**缺點**：
 
 - ❌ Not browser-friendly (needs gRPC-Web)
 - ❌ Team lacks gRPC experience
-- ❌ Limited tooling for debugging
-- ❌ Harder to test manually
-- ❌ Not suitable for public APIs
+- ❌ Limited tooling 用於 debugging
+- ❌ 更難test manually
+- ❌ Not suitable 用於 public APIs
 
-**Cost**: $0 (open source)
+**成本**： $0 (open source)
 
-**Risk**: **High** - Not suitable for web/mobile clients
+**風險**： **High** - Not suitable for web/mobile clients
 
-### Option 4: REST without OpenAPI
+### 選項 4： REST without OpenAPI
 
-**Description**: REST API without formal specification
+**描述**： REST API without formal specification
 
-**Pros**:
+**優點**：
 
-- ✅ Simple to start
+- ✅ 簡單start
 - ✅ Flexible
 
-**Cons**:
+**缺點**：
 
 - ❌ No auto-generated documentation
 - ❌ Manual documentation maintenance
@@ -175,28 +175,28 @@ The Enterprise E-Commerce Platform needs a well-defined API strategy that:
 - ❌ Inconsistent API design
 - ❌ Poor developer experience
 
-**Cost**: $0
+**成本**： $0
 
-**Risk**: **High** - Poor maintainability
+**風險**： **High** - Poor maintainability
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **RESTful API with OpenAPI 3.0 (SpringDoc)**
+**選擇的選項**： **RESTful API with OpenAPI 3.0 (SpringDoc)**
 
-### Rationale
+### 理由
 
-RESTful API with OpenAPI 3.0 was selected for the following reasons:
+RESTful API 與 OpenAPI 3.0被選擇的原因如下：
 
-1. **Industry Standard**: REST is widely understood and adopted
+1. **Industry Standard**: REST is widely understood 和 adopted
 2. **Team Experience**: Team already knows REST principles
-3. **OpenAPI Ecosystem**: Excellent tooling for documentation, testing, and code generation
-4. **SpringDoc Integration**: Seamless Spring Boot integration with auto-generated docs
-5. **Swagger UI**: Interactive API documentation and testing
-6. **Versioning Support**: URL-based versioning strategy
-7. **Client Support**: Works with all client types (web, mobile, third-party)
-8. **Cost-Effective**: Free and open source
+3. **OpenAPI Ecosystem**: 優秀的 tooling 用於 documentation, testing, 和 code generation
+4. **SpringDoc Integration**: 無縫的Spring Boot整合 與 auto-generated docs
+5. **Swagger UI**: Interactive API documentation 和 testing
+6. **Versioning 支援**: URL-based versioning strategy
+7. **Client 支援**: Works 與 all client types (web, mobile, third-party)
+8. **Cost-Effective**: Free 和 open source
 
-**Implementation Strategy**:
+**實作策略**：
 
 **API Design Principles**:
 
@@ -204,28 +204,28 @@ RESTful API with OpenAPI 3.0 was selected for the following reasons:
 - Standard HTTP methods (GET, POST, PUT, DELETE, PATCH)
 - Consistent response formats
 - Proper HTTP status codes
-- HATEOAS for discoverability (optional)
+- HATEOAS 用於 discoverability (optional)
 
 **OpenAPI Documentation**:
 
 - SpringDoc annotations on controllers
 - Auto-generated OpenAPI 3.0 specification
-- Swagger UI for interactive testing
-- API documentation versioned with code
+- Swagger UI 用於 interactive testing
+- API documentation versioned 與 code
 
 **Versioning Strategy**:
 
 - URL-based versioning: `/api/v1/`, `/api/v2/`
-- Maintain backward compatibility for at least 2 versions
-- Deprecation headers for old versions
+- 維持 backward compatibility 用於 at least 2 versions
+- Deprecation headers 用於 old versions
 
-**Why Not GraphQL**: While GraphQL offers flexibility, the team lacks experience and REST meets all current requirements. Can add GraphQL later if needed.
+**為何不選 GraphQL**： While GraphQL offers flexibility, the team lacks experience 和 REST meets all current requirements. 可以 add GraphQL later if needed.
 
-**Why Not gRPC**: Not suitable for browser-based clients. Better for internal service-to-service communication, which we handle with domain events.
+**為何不選 gRPC**： Not suitable 用於 browser-based clients. 更好的 用於 internal service-to-service communication, which we 處理 與 domain events.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
@@ -235,20 +235,20 @@ RESTful API with OpenAPI 3.0 was selected for the following reasons:
 | Backend Developers | Medium | API implementers | SpringDoc annotations, examples |
 | QA Team | Medium | API testing | Postman collections, contract tests |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All client applications
 - API documentation
 - Testing strategy
 - Deployment process
-- Monitoring and logging
+- Monitoring 和 logging
 - Security implementation
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
@@ -258,11 +258,11 @@ Affects:
 | Over-fetching data | Low | Low | Optimize endpoints, consider GraphQL later |
 | API security issues | Low | High | Security best practices, regular audits |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Setup and Standards (Week 1)
+### 第 1 階段： Setup and Standards （第 1 週）
 
 - [x] Add SpringDoc dependency
 
@@ -304,7 +304,7 @@ Affects:
 - [x] Create API design guidelines document
 - [x] Define standard response formats
 
-### Phase 2: API Design Patterns (Week 1-2)
+### 第 2 階段： API Design Patterns （第 1-2 週）
 
 - [ ] Implement standard response wrapper
 
@@ -372,7 +372,7 @@ Affects:
   }
   ```
 
-- [ ] Create pagination support
+- [ ] Create pagination 支援
 
   ```java
   public record PageResponse<T>(
@@ -401,7 +401,7 @@ Affects:
   }
   ```
 
-### Phase 3: Customer API Implementation (Week 2-3)
+### 第 3 階段： Customer API Implementation （第 2-3 週）
 
 - [ ] Implement Customer API endpoints
 
@@ -486,7 +486,7 @@ Affects:
   }
   ```
 
-- [ ] Add request/response DTOs with validation
+- [ ] Add request/response DTOs 與 validation
 
   ```java
   public record CreateCustomerRequest(
@@ -546,7 +546,7 @@ Affects:
   }
   ```
 
-### Phase 4: Remaining APIs (Week 3-6)
+### 第 4 階段： Remaining APIs （第 3-6 週）
 
 - [ ] Implement Order API
 - [ ] Implement Product API
@@ -554,7 +554,7 @@ Affects:
 - [ ] Implement Payment API
 - [ ] Implement remaining bounded context APIs
 
-### Phase 5: API Versioning (Week 6-7)
+### Phase 5: API Versioning （第 6-7 週）
 
 - [ ] Implement versioning strategy
 
@@ -585,7 +585,7 @@ Affects:
   }
   ```
 
-### Phase 6: Testing and Documentation (Week 7-8)
+### Phase 6: Testing and Documentation （第 7-8 週）
 
 - [ ] Generate OpenAPI specification
 
@@ -610,36 +610,36 @@ Affects:
 - [ ] Create API usage examples
 - [ ] Document authentication flow
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - API design inconsistencies causing client issues
 - OpenAPI documentation drift > 20%
-- Team unable to maintain API standards
-- Performance issues with SpringDoc
+- Team unable to 維持 API standards
+- Performance issues 與 SpringDoc
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Remove SpringDoc dependency
 2. Create manual API documentation
 3. Simplify API design
 4. Re-evaluate API strategy
 
-**Rollback Time**: 1 week
+**回滾時間**： 1 week
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ 100% of endpoints documented in OpenAPI
-- ✅ API response time < 2 seconds (95th percentile)
+- ✅ API 回應時間 < 2 seconds (95th percentile)
 - ✅ API error rate < 1%
-- ✅ Zero breaking changes without version bump
+- ✅ Zero breaking changes 沒有 version bump
 - ✅ API documentation accuracy > 95%
 - ✅ Developer satisfaction > 4/5
 
-### Monitoring Plan
+### 監控計畫
 
 **API Metrics**:
 
@@ -654,54 +654,54 @@ Affects:
 - Documentation page views
 - API usage examples accessed
 
-**Review Schedule**:
+**審查時程**：
 
 - Weekly: API design review
 - Monthly: API versioning review
 - Quarterly: API strategy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Consistent API Design**: RESTful principles ensure consistency
 - ✅ **Auto-Generated Docs**: SpringDoc generates docs from code
-- ✅ **Interactive Testing**: Swagger UI enables easy API testing
-- ✅ **Contract Testing**: OpenAPI spec enables contract tests
-- ✅ **Client Generation**: Can generate client SDKs from spec
-- ✅ **Versioning Support**: URL-based versioning is straightforward
-- ✅ **Industry Standard**: REST and OpenAPI are widely adopted
+- ✅ **Interactive Testing**: Swagger UI 啟用s easy API testing
+- ✅ **Contract Testing**: OpenAPI spec 啟用s contract tests
+- ✅ **Client Generation**: 可以 generate client SDKs from spec
+- ✅ **Versioning 支援**: URL-based versioning is straightforward
+- ✅ **Industry Standard**: REST 和 OpenAPI are widely adopted
 - ✅ **Team Familiarity**: Team already knows REST
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Verbosity**: REST can be verbose for complex operations
-- ⚠️ **Over/Under-Fetching**: May need multiple requests or get extra data
-- ⚠️ **Versioning Discipline**: Need to maintain backward compatibility
+- ⚠️ **Verbosity**: REST 可以 be verbose 用於 複雜的 operations
+- ⚠️ **Over/Under-Fetching**: May need multiple requests 或 get extra data
+- ⚠️ **Versioning Discipline**: Need to 維持 backward compatibility
 - ⚠️ **Documentation Maintenance**: Need to keep annotations up to date
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. No HATEOAS implementation yet (acceptable for MVP)
-2. Limited API rate limiting (future enhancement)
+1. No HATEOAS implementation yet (acceptable 用於 MVP)
+2. Limited API 速率限制 (future enhancement)
 3. No API gateway yet (future requirement)
-4. Manual Postman collection creation (can be automated)
+4. Manual Postman collection creation (可以 be automated)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
-- **Q1 2026**: Implement API rate limiting
-- **Q2 2026**: Add HATEOAS for discoverability
+- **Q1 2026**: Implement API 速率限制
+- **Q2 2026**: Add HATEOAS 用於 discoverability
 - **Q3 2026**: Evaluate API gateway (Kong, AWS API Gateway)
 - **Q4 2026**: Automate client SDK generation
 
-## Related Decisions
+## 相關決策
 
 - [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - API in interfaces layer
-- [ADR-003: Use Domain Events for Cross-Context Communication](003-use-domain-events-for-cross-context-communication.md) - Internal vs external communication
+- [ADR-003: Use Domain Events 用於 Cross-Context Communication](003-use-domain-events-for-cross-context-communication.md) - Internal vs external communication
 
-## Notes
+## 備註
 
 ### API Design Guidelines
 
@@ -785,6 +785,6 @@ paths:
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-24  
-**Next Review**: 2026-01-24 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-24  
+**下次審查**： 2026-01-24 （每季）

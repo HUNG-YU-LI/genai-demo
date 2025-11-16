@@ -2,26 +2,26 @@
 
 ## Symptoms
 
-- Service health check failing
-- 503/504 errors from load balancer
-- All API endpoints returning errors
-- Zero successful requests
+- Service health check 失敗
+- Load balancer 回傳 503/504 錯誤
+- 所有 API endpoints 回傳錯誤
+- 零成功請求
 
 ## Impact
 
-- **Severity**: P0 - Critical
-- **Affected Users**: All users
-- **Business Impact**: Complete service unavailability, revenue loss
+- **Severity**：P0 - Critical
+- **Affected Users**：所有使用者
+- **Business Impact**：服務完全無法使用、營收損失
 
 ## Detection
 
-- **Alert**: `APIEndpointDown` alert fires
-- **Monitoring Dashboard**: Operations Dashboard shows service down
-- **Log Patterns**: Connection refused, service unavailable
+- **Alert**：`APIEndpointDown` alert 觸發
+- **Monitoring Dashboard**：Operations Dashboard 顯示服務停止
+- **Log Patterns**：Connection refused、service unavailable
 
 ## Diagnosis
 
-### Step 1: Check Service Status
+### 步驟 1：檢查 Service 狀態
 
 ```bash
 # Check pod status
@@ -34,7 +34,7 @@ kubectl get endpoints ecommerce-backend -n production
 kubectl get svc ecommerce-backend -n production
 ```
 
-### Step 2: Check Recent Changes
+### 步驟 2：檢查最近的變更
 
 ```bash
 # Check recent deployments
@@ -44,7 +44,7 @@ kubectl rollout history deployment/ecommerce-backend -n production
 kubectl get events -n production --sort-by='.lastTimestamp' | head -20
 ```
 
-### Step 3: Check Dependencies
+### 步驟 3：檢查相依服務
 
 ```bash
 # Check database connectivity
@@ -62,9 +62,9 @@ kubectl exec -it ${POD_NAME} -n production -- \
 
 ## Resolution
 
-### Immediate Actions
+### 立即行動
 
-1. **Notify stakeholders**:
+1. **通知 stakeholders**：
 
 ```bash
 # Send critical incident notification
@@ -72,28 +72,28 @@ kubectl exec -it ${POD_NAME} -n production -- \
 # All services are currently unavailable. Team is investigating.
 ```
 
-1. **Check pod logs**:
+1. **檢查 pod logs**：
 
 ```bash
 kubectl logs -f deployment/ecommerce-backend -n production --tail=100
 ```
 
-1. **Restart pods if needed**:
+1. **必要時重啟 pods**：
 
 ```bash
 kubectl rollout restart deployment/ecommerce-backend -n production
 ```
 
-### Root Cause Fixes
+### 根本原因修復
 
-#### If caused by failed deployment
+#### 如果由失敗的 deployment 造成
 
 ```bash
 # Rollback to previous version
 kubectl rollout undo deployment/ecommerce-backend -n production
 ```
 
-#### If caused by configuration issue
+#### 如果由設定問題造成
 
 ```bash
 # Restore previous configuration
@@ -101,7 +101,7 @@ kubectl apply -f previous-config.yaml
 kubectl rollout restart deployment/ecommerce-backend -n production
 ```
 
-#### If caused by dependency failure
+#### 如果由相依服務失敗造成
 
 ```bash
 # Check and fix database/Redis/Kafka
@@ -110,37 +110,37 @@ kubectl rollout restart deployment/ecommerce-backend -n production
 
 ## Verification
 
-- [ ] All pods are running
-- [ ] Health checks passing
-- [ ] API endpoints responding
-- [ ] Smoke tests passing
-- [ ] Error rate < 1%
-- [ ] Response times normal
+- [ ] 所有 pods 都在執行
+- [ ] Health checks 通過
+- [ ] API endpoints 正常回應
+- [ ] Smoke tests 通過
+- [ ] 錯誤率 < 1%
+- [ ] 回應時間正常
 
 ## Prevention
 
-1. **Deployment safety**:
-   - Use canary deployments
-   - Implement proper health checks
-   - Test in staging first
+1. **Deployment 安全性**：
+   - 使用 canary deployments
+   - 實作適當的 health checks
+   - 先在 staging 測試
 
-2. **Dependency resilience**:
-   - Implement circuit breakers
-   - Add retry logic
-   - Use fallback mechanisms
+2. **相依服務韌性**：
+   - 實作 circuit breakers
+   - 新增 retry 邏輯
+   - 使用 fallback 機制
 
-3. **Monitoring**:
-   - Comprehensive health checks
-   - Dependency monitoring
-   - Automated rollback on failure
+3. **Monitoring**：
+   - 全面的 health checks
+   - 相依服務 monitoring
+   - 失敗時自動 rollback
 
 ## Escalation
 
-- **Immediate**: Notify on-call engineer via PagerDuty
-- **5 minutes**: Escalate to team lead
-- **15 minutes**: Escalate to engineering manager
+- **立即**：透過 PagerDuty 通知 on-call engineer
+- **5 分鐘**：升級至 team lead
+- **15 分鐘**：升級至 engineering manager
 
-## Related
+## 相關
 
 - [Failed Deployment](failed-deployment.md)
 - [Database Connection Issues](database-connection-issues.md)
@@ -148,5 +148,5 @@ kubectl rollout restart deployment/ecommerce-backend -n production
 
 ---
 
-**Last Updated**: 2025-10-25  
-**Owner**: DevOps Team
+**Last Updated**：2025-10-25
+**Owner**：DevOps Team

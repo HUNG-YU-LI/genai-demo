@@ -1,21 +1,21 @@
-# Runbook: Backup and Restore Operations
+# Runbook: Backup 和 Restore 操作
 
-## Overview
+## 概述
 
-This runbook covers database backup and restore procedures for the Enterprise E-Commerce Platform.
+本 runbook 涵蓋 Enterprise E-Commerce Platform 的 database backup 和 restore 程序。
 
-## Backup Procedures
+## Backup 程序
 
-### Automated Backups
+### 自動化 Backups
 
-Automated backups run according to schedule:
+自動化 backups 根據排程執行：
 
-- **Production**: Hourly snapshots, 30-day retention
-- **Staging**: Daily snapshots, 7-day retention
+- **Production**：每小時 snapshots，保留 30 天
+- **Staging**：每日 snapshots，保留 7 天
 
-### Manual Backup
+### 手動 Backup
 
-#### Create Manual Snapshot
+#### 建立手動 Snapshot
 
 ```bash
 # Create RDS snapshot
@@ -32,7 +32,7 @@ aws rds describe-db-snapshots \
   --db-snapshot-identifier ecommerce-prod-manual-$(date +%Y%m%d-%H%M%S)
 ```
 
-#### Export Database Dump
+#### 匯出 Database Dump
 
 ```bash
 # Create logical backup
@@ -49,11 +49,11 @@ aws s3 cp ./backup-$(date +%Y%m%d).dump \
   s3://ecommerce-backups/database/backup-$(date +%Y%m%d).dump
 ```
 
-## Restore Procedures
+## Restore 程序
 
-### Restore from RDS Snapshot
+### 從 RDS Snapshot Restore
 
-#### Step 1: List Available Snapshots
+#### 步驟 1：列出可用的 Snapshots
 
 ```bash
 # List recent snapshots
@@ -63,14 +63,14 @@ aws rds describe-db-snapshots \
   --output table | head -20
 ```
 
-#### Step 2: Stop Application
+#### 步驟 2：停止 Application
 
 ```bash
 # Scale down to prevent writes
 kubectl scale deployment/ecommerce-backend --replicas=0 -n production
 ```
 
-#### Step 3: Restore Snapshot
+#### 步驟 3：Restore Snapshot
 
 ```bash
 # Restore to new instance
@@ -85,7 +85,7 @@ aws rds wait db-instance-available \
   --db-instance-identifier ecommerce-prod-restored
 ```
 
-#### Step 4: Update Application Configuration
+#### 步驟 4：更新 Application 設定
 
 ```bash
 # Update database endpoint in Secrets Manager
@@ -99,7 +99,7 @@ aws secretsmanager update-secret \
   }'
 ```
 
-#### Step 5: Restart Application
+#### 步驟 5：重啟 Application
 
 ```bash
 # Scale up application
@@ -109,9 +109,9 @@ kubectl scale deployment/ecommerce-backend --replicas=4 -n production
 kubectl logs -f deployment/ecommerce-backend -n production
 ```
 
-### Restore from Database Dump
+### 從 Database Dump Restore
 
-#### Step 1: Download Backup
+#### 步驟 1：下載 Backup
 
 ```bash
 # Download from S3
@@ -119,13 +119,13 @@ aws s3 cp s3://ecommerce-backups/database/${BACKUP_FILE} \
   ./restore-backup.dump
 ```
 
-#### Step 2: Stop Application
+#### 步驟 2：停止 Application
 
 ```bash
 kubectl scale deployment/ecommerce-backend --replicas=0 -n production
 ```
 
-#### Step 3: Restore Database
+#### 步驟 3：Restore Database
 
 ```bash
 # Copy dump to pod
@@ -138,21 +138,21 @@ kubectl exec -it ${POD_NAME} -n production -- \
   -c -F c /tmp/restore-backup.dump
 ```
 
-#### Step 4: Verify Restore
+#### 步驟 4：驗證 Restore
 
 ```bash
 # Check table counts
 kubectl exec -it ${POD_NAME} -n production -- \
   psql -h ${DB_HOST} -U ${DB_USER} -d ${DB_NAME} \
-  -c "SELECT schemaname, tablename, n_live_tup 
-      FROM pg_stat_user_tables 
+  -c "SELECT schemaname, tablename, n_live_tup
+      FROM pg_stat_user_tables
       ORDER BY n_live_tup DESC;"
 
 # Verify data integrity
 ./scripts/verify-database-integrity.sh
 ```
 
-#### Step 5: Restart Application
+#### 步驟 5：重啟 Application
 
 ```bash
 kubectl scale deployment/ecommerce-backend --replicas=4 -n production
@@ -160,7 +160,7 @@ kubectl scale deployment/ecommerce-backend --replicas=4 -n production
 
 ## Point-in-Time Recovery
 
-### Restore to Specific Time
+### Restore 至特定時間
 
 ```bash
 # Restore to specific timestamp
@@ -175,20 +175,20 @@ aws rds wait db-instance-available \
   --db-instance-identifier ecommerce-prod-pitr
 ```
 
-## Verification Checklist
+## 驗證檢查清單
 
-### After Restore
+### Restore 之後
 
-- [ ] Database is accessible
-- [ ] All tables present
-- [ ] Row counts match expectations
-- [ ] Foreign key constraints intact
-- [ ] Application can connect
-- [ ] Critical queries execute successfully
-- [ ] Business logic functions correctly
-- [ ] No data corruption detected
+- [ ] Database 可存取
+- [ ] 所有 tables 都存在
+- [ ] Row 計數符合預期
+- [ ] Foreign key constraints 完整
+- [ ] Application 可以連線
+- [ ] 關鍵 queries 成功執行
+- [ ] 業務邏輯正常運作
+- [ ] 未偵測到資料損毀
 
-### Data Integrity Checks
+### 資料完整性檢查
 
 ```sql
 -- Check for orphaned records
@@ -203,49 +203,49 @@ WHERE contype = 'f' AND convalidated = false;
 SELECT id, COUNT(*) FROM orders GROUP BY id HAVING COUNT(*) > 1;
 ```
 
-## Backup Testing
+## Backup 測試
 
-### Monthly Backup Test
+### 每月 Backup 測試
 
-1. Restore backup to test environment
-2. Verify data integrity
-3. Run application tests
-4. Document results
-5. Update procedures if needed
+1. Restore backup 至測試環境
+2. 驗證資料完整性
+3. 執行 application tests
+4. 記錄結果
+5. 必要時更新程序
 
-## Backup Retention Policy
+## Backup 保留政策
 
 | Environment | Frequency | Retention | Type |
 |-------------|-----------|-----------|------|
-| Production | Hourly | 7 days | Automated snapshot |
-| Production | Daily | 30 days | Automated snapshot |
-| Production | Weekly | 90 days | Manual snapshot |
-| Staging | Daily | 7 days | Automated snapshot |
+| Production | 每小時 | 7 天 | Automated snapshot |
+| Production | 每日 | 30 天 | Automated snapshot |
+| Production | 每週 | 90 天 | Manual snapshot |
+| Staging | 每日 | 7 天 | Automated snapshot |
 
 ## Disaster Recovery
 
-### RTO and RPO Targets
+### RTO 和 RPO 目標
 
-- **RTO** (Recovery Time Objective): < 1 hour
-- **RPO** (Recovery Point Objective): < 15 minutes
+- **RTO** (Recovery Time Objective)：< 1 小時
+- **RPO** (Recovery Point Objective)：< 15 分鐘
 
-### DR Procedure
+### DR 程序
 
-1. Assess situation and impact
-2. Notify stakeholders
-3. Activate DR plan
-4. Restore from most recent backup
-5. Verify data integrity
-6. Resume operations
-7. Conduct post-mortem
+1. 評估情況和影響
+2. 通知 stakeholders
+3. 啟動 DR plan
+4. 從最近的 backup restore
+5. 驗證資料完整性
+6. 恢復營運
+7. 進行 post-mortem
 
 ## Escalation
 
-- **L1 Support**: DevOps team
-- **L2 Support**: Database administrator
-- **AWS Support**: For RDS-specific issues
+- **L1 Support**：DevOps team
+- **L2 Support**：Database administrator
+- **AWS Support**：針對 RDS 特定問題
 
-## Related
+## 相關
 
 - [Database Connection Issues](database-connection-issues.md)
 - [Data Inconsistency](data-inconsistency.md)
@@ -253,5 +253,5 @@ SELECT id, COUNT(*) FROM orders GROUP BY id HAVING COUNT(*) > 1;
 
 ---
 
-**Last Updated**: 2025-10-25  
-**Owner**: DevOps Team
+**Last Updated**：2025-10-25
+**Owner**：DevOps Team

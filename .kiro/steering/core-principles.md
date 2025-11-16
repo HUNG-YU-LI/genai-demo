@@ -2,10 +2,10 @@
 
 ## Overview
 
-This document defines the fundamental principles that guide all development work in this project. These principles are mandatory and must be followed by all team members.
+本文件定義指導本專案所有開發工作的基本原則。這些原則是強制性的，所有團隊成員都必須遵守。
 
-**Purpose**: Provide a concise reference of core principles without detailed examples.
-**Detailed Examples**: See `.kiro/examples/` for comprehensive implementation guides.
+**Purpose**: 提供核心原則的簡潔參考，不包含詳細範例。
+**Detailed Examples**: 查看 `.kiro/examples/` 以獲取完整的實作指南。
 
 ---
 
@@ -14,9 +14,9 @@ This document defines the fundamental principles that guide all development work
 ### Must Follow
 
 - [ ] **DDD + Hexagonal Architecture**: Domain-Driven Design with ports and adapters
-- [ ] **Event-Driven Design**: Use domain events for cross-context communication
-- [ ] **Bounded Context Isolation**: Each context is independent and self-contained
-- [ ] **Dependency Rule**: Domain layer has no dependencies on infrastructure
+- [ ] **Event-Driven Design**: 使用 domain events 進行跨 context 溝通
+- [ ] **Bounded Context Isolation**: 每個 context 都是獨立且自包含的
+- [ ] **Dependency Rule**: Domain layer 不依賴於 infrastructure
 
 ### Architecture Layers
 
@@ -37,24 +37,24 @@ graph LR
 
 ### Aggregate Roots
 
-- [ ] Extend `AggregateRoot` base class
-- [ ] Use `@AggregateRoot` annotation
-- [ ] Aggregates collect events, application services publish them
-- [ ] No direct repository access from domain layer
+- [ ] 擴展 `AggregateRoot` base class
+- [ ] 使用 `@AggregateRoot` annotation
+- [ ] Aggregates 收集 events，application services 發布它們
+- [ ] Domain layer 不直接存取 repository
 
 ### Domain Events
 
-- [ ] Use Record implementation for immutability
-- [ ] Implement `DomainEvent` interface
-- [ ] Use factory method with `createEventMetadata()`
-- [ ] Events are immutable and contain all necessary data
+- [ ] 使用 Record implementation 確保不可變性
+- [ ] 實作 `DomainEvent` interface
+- [ ] 使用 factory method 搭配 `createEventMetadata()`
+- [ ] Events 是不可變的並包含所有必要資料
 
 ### Value Objects
 
-- [ ] Use Record for immutability
-- [ ] Validate in constructor
-- [ ] No setters
-- [ ] Implement equals/hashCode based on value
+- [ ] 使用 Record 確保不可變性
+- [ ] 在 constructor 中驗證
+- [ ] 沒有 setters
+- [ ] 基於值實作 equals/hashCode
 
 **Detailed Patterns**: #[[file:ddd-tactical-patterns.md]]
 
@@ -64,19 +64,19 @@ graph LR
 
 ### SOLID Principles
 
-- [ ] **Single Responsibility**: One class, one reason to change
-- [ ] **Open/Closed**: Open for extension, closed for modification
-- [ ] **Liskov Substitution**: Subtypes must be substitutable
-- [ ] **Interface Segregation**: Small, focused interfaces
-- [ ] **Dependency Inversion**: Depend on abstractions, not concretions
+- [ ] **Single Responsibility**: 一個類別，一個變更的理由
+- [ ] **Open/Closed**: 對擴展開放，對修改封閉
+- [ ] **Liskov Substitution**: 子類型必須可替代
+- [ ] **Interface Segregation**: 小而專注的介面
+- [ ] **Dependency Inversion**: 依賴於抽象，而非具體實作
 
 ### Clean Code Standards
 
-- [ ] **Meaningful Names**: Clear, descriptive naming
-- [ ] **Small Functions**: < 20 lines per method
-- [ ] **Single Level of Abstraction**: One abstraction level per function
+- [ ] **Meaningful Names**: 清楚、描述性的命名
+- [ ] **Small Functions**: 每個方法 < 20 lines
+- [ ] **Single Level of Abstraction**: 每個函數一個抽象層級
 - [ ] **No Duplication**: DRY principle
-- [ ] **Error Handling**: Use specific exceptions with context
+- [ ] **Error Handling**: 使用帶有上下文的特定 exceptions
 
 **Detailed Principles**: #[[file:design-principles.md]]
 **Quality Checklist**: #[[file:code-quality-checklist.md]]
@@ -87,10 +87,10 @@ graph LR
 
 ### BDD/TDD Approach
 
-- [ ] Write Gherkin scenarios before implementation
-- [ ] Write failing tests first (Red)
-- [ ] Write minimal code to pass (Green)
-- [ ] Refactor for quality (Refactor)
+- [ ] 在實作前編寫 Gherkin scenarios
+- [ ] 先寫失敗的測試 (Red)
+- [ ] 撰寫最少的程式碼以通過測試 (Green)
+- [ ] 重構以提高品質 (Refactor)
 
 ### Test Pyramid
 
@@ -142,11 +142,11 @@ graph LR
 
 ### Code Review
 
-- [ ] All tests pass
-- [ ] Code coverage > 80%
-- [ ] ArchUnit rules pass
-- [ ] No security vulnerabilities
-- [ ] Documentation updated
+- [ ] 所有測試通過
+- [ ] 程式碼覆蓋率 > 80%
+- [ ] ArchUnit 規則通過
+- [ ] 沒有安全漏洞
+- [ ] 文件已更新
 
 **Review Guide**: #[[file:../examples/process/code-review-guide.md]]
 
@@ -181,8 +181,8 @@ graph LR
 
 | Principle | Key Rule | Validation |
 |-----------|----------|------------|
-| Architecture | Domain has no infrastructure dependencies | `./gradlew archUnit` |
-| Domain Model | Aggregates collect events, services publish | Code review |
+| Architecture | Domain 不依賴於 infrastructure | `./gradlew archUnit` |
+| Domain Model | Aggregates 收集 events，services 發布 | Code review |
 | Code Quality | SOLID + Clean Code | `./gradlew pmdMain` |
 | Testing | Test-first, > 80% coverage | `./gradlew test` |
 

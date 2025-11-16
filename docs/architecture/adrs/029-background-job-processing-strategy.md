@@ -12,92 +12,92 @@ affected_perspectives: ["performance", "scalability", "availability"]
 
 # ADR-029: Background Job Processing Strategy
 
-## Status
+## 狀態
 
 **Accepted** - 2025-10-25
 
-## Context
+## 上下文
 
-### Problem Statement
+### 問題陳述
 
-The Enterprise E-Commerce Platform requires background job processing for:
+The Enterprise E-Commerce Platform 需要background job processing for:
 
 - **Asynchronous Operations**: Email sending, notifications, report generation
 - **Scheduled Tasks**: Daily inventory sync, order status updates, abandoned cart reminders
 - **Long-Running Operations**: Bulk imports, data exports, image processing
 - **Retry Logic**: Failed payment retries, external API call retries
 - **Batch Processing**: End-of-day reconciliation, analytics aggregation
-- **Event Processing**: Domain event handlers that don't need immediate execution
+- **Event Processing**: Domain event 處理rs that don't need immediate execution
 - **Resource-Intensive Tasks**: PDF generation, video transcoding, data analysis
 
-### Business Context
+### 業務上下文
 
-**Business Drivers**:
+**業務驅動因素**：
 
-- Improve user experience (don't block on slow operations)
-- Handle peak loads (queue jobs during traffic spikes)
+- 改善 用戶體驗 (don't block on slow operations)
+- 處理 peak loads (queue jobs 期間 流量尖峰)
 - Ensure reliability (retry failed operations automatically)
-- Support scheduled operations (daily reports, reminders)
-- Enable scalability (process jobs independently)
-- Maintain system responsiveness (offload heavy tasks)
+- 支援 scheduled operations (daily reports, reminders)
+- 啟用 scalability (process jobs independently)
+- 維持 system responsiveness (offload heavy tasks)
 
 **Business Constraints**:
 
-- Budget: $300/month for job processing infrastructure
-- Job processing latency < 5 minutes for high-priority jobs
-- Support for job priorities (critical, high, normal, low)
-- Job retry with exponential backoff
-- Job monitoring and alerting
-- Dead letter queue for failed jobs
+- 預算: $300/month 用於 job processing infrastructure
+- Job processing latency < 5 minutes 用於 high-priority jobs
+- 支援 用於 job priorities (critical, high, normal, low)
+- Job retry 與 exponential backoff
+- Job monitoring 和 alerting
+- Dead letter queue 用於 failed jobs
 
-### Technical Context
+### 技術上下文
 
-**Current State**:
+**目前狀態**：
 
 - Spring Boot 3.4.5 application
-- Kafka for event streaming (ADR-005)
-- Redis for distributed caching (ADR-022)
-- AWS cloud infrastructure
-- Multiple application instances (horizontal scaling)
+- Kafka 用於 event streaming (ADR-005)
+- Redis 用於 分散式快取 (ADR-022)
+- AWS 雲端基礎設施
+- Multiple 應用程式實例 (horizontal scaling)
 
-**Requirements**:
+**需求**：
 
 - Distributed job processing (multiple workers)
 - Job scheduling (cron-like)
-- Job priorities and queues
-- Retry mechanism with exponential backoff
-- Dead letter queue for failed jobs
-- Job monitoring and metrics
+- Job priorities 和 queues
+- Retry mechanism 與 exponential backoff
+- Dead letter queue 用於 failed jobs
+- Job monitoring 和 metrics
 - Horizontal scalability
 - At-least-once delivery guarantee
 - Job persistence (survive restarts)
 
-## Decision Drivers
+## 決策驅動因素
 
 1. **Reliability**: At-least-once delivery, automatic retries
-2. **Scalability**: Handle 10,000+ jobs/hour
-3. **Performance**: Low latency for high-priority jobs
+2. **Scalability**: 處理 10,000+ jobs/hour
+3. **Performance**: Low latency 用於 high-priority jobs
 4. **Features**: Scheduling, priorities, retries, DLQ
 5. **Integration**: Spring Boot, AWS ecosystem
-6. **Cost**: Within $300/month budget
-7. **Operations**: Easy to monitor and troubleshoot
-8. **Flexibility**: Support various job types
+6. **成本**： Within $300/month budget
+7. **Operations**: 容易monitor 和 troubleshoot
+8. **Flexibility**: 支援 various job types
 
-## Considered Options
+## 考慮的選項
 
-### Option 1: Spring Boot @Async with Database Queue
+### 選項 1： Spring Boot @Async with Database Queue
 
-**Description**: Use Spring's @Async with database-backed job queue
+**描述**： Use Spring's @Async with database-backed job queue
 
-**Pros**:
+**優點**：
 
-- ✅ Simple to implement
+- ✅ 簡單implement
 - ✅ No additional infrastructure
-- ✅ ACID transactions with jobs
+- ✅ ACID transactions 與 jobs
 - ✅ Built into Spring Boot
-- ✅ Easy to debug
+- ✅ 容易debug
 
-**Cons**:
+**缺點**：
 
 - ❌ Poor scalability (database bottleneck)
 - ❌ No built-in scheduling
@@ -107,79 +107,79 @@ The Enterprise E-Commerce Platform requires background job processing for:
 - ❌ Doesn't survive application restarts well
 - ❌ No distributed coordination
 
-**Cost**: $0 (included in database)
+**成本**： $0 (included in database)
 
-**Risk**: **High** - Insufficient for requirements
+**風險**： **High** - Insufficient for requirements
 
 **Performance**: 100-500 jobs/minute
 
-### Option 2: AWS SQS + Spring Cloud AWS
+### 選項 2： AWS SQS + Spring Cloud AWS
 
-**Description**: Use AWS SQS for job queues with Spring Cloud AWS integration
+**描述**： Use AWS SQS for job queues with Spring Cloud AWS integration
 
-**Pros**:
+**優點**：
 
-- ✅ Fully managed service
+- ✅ Fully 託管服務
 - ✅ Highly scalable (unlimited throughput)
 - ✅ At-least-once delivery
-- ✅ Dead letter queue support
+- ✅ Dead letter queue 支援
 - ✅ Message visibility timeout (retry)
 - ✅ FIFO queues available
-- ✅ Excellent Spring Boot integration
+- ✅ 優秀的Spring Boot整合
 - ✅ Pay-as-you-go pricing
 - ✅ AWS native integration
-- ✅ No operational overhead
+- ✅ No 營運開銷
 
-**Cons**:
+**缺點**：
 
 - ⚠️ No built-in scheduling (need EventBridge)
 - ⚠️ Limited message size (256KB)
 - ⚠️ Eventual consistency
 - ⚠️ No priority within queue (need multiple queues)
 
-**Cost**:
+**成本**：
 
 - SQS: $0.40/million requests (first 1M free)
 - EventBridge: $1.00/million events
 - Total: $50-100/month (10M jobs/month)
 
-**Risk**: **Low** - AWS managed service
+**風險**： **Low** - AWS managed service
 
 **Performance**: 10,000+ jobs/second
 
-### Option 3: Redis-Based Queue (Spring Data Redis)
+### 選項 3： Redis-Based Queue (Spring Data Redis)
 
-**Description**: Use Redis as job queue with Spring Data Redis
+**描述**： Use Redis as job queue with Spring Data Redis
 
-**Pros**:
+**優點**：
 
 - ✅ Uses existing Redis infrastructure
-- ✅ Fast (in-memory)
-- ✅ Simple to implement
-- ✅ Good Spring Boot integration
-- ✅ Supports priorities (sorted sets)
-- ✅ Pub/sub for notifications
+- ✅ Fast (記憶體內)
+- ✅ 簡單implement
+- ✅ 良好的Spring Boot整合
+- ✅ 支援s priorities (sorted sets)
+- ✅ Pub/sub 用於 notifications
 
-**Cons**:
+**缺點**：
 
 - ❌ No built-in scheduling
 - ❌ Limited persistence (AOF/RDB)
 - ❌ Manual retry logic
 - ❌ No dead letter queue (need to implement)
 - ❌ Memory constraints
-- ❌ Complex distributed coordination
+- ❌ 複雜的 distributed coordination
 
-**Cost**: $0 (uses existing Redis)
+**成本**： $0 (uses existing Redis)
 
-**Risk**: **Medium** - Need to implement features
+**風險**： **Medium** - Need to implement features
 
 **Performance**: 5,000-10,000 jobs/second
 
-### Option 4: Quartz Scheduler + Database
+### 選項 4： Quartz Scheduler + Database
 
-**Description**: Use Quartz Scheduler for job scheduling and execution
+**描述**： Use Quartz Scheduler for job scheduling and execution
 
-**Pros**:
+**優點**：
 
 - ✅ Mature scheduling library
 - ✅ Cron-like scheduling
@@ -188,65 +188,65 @@ The Enterprise E-Commerce Platform requires background job processing for:
 - ✅ Spring Boot integration
 - ✅ Misfire handling
 
-**Cons**:
+**缺點**：
 
 - ❌ Database-backed (scalability limits)
-- ❌ Complex configuration
-- ❌ Not designed for high-throughput queues
+- ❌ 複雜的 configuration
+- ❌ Not designed 用於 high-throughput queues
 - ❌ Limited retry logic
 - ❌ No dead letter queue
 - ❌ Polling overhead
 
-**Cost**: $0 (uses existing database)
+**成本**： $0 (uses existing database)
 
-**Risk**: **Medium** - Scalability concerns
+**風險**： **Medium** - Scalability concerns
 
 **Performance**: 100-1,000 jobs/minute
 
-### Option 5: Apache Kafka (Existing Infrastructure)
+### 選項 5： Apache Kafka (Existing Infrastructure)
 
-**Description**: Use existing Kafka infrastructure for job processing
+**描述**： Use existing Kafka infrastructure for job processing
 
-**Pros**:
+**優點**：
 
 - ✅ Already deployed (ADR-005)
 - ✅ High throughput
 - ✅ Durable (replicated)
 - ✅ Ordered processing
 - ✅ Exactly-once semantics
-- ✅ Good for event-driven jobs
+- ✅ 良好的 用於 event-driven jobs
 
-**Cons**:
+**缺點**：
 
 - ❌ No built-in scheduling
-- ❌ Complex retry logic
+- ❌ 複雜的 retry logic
 - ❌ No priority queues
-- ❌ Overkill for simple jobs
-- ❌ Higher operational complexity
+- ❌ Overkill 用於 簡單的 jobs
+- ❌ Higher operational 複雜的ity
 
-**Cost**: $0 (existing infrastructure)
+**成本**： $0 (existing infrastructure)
 
-**Risk**: **Medium** - Complex for simple jobs
+**風險**： **Medium** - Complex for simple jobs
 
 **Performance**: 100,000+ messages/second
 
-## Decision Outcome
+## 決策結果
 
-**Chosen Option**: **AWS SQS + Spring Cloud AWS + EventBridge Scheduler**
+**選擇的選項**： **AWS SQS + Spring Cloud AWS + EventBridge Scheduler**
 
-### Rationale
+### 理由
 
-AWS SQS with EventBridge was selected for the following reasons:
+AWS SQS 與 EventBridge被選擇的原因如下：
 
-1. **Fully Managed**: No operational overhead, AWS handles scaling
+1. **Fully Managed**: No 營運開銷, AWS 處理s scaling
 2. **Reliability**: At-least-once delivery, automatic retries
-3. **Scalability**: Unlimited throughput, handles 10,000+ jobs/second
-4. **Cost-Effective**: Pay-as-you-go, within budget ($50-100/month)
+3. **Scalability**: Unlimited throughput, 處理s 10,000+ jobs/second
+4. **Cost-Effective**: Pay-as-you-go, within 預算 ($50-100/month)
 5. **Features**: Dead letter queue, visibility timeout, FIFO queues
-6. **Integration**: Excellent Spring Boot support via Spring Cloud AWS
-7. **Scheduling**: EventBridge for cron-like scheduling
-8. **AWS Native**: Seamless integration with other AWS services
-9. **Proven**: Used by millions of applications worldwide
+6. **Integration**: 優秀的 Spring Boot 支援 via Spring Cloud AWS
+7. **Scheduling**: EventBridge 用於 cron-like scheduling
+8. **AWS Native**: Seamless integration 與 other AWS services
+9. **Proven**: Used 透過 millions of applications worldwide
 
 **Job Processing Architecture**:
 
@@ -256,12 +256,12 @@ AWS SQS with EventBridge was selected for the following reasons:
 - `ecommerce-jobs-high`: High-priority jobs (email sending, notifications)
 - `ecommerce-jobs-normal`: Normal jobs (report generation, data sync)
 - `ecommerce-jobs-low`: Low-priority jobs (analytics, cleanup)
-- `ecommerce-jobs-dlq`: Dead letter queue for failed jobs
+- `ecommerce-jobs-dlq`: Dead letter queue 用於 failed jobs
 
 **Job Types**:
 
 - **Immediate Jobs**: Processed as soon as possible (email, notifications)
-- **Scheduled Jobs**: Triggered by EventBridge (daily reports, reminders)
+- **Scheduled Jobs**: Triggered 透過 EventBridge (daily reports, reminders)
 - **Delayed Jobs**: Delayed execution (abandoned cart after 1 hour)
 - **Recurring Jobs**: Periodic execution (inventory sync every 15 minutes)
 
@@ -270,7 +270,7 @@ AWS SQS with EventBridge was selected for the following reasons:
 - **Automatic Retries**: SQS visibility timeout (exponential backoff)
 - **Max Retries**: 3 attempts before moving to DLQ
 - **Backoff**: 1 minute, 5 minutes, 15 minutes
-- **DLQ Processing**: Manual review and reprocessing
+- **DLQ Processing**: Manual review 和 reprocessing
 
 **EventBridge Scheduling**:
 
@@ -280,30 +280,30 @@ AWS SQS with EventBridge was selected for the following reasons:
 - Order status updates: Every 5 minutes
 - Analytics aggregation: Midnight UTC
 
-**Why Not @Async**: Poor scalability, limited features, doesn't survive restarts.
+**為何不選 @Async**： Poor scalability, limited features, doesn't survive restarts.
 
-**Why Not Redis Queue**: Need to implement many features, memory constraints.
+**為何不選 Redis Queue**： Need to implement many features, memory constraints.
 
-**Why Not Quartz**: Database bottleneck, not designed for high-throughput queues.
+**為何不選 Quartz**： Database bottleneck, not designed 用於 high-throughput queues.
 
-**Why Not Kafka**: Overkill for simple jobs, complex retry logic.
+**為何不選 Kafka**： Overkill 用於 簡單的 jobs, 複雜的 retry logic.
 
-## Impact Analysis
+## 影響分析
 
-### Stakeholder Impact
+### 利害關係人影響
 
 | Stakeholder | Impact Level | Description | Mitigation |
 |-------------|--------------|-------------|------------|
-| Development Team | Medium | Learn SQS and EventBridge | Training, code examples, documentation |
-| Operations Team | Low | Monitor SQS and EventBridge | AWS managed service, CloudWatch dashboards |
-| End Users | Positive | Faster response times, better UX | N/A |
+| Development Team | Medium | Learn SQS 和 EventBridge | Training, code examples, documentation |
+| Operations Team | Low | Monitor SQS 和 EventBridge | AWS 託管服務, CloudWatch dashboards |
+| End Users | Positive | Faster 回應時間, 更好的 UX | N/A |
 | Business | Positive | Reliable job processing, scalability | N/A |
 
-### Impact Radius
+### 影響半徑
 
-**Selected Impact Radius**: **System**
+**選擇的影響半徑**： **System**
 
-Affects:
+影響：
 
 - All bounded contexts (job processing)
 - Application services (job submission)
@@ -312,7 +312,7 @@ Affects:
 - Report generation service
 - Data synchronization services
 
-### Risk Assessment
+### 風險評估
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
@@ -322,27 +322,27 @@ Affects:
 | Cost overrun | Low | Low | Monitor usage, set alarms |
 | Message loss | Very Low | High | At-least-once delivery, DLQ |
 
-**Overall Risk Level**: **Low**
+**整體風險等級**： **Low**
 
-## Implementation Plan
+## 實作計畫
 
-### Phase 1: Setup (Week 1)
+### 第 1 階段： Setup （第 1 週）
 
 - [x] Create SQS queues (critical, high, normal, low, DLQ)
-- [x] Configure queue policies and IAM roles
+- [x] Configure queue policies 和 IAM roles
 - [x] Set up EventBridge scheduler
 - [x] Configure CloudWatch alarms
 - [x] Create monitoring dashboards
 
-### Phase 2: Integration (Week 2-3)
+### 第 2 階段： Integration （第 2-3 週）
 
 - [x] Integrate Spring Cloud AWS
 - [x] Implement job submission service
 - [x] Implement job processing workers
-- [x] Add retry logic and error handling
+- [x] Add retry logic 和 error handling
 - [x] Implement DLQ processing
 
-### Phase 3: Job Types (Week 4-5)
+### 第 3 階段： Job Types （第 4-5 週）
 
 - [x] Implement email sending jobs
 - [x] Implement notification jobs
@@ -350,44 +350,44 @@ Affects:
 - [x] Implement data sync jobs
 - [x] Implement scheduled jobs (EventBridge)
 
-### Phase 4: Testing & Optimization (Week 6)
+### 第 4 階段： Testing & Optimization （第 6 週）
 
 - [x] Load testing (10,000+ jobs/hour)
 - [x] Failure testing (retry, DLQ)
 - [x] Performance optimization
-- [x] Documentation and training
+- [x] Documentation 和 training
 
-### Rollback Strategy
+### 回滾策略
 
-**Trigger Conditions**:
+**觸發條件**：
 
 - Job processing failure rate > 5%
 - Queue depth > 10,000 messages
 - SQS errors > 1%
-- Cost exceeds budget by > 50%
+- Cost exceeds 預算 透過 > 50%
 
-**Rollback Steps**:
+**回滾步驟**：
 
 1. Disable job submission to SQS
 2. Fall back to synchronous processing
-3. Investigate and fix issues
-4. Re-enable SQS gradually
+3. Investigate 和 fix issues
+4. Re-啟用 SQS gradually
 5. Monitor performance
 
-**Rollback Time**: < 1 hour
+**回滾時間**： < 1 hour
 
-## Monitoring and Success Criteria
+## 監控和成功標準
 
-### Success Metrics
+### 成功指標
 
 - ✅ Job processing success rate > 99%
 - ✅ Job processing latency < 5 minutes (high-priority)
 - ✅ Queue depth < 1,000 messages
 - ✅ DLQ messages < 1% of total
-- ✅ Cost within budget ($100/month)
+- ✅ Cost within 預算 ($100/month)
 - ✅ Zero job loss incidents
 
-### Monitoring Plan
+### 監控計畫
 
 **CloudWatch Metrics**:
 
@@ -413,7 +413,7 @@ public class JobProcessingMetrics {
 }
 ```
 
-**Alerts**:
+**告警**：
 
 - Queue depth > 5,000 messages
 - Message age > 30 minutes
@@ -422,54 +422,54 @@ public class JobProcessingMetrics {
 - EventBridge failures > 1%
 - Cost > $150/month
 
-**Review Schedule**:
+**審查時程**：
 
 - Daily: Check job processing metrics
-- Weekly: Review failed jobs and DLQ
+- Weekly: Review failed jobs 和 DLQ
 - Monthly: Optimize job processing
 - Quarterly: Job processing strategy review
 
-## Consequences
+## 後果
 
-### Positive Consequences
+### 正面後果
 
 - ✅ **Reliability**: At-least-once delivery, automatic retries
-- ✅ **Scalability**: Unlimited throughput, handles peak loads
+- ✅ **Scalability**: Unlimited throughput, 處理s peak loads
 - ✅ **Performance**: Fast job processing, low latency
-- ✅ **Cost-Effective**: Pay-as-you-go, within budget
-- ✅ **Managed Service**: No operational overhead
-- ✅ **Flexibility**: Support various job types and priorities
-- ✅ **Monitoring**: Comprehensive metrics and alerting
+- ✅ **Cost-Effective**: Pay-as-you-go, within 預算
+- ✅ **Managed Service**: No 營運開銷
+- ✅ **Flexibility**: 支援 various job types 和 priorities
+- ✅ **Monitoring**: Comprehensive metrics 和 alerting
 
-### Negative Consequences
+### 負面後果
 
-- ⚠️ **Complexity**: Additional AWS services to manage
+- ⚠️ **複雜的ity**: Additional AWS services to manage
 - ⚠️ **Eventual Consistency**: Jobs processed asynchronously
-- ⚠️ **Debugging**: Harder to trace job execution
-- ⚠️ **Cost**: Additional AWS service costs
-- ⚠️ **Learning Curve**: Team needs to learn SQS and EventBridge
+- ⚠️ **Debugging**: 更難trace job execution
+- ⚠️ **成本**： Additional AWS service costs
+- ⚠️ **Learning Curve**: Team needs to learn SQS 和 EventBridge
 
-### Technical Debt
+### 技術債務
 
-**Identified Debt**:
+**已識別債務**：
 
-1. Manual DLQ processing (can automate with Lambda)
-2. Simple retry logic (can add exponential backoff with jitter)
+1. Manual DLQ processing (可以 automate 與 Lambda)
+2. 簡單的 retry logic (可以 add exponential backoff 與 jitter)
 3. No job prioritization within queue (future enhancement)
 
-**Debt Repayment Plan**:
+**債務償還計畫**：
 
 - **Q2 2026**: Implement automated DLQ processing
 - **Q3 2026**: Add advanced retry strategies
-- **Q4 2026**: Implement job prioritization and scheduling optimization
+- **Q4 2026**: Implement job prioritization 和 scheduling optimization
 
-## Related Decisions
+## 相關決策
 
-- [ADR-005: Use Apache Kafka for Event Streaming](005-use-kafka-for-event-streaming.md) - Kafka for event-driven jobs
-- [ADR-022: Distributed Locking with Redis](022-distributed-locking-with-redis.md) - Locking for job coordination
-- [ADR-028: File Storage Strategy with S3](028-file-storage-strategy-with-s3.md) - S3 for job artifacts
+- [ADR-005: Use Apache Kafka 用於 Event Streaming](005-use-kafka-for-event-streaming.md) - Kafka 用於 event-driven jobs
+- [ADR-022: Distributed Locking 與 Redis](022-distributed-locking-with-redis.md) - Locking 用於 job coordination
+- [ADR-028: File Storage Strategy 與 S3](028-file-storage-strategy-with-s3.md) - S3 用於 job artifacts
 
-## Notes
+## 備註
 
 ### SQS Queue Configuration
 
@@ -717,7 +717,7 @@ Input:
   priority: HIGH
 ```
 
-### Lambda Function for EventBridge
+### Lambda Function 用於 EventBridge
 
 ```javascript
 // Lambda function to submit jobs to SQS from EventBridge
@@ -846,6 +846,6 @@ public class ReportJobData {
 
 ---
 
-**Document Status**: ✅ Accepted  
-**Last Reviewed**: 2025-10-25  
-**Next Review**: 2026-01-25 (Quarterly)
+**文檔狀態**： ✅ Accepted  
+**上次審查**： 2025-10-25  
+**下次審查**： 2026-01-25 （每季）
